@@ -1,0 +1,26 @@
+{
+  "name": "io.sentry.unity",
+  "version": "0.22.0",
+  "displayName": "Sentry Unity",
+  "description": "Sentry SDK for Unity",
+  "unity": "2019.4",
+  "license": "MIT",
+  "keywords": [
+    "logging",
+    "performance",
+    "diagnostics"
+  ],
+  "author": {
+    "name": "Sentry Application Monitoring",
+    "email": "sdks@sentry.io",
+    "url": "https://github.com/getsentry/sentry-unity"
+  },
+  "samples": [
+    {
+      "displayName": "Unity of bugs",
+      "description": "Unity scene to test Sentry on",
+      "path": "Samples~/unity-of-bugs"
+    }
+  ],
+  "type": "library"
+}

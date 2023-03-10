@@ -1,0 +1,16 @@
+﻿{
+  "IsDebug": true,
+  "ServerId": 1001, //[1000,9999]
+  "ServerName": "geek_server",
+  "LocalIp": "127.0.0.1",
+  "TcpPort": 8899,
+  "HttpCode": "inner_httpcode",
+  "HttpPort": 20000,
+  "GrpcPort": 30000,
+  "LocalDBPrefix": "gamedb_",
+  "LocalDBPath": "../../database/game/",
+  "SDKType": 0,
+  "DBModel": 0, //0:内嵌 1:mongodb
+  "MongoUrl": "mongodb://127.0.0.1:27017/?authSource=admin",
+  "MongoDBName": "geek_server"
+}

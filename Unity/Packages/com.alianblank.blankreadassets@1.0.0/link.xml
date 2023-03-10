@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<linker>
+    <assembly fullname="BlankReadAssets.Runtime" preserve="all">
+        <namespace fullname="BlankReadAssets" preserve="all"/>
+    </assembly>    
+</linker>

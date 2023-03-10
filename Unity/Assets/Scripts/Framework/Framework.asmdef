@@ -1,0 +1,22 @@
+{
+    "name": "Framework",
+    "references": [
+        "Fairygui.Runtime",
+        "BlankReadAssets.Runtime",
+        "BetterStreamingAssets",
+        "HybridCLR.Runtime",
+        "MessagePack",
+        "MessagePack.Annotations",
+        "UniTask",
+        "YooAsset.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,11 @@
+﻿Unity/.idea
+Unity/Bundles
+Unity/Library
+Unity/obj
+GeekConfig/.idea
+GeekConfig/Test
+Server/.idea
+Server/database
+Server/bin
+Server/**/obj
+Unity/*.csproj

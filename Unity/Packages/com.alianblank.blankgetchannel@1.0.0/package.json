@@ -1,0 +1,15 @@
+{
+  "name": "com.alianblank.blankgetchannel",
+  "displayName": "Blank Get Channel",
+  "category": "Blank",
+  "description": "获取渠道",
+  "version": "1.0.0",
+  "unity": "2017.1",
+  "keywords": [
+    "BlankGetchannel"
+  ],
+  "author": {
+    "name": "alianblank",
+    "url": "https://alianblank.com"
+  }
+}

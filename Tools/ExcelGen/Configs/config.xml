@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <config-path>input/</config-path>  <!-- 配置表路径 -->
+  <server-code-path>../../Server/Geek.Server.Generate/Configs/</server-code-path>  <!-- 代码导出路径-->
+  <server-bin-path>../../Server/bin/app_debug/Bytes/</server-bin-path>  <!-- bin导出路径-->
+  <client-code-path>../../Unity/Assets/Scripts/Generate/Config/</client-code-path>  <!-- 代码导出路径-->
+  <client-bin-path>../../Unity/Assets/Bundles/Config/</client-bin-path>  <!-- bin导出路径 -->
+  <normal-buffer-size>5242880</normal-buffer-size>  <!-- 普通配置表缓冲区大小-5M-->
+  <lan-buffer-size>5242880</lan-buffer-size>  <!-- 语言包缓冲区大小-5M-->
+</config>

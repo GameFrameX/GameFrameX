@@ -1,0 +1,74 @@
+/**
+ * Auto generated, do not edit it server
+ *
+ * {{SheetNameDesc}}
+ */
+
+using Base;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using Data.Beans;
+
+namespace Data.Containers
+{
+	public class {{ContainerClassName}} : BaseContainer
+	{
+		private List<{{BeanClassName}}> list = new List<{{BeanClassName}}>();
+		private Dictionary<{{PrimaryKeyType}}, {{BeanClassName}}> map = new Dictionary<{{PrimaryKeyType}}, {{BeanClassName}}>();
+
+		//public override List<{{BeanClassName}}> getList()
+		public override IList getList()
+		{
+			return list;
+		}
+
+		//public override Dictionary<{{PrimaryKeyType}}, {{BeanClassName}}> getMap()
+		public override IDictionary getMap()
+		{
+			return map;
+		}
+		
+		public Type BinType = typeof({{BeanClassName}});
+
+		public override void loadDataFromBin()
+		{    
+			map.Clear();
+			list.Clear();
+			Loaded = true;
+			
+			byte[] data = ConfigManager.Singleton.GetData("{{BeanClassName}}");
+			if(data != null)
+			{
+				try
+				{
+					int offset = 0;
+					//filed count£¨int£©+ field type£¨byte£©(0:int 1:long 2:string 3:float)
+					offset = {{ContentStartOffset}};  
+					while (data.Length > offset)
+					{
+						{{BeanClassName}} bean = new {{BeanClassName}}();
+						bean.LoadData(data, ref offset);
+						list.Add(bean);
+						if(!map.ContainsKey(bean.t_id))
+							map.Add(bean.t_id, bean);
+						else
+							Debuger.Err("Exist duplicate Key: " + bean.t_id + " {{BeanClassName}}");
+					}
+				}
+				catch (Exception ex)
+				{
+					Debuger.Err("import data error: {{BeanClassName}} >>" + ex.ToString());
+				}
+			}
+			else
+			{
+				Debuger.Err("can not find conf data: {{BeanClassName}}.bytes");
+			}
+		}
+		
+	}
+}
+
+

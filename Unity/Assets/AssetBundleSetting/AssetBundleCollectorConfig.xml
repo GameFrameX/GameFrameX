@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root Version="2.2">
+  <Common UniqueBundleName="False" ShowPackageView="True" ShowEditorAlias="False" />
+  <Package PackageName="DefaultPackage" PackageDesc="">
+    <Group GroupName="Config" GroupDesc="" AssetTags="">
+      <Collector CollectPath="Assets/Bundles/Config" CollectGUID="c9f4f21a25a31d840af71a381db88c51" CollectType="StaticAssetCollector" AddressRule="AddressByFileName" PackRule="PackDirectory" FilterRule="CollectAll" AssetTags="" />
+    </Group>
+  </Package>
+</root>

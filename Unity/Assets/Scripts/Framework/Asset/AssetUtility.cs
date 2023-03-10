@@ -1,0 +1,19 @@
+﻿namespace Framework.Asset
+{
+    /// <summary>
+    /// AB实用函数集，主要是路径拼接
+    /// </summary>
+    public static class AssetUtility
+    {
+        /// <summary>
+        /// 获取配置文件路径
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        public static string GetConfigPath(string fileName, string extension = ".bytes")
+        {
+            return $"Assets/Bundles/Config/{fileName}{extension}";
+        }
+    }
+}

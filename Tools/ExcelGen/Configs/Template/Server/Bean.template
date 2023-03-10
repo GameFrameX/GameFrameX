@@ -1,0 +1,36 @@
+﻿/**
+ * Auto generated, do not edit it client
+ */
+using Geek.Server.Config;
+using MessagePack;
+using System.Collections.Generic;
+
+namespace Geek.Server.Config
+{
+	///<summary>{{SheetNameDesc}}</summary> 
+    public class {{BeanClassName}} : BaseBin
+    {
+        {%- for field in Fields -%}
+        {%- if field.Datatype == "textmult" -%}  
+        public int m_{{field.Name}};
+		///<summary>{{field.Desc}}</summary> 
+        public string {{field.name}}
+		{
+			get           
+			{
+				if(m_{{field.Name}} == 0) 
+					return "";
+				t_languageBean lanBean = ConfigBean.GetBean<t_languageBean, int>(m_{{field.Name}});
+				if (lanBean != null)
+					return lanBean.t_content;
+				else
+					return m_{{field.Name}}.ToString();
+			}
+		}
+        {%- else -%}
+		///<summary>{{field.Desc}}</summary> 
+        public {{field.Datatype}} {{field.Name}};
+		{%- endif -%}
+        {%- endfor -%} 
+    }
+}

@@ -1,0 +1,183 @@
+/**
+ * Auto generated, do not edit it client
+ */
+using Base;
+using System;
+using Data.Beans;
+using Data.Containers;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace Data.Containers
+{
+	public class GameDataManager
+	{
+		public static readonly GameDataManager Instance = new GameDataManager();
+		{%- for container in containers -%}
+        public {{container}} {{container}} = new {{container}}();
+        {%- endfor -%}
+		//@%@%@
+		private GameDataManager()
+		{
+			{%- for container in containers -%}
+			t_containerMap.Add({{container}}.BinType, {{container}});
+			{%- endfor -%}
+			//@#@#@
+		}
+		
+		public void LoadAll(bool forceReload = false)
+		{
+			{%- for container in containers -%}
+			LoadOneBean({{container}}.BinType, forceReload);
+			{%- endfor -%}
+			//@*@*@
+		}
+		
+		//bin -- container dictionary
+		private Dictionary<Type, BaseContainer> t_containerMap = new Dictionary<Type, BaseContainer>();
+		
+		public T GetBin<T, K>(K key, bool ignoreErrLog) where T : BaseBin
+		{
+			Type t = typeof(T);
+			LoadOneBean(t);
+			if(t_containerMap.ContainsKey(t))
+			{
+				var t_container = t_containerMap[t];
+				Dictionary<K, T> map = t_container.getMap() as Dictionary<K, T>;
+				if(map != null && map.ContainsKey(key))
+					return map[key];
+				//UnityEngine.Debug.LogError("T,K get > " + t.Name + "," + typeof(K).Name + " should be > " + t_container.getMap());
+			}
+			if(false == ignoreErrLog)
+				Debuger.Err("can not find Bin > " + t.Name + " id > " + key);
+			return null;
+		}
+		
+		public List<T> GetBinList<T>() where T : BaseBin
+		{
+			Type t = typeof(T);
+			LoadOneBean(t);
+			if(t_containerMap.ContainsKey(t))
+			{
+				var t_container = t_containerMap[t];
+				List<T> list = t_container.getList() as List<T>;
+				if(list != null)
+					return list;
+				Debuger.Err("can not find Bin > " + t.Name);
+			}
+			Debuger.Err("can not find Bin > " + t.Name);
+			return null;
+		}
+		
+		public Dictionary<K, T> GetBinMap<T, K>() where T : BaseBin
+		{
+			Type t = typeof(T);
+			LoadOneBean(t);
+			if(t_containerMap.ContainsKey(t))
+			{
+				var t_container = t_containerMap[t];
+				Dictionary<K, T> map = t_container.getMap() as Dictionary<K, T>;
+				if(map != null)
+					return map;
+				Debuger.Err("T,K get > " + t.Name + "," + typeof(K).Name + " should be > " + t_container.getMap());
+			}
+			return null;
+		}
+		
+		public void LoadOneBean<T>(bool forceReload = false) where T : BaseBin
+        {
+			Type t = typeof(T);
+			LoadOneBean(t, forceReload);
+        }
+		
+		public void LoadOneBean(Type t, bool forceReload = false)
+		{
+            if (t_containerMap.ContainsKey(t))
+            {
+                if (!t_containerMap[t].Loaded || forceReload)
+                {
+					t_containerMap[t].loadDataFromBin();
+				}
+            }
+		}
+	}
+	
+	public class BaseContainer
+	{
+		public bool Loaded { get; protected set; }
+		public virtual IList getList()
+		{
+			return null;
+		}
+		
+		public virtual IDictionary getMap()
+		{
+			return null;
+		}
+		
+		public virtual void loadDataFromBin()
+		{
+		
+		}
+	}
+	
+	public class BaseBin
+	{
+	}
+}
+
+public class ConfigBean
+{
+	public static bool IsServer;
+	/// <summary>
+	///T -----> Bean
+	///K -----> id type (int/string)
+	/// </summary>
+    public static T GetBean<T, K>(K id, bool ignoreErrLog = false) where T : BaseBin
+    {
+        return GameDataManager.Instance.GetBin<T, K>(id, ignoreErrLog);
+    }
+	
+	/// <summary>
+	/// Get Table Data By List
+	/// </summary>
+    public static List<T> GetBeanList<T>() where T : BaseBin
+    {
+        return GameDataManager.Instance.GetBinList<T>();
+    }
+	
+	/// <summary>
+	/// Get Table Data By Map 
+	/// </summary>
+	public static Dictionary<K, T> GetBeanMap<T, K>() where T : BaseBin
+    {
+        return GameDataManager.Instance.GetBinMap<T, K>();
+    }
+}
+
+public static class ConfigExtension
+{
+	public static string GetItsLanaugeStr(this int id)
+	{
+		var bean = ConfigBean.GetBean<t_languageBean, int>(id);
+		if(bean != null)
+			return bean.t_content;
+		return id.ToString();
+	}
+	
+	public static string GetItsGlobalStr(this int id)
+	{
+		var bean = ConfigBean.GetBean<t_globalBean, int>(id);
+		if(bean != null)
+			return bean.t_string_param;
+		return "";
+	}
+	
+	public static int GetItsGlobalInt(this int id)
+	{
+		var bean = ConfigBean.GetBean<t_globalBean, int>(id);
+		if(bean != null)
+			return bean.t_int_param;
+		return 0;
+	}
+}

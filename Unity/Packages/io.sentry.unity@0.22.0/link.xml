@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<linker>
+    <assembly fullname="Sentry" preserve="all"/>
+    <assembly fullname="Sentry.Unity" preserve="all"/>
+    <assembly fullname="Sentry.Unity.Android" preserve="all"/>
+    <assembly fullname="Sentry.Unity.iOS" preserve="all"/>
+    <assembly fullname="Sentry.Unity.Native" preserve="all"/>
+    <assembly fullname="Sentry.Android" preserve="all"/>
+    <assembly fullname="Sentry.iOS" preserve="all"/>
+</linker>
