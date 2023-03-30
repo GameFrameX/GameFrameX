@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="2160,1080" designImage="ui://f011l0h9nmd08" designImageOffsetY="9" designImageAlpha="0" designImageLayer="1">
+  <displayList>
+    <graph id="n31_xsvi" name="MaskLayer" xy="-1420,-1960" pivot="0.5,0.5" size="5000,5000" alpha="0.4" type="rect" lineSize="0" fillColor="#02000000">
+      <relation target="" sidePair="width-width,height-height,center-center%,middle-middle%"/>
+    </graph>
+    <image id="n24_nmd0" name="n24" src="ghno31" fileName="Background/UI_bg_Pop-ups.png" pkg="f59y7iy8" xy="1080,540" pivot="0.5,0.5" anchor="true" size="972,767"/>
+    <component id="n14_nmd0" name="BackBtn" src="p5slk" fileName="Scene/UISetting_BtnLanauage.xml" pkg="e9ew8fm5" xy="700,765" size="240,125">
+      <Button title="返回" titleFontSize="45"/>
+    </component>
+    <component id="n15_nmd0" name="RegistBtn" src="p5sl3n" fileName="Buttons/UIButtonBase6.xml" pkg="s1h25l7x" xy="1018,764">
+      <Button title="注册"/>
+    </component>
+    <graph id="n16_nmd0" name="n16" xy="698,362" size="767,97" type="rect" lineSize="0" fillColor="#ff1e1d1b" corner="3"/>
+    <text id="n17_nmd0" name="Inputname" xy="717,380" size="668,59" font="ui://f59y7iy8ghno32" fontSize="44" color="#ffffff" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" text="" input="true" prompt="点击输入"/>
+    <graph id="n18_nmd0" name="n18" xy="698,546" size="767,97" type="rect" lineSize="0" fillColor="#ff1e1d1b" corner="3"/>
+    <text id="n19_nmd0" name="InputPassword" xy="717,564" size="668,59" font="ui://f59y7iy8ghno32" fontSize="44" color="#ffffff" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" text="" input="true" prompt="点击输入"/>
+    <text id="n20_nmd0" name="n20" xy="699,306" size="129,56" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="账户名"/>
+    <text id="n21_nmd0" name="n21" xy="699,490" size="87,56" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="密码"/>
+    <text id="n28_xsvi" name="ErrorAccountText" xy="701,462" pivot="1,0" size="764,39" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="right" leading="0" letterSpacing="-1" autoSize="height" text="账号至少6位,且由 _@!$% 、大小写字母、数字组成"/>
+    <text id="n29_xsvi" name="ErrorPassText" xy="701,645" pivot="1,0" size="764,73" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="right" leading="0" letterSpacing="-1" autoSize="height" text="账号至少6位,且由 _@!$% 、大小写字母、数字组成账号至少6位,且由 _@!$% 、大小写字母、数字组成"/>
+    <text id="n30_xsvi" name="ErrorText" xy="1055,297" pivot="1,0" size="410,46" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="right" letterSpacing="-1" autoSize="none" text="密码错误！"/>
+    <text id="n32_ts7x" name="n23" xy="1080,206" pivot="0.5,0.5" anchor="true" size="252,66" font="ui://f59y7iy8ghno32" fontSize="50" color="#e1c399" align="center" text="注册新账号">
+      <relation target="" sidePair="center-center"/>
+    </text>
+  </displayList>
+</component>

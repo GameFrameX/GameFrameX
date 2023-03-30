@@ -15,9 +15,9 @@ namespace Cysharp.Threading.Tasks.Linq
         }
     }
 
-    internal static class ToArray
+    public static class ToArray
     {
-        internal static async UniTask<TSource[]> ToArrayAsync<TSource>(IUniTaskAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
+        public static async UniTask<TSource[]> ToArrayAsync<TSource>(IUniTaskAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
             var pool = ArrayPool<TSource>.Shared;
             var array = pool.Rent(16);

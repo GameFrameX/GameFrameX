@@ -6,10 +6,10 @@ using System.Runtime.CompilerServices;
 
 namespace Cysharp.Threading.Tasks.Internal
 {
-    internal static class ArrayPoolUtil
+    public static class ArrayPoolUtil
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void EnsureCapacity<T>(ref T[] array, int index, ArrayPool<T> pool)
+        public static void EnsureCapacity<T>(ref T[] array, int index, ArrayPool<T> pool)
         {
             if (array.Length <= index)
             {

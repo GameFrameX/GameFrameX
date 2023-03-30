@@ -1,0 +1,38 @@
+{
+  "font": "ui://f59y7iy8udcb2",
+  "fontSize": 30,
+  "textColor": "#000000",
+  "fontAdjustment": false,
+  "colorScheme": [
+    "深灰色 #3c3c3c",
+    "深黑 #101010",
+    "纯白 #FFFFFF",
+    "标题白 #d6ecff",
+    "黑棕色 #241d18",
+    "深红 #7F2D29",
+    "灰棕色 #5b453c",
+    "草绿色 #52753C",
+    "浅绿色 #A4CE8A",
+    "浅红 #f56236",
+    "弹窗正文色 #BBB8B3",
+    "弹窗标题色 #E1C399"
+  ],
+  "fontSizeScheme": [
+    "主标题 72",
+    "中弹窗标题大小 38",
+    "弹窗说明字体大小 35",
+    "说明字体大小 28"
+  ],
+  "fontScheme": [
+    "默认数字字体 ui://f59y7iy8rlr0az"
+  ],
+  "scrollBars": {
+    "horizontal": "",
+    "vertical": "ui://s1h25l7xwnkvf",
+    "defaultDisplay": "visible"
+  },
+  "tipsRes": "ui://t2ic63zdoky1x",
+  "buttonClickSound": "",
+  "pivot": "default",
+  "fileName": "Common"
+}

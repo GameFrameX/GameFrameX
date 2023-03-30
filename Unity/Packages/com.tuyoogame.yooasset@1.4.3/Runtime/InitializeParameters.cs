@@ -28,7 +28,7 @@
     {
         /// <summary>
         /// 资源定位地址大小写不敏感
-        /// 注意：默认值为False
+        /// 注意：默认值为true
         /// </summary>
         public bool LocationToLower = true;
 

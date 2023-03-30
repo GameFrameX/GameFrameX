@@ -1,0 +1,21 @@
+{
+    "name": "Animancer",
+    "references": [
+        "Animancer.FSM"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.2d.sprite",
+            "expression": "",
+            "define": "UNITY_2D_SPRITE"
+        }
+    ],
+    "noEngineReferences": false
+}

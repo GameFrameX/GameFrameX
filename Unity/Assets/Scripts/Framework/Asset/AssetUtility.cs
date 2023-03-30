@@ -15,5 +15,16 @@
         {
             return $"Assets/Bundles/Config/{fileName}{extension}";
         }
+
+        /// <summary>
+        /// 获取代码文件路径
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        public static string GetCodePath(string fileName, string extension = ".bytes")
+        {
+            return $"Assets/Bundles/Code/{fileName}{extension}";
+        }
     }
 }

@@ -9,3 +9,8 @@ Server/database
 Server/bin
 Server/**/obj
 Unity/*.csproj
+FairyGUIProject/.objs
+FairyGUIProject/plugins/.idea
+Unity/Sandbox
+Unity/Temp
+Unity/Assets/Bundles/Code

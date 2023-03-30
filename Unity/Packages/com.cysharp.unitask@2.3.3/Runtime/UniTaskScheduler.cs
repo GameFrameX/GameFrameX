@@ -38,7 +38,7 @@ namespace Cysharp.Threading.Tasks
         }
 #endif
 
-        internal static void PublishUnobservedTaskException(Exception ex)
+        public static void PublishUnobservedTaskException(Exception ex)
         {
             if (ex != null)
             {

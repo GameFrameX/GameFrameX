@@ -1,0 +1,23 @@
+{
+  "name": "com.arongranberg.animancer",
+  "displayName": "Animancer",
+  "category": "Animancer",
+  "description": "",
+  "version": "7.4.2",
+  "unity": "2017.1",
+  "keywords": [
+    "Animancer"
+  ],
+  "samples": [
+    {
+      "displayName": "Samples",
+      "description": "Samples",
+      "path": "Samples~/Samples"
+    }
+  ],
+  "author": {
+    "name": "Aron Granberg",
+    "email": "aron.granberg@gmail.com",
+    "url": "https://assetstore.unity.com/publishers/628"
+  }
+}

@@ -1,0 +1,1 @@
+The plugin's license falls under the Unity Asset Store EULA that can be found here under Appendix 1: https://unity3d.com/legal/as_terms

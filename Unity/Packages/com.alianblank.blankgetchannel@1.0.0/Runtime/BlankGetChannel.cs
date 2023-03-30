@@ -8,7 +8,7 @@ using UnityEngine;
 /// 获取渠道名称
 /// Android:
 ///         需要在主启动的Activity 中添加
-/// <meta-data android:name="appchannel" android:value="android_cn_yyyl" />
+/// <meta-data android:name="channel" android:value="android_cn_taptap" />
 ///
 /// iOS :
 ///         需要在Info.plist中添加
@@ -26,7 +26,7 @@ public sealed class BlankGetChannel
     /// <summary>
     /// 获取渠道值
     /// </summary>
-    public static string GetChannelName(string channelKey)
+    public static string GetChannelName(string channelKey = "channel")
     {
         string channelName = "unknown";
 #if UNITY_STANDALONE || UNITY_EDITOR

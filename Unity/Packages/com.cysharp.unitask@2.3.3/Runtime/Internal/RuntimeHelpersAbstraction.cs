@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Cysharp.Threading.Tasks.Internal
 {
-    internal static class RuntimeHelpersAbstraction
+    public static class RuntimeHelpersAbstraction
     {
         // If we can use RuntimeHelpers.IsReferenceOrContainsReferences(.NET Core 2.0), use it.
         public static bool IsWellKnownNoReferenceContainsType<T>()

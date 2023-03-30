@@ -119,7 +119,7 @@ namespace FairyGUI
         /// Display a window.
         /// </summary>
         /// <param name="win"></param>
-        public void ShowWindow(Window win)
+        public void ShowWindow(GWindow win)
         {
             AddChild(win);
             AdjustModalLayer();
@@ -130,7 +130,7 @@ namespace FairyGUI
         /// 关闭一个窗口。将调用Window.Hide方法。
         /// </summary>
         /// <param name="win"></param>
-        public void HideWindow(Window win)
+        public void HideWindow(GWindow win)
         {
             win.Hide();
         }
@@ -140,7 +140,7 @@ namespace FairyGUI
         ///立刻关闭一个窗口。不会调用Window.Hide方法，Window.OnHide也不会被调用。
         /// </summary>
         /// <param name="win"></param>
-        public void HideWindowImmediately(Window win)
+        public void HideWindowImmediately(GWindow win)
         {
             HideWindowImmediately(win, false);
         }
@@ -151,7 +151,7 @@ namespace FairyGUI
         /// </summary>
         /// <param name="win"></param>
         /// <param name="dispose">True to dispose the window.</param>
-        public void HideWindowImmediately(Window win, bool dispose)
+        public void HideWindowImmediately(GWindow win, bool dispose)
         {
             if (win.parent == this)
                 RemoveChild(win, dispose);
@@ -165,7 +165,7 @@ namespace FairyGUI
         /// 将一个窗口提到所有窗口的最前面
         /// </summary>
         /// <param name="win"></param>
-        public void BringToFront(Window win)
+        public void BringToFront(GWindow win)
         {
             int cnt = this.numChildren;
             int i;
@@ -179,7 +179,7 @@ namespace FairyGUI
                 GObject g = GetChildAt(i);
                 if (g == win)
                     return;
-                if (g is Window)
+                if (g is GWindow)
                     break;
             }
 
@@ -225,8 +225,8 @@ namespace FairyGUI
             GObject[] arr = _children.ToArray();
             foreach (GObject g in arr)
             {
-                if ((g is Window) && !(g as Window).modal)
-                    HideWindowImmediately(g as Window);
+                if ((g is GWindow) && !(g as GWindow).modal)
+                    HideWindowImmediately(g as GWindow);
             }
         }
 
@@ -238,8 +238,8 @@ namespace FairyGUI
             GObject[] arr = _children.ToArray();
             foreach (GObject g in arr)
             {
-                if (g is Window)
-                    HideWindowImmediately(g as Window);
+                if (g is GWindow)
+                    HideWindowImmediately(g as GWindow);
             }
         }
 
@@ -247,15 +247,15 @@ namespace FairyGUI
         /// Get window on top.
         /// </summary>
         /// <returns></returns>
-        public Window GetTopWindow()
+        public GWindow GetTopWindow()
         {
             int cnt = this.numChildren;
             for (int i = cnt - 1; i >= 0; i--)
             {
                 GObject g = this.GetChildAt(i);
-                if (g is Window)
+                if (g is GWindow)
                 {
-                    return (Window)(g);
+                    return (GWindow)(g);
                 }
             }
 
@@ -345,7 +345,7 @@ namespace FairyGUI
             for (int i = cnt - 1; i >= 0; i--)
             {
                 GObject g = this.GetChildAt(i);
-                if ((g is Window) && (g as Window).modal)
+                if ((g is GWindow) && (g as GWindow).modal)
                 {
                     if (_modalLayer.parent == null)
                         AddChildAt(_modalLayer, i);
@@ -454,7 +454,7 @@ namespace FairyGUI
             AddChild(popup);
             AdjustModalLayer();
 
-            if ((popup is Window) && target == null && dir == PopupDirection.Auto)
+            if ((popup is GWindow) && target == null && dir == PopupDirection.Auto)
                 return;
 
             Vector2 pos = GetPoupPosition(popup, target, dir);
@@ -610,8 +610,8 @@ namespace FairyGUI
         {
             if (target.parent != null)
             {
-                if (target is Window)
-                    ((Window)target).Hide();
+                if (target is GWindow)
+                    ((GWindow)target).Hide();
                 else
                     RemoveChild(target);
             }

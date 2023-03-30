@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="368,45">
+  <displayList>
+    <graph id="n2_lik5" name="n0" xy="0,0" size="368,45" type="rect" lineSize="0" fillColor="#ff666666">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <image id="n4_pfij" name="n4" src="pfijs1x" fileName="Background/UI_bg_typeframe.png" pkg="f59y7iy8" xy="1,-2" size="366,47">
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <text id="n3_lik5" name="InputText" xy="13,1" size="342,42" fontSize="30" color="#ffffff" vAlign="middle" autoSize="none" singleLine="true" text="" input="true" prompt="账号" maxLength="12" restrict="[1-9]|[a-z]|[A-Z]|@|!|#" keyboardType="1">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+  <customProperty target="InputText" propertyId="0" label="555"/>
+</component>

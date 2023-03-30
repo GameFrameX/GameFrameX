@@ -1,0 +1,11 @@
+{
+  "name": "com.gameanalytics.gameanalytics",
+  "displayName": "GameAnalytics Unity SDK",
+  "category": "GameAnalytics",
+  "description": "GameAnalytics Unity SDK",
+  "version": "1.0.0",
+  "unity": "2017.1",
+  "keywords": [
+    "GameAnalytics"
+  ]
+}

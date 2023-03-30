@@ -7,7 +7,7 @@ namespace Cysharp.Threading.Tasks.Internal
 {
     // Same interface as System.Buffers.ArrayPool<T> but only provides Shared.
 
-    internal sealed class ArrayPool<T>
+    public sealed class ArrayPool<T>
     {
         // Same size as System.Buffers.DefaultArrayPool<T>
         const int DefaultMaxNumberOfArraysPerBucket = 50;

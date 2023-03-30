@@ -1,0 +1,18 @@
+{
+  "name": "com.benedicht.besthttp",
+  "displayName": "Best HTTP",
+  "category": "Best HTTP",
+  "description": "",
+  "version": "2.6.1",
+  "unity": "2017.1",
+  "keywords": [
+    "Best HTTP"
+  ],
+  "samples": [
+    {
+      "displayName": "Samples",
+      "description": "Samples",
+      "path": "Samples~/Samples"
+    }
+  ]
+}

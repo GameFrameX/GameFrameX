@@ -1,0 +1,58 @@
+#if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
+#pragma warning disable
+using System;
+
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
+
+namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Crmf
+{
+    public class CertReqMessages
+        : Asn1Encodable
+    {
+        private readonly Asn1Sequence content;
+
+        private CertReqMessages(Asn1Sequence seq)
+        {
+            content = seq;
+        }
+
+        public static CertReqMessages GetInstance(object obj)
+        {
+            if (obj is CertReqMessages)
+                return (CertReqMessages)obj;
+
+            if (obj is Asn1Sequence)
+                return new CertReqMessages((Asn1Sequence)obj);
+
+            throw new ArgumentException("Invalid object: " + BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.GetTypeName(obj), "obj");
+        }
+
+		public CertReqMessages(params CertReqMsg[] msgs)
+        {
+            content = new DerSequence(msgs);
+        }
+
+        public virtual CertReqMsg[] ToCertReqMsgArray()
+        {
+            CertReqMsg[] result = new CertReqMsg[content.Count];
+            for (int i = 0; i != result.Length; ++i)
+            {
+                result[i] = CertReqMsg.GetInstance(content[i]);
+            }
+            return result;
+        }
+
+        /**
+         * <pre>
+         * CertReqMessages ::= SEQUENCE SIZE (1..MAX) OF CertReqMsg
+         * </pre>
+         * @return a basic ASN.1 object representation.
+         */
+        public override Asn1Object ToAsn1Object()
+        {
+            return content;
+        }
+    }
+}
+#pragma warning restore
+#endif

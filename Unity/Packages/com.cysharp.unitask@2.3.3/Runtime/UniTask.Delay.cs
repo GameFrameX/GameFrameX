@@ -13,8 +13,10 @@ namespace Cysharp.Threading.Tasks
     {
         /// <summary>use Time.deltaTime.</summary>
         DeltaTime,
+
         /// <summary>Ignore timescale, use Time.unscaledDeltaTime.</summary>
         UnscaledDeltaTime,
+
         /// <summary>use Stopwatch.GetTimestamp().</summary>
         Realtime
     }
@@ -111,6 +113,11 @@ namespace Cysharp.Threading.Tasks
             return UniTask.Yield(PlayerLoopTiming.LastFixedUpdate, cancellationToken);
         }
 
+        public static UniTask DelayFrame()
+        {
+            return DelayFrame(1);
+        }
+
         public static UniTask DelayFrame(int delayFrameCount, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (delayFrameCount < 0)
@@ -157,18 +164,18 @@ namespace Cysharp.Threading.Tasks
             switch (delayType)
             {
                 case DelayType.UnscaledDeltaTime:
-                    {
-                        return new UniTask(DelayIgnoreTimeScalePromise.Create(delayTimeSpan, delayTiming, cancellationToken, out var token), token);
-                    }
+                {
+                    return new UniTask(DelayIgnoreTimeScalePromise.Create(delayTimeSpan, delayTiming, cancellationToken, out var token), token);
+                }
                 case DelayType.Realtime:
-                    {
-                        return new UniTask(DelayRealtimePromise.Create(delayTimeSpan, delayTiming, cancellationToken, out var token), token);
-                    }
+                {
+                    return new UniTask(DelayRealtimePromise.Create(delayTimeSpan, delayTiming, cancellationToken, out var token), token);
+                }
                 case DelayType.DeltaTime:
                 default:
-                    {
-                        return new UniTask(DelayPromise.Create(delayTimeSpan, delayTiming, cancellationToken, out var token), token);
-                    }
+                {
+                    return new UniTask(DelayPromise.Create(delayTimeSpan, delayTiming, cancellationToken, out var token), token);
+                }
             }
         }
 
@@ -626,7 +633,7 @@ namespace Cysharp.Threading.Tasks
                 }
 
                 result.elapsed = 0.0f;
-                result.delayTimeSpan = (float)delayTimeSpan.TotalSeconds;
+                result.delayTimeSpan = (float) delayTimeSpan.TotalSeconds;
                 result.cancellationToken = cancellationToken;
                 result.initialFrame = PlayerLoopHelper.IsMainThread ? Time.frameCount : -1;
 
@@ -737,7 +744,7 @@ namespace Cysharp.Threading.Tasks
                 }
 
                 result.elapsed = 0.0f;
-                result.delayFrameTimeSpan = (float)delayFrameTimeSpan.TotalSeconds;
+                result.delayFrameTimeSpan = (float) delayFrameTimeSpan.TotalSeconds;
                 result.initialFrame = PlayerLoopHelper.IsMainThread ? Time.frameCount : -1;
                 result.cancellationToken = cancellationToken;
 
@@ -949,7 +956,9 @@ namespace Cysharp.Threading.Tasks
 
             public bool IsCompleted => false;
 
-            public void GetResult() { }
+            public void GetResult()
+            {
+            }
 
             public void OnCompleted(Action continuation)
             {

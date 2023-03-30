@@ -487,7 +487,7 @@ namespace Cysharp.Threading.Tasks
         }
     }
 
-    internal static class CompletedTasks
+    public static class CompletedTasks
     {
         public static readonly UniTask<AsyncUnit> AsyncUnit = UniTask.FromResult(Cysharp.Threading.Tasks.AsyncUnit.Default);
         public static readonly UniTask<bool> True = UniTask.FromResult(true);

@@ -1,8 +1,7 @@
 {
-    "name": "Fairygui.Editor",
-    "rootNamespace": "",
+    "name": "FairyGUI.Editor",
     "references": [
-        "Fairygui.Runtime"
+        "FairyGUI.Runtime"
     ],
     "includePlatforms": [
         "Editor"

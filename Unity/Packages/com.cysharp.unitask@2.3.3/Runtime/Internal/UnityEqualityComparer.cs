@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Cysharp.Threading.Tasks.Internal
 {
-    internal static class UnityEqualityComparer
+    public static class UnityEqualityComparer
     {
         public static readonly IEqualityComparer<Vector2> Vector2 = new Vector2EqualityComparer();
         public static readonly IEqualityComparer<Vector3> Vector3 = new Vector3EqualityComparer();

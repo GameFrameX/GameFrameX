@@ -31,13 +31,13 @@ MonoBehaviour:
         PackRuleName: PackRawFile
         FilterRuleName: CollectAll
         AssetTags: 
-    - GroupName: UI
-      GroupDesc: 
-      AssetTags: 
+    - GroupName: Code
+      GroupDesc: "\u70ED\u66F4\u65B0\u903B\u8F91\u4EE3\u7801"
+      AssetTags: code
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Resources
-        CollectorGUID: d3b01df678ea57848b0706f55cc2179f
+      - CollectPath: Assets/Bundles/Code
+        CollectorGUID: fb2b5b6715f0e28419ebca2b4df07bcd
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

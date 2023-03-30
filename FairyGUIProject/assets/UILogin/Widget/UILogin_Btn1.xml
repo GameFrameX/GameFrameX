@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="480,128" extention="Button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <image id="n0_p5sl" name="n0" src="p2crfsew" fileName="Button/UI_icon_btn_brown.png" pkg="aawaa8ms" xy="0,0">
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <text id="n2_p5sl" name="title" xy="188,31" pivot="0.5,0.5" size="103,66" font="ui://f59y7iy8ghno32" fontSize="50" color="#f7f3ec" align="center" vAlign="middle" shadowColor="#000000" shadowOffset="0,2" singleLine="true" text="登录">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </text>
+  </displayList>
+  <Button downEffect="dark" downEffectValue=".8"/>
+</component>

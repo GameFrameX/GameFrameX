@@ -1,0 +1,54 @@
+#if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
+#pragma warning disable
+using System;
+
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs;
+
+namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Pkcs
+{
+	public class Pkcs12StoreBuilder
+	{
+		private DerObjectIdentifier	keyAlgorithm = PkcsObjectIdentifiers.PbeWithShaAnd3KeyTripleDesCbc;
+		private DerObjectIdentifier	certAlgorithm = PkcsObjectIdentifiers.PbewithShaAnd40BitRC2Cbc;
+		private DerObjectIdentifier keyPrfAlgorithm = null;
+		private DerObjectIdentifier certPrfAlgorithm = null;
+		private bool useDerEncoding = false;
+
+		public Pkcs12StoreBuilder()
+		{
+		}
+
+		public Pkcs12Store Build()
+		{
+			return new Pkcs12Store(keyAlgorithm, keyPrfAlgorithm, certAlgorithm, certPrfAlgorithm, useDerEncoding);
+		}
+
+		public Pkcs12StoreBuilder SetCertAlgorithm(DerObjectIdentifier certAlgorithm)
+		{
+			this.certAlgorithm = certAlgorithm;
+			return this;
+		}
+
+		public Pkcs12StoreBuilder SetKeyAlgorithm(DerObjectIdentifier keyAlgorithm)
+		{
+			this.keyAlgorithm = keyAlgorithm;
+			return this;
+		}
+
+		// Specify a PKCS#5 Scheme 2 encryption for keys
+		public Pkcs12StoreBuilder SetKeyAlgorithm(DerObjectIdentifier keyAlgorithm, DerObjectIdentifier keyPrfAlgorithm)
+		{
+			this.keyAlgorithm = keyAlgorithm;
+			this.keyPrfAlgorithm = keyPrfAlgorithm;
+			return this;
+		}
+		public Pkcs12StoreBuilder SetUseDerEncoding(bool useDerEncoding)
+		{
+			this.useDerEncoding = useDerEncoding;
+			return this;
+		}
+	}
+}
+#pragma warning restore
+#endif

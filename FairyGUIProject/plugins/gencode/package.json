@@ -1,0 +1,11 @@
+{
+  "name": "gencode",
+  "displayName": "代码生成",
+  "description": "",
+  "version": "1.0",
+  "author": {
+    "name": "AlianBlank.com"
+  },
+  "icon": "",
+  "main": "main.lua"
+}

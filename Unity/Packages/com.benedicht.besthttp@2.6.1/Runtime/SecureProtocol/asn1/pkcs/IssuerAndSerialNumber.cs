@@ -1,0 +1,76 @@
+#if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
+#pragma warning disable
+using System;
+
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.X509;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Math;
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
+
+namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Asn1.Pkcs
+{
+    public class IssuerAndSerialNumber
+        : Asn1Encodable
+    {
+        private readonly X509Name name;
+        private readonly DerInteger certSerialNumber;
+
+		public static IssuerAndSerialNumber GetInstance(
+            object obj)
+        {
+            if (obj is IssuerAndSerialNumber)
+            {
+                return (IssuerAndSerialNumber) obj;
+            }
+
+			if (obj is Asn1Sequence)
+            {
+                return new IssuerAndSerialNumber((Asn1Sequence) obj);
+            }
+
+			throw new ArgumentException("Unknown object in factory: " + BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities.Platform.GetTypeName(obj), "obj");
+		}
+
+		private IssuerAndSerialNumber(
+            Asn1Sequence seq)
+        {
+			if (seq.Count != 2)
+				throw new ArgumentException("Wrong number of elements in sequence", "seq");
+
+			this.name = X509Name.GetInstance(seq[0]);
+            this.certSerialNumber = DerInteger.GetInstance(seq[1]);
+        }
+
+		public IssuerAndSerialNumber(
+            X509Name	name,
+            BigInteger	certSerialNumber)
+        {
+            this.name = name;
+            this.certSerialNumber = new DerInteger(certSerialNumber);
+        }
+
+		public IssuerAndSerialNumber(
+            X509Name	name,
+            DerInteger	certSerialNumber)
+        {
+            this.name = name;
+            this.certSerialNumber = certSerialNumber;
+        }
+
+		public X509Name Name
+		{
+			get { return name; }
+		}
+
+		public DerInteger CertificateSerialNumber
+		{
+			get { return certSerialNumber; }
+		}
+
+		public override Asn1Object ToAsn1Object()
+        {
+			return new DerSequence(name, certSerialNumber);
+        }
+    }
+}
+#pragma warning restore
+#endif

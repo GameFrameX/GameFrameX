@@ -1,0 +1,44 @@
+#if !BESTHTTP_DISABLE_ALTERNATE_SSL && (!UNITY_WEBGL || UNITY_EDITOR)
+#pragma warning disable
+using System;
+
+using BestHTTP.SecureProtocol.Org.BouncyCastle.Utilities;
+
+namespace BestHTTP.SecureProtocol.Org.BouncyCastle.Crypto.Parameters
+{
+    public class ParametersWithIV
+        : ICipherParameters
+    {
+        private readonly ICipherParameters parameters;
+        private readonly byte[] iv;
+
+        public ParametersWithIV(ICipherParameters parameters,
+            byte[] iv)
+            : this(parameters, iv, 0, iv.Length)
+        {
+        }
+
+        public ParametersWithIV(ICipherParameters parameters,
+            byte[] iv, int ivOff, int ivLen)
+        {
+            // NOTE: 'parameters' may be null to imply key re-use
+            if (iv == null)
+                throw new ArgumentNullException("iv");
+
+            this.parameters = parameters;
+            this.iv = Arrays.CopyOfRange(iv, ivOff, ivOff + ivLen);
+        }
+
+        public byte[] GetIV()
+        {
+            return (byte[])iv.Clone();
+        }
+
+        public ICipherParameters Parameters
+        {
+            get { return parameters; }
+        }
+    }
+}
+#pragma warning restore
+#endif

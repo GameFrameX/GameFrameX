@@ -587,8 +587,8 @@ namespace FairyGUI
 
             if (linkedPopup != null)
             {
-                if (linkedPopup is Window)
-                    ((Window)linkedPopup).ToggleStatus();
+                if (linkedPopup is GWindow)
+                    ((GWindow)linkedPopup).ToggleStatus();
                 else
                     this.root.TogglePopup(linkedPopup, this);
             }

@@ -1,0 +1,6 @@
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="com.google.android.instantapps:instantapps:1.1.0"/>
+        <androidPackage spec="com.google.android.gms:play-services-appset:16.0.2"/>
+    </androidPackages>
+</dependencies>

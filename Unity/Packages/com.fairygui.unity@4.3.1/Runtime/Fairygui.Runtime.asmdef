@@ -1,3 +1,17 @@
-﻿{
-  "name": "Fairygui.Runtime"
+{
+    "name": "FairyGUI.Runtime",
+    "references": [
+        "FarryGU.Extension.TextMeshPro",
+        "FarryGU.Extension.Spine",
+        "FairyGU.Extension.DragonBones"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

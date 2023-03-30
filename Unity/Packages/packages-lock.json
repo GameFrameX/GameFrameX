@@ -18,8 +18,26 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "com.arongranberg.animancer": {
+      "version": "file:com.arongranberg.animancer@7.4.2",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.benedicht.besthttp": {
+      "version": "file:com.benedicht.besthttp@2.6.1",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.cysharp.unitask": {
       "version": "file:com.cysharp.unitask@2.3.3",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.demigiant.dotween": {
+      "version": "file:com.demigiant.dotween@2.3.1",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
@@ -31,17 +49,62 @@
       "dependencies": {}
     },
     "com.focus-creative-games.hybridclr_unity": {
-      "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
+      "version": "file:com.focus-creative-games.hybridclr_unity@2.0.11",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "141ff18a7ea61403e7e9c372e2f6259ff2eba4ac"
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameanalytics.gameanalytics": {
+      "version": "file:com.gameanalytics.gameanalytics@1.0.0",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.google.protobuf": {
+      "version": "file:com.google.protobuf@22.2",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
     },
     "com.gwiazdorrr.betterstreamingassets": {
       "version": "file:com.gwiazdorrr.betterstreamingassets@1.6.0",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
+    },
+    "com.jiangyin.gameframework": {
+      "version": "file:com.jiangyin.gameframework@2021.5.31",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.jiangyin.unitygameframework": {
+      "version": "file:com.jiangyin.unitygameframework@2021.5.31",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      }
+    },
+    "com.jiangyin.unitygameframeworkextension": {
+      "version": "file:com.jiangyin.unitygameframeworkextension@2021.5.31",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      }
     },
     "com.neuecc.messagepack": {
       "version": "file:com.neuecc.messagepack@2.4.1",
@@ -100,37 +163,16 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.timeline": {
-      "version": "1.4.6",
+    "com.xincger.litjson": {
+      "version": "file:com.xincger.litjson@1.0.0",
       "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.director": "1.0.0",
-        "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
-        "com.unity.modules.particlesystem": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.ugui": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.modules.ui": "1.0.0",
-        "com.unity.modules.imgui": "1.0.0"
-      }
+      "source": "embedded",
+      "dependencies": {}
     },
     "io.sentry.unity": {
       "version": "file:io.sentry.unity@0.22.0",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
-    },
-    "com.unity.modules.ai": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
       "dependencies": {}
     },
     "com.unity.modules.androidjni": {
@@ -180,7 +222,7 @@
     },
     "com.unity.modules.jsonserialize": {
       "version": "1.0.0",
-      "depth": 0,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {}
     },
@@ -212,7 +254,7 @@
     },
     "com.unity.modules.ui": {
       "version": "1.0.0",
-      "depth": 0,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {}
     },
@@ -222,21 +264,6 @@
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.imgui": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      }
-    },
-    "com.unity.modules.umbra": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {}
-    },
-    "com.unity.modules.unityanalytics": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       }
     },
@@ -295,12 +322,6 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0"
       }
-    },
-    "com.unity.modules.wind": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {}
     }
   }
 }

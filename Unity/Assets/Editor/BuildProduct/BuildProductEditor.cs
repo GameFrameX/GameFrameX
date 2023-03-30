@@ -88,11 +88,11 @@ namespace Unity.Editor
             Debug.Log("AAB存储路径=>" + aabFilePath);
         }
 
-        static string GeneratorGradleByWrapper(string path)
+        static string GeneratorGradleByWrapper(string path, string extensionSuffix = ".bat")
         {
-            File.WriteAllText(path + "/build_init.bat", "gradle wrapper");
+            File.WriteAllText(path + "/build_init" + extensionSuffix, "gradle wrapper");
 
-            return path + "/build_init.bat";
+            return path + "/build_init" + extensionSuffix;
         }
 
         static string GeneratorGradlewByAssembleDebug(string path)
@@ -102,34 +102,46 @@ namespace Unity.Editor
             return path + "/build_debug.bat";
         }
 
-        static string GeneratorOutPutPathByDebug(string path)
+        static string GeneratorOutPutPathByDebug(string path, string extensionSuffix = ".bat")
         {
             string outputPath = GetOutPutPath(path, "debug");
 
-            File.WriteAllText(path + "/build_output_debug.bat",
+            File.WriteAllText(path + "/build_output_debug" + extensionSuffix,
                 $"start {outputPath}");
 
-            return path + "/build_output_debug.bat";
+            return path + "/build_output_debug" + extensionSuffix;
         }
 
-        static string GeneratorOutPutPathByRelease(string path)
+        static void GeneratorGradle(string outputPath)
+        {
+#if UNITY_EDITOR_WIN
+            string extensionSuffix = ".bat";
+#else
+            string extensionSuffix = ".sh";
+#endif
+            GeneratorGradleByWrapper(outputPath, extensionSuffix);
+            GeneratorGradlewByAssembleRelease(outputPath, extensionSuffix);
+            GeneratorOutPutPathByRelease(outputPath, extensionSuffix);
+        }
+
+        static string GeneratorOutPutPathByRelease(string path, string extensionSuffix = ".bat")
         {
             string outputPath = GetOutPutPath(path, "release");
 
-            File.WriteAllText(path + "/build_output_release.bat",
+            File.WriteAllText(path + "/build_output_release" + extensionSuffix,
                 $"start {outputPath}");
 
             return path + "/build_output_release.bat";
         }
 
-        static string GeneratorGradlewByAssembleRelease(string path)
+        static string GeneratorGradlewByAssembleRelease(string path, string extensionSuffix = ".bat")
         {
             string outputPath = GetOutPutPath(path, "release");
 
-            File.WriteAllText(path + "/build_release.bat",
+            File.WriteAllText(path + "/build_release" + extensionSuffix,
                 $"gradlew assembleRelease");
 
-            return path + "/build_release.bat";
+            return path + "/build_release" + extensionSuffix;
         }
 
         /// <summary>
@@ -159,9 +171,7 @@ namespace Unity.Editor
             BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, apkPath, BuildTarget.Android,
                 BuildOptions.None);
             Debug.Log(apkPath);
-            GeneratorGradleByWrapper(apkPath);
-            GeneratorGradlewByAssembleRelease(apkPath);
-            GeneratorOutPutPathByRelease(apkPath);
+            GeneratorGradle(apkPath);
             Debug.LogError("发布目录:" + apkPath);
         }
 
@@ -272,9 +282,7 @@ namespace Unity.Editor
                 BuildOptions.None);
             Debug.Log(apkPath);
 
-            GeneratorGradleByWrapper(apkPath);
-            GeneratorGradlewByAssembleDebug(apkPath);
-            GeneratorOutPutPathByDebug(apkPath);
+            GeneratorGradle(apkPath);
             Process.Start(apkPath);
         }
 

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 52ab75e1c9c44fe40a4a23af3b8fe445
+labels:
+- Example
+- IK
+- InverseKinematics
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
