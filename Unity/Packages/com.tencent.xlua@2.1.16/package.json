@@ -1,0 +1,16 @@
+{
+    "name": "com.tencent.xlua",
+    "displayName": "XLua",
+    "version": "2.1.16",
+    "unity": "2019.4",
+    "description": "xLua为Unity、 .Net、 Mono等C#环境增加Lua脚本编程的能力，借助xLua，这些Lua代码可以方便的和C#相互调用",
+    "author": {
+        "name": "Tencent",
+        "url": "https://github.com/Tencent/xLua"
+    },   
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Tencent/xLua.git"
+    },
+    "relatedPackages": {}   
+}

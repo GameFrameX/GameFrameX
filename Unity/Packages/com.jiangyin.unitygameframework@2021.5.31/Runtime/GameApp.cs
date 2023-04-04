@@ -344,4 +344,22 @@ public static class GameApp
     }
 
     private static AssetComponent _asset;
+
+    /// <summary>
+    /// 获取Lua组件。
+    /// </summary>
+    public static LuaComponent Lua
+    {
+        get
+        {
+            if (_lua == null)
+            {
+                _lua = GameEntry.GetComponent<LuaComponent>();
+            }
+
+            return _lua;
+        }
+    }
+
+    private static LuaComponent _lua;
 }

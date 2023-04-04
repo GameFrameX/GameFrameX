@@ -1,0 +1,243 @@
+﻿#if USE_UNI_LUA
+using LuaAPI = UniLua.Lua;
+using RealStatePtr = UniLua.ILuaState;
+using LuaCSFunction = UniLua.CSharpFunctionDelegate;
+#else
+using LuaAPI = XLua.LuaDLL.Lua;
+using RealStatePtr = System.IntPtr;
+using LuaCSFunction = XLua.LuaDLL.lua_CSFunction;
+#endif
+
+using System;
+<%
+require "TemplateCommon"
+%>
+
+namespace XLua
+{
+    public static partial class CopyByValue_Gen
+    {
+		//-------------------------- CopyByValueBase ---------------------------------//
+        public static bool Pack(IntPtr buff, int offset, byte field)
+        {
+            return LuaAPI.xlua_pack_int8_t(buff, offset, field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out byte field)
+        {
+            return LuaAPI.xlua_unpack_int8_t(buff, offset, out field);
+        }
+        public static bool Pack(IntPtr buff, int offset, sbyte field)
+        {
+            return LuaAPI.xlua_pack_int8_t(buff, offset, (byte)field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out sbyte field)
+        {
+            byte tfield;
+            bool ret = LuaAPI.xlua_unpack_int8_t(buff, offset, out tfield);
+            field = (sbyte)tfield;
+            return ret;
+        }
+        // for int16
+        public static bool Pack(IntPtr buff, int offset, short field)
+        {
+            return LuaAPI.xlua_pack_int16_t(buff, offset, field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out short field)
+        {
+            return LuaAPI.xlua_unpack_int16_t(buff, offset, out field);
+        }
+        public static bool Pack(IntPtr buff, int offset, ushort field)
+        {
+            return LuaAPI.xlua_pack_int16_t(buff, offset, (short)field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out ushort field)
+        {
+            short tfield;
+            bool ret = LuaAPI.xlua_unpack_int16_t(buff, offset, out tfield);
+            field = (ushort)tfield;
+            return ret;
+        }
+        // for int32
+        public static bool Pack(IntPtr buff, int offset, int field)
+        {
+            return LuaAPI.xlua_pack_int32_t(buff, offset, field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out int field)
+        {
+            return LuaAPI.xlua_unpack_int32_t(buff, offset, out field);
+        }
+        public static bool Pack(IntPtr buff, int offset, uint field)
+        {
+            return LuaAPI.xlua_pack_int32_t(buff, offset, (int)field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out uint field)
+        {
+            int tfield;
+            bool ret = LuaAPI.xlua_unpack_int32_t(buff, offset, out tfield);
+            field = (uint)tfield;
+            return ret;
+        }
+        // for int64
+        public static bool Pack(IntPtr buff, int offset, long field)
+        {
+            return LuaAPI.xlua_pack_int64_t(buff, offset, field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out long field)
+        {
+            return LuaAPI.xlua_unpack_int64_t(buff, offset, out field);
+        }
+        public static bool Pack(IntPtr buff, int offset, ulong field)
+        {
+            return LuaAPI.xlua_pack_int64_t(buff, offset, (long)field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out ulong field)
+        {
+            long tfield;
+            bool ret = LuaAPI.xlua_unpack_int64_t(buff, offset, out tfield);
+            field = (ulong)tfield;
+            return ret;
+        }
+        // for float
+        public static bool Pack(IntPtr buff, int offset, float field)
+        {
+            return LuaAPI.xlua_pack_float(buff, offset, field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out float field)
+        {
+            return LuaAPI.xlua_unpack_float(buff, offset, out field);
+        }
+        // for double
+        public static bool Pack(IntPtr buff, int offset, double field)
+        {
+            return LuaAPI.xlua_pack_double(buff, offset, field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out double field)
+        {
+            return LuaAPI.xlua_unpack_double(buff, offset, out field);
+        }
+        // for decimal
+        public static bool Pack(IntPtr buff, int offset, decimal field)
+        {
+            return LuaAPI.xlua_pack_decimal(buff, offset, ref field);
+        }
+        public static bool UnPack(IntPtr buff, int offset, out decimal field)
+        {
+            byte scale;
+            byte sign;
+            int hi32;
+            ulong lo64;
+            if (!LuaAPI.xlua_unpack_decimal(buff, offset, out scale, out sign, out hi32, out lo64))
+            {
+                field = default(decimal);
+                return false;
+            }
+
+            field = new Decimal((int)(lo64 & 0xFFFFFFFF), (int)(lo64 >> 32), hi32, (sign & 0x80) != 0, scale);
+            return true;
+        }
+        //-------------------------- CopyByValueBase ---------------------------------//
+
+        <%ForEachCsList(type_infos, function(type_info)
+        local full_type_name = CsFullTypeName(type_info.Type)
+        %>
+		<%if type_info.IsRoot then
+		ForEachCsList(type_info.FieldInfos, function(fieldInfo) fieldInfo.Name = UnK(fieldInfo.Name) end)
+		%>
+		public static void UnPack(ObjectTranslator translator, RealStatePtr L, int idx, out <%=full_type_name%> val)
+		{
+		    val = new <%=full_type_name%>();
+            int top = LuaAPI.lua_gettop(L);
+			<%ForEachCsList(type_info.FieldInfos, function(fieldInfo)%>
+			if (Utils.LoadField(L, idx, "<%=fieldInfo.Name%>"))
+            {
+			    <%if fieldInfo.IsField then%>
+                translator.Get(L, top + 1, out val.<%=fieldInfo.Name%>);
+				<%else%>
+				var <%=fieldInfo.Name%> = val.<%=fieldInfo.Name%>;
+				translator.Get(L, top + 1, out <%=fieldInfo.Name%>);
+				val.<%=fieldInfo.Name%> = <%=fieldInfo.Name%>;
+				<%end%>
+            }
+            LuaAPI.lua_pop(L, 1);
+			<%end)%>
+		}
+		<%end%>
+        public static bool Pack(IntPtr buff, int offset, <%=full_type_name%> field)
+        {
+            <%
+            local offset_inner = 0
+            if not type_info.FieldGroup then
+            ForEachCsList(type_info.FieldInfos, function(fieldInfo)
+            %>
+            if(!Pack(buff, offset<%=(offset_inner == 0 and "" or (" + " .. offset_inner))%>, field.<%=fieldInfo.Name%>))
+            {
+                return false;
+            }
+            <%
+            offset_inner = offset_inner + fieldInfo.Size
+            end)
+            else
+            ForEachCsList(type_info.FieldGroup, function(group)
+            %>
+            if(!LuaAPI.xlua_pack_float<%=(group.Count == 1 and "" or group.Count)%>(buff, offset<%=(offset_inner == 0 and "" or (" + " .. offset_inner))%><%
+            ForEachCsList(group, function(fieldInfo, i)
+            %>, field.<%=fieldInfo.Name%><%
+            end)
+            %>))
+            {
+                return false;
+            }
+            <%
+            offset_inner = offset_inner + group.Count * 4
+            end)
+            end%>
+            return true;
+        }
+        public static bool UnPack(IntPtr buff, int offset, out <%=full_type_name%> field)
+        {
+            field = default(<%=full_type_name%>);
+            <%
+            local offset_inner = 0
+            if not type_info.FieldGroup then
+            ForEachCsList(type_info.FieldInfos, function(fieldInfo)
+            if fieldInfo.IsField then
+            %>
+            if(!UnPack(buff, offset<%=(offset_inner == 0 and "" or (" + " .. offset_inner))%>, out field.<%=fieldInfo.Name%>))
+            {
+                return false;
+            }
+            <%else%>
+            var <%=fieldInfo.Name%> = field.<%=fieldInfo.Name%>;
+            if(!UnPack(buff, offset<%=(offset_inner == 0 and "" or (" + " .. offset_inner))%>, out <%=fieldInfo.Name%>))
+            {
+                return false;
+            }
+            field.<%=fieldInfo.Name%> = <%=fieldInfo.Name%>;
+            <%
+            end
+            offset_inner = offset_inner + fieldInfo.Size
+            end)
+            else
+            ForEachCsList(type_info.FieldGroup, function(group)
+            %>
+            <%ForEachCsList(group, function(fieldInfo)%>float <%=fieldInfo.Name%> = default(float);
+            <%end)%>
+            if(!LuaAPI.xlua_unpack_float<%=(group.Count == 1 and "" or group.Count)%>(buff, offset<%=(offset_inner == 0 and "" or (" + " .. offset_inner))%><%
+            ForEachCsList(group, function(fieldInfo)
+            %>, out <%=fieldInfo.Name%><%
+            end)
+            %>))
+            {
+                return false;
+            }
+            <%ForEachCsList(group, function(fieldInfo)%>field.<%=fieldInfo.Name%> = <%=fieldInfo.Name%>;
+            <%end)%>
+            <%
+            offset_inner = offset_inner + group.Count * 4
+            end)
+            end%>
+            return true;
+        }
+        <%end)%>
+    }
+}

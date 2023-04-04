@@ -6,6 +6,7 @@
         "LitJSON.Runtime",
         "YooAsset.Runtime",
         "FairyGUI.Runtime",
+        "XLua.Runtime",
         "BestHTTP",
         "UniTask",
         "BetterStreamingAssets"
