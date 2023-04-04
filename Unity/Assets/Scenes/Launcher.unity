@@ -312,5 +312,6 @@ PrefabInstance:
       propertyPath: GamePlayMode
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5433838300546985263, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}

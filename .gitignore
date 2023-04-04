@@ -14,3 +14,7 @@ FairyGUIProject/plugins/.idea
 Unity/Sandbox
 Unity/Temp
 Unity/Assets/Bundles/Code
+Unity/HybridCLRData/HotUpdateDlls
+Unity/HybridCLRData/LocalIl2CppData-WindowsEditor
+Unity/HybridCLRData/hybridclr_repo
+Unity/HybridCLRData/il2cpp_plus_repo

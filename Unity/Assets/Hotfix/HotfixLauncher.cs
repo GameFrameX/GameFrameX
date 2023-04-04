@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Animancer;
+using UnityEngine;
 
 namespace Hotfix
 {
@@ -6,7 +7,8 @@ namespace Hotfix
     {
         public static void Main()
         {
-            Debug.Log("AAAAAAAAA");
+            UnityGameFramework.Runtime.Log.Info("AAAAAAAAA");
+            GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<AnimancerComponent>();
         }
     }
 }

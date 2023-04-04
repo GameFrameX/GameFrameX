@@ -1,3 +1,29 @@
-﻿{
-	"name": "Unity.HotFix"
+{
+    "name": "Unity.HotFix",
+    "references": [
+        "UnityGameFramework.Runtime",
+        "UnityGameFramework.Runtime.Extension",
+        "BestHTTP",
+        "Animancer",
+        "BlankGetChannel.Runtime",
+        "FairyGUI.Runtime",
+        "HybridCLR.Runtime",
+        "DOTween.Runtime.Modules",
+        "UniTask",
+        "ProtoBuffer.Runtime",
+        "YooAsset.Runtime",
+        "GameFramework.Runtime",
+        "GameAnalytics.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

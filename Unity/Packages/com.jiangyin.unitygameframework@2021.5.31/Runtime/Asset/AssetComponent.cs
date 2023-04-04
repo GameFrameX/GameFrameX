@@ -23,6 +23,11 @@ namespace UnityGameFramework.Runtime
         private string _hostServer;
         public string StaticVersion { get; private set; }
 
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
         public void UpdateStaticVersion(string version)
         {
             StaticVersion = version;
