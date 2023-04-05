@@ -7,8 +7,9 @@ namespace Hotfix
     {
         public static void Main()
         {
-            UnityGameFramework.Runtime.Log.Info("AAAAAAAAA");
+            UnityGameFramework.Runtime.Log.Info("Hello World");
             GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<AnimancerComponent>();
+            GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World')");
         }
     }
 }

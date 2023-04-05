@@ -8,6 +8,7 @@
         "BlankGetChannel.Runtime",
         "FairyGUI.Runtime",
         "HybridCLR.Runtime",
+        "XLua.Runtime",
         "DOTween.Runtime.Modules",
         "UniTask",
         "ProtoBuffer.Runtime",
