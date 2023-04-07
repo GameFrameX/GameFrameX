@@ -3,7 +3,7 @@ namespace UnityGameFramework.Procedure
     /// <summary>
     /// 
     /// </summary>
-    public class ResponseGlobalInfo
+    public sealed class ResponseGlobalInfo
     {
         /// <summary>
         /// 检测程序版本地址
@@ -16,7 +16,7 @@ namespace UnityGameFramework.Procedure
         public string CheckResourceVersionUrl { get; set; }
 
         /// <summary>
-        /// 内容
+        /// 扩展内容
         /// </summary>
         public string Content { get; set; }
     }

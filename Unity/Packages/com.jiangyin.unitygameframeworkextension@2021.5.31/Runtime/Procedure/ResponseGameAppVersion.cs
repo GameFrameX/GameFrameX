@@ -1,7 +1,7 @@
 namespace UnityGameFramework.Procedure
 {
     /// <summary>
-    /// 
+    /// 游戏版本信息
     /// </summary>
     public sealed class ResponseGameAppVersion
     {
