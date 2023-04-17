@@ -109,5 +109,15 @@ namespace UnityGameFramework.Runtime
         {
             return ClientNow();
         }
+
+        public static long UnixTimeSeconds()
+        {
+            return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+        }
+
+        public static long UnixTimeMilliseconds()
+        {
+            return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+        }
     }
 }

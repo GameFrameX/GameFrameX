@@ -18,8 +18,21 @@ namespace GameFramework
         public static partial class Verifier
         {
             private const int CachedBytesLength = 0x1000;
-            private static readonly byte[] s_CachedBytes = new byte[CachedBytesLength];
-            private static readonly Crc32 s_Algorithm = new Crc32();
+            private static readonly byte[] SCachedBytes = new byte[CachedBytesLength];
+            private static readonly Crc32 SAlgorithm = new Crc32();
+            private static readonly Crc64 SAlgorithm64 = new Crc64();
+
+            /// <summary>
+            /// 计算二进制流的CRC64
+            /// </summary>
+            /// <param name="bytes"></param>
+            /// <returns></returns>
+            public static ulong GetCrc64(byte[] bytes)
+            {
+                SAlgorithm64.Reset();
+                SAlgorithm64.Append(bytes);
+                return SAlgorithm64.GetCurrentHashAsUInt64();
+            }
 
             /// <summary>
             /// 计算二进制流的 CRC32。
@@ -55,9 +68,9 @@ namespace GameFramework
                     throw new GameFrameworkException("Offset or length is invalid.");
                 }
 
-                s_Algorithm.HashCore(bytes, offset, length);
-                int result = (int)s_Algorithm.HashFinal();
-                s_Algorithm.Initialize();
+                SAlgorithm.HashCore(bytes, offset, length);
+                int result = (int) SAlgorithm.HashFinal();
+                SAlgorithm.Initialize();
                 return result;
             }
 
@@ -75,10 +88,10 @@ namespace GameFramework
 
                 while (true)
                 {
-                    int bytesRead = stream.Read(s_CachedBytes, 0, CachedBytesLength);
+                    int bytesRead = stream.Read(SCachedBytes, 0, CachedBytesLength);
                     if (bytesRead > 0)
                     {
-                        s_Algorithm.HashCore(s_CachedBytes, 0, bytesRead);
+                        SAlgorithm.HashCore(SCachedBytes, 0, bytesRead);
                     }
                     else
                     {
@@ -86,9 +99,9 @@ namespace GameFramework
                     }
                 }
 
-                int result = (int)s_Algorithm.HashFinal();
-                s_Algorithm.Initialize();
-                Array.Clear(s_CachedBytes, 0, CachedBytesLength);
+                int result = (int) SAlgorithm.HashFinal();
+                SAlgorithm.Initialize();
+                Array.Clear(SCachedBytes, 0, CachedBytesLength);
                 return result;
             }
 
@@ -99,7 +112,7 @@ namespace GameFramework
             /// <returns>CRC32 数值的二进制数组。</returns>
             public static byte[] GetCrc32Bytes(int crc32)
             {
-                return new byte[] { (byte)((crc32 >> 24) & 0xff), (byte)((crc32 >> 16) & 0xff), (byte)((crc32 >> 8) & 0xff), (byte)(crc32 & 0xff) };
+                return new byte[] {(byte) ((crc32 >> 24) & 0xff), (byte) ((crc32 >> 16) & 0xff), (byte) ((crc32 >> 8) & 0xff), (byte) (crc32 & 0xff)};
             }
 
             /// <summary>
@@ -130,10 +143,10 @@ namespace GameFramework
                     throw new GameFrameworkException("Offset or length is invalid.");
                 }
 
-                bytes[offset] = (byte)((crc32 >> 24) & 0xff);
-                bytes[offset + 1] = (byte)((crc32 >> 16) & 0xff);
-                bytes[offset + 2] = (byte)((crc32 >> 8) & 0xff);
-                bytes[offset + 3] = (byte)(crc32 & 0xff);
+                bytes[offset] = (byte) ((crc32 >> 24) & 0xff);
+                bytes[offset + 1] = (byte) ((crc32 >> 16) & 0xff);
+                bytes[offset + 2] = (byte) ((crc32 >> 8) & 0xff);
+                bytes[offset + 3] = (byte) (crc32 & 0xff);
             }
 
             internal static int GetCrc32(Stream stream, byte[] code, int length)
@@ -154,7 +167,7 @@ namespace GameFramework
                     throw new GameFrameworkException("Code length is invalid.");
                 }
 
-                int bytesLength = (int)stream.Length;
+                int bytesLength = (int) stream.Length;
                 if (length < 0 || length > bytesLength)
                 {
                     length = bytesLength;
@@ -163,21 +176,21 @@ namespace GameFramework
                 int codeIndex = 0;
                 while (true)
                 {
-                    int bytesRead = stream.Read(s_CachedBytes, 0, CachedBytesLength);
+                    int bytesRead = stream.Read(SCachedBytes, 0, CachedBytesLength);
                     if (bytesRead > 0)
                     {
                         if (length > 0)
                         {
                             for (int i = 0; i < bytesRead && i < length; i++)
                             {
-                                s_CachedBytes[i] ^= code[codeIndex++];
+                                SCachedBytes[i] ^= code[codeIndex++];
                                 codeIndex %= codeLength;
                             }
 
                             length -= bytesRead;
                         }
 
-                        s_Algorithm.HashCore(s_CachedBytes, 0, bytesRead);
+                        SAlgorithm.HashCore(SCachedBytes, 0, bytesRead);
                     }
                     else
                     {
@@ -185,9 +198,9 @@ namespace GameFramework
                     }
                 }
 
-                int result = (int)s_Algorithm.HashFinal();
-                s_Algorithm.Initialize();
-                Array.Clear(s_CachedBytes, 0, CachedBytesLength);
+                int result = (int) SAlgorithm.HashFinal();
+                SAlgorithm.Initialize();
+                Array.Clear(SCachedBytes, 0, CachedBytesLength);
                 return result;
             }
         }
