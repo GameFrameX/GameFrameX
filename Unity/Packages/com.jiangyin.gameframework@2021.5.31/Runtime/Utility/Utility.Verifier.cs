@@ -35,6 +35,18 @@ namespace GameFramework
             }
 
             /// <summary>
+            /// 计算流的CRC64
+            /// </summary>
+            /// <param name="stream"></param>
+            /// <returns></returns>
+            public static ulong GetCrc64(Stream stream)
+            {
+                SAlgorithm64.Reset();
+                SAlgorithm64.Append(stream);
+                return SAlgorithm64.GetCurrentHashAsUInt64();
+            }
+
+            /// <summary>
             /// 计算二进制流的 CRC32。
             /// </summary>
             /// <param name="bytes">指定的二进制流。</param>
