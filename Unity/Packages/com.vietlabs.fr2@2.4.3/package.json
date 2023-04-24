@@ -1,0 +1,14 @@
+{
+  "name": "com.vietlabs.fr2",
+  "displayName": "Find Reference 2",
+  "version": "2.4.3",
+  "unity": "2017.1",
+  "description": "Find reference 2 is a powerful tool to track all the references between your assets inside  the whole project.  See exactly which assets being included in scenes, clearing redundant assets included in each scene, spot duplicated assets, replace prefab, materials, textures, shaders in 1-2 clicks are just some of FR2 features ...  Full C# source code, blazing fast, works with Unity Unity 5.x, 2017.x, 2018.x and 2019.x",
+  "author": {
+    "name": "vietlabs",
+    "url": "http://tiny.cc/fr2-assetstore"
+  },
+  "relatedPackages": {},
+  "dependencies": {
+  }
+}
