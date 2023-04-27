@@ -539,7 +539,7 @@ namespace GameFramework.Network
                     if (NetworkChannelError != null)
                     {
                         SocketException socketException = exception as SocketException;
-                        NetworkChannelError(this, NetworkErrorCode.DeserializePacketHeaderError, socketException != null ? socketException.SocketErrorCode : SocketError.Success, exception.ToString());
+                        NetworkChannelError(this, NetworkErrorCode.DeserializePacketHeaderError, socketException?.SocketErrorCode ?? SocketError.Success, exception.ToString());
                         return false;
                     }
 
@@ -558,8 +558,7 @@ namespace GameFramework.Network
 
                 try
                 {
-                    object customErrorData = null;
-                    Packet packet = m_NetworkChannelHelper.DeserializePacket(m_ReceiveState.PacketHeader, m_ReceiveState.Stream, out customErrorData);
+                    Packet packet = m_NetworkChannelHelper.DeserializePacket(m_ReceiveState.PacketHeader, m_ReceiveState.Stream, out var customErrorData);
 
                     if (customErrorData != null && NetworkChannelCustomError != null)
                     {

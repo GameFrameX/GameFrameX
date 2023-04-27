@@ -1,23 +1,26 @@
 {
-    "name": "UnityGameFramework.Runtime",
-    "references": [
-        "GameFramework.Runtime",
-        "BlankReadAssets.Runtime",
-        "LitJSON.Runtime",
-        "YooAsset.Runtime",
-        "FairyGUI.Runtime",
-        "XLua.Runtime",
-        "BestHTTP",
-        "UniTask",
-        "BetterStreamingAssets"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": true,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "UnityGameFramework.Runtime",
+  "references": [
+    "GameFramework.Runtime",
+    "BlankReadAssets.Runtime",
+    "LitJSON.Runtime",
+    "YooAsset.Runtime",
+    "FairyGUI.Runtime",
+    "XLua.Runtime",
+    "BestHTTP",
+    "UniTask",
+    "BetterStreamingAssets"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": true,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  }
 }

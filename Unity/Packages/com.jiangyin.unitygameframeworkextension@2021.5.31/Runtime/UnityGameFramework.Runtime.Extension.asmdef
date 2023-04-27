@@ -4,11 +4,12 @@
         "UnityGameFramework.Runtime",
         "GameFramework.Runtime",
         "YooAsset.Runtime",
-        "UniTask"
+        "UniTask",
+        "ProtoBuffer.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,

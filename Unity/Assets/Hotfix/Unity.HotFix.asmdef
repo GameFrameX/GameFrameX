@@ -14,13 +14,15 @@
         "ProtoBuffer.Runtime",
         "YooAsset.Runtime",
         "GameFramework.Runtime",
-        "GameAnalytics.Runtime"
+        "GameAnalytics.Runtime",
+        "MessagePack.Runtime",
+        "MessagePack.Annotations"
     ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,

@@ -1,0 +1,40 @@
+syntax = "proto3";
+package common;
+
+// 返回码
+enum ResultCode {
+	Success = 0; //成功
+	Failed = 1; //失败
+}
+
+// 玩家基础信息
+message UserInfo {
+	string RoleName = 1; // 角色名
+	int64 RoleId = 2; // 角色ID
+	int32 Level = 3; // 角色等级
+  int64 CreateTime = 4; // 创建时间
+  int32 VipLevel = 5; // vip等级
+}
+
+enum PhoneType {
+  MOBILE = 0; // 手机
+  HOME = 1;
+  WORK = 2; // 工作号码
+}
+
+message PhoneNumber {
+  string number = 1;
+  PhoneType type = 2;
+}
+
+message Person {
+  string name = 1;
+  int32 id = 2;  // Unique ID number for this person.
+  string email = 3;
+  repeated PhoneNumber phones = 4;
+}
+
+// Our address book file is just one of these.
+message AddressBook {
+  repeated Person people = 1;
+}

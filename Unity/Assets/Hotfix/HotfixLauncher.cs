@@ -19,7 +19,7 @@ namespace Hotfix
             GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World luw')");
             MemoryStream memoryStream = new MemoryStream();
             var userInfo = new CSHeartBeat();
-            userInfo.Timestamp = 11111;
+            userInfo.Timestamp = 11111111;
             RuntimeTypeModel.Default.Serialize(memoryStream, userInfo);
             var buffer = memoryStream.ToArray();
 

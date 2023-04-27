@@ -172,8 +172,7 @@ namespace GameFramework.Network
         /// <returns>要获取的网络频道。</returns>
         public INetworkChannel GetNetworkChannel(string name)
         {
-            NetworkChannelBase networkChannel = null;
-            if (m_NetworkChannels.TryGetValue(name ?? string.Empty, out networkChannel))
+            if (m_NetworkChannels.TryGetValue(name ?? string.Empty, out var networkChannel))
             {
                 return networkChannel;
             }
@@ -270,8 +269,7 @@ namespace GameFramework.Network
         /// <returns>是否销毁网络频道成功。</returns>
         public bool DestroyNetworkChannel(string name)
         {
-            NetworkChannelBase networkChannel = null;
-            if (m_NetworkChannels.TryGetValue(name ?? string.Empty, out networkChannel))
+            if (m_NetworkChannels.TryGetValue(name ?? string.Empty, out var networkChannel))
             {
                 networkChannel.NetworkChannelConnected -= OnNetworkChannelConnected;
                 networkChannel.NetworkChannelClosed -= OnNetworkChannelClosed;

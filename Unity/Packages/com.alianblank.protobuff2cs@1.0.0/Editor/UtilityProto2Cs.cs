@@ -22,7 +22,7 @@ namespace Proto2CS.Editor
         private static readonly string[] splitNotesChars = {"//"};
         private static readonly List<OpcodeInfo> msgOpcode = new List<OpcodeInfo>();
 
-        public static void Proto2Cs(string inputPath, string outputPath, string namespaceName = "ETHotfix")
+        public static void Proto2Cs(string inputPath, string outputPath, string namespaceName = "ETHotfix", bool isServer = false)
         {
             // msgOpcode.Clear();
             DirectoryInfo directoryInfo = new DirectoryInfo(inputPath);
@@ -35,7 +35,7 @@ namespace Proto2CS.Editor
                     continue;
                 }
 
-                Proto2CS(namespaceName, fileInfo.FullName, outputPath, "HotfixOuterOpcode");
+                Proto2CS(namespaceName, fileInfo.FullName, outputPath, "HotfixOuterOpcode", isServer);
             }
         }
 
@@ -177,7 +177,7 @@ namespace Proto2CS.Editor
             File.WriteAllText(csPath, sb.ToString(), Encoding.UTF8);
         }
 
-        public static void Proto2CS(string ns, string protoName, string outputPath, string opcodeClassName)
+        public static void Proto2CS(string ns, string protoName, string outputPath, string opcodeClassName, bool isServer = false)
         {
             if (!Directory.Exists(outputPath))
             {
@@ -250,7 +250,14 @@ namespace Proto2CS.Editor
                     // }
                     // else
                     {
-                        sb.Append($"\tpublic partial class {msgName}");
+                        if (isServer)
+                        {
+                            sb.Append($"\tpublic partial class {msgName}: Message");
+                        }
+                        else
+                        {
+                            sb.Append($"\tpublic partial class {msgName}");
+                        }
                     }
 
 
@@ -304,9 +311,9 @@ namespace Proto2CS.Editor
                     //     parentClass = "IResponseMessage";
                     // }
 
-                    if (parentClass == "IActorMessage" || parentClass == "IActorRequest" || parentClass == "IActorResponse")
+                    if (parentClass == "Message" || parentClass == "IActorRequest" || parentClass == "IActorResponse")
                     {
-                        sb.Append($", {parentClass}\n");
+                        sb.Append($": {parentClass}\n");
                     }
                     else if (parentClass != "")
                     {
@@ -424,6 +431,10 @@ namespace Proto2CS.Editor
                     break;
                 case "uint16":
                     typeCs = "ushort";
+
+                    break;
+                case "map<int32,long>":
+                    typeCs = "Dictionary<int, long>";
 
                     break;
                 default:

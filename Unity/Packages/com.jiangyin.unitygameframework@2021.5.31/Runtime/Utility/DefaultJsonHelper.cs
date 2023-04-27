@@ -7,6 +7,7 @@
 
 using GameFramework;
 using System;
+using Newtonsoft.Json;
 
 namespace UnityGameFramework.Runtime
 {
@@ -22,7 +23,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>序列化后的 JSON 字符串。</returns>
         public string ToJson(object obj)
         {
-            return LitJson.JsonMapper.ToJson(obj);
+            return JsonConvert.SerializeObject(obj);
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>反序列化后的对象。</returns>
         public T ToObject<T>(string json)
         {
-            return LitJson.JsonMapper.ToObject<T>(json);
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>反序列化后的对象。</returns>
         public object ToObject(Type objectType, string json)
         {
-            object t = LitJson.JsonMapper.ToObject(json, objectType);
+            object t = JsonConvert.DeserializeObject(json, objectType);
             return t;
         }
     }
