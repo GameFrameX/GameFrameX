@@ -8,6 +8,7 @@
 using GameFramework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -21,22 +22,9 @@ namespace UnityGameFramework.Runtime
         private readonly SortedDictionary<string, string> m_Settings = new SortedDictionary<string, string>(StringComparer.Ordinal);
 
         /// <summary>
-        /// 初始化本地版本资源列表的新实例。
-        /// </summary>
-        public DefaultSetting()
-        {
-        }
-
-        /// <summary>
         /// 获取游戏配置项数量。
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return m_Settings.Count;
-            }
-        }
+        public int Count => m_Settings.Count;
 
         /// <summary>
         /// 获取所有游戏配置项的名称。
@@ -46,7 +34,7 @@ namespace UnityGameFramework.Runtime
         {
             int index = 0;
             string[] allSettingNames = new string[m_Settings.Count];
-            foreach (KeyValuePair<string, string> setting in m_Settings)
+            foreach (var setting in m_Settings)
             {
                 allSettingNames[index++] = setting.Key;
             }
@@ -66,7 +54,7 @@ namespace UnityGameFramework.Runtime
             }
 
             results.Clear();
-            foreach (KeyValuePair<string, string> setting in m_Settings)
+            foreach (var setting in m_Settings)
             {
                 results.Add(setting.Key);
             }
@@ -107,8 +95,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>读取的布尔值。</returns>
         public bool GetBool(string settingName)
         {
-            string value = null;
-            if (!m_Settings.TryGetValue(settingName, out value))
+            if (!m_Settings.TryGetValue(settingName, out var value))
             {
                 Log.Warning("Setting '{0}' is not exist.", settingName);
                 return false;
@@ -125,8 +112,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>读取的布尔值。</returns>
         public bool GetBool(string settingName, bool defaultValue)
         {
-            string value = null;
-            if (!m_Settings.TryGetValue(settingName, out value))
+            if (!m_Settings.TryGetValue(settingName, out var value))
             {
                 return defaultValue;
             }
@@ -151,8 +137,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>读取的整数值。</returns>
         public int GetInt(string settingName)
         {
-            string value = null;
-            if (!m_Settings.TryGetValue(settingName, out value))
+            if (!m_Settings.TryGetValue(settingName, out var value))
             {
                 Log.Warning("Setting '{0}' is not exist.", settingName);
                 return 0;
@@ -169,8 +154,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>读取的整数值。</returns>
         public int GetInt(string settingName, int defaultValue)
         {
-            string value = null;
-            if (!m_Settings.TryGetValue(settingName, out value))
+            if (!m_Settings.TryGetValue(settingName, out var value))
             {
                 return defaultValue;
             }
@@ -195,8 +179,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>读取的浮点数值。</returns>
         public float GetFloat(string settingName)
         {
-            string value = null;
-            if (!m_Settings.TryGetValue(settingName, out value))
+            if (!m_Settings.TryGetValue(settingName, out var value))
             {
                 Log.Warning("Setting '{0}' is not exist.", settingName);
                 return 0f;
@@ -213,8 +196,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>读取的浮点数值。</returns>
         public float GetFloat(string settingName, float defaultValue)
         {
-            string value = null;
-            if (!m_Settings.TryGetValue(settingName, out value))
+            if (!m_Settings.TryGetValue(settingName, out var value))
             {
                 return defaultValue;
             }
@@ -229,7 +211,7 @@ namespace UnityGameFramework.Runtime
         /// <param name="value">要写入的浮点数值。</param>
         public void SetFloat(string settingName, float value)
         {
-            m_Settings[settingName] = value.ToString();
+            m_Settings[settingName] = value.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -239,8 +221,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>读取的字符串值。</returns>
         public string GetString(string settingName)
         {
-            string value = null;
-            if (!m_Settings.TryGetValue(settingName, out value))
+            if (!m_Settings.TryGetValue(settingName, out var value))
             {
                 Log.Warning("Setting '{0}' is not exist.", settingName);
                 return null;
@@ -257,8 +238,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>读取的字符串值。</returns>
         public string GetString(string settingName, string defaultValue)
         {
-            string value = null;
-            if (!m_Settings.TryGetValue(settingName, out value))
+            if (!m_Settings.TryGetValue(settingName, out var value))
             {
                 return defaultValue;
             }

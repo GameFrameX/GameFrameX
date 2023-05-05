@@ -5,8 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using UnityGameFramework.Runtime;
-
 /// <summary>
 /// 对 string 的扩展方法。
 /// </summary>

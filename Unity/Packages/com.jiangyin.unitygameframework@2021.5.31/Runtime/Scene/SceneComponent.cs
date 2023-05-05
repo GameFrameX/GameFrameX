@@ -27,8 +27,7 @@ namespace UnityGameFramework.Runtime
         private ISceneManager m_SceneManager = null;
         private EventComponent m_EventComponent = null;
 
-        private readonly SortedDictionary<string, int> m_SceneOrder =
-            new SortedDictionary<string, int>(StringComparer.Ordinal);
+        private readonly SortedDictionary<string, int> m_SceneOrder = new SortedDictionary<string, int>(StringComparer.Ordinal);
 
         private Camera m_MainCamera = null;
         private Scene m_GameFrameworkScene = default(Scene);
@@ -376,7 +375,7 @@ namespace UnityGameFramework.Runtime
             {
                 string maxSceneName = null;
                 int maxSceneOrder = 0;
-                foreach (KeyValuePair<string, int> sceneOrder in m_SceneOrder)
+                foreach (var sceneOrder in m_SceneOrder)
                 {
                     if (SceneIsLoading(sceneOrder.Key))
                     {
