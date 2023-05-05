@@ -42,7 +42,7 @@ namespace Server.Config
 
             if (item == null)
             {
-                throw new Exception($"配置找不到，配置表名: {nameof (Language)}，配置id: {id}");
+                throw new Exception($"配置找不到，配置表名: {nameof(Language)}，配置id: {id}");
             }
 
             return item;
@@ -52,6 +52,11 @@ namespace Server.Config
         {
             return this.dict.ContainsKey(id);
         }
+        
+        public List<Language> GetList()
+        {
+            return this.list;
+        }
 
         public Dictionary<int, Language> GetAll()
         {
@@ -60,7 +65,7 @@ namespace Server.Config
 
         public Language GetOne()
         {
-            if (this.dict == null || this.dict.Count <= 0)
+            if (this.dict.Count <= 0)
             {
                 return null;
             }

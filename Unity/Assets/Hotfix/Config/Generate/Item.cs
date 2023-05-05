@@ -42,7 +42,7 @@ namespace Hotfix.Config
 
             if (item == null)
             {
-                throw new Exception($"配置找不到，配置表名: {nameof (Item)}，配置id: {id}");
+                throw new Exception($"配置找不到，配置表名: {nameof(Item)}，配置id: {id}");
             }
 
             return item;
@@ -52,6 +52,11 @@ namespace Hotfix.Config
         {
             return this.dict.ContainsKey(id);
         }
+        
+        public List<Item> GetList()
+        {
+            return this.list;
+        }
 
         public Dictionary<int, Item> GetAll()
         {
@@ -60,7 +65,7 @@ namespace Hotfix.Config
 
         public Item GetOne()
         {
-            if (this.dict == null || this.dict.Count <= 0)
+            if (this.dict.Count <= 0)
             {
                 return null;
             }
