@@ -17,35 +17,22 @@ namespace GameFramework.Localization
         /// <summary>
         /// 获取或设置本地化语言。
         /// </summary>
-        Language Language
-        {
-            get;
-            set;
-        }
+        Language Language { get; set; }
 
         /// <summary>
         /// 获取系统语言。
         /// </summary>
-        Language SystemLanguage
-        {
-            get;
-        }
+        Language SystemLanguage { get; }
 
         /// <summary>
         /// 获取字典数量。
         /// </summary>
-        int DictionaryCount
-        {
-            get;
-        }
+        int DictionaryCount { get; }
 
         /// <summary>
         /// 获取缓冲二进制流的大小。
         /// </summary>
-        int CachedBytesSize
-        {
-            get;
-        }
+        int CachedBytesSize { get; }
 
         /// <summary>
         /// 设置资源管理器。
@@ -82,6 +69,15 @@ namespace GameFramework.Localization
         /// <param name="key">字典主键。</param>
         /// <returns>要获取的字典内容字符串。</returns>
         string GetString(string key);
+
+        /// <summary>
+        /// 根据字典主键获取字典内容字符串。
+        /// </summary>
+        /// <typeparam name="T">字典参数的类型。</typeparam>
+        /// <param name="key">字典主键。</param>
+        /// <param name="args">字典参数列表。</param>
+        /// <returns>要获取的字典内容字符串。</returns>
+        string GetString(string key, params object[] args);
 
         /// <summary>
         /// 根据字典主键获取字典内容字符串。

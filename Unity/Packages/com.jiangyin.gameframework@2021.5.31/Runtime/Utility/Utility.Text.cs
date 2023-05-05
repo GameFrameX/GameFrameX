@@ -30,6 +30,28 @@ namespace GameFramework
             /// </summary>
             /// <typeparam name="T">字符串参数的类型。</typeparam>
             /// <param name="format">字符串格式。</param>
+            /// <param name="args">参数列表。</param>
+            /// <returns>格式化后的字符串。</returns>
+            public static string Format(string format, params object[] args)
+            {
+                if (format == null)
+                {
+                    throw new GameFrameworkException("Format is invalid.");
+                }
+
+                if (s_TextHelper == null)
+                {
+                    return string.Format(format, args);
+                }
+
+                return s_TextHelper.Format(format, args);
+            }
+
+            /// <summary>
+            /// 获取格式化字符串。
+            /// </summary>
+            /// <typeparam name="T">字符串参数的类型。</typeparam>
+            /// <param name="format">字符串格式。</param>
             /// <param name="arg">字符串参数。</param>
             /// <returns>格式化后的字符串。</returns>
             public static string Format<T>(string format, T arg)

@@ -19,6 +19,14 @@ namespace GameFramework
                 /// <summary>
                 /// 获取格式化字符串。
                 /// </summary>
+                /// <param name="format">字符串格式。</param>
+                /// <param name="args">参数列表。</param>
+                /// <returns>格式化后的字符串。</returns>
+                string Format(string format, params object[] args);
+
+                /// <summary>
+                /// 获取格式化字符串。
+                /// </summary>
                 /// <typeparam name="T">字符串参数的类型。</typeparam>
                 /// <param name="format">字符串格式。</param>
                 /// <param name="arg">字符串参数。</param>

@@ -24,6 +24,25 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 获取格式化字符串。
         /// </summary>
+        /// <param name="format">字符串格式。</param>
+        /// <param name="args">参数列表。</param>
+        /// <returns>格式化后的字符串。</returns>
+        public string Format(string format, params object[] args)
+        {
+            if (format == null)
+            {
+                throw new GameFrameworkException("Format is invalid.");
+            }
+
+            CheckCachedStringBuilder();
+            s_CachedStringBuilder.Length = 0;
+            s_CachedStringBuilder.AppendFormat(format, args);
+            return s_CachedStringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 获取格式化字符串。
+        /// </summary>
         /// <typeparam name="T">字符串参数的类型。</typeparam>
         /// <param name="format">字符串格式。</param>
         /// <param name="arg">字符串参数。</param>

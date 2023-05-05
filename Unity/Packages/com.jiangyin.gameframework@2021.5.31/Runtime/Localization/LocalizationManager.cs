@@ -308,6 +308,23 @@ namespace GameFramework.Localization
         /// <summary>
         /// 根据字典主键获取字典内容字符串。
         /// </summary>
+        /// <param name="key">字典主键。</param>
+        /// <param name="args">参数列表.</param>
+        /// <returns>要获取的字典内容字符串。</returns>
+        public string GetString(string key, params object[] args)
+        {
+            string value = GetRawString(key);
+            if (value == null)
+            {
+                return Utility.Text.Format("<NoKey>{0}", key);
+            }
+
+            return Utility.Text.Format(value, args);
+        }
+
+        /// <summary>
+        /// 根据字典主键获取字典内容字符串。
+        /// </summary>
         /// <typeparam name="T">字典参数的类型。</typeparam>
         /// <param name="key">字典主键。</param>
         /// <param name="arg">字典参数。</param>
