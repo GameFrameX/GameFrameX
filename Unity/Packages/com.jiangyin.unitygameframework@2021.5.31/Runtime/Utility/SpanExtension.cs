@@ -7,6 +7,7 @@ public static class SpanExtension
     public const int LongSize = sizeof(long);
 
     #region WriteSpan
+
     public static unsafe void WriteInt(this Span<byte> buffer, int value, ref int offset)
     {
         if (offset + IntSize > buffer.Length)
@@ -16,7 +17,7 @@ public static class SpanExtension
 
         fixed (byte* ptr = buffer)
         {
-            *(int*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
+            *(int*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
             offset += IntSize;
         }
     }
@@ -31,7 +32,7 @@ public static class SpanExtension
 
         fixed (byte* ptr = buffer)
         {
-            *(long*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
+            *(long*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
             offset += LongSize;
         }
     }
@@ -54,15 +55,17 @@ public static class SpanExtension
             Buffer.MemoryCopy(valPtr, ptr + offset, value.Length, value.Length);
             offset += value.Length;
         }
-
     }
+
     public static ArraySegment<byte> GetArray(this ReadOnlyMemory<byte> memory)
     {
         if (!MemoryMarshal.TryGetArray(memory, out var result))
         {
             throw new InvalidOperationException("Buffer backed by array was expected");
         }
+
         return result;
     }
+
     #endregion
 }
