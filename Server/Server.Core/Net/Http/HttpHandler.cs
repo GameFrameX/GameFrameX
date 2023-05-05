@@ -10,7 +10,6 @@ namespace Server.Core.Net.Http
 {
     internal class HttpHandler
     {
-
         static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
 
         public static async Task HandleRequest(HttpContext context)
@@ -34,6 +33,7 @@ namespace Server.Core.Net.Http
                         await context.Response.WriteAsync("http header content type is null");
                         return;
                     }
+
                     var isJson = context.Request.HasJsonContentType();
                     var isForm = context.Request.HasFormContentType;
                     Console.WriteLine("isJson:" + isJson);
@@ -47,6 +47,7 @@ namespace Server.Core.Net.Http
                                 await context.Response.WriteAsync(new HttpResult(HttpResult.Stauts.ParamErr, "参数重复了:" + keyValuePair.Name));
                                 return;
                             }
+
                             var key = keyValuePair.Name;
                             var val = keyValuePair.Value.GetString();
                             paramMap.Add(keyValuePair.Name, keyValuePair.Value.GetString());
@@ -61,6 +62,7 @@ namespace Server.Core.Net.Http
                                 await context.Response.WriteAsync(new HttpResult(HttpResult.Stauts.ParamErr, "参数重复了:" + keyValuePair.Key));
                                 return;
                             }
+
                             paramMap.Add(keyValuePair.Key, keyValuePair.Value[0]);
                         }
                     }
@@ -74,6 +76,7 @@ namespace Server.Core.Net.Http
                         continue;
                     str.Append("'").Append(parameter.Key).Append("'='").Append(parameter.Value).Append("'  ");
                 }
+
                 LOGGER.Info(str.ToString());
 
                 if (!paramMap.TryGetValue("command", out var cmd))
@@ -97,7 +100,7 @@ namespace Server.Core.Net.Http
                 }
 
                 //验证
-                var checkCode = handler.CheckSgin(paramMap);
+                var checkCode = handler.CheckSign(paramMap);
                 if (!string.IsNullOrEmpty(checkCode))
                 {
                     await context.Response.WriteAsync(checkCode);
@@ -114,6 +117,5 @@ namespace Server.Core.Net.Http
                 await context.Response.WriteAsync(e.Message);
             }
         }
-
     }
 }

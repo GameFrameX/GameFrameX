@@ -23,7 +23,7 @@ namespace Server.Hotfix.Logic.Http
         /// <summary>
         /// ***正式的HttpHandler请一定设置CheckSign为True***
         /// </summary>
-        public override bool CheckSign => false;
+        public override bool IsCheckSign => false;
 
         /// <summary>
         /// http://127.0.0.1:20000/game/api?command=test

@@ -10,7 +10,7 @@ namespace Server.Core.Net.Http
     {
         static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
         /// <summary> 是否使用内部验证方式 </summary>
-        public virtual bool CheckSign => true;
+        public virtual bool IsCheckSign => true;
 
         public static string GetStringSign(string str)
         {
@@ -33,9 +33,9 @@ namespace Server.Core.Net.Http
             return md5;
         }
 
-        public string CheckSgin(Dictionary<string, string> paramMap)
+        public string CheckSign(Dictionary<string, string> paramMap)
         {
-            if (!CheckSign || Settings.IsDebug)
+            if (!IsCheckSign || Settings.IsDebug)
                 return "";
 
             //内部验证

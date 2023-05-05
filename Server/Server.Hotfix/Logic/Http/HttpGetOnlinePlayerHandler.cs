@@ -6,7 +6,7 @@ namespace Server.Hotfix.Logic.Http
     [HttpMsgMapping("online_num_query")]
     public class HttpGetOnlinePlayerHandler : BaseHttpHandler
     {
-        public override bool CheckSign => true;
+        public override bool IsCheckSign => true;
 
         /// <summary>
         /// http://192.168.0.163:20000/game/api?command=online_num_query
@@ -17,7 +17,6 @@ namespace Server.Hotfix.Logic.Http
         /// <returns></returns>
         public override Task<string> Action(string ip, string url, Dictionary<string, string> parameters)
         {
-
             var res = new HttpResult(HttpResult.Stauts.Success, $"当前在线人数:{SessionManager.Count()}").ToString();
             return Task.FromResult(res);
         }
