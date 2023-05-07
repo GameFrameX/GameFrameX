@@ -8,9 +8,9 @@ namespace Hotfix
     {
         public static void Main()
         {
-            Log.Info("Hello World hybridCLR");
+            Log.Info("Hello World HybridCLR");
             GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<AnimancerComponent>();
-            GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World lua')");
+            GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World Lua')");
             // MemoryStream memoryStream = new MemoryStream();
             // var userInfo = new CSHeartBeat();
             // userInfo.Timestamp = 11111111;
