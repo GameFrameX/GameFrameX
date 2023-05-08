@@ -172,7 +172,7 @@ namespace ExcelExporter.Editor
                         ExportClass(kv.Key, kv.Value.HeadInfos, ConfigType.s);
                     }
 
-                    ExportClass(kv.Key, kv.Value.HeadInfos, ConfigType.cs);
+                    // ExportClass(kv.Key, kv.Value.HeadInfos, ConfigType.cs);
                 }
 
                 // 动态编译生成的配置代码
