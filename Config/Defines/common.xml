@@ -1,0 +1,68 @@
+<module name="common">
+    <bean name="DateTimeRange" sep=";">
+        <var name="start_time" type="datetime?"/>
+        <var name="end_time" type="datetime?"/>
+    </bean>
+	
+    <bean name="TimeOfDay" sep=":">
+		<var name="hour" type="int"/>
+		<var name="minute" type="int"/>
+		<var name="second" type="int"/>
+	</bean>
+	
+	<bean name="OneDayTimeRange" sep=";">
+		<var name="start_time" type="TimeOfDay"/>
+		<var name="end_time" type="TimeOfDay"/>
+	</bean>
+	
+	<enum name="EBoolOperator">
+		<var name="AND"/>
+		<var name="OR"/>
+	</enum>
+	
+	<bean name="IntRange">
+		<var name="min" type="int"/>
+		<var name="max" type="int"/>
+	</bean>
+	
+	<bean name="FloatRange">
+		<var name="min" type="float"/>
+		<var name="max" type="float"/>
+	</bean>
+	
+	<bean name="GlobalConfig">
+
+		<!-- 背包相关 -->
+	    <var name="bag_capacity" type="int" comment="背包容量"/>
+        <var name="bag_capacity_special" type="int"/>
+        <var name="bag_temp_expendable_capacity" type="int"/>
+        <var name="bag_temp_tool_capacity" type="int"/>
+		<var name="bag_init_capacity" type="int"/>
+		<var name="quick_bag_capacity" type="int"/>
+		<var name="cloth_bag_capacity" type="int"/>
+		<var name="cloth_bag_init_capacity" type="int"/>
+		<var name="cloth_bag_capacity_special" type="int"/>
+		<var name="bag_init_items_drop_id" type="int?" ref="bonus.TbDrop"/>
+		
+		
+		<!-- 邮箱 -->
+		<var name="mail_box_capacity" type="int"/>
+		
+		<!-- 技能与战斗 -->
+		<var name="damage_param_c" type="float"/>
+		<var name="damage_param_e" type="float"/>
+		<var name="damage_param_f" type="float"/>
+		<var name="damage_param_d" type="float"/>
+		
+		<!-- 场景对象 -->
+		<var name="role_speed" type="float"/>
+		<var name="monster_speed" type="float"/>
+		<var name="init_energy" type="int"/>
+		<var name="init_viality" type="int"/>
+		<var name="max_viality" type="int"/>
+		<var name="per_viality_recovery_time" type="int"/> 多久恢复一点
+	</bean>
+	
+	<table name="TbGlobalConfig" value="GlobalConfig" mode="one" input="common/全局常量配置表.xlsx"/>
+	
+</module>

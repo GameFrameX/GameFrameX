@@ -1,0 +1,562 @@
+<module name="test">
+    <enum name="DemoEnum">
+        <var name="NONE" value="0"/>
+        <var name="A" alias="aa" value="1"/>
+        <var name="B" alias="bb"/>
+        <var name="C" alias="cc" value="4"/>
+        <var name="D" alias="dd"/>
+    </enum>
+    
+    <enum name="DemoFlag" flags="1">
+        <var name="A" value="1"/>
+        <var name="B" value="2"/>
+        <var name="C" value="4"/>
+        <var name="D" value="8"/>
+    </enum>
+    
+    <bean name="DemoType1">
+        <var name="x1" type="int"/>
+    </bean>
+    
+    <bean name="DemoDynamic"> 多态数据结构
+        <var name="x1" type="int"/>
+        
+        <bean name="DemoD2" alias="测试别名">
+            <var name="x2" type="int"/>
+        </bean>
+        
+        <bean name="DemoD3">
+            <var name="x3" type="int"/>
+            <bean name="DemoE1">
+                <var name="x4" type="int"/>
+            </bean>
+        </bean>
+        <bean name="DemoD5">
+            <var name="time" type="DateTimeRange"/>
+        </bean>
+    </bean>
+    
+    <bean name="DemoE2">
+        <var name="y1" type="int?"/>
+        <var name="y2" type="bool"/>
+    </bean>
+    
+    <bean name="DemoExplicitType">
+        <var name="x1" type="uint8"/>
+        <var name="x2" type="int16"/>
+        <var name="x3" type="int32"/>
+        <var name="x4" type="int64"/>
+        <var name="x5" type="float32"/>
+        <var name="x6" type="float64"/>
+        <var name="x7" type="bigint"/>
+    </bean>
+    
+    <bean name="DemoType2" tags="d=5#a=3">
+        <var name="x4" type="int#range=[1,100]"/>
+        <var name="x1" type="bool#kind=cat#type=sss"  tags="aa=10#bb=23"/>
+        <var name="x2" type="byte#kind=mouse#name=yyy" tags="aa#dd=32"/>
+        <var name="x3" type="short"/>
+        <var name="x5" type="long" />
+        <var name="x6" type="float"/>
+        <var name="x7" type="double"/>
+        <var name="x8_0" type="fshort"/>
+        <var name="x8" type="fint"/>
+        <var name="x9" type="flong"/>
+        
+        <var name="x10" type="string#res=demo" path="unity"/>
+        <var name="x12" type="DemoType1"/>
+        <var name="x13" type="DemoEnum#sep=,"/>
+        <var name="x14" type="DemoDynamic#sep=,"/>多态数据结构
+        
+        <var name="s1" type="text"/>
+        
+        <var name="v2" type="vector2"/>
+        <var name="v3" type="vector3"/>
+        <var name="v4" type="vector4"/>
+        
+        <var name="t1" type="datetime"/>
+
+        <var name="k1" type="array,int"/>
+        <var name="k2" type="list,int"/>
+        <var name="k5" type="set,int"/>
+        <var name="k8" type="(map#sep=,),int#ref=test.TbFullTypes,int#ref=test.TbFullTypes"/>
+        <var name="k9" type="(list#sep=;),DemoE2#sep=,"/>
+        <var name="k15" type="(array#sep=;),DemoDynamic#sep=,"/> 
+    </bean>
+    
+    <table name="TbFullTypes" index="x4" value="DemoType2" input="test/full_type.xlsx"/> 最常见的普通 key-value表
+    
+    <bean name="DateTimeRange" sep=";">
+        <var name="start_time" type="datetime"/>
+        <var name="end_time" type="datetime"/>
+    </bean>
+    
+    <bean name="DemoSingletonType">
+        <var name="id" type="int"/>
+        <var name="name" type="text"/>
+        <var name="date" type="DemoDynamic"/>
+    </bean>
+    
+    <table name="TbSingleton" mode="one" value="DemoSingletonType" input="test/table_one.xlsx"/> 单例表，只有一个记录
+    
+    <bean name="NotIndexList">
+        <var name="x" type="int"/>
+        <var name="y" type="int"/>
+    </bean>
+    <table name="TbNotIndexList" value="NotIndexList" mode="list" input="not_index@test/list.xlsx"/>
+    
+    <bean name="MultiUnionIndexList">
+        <var name="id1" type="int"/>
+        <var name="id2" type="long"/>
+        <var name="id3" type="string"/>
+        <var name="num" type="int"/>
+        <var name="desc" type="string"/>
+    </bean>
+    <!--  index="id1,id2,id3" index="id1+id2+id3" index="id1&id2&id3" 都可以表达是 (id1,id2,id3) 联合唯一索引 -->
+    <table name="TbMultiUnionIndexList" value="MultiUnionIndexList" mode="list" index="id1+id2+id3" input="multi_union_index@test/list.xlsx"/>
+    
+    <bean name="MultiIndexList">
+        <var name="id1" type="int"/>
+        <var name="id2" type="long"/>
+        <var name="id3" type="string"/>
+        <var name="num" type="int"/>
+        <var name="desc" type="string"/>
+    </bean>
+    <!-- index="id1|id2|id3" 表示这3个key分别都是唯一索引 -->
+    <table name="TbMultiIndexList" value="MultiIndexList" mode="list" index="id1,id2,id3" input="multi_index@test/list.xlsx"/>
+    
+    <table name="TbDataFromMisc" value="DemoType2" input="test/misc_datas"/> 普通表，不过数据从misc_datas目录递归读入各种类型的数据源
+    
+    <bean name="MultiRowType1">
+        <var name="id" type="int"/>
+        <var name="x" type="int"/>
+    </bean>
+    
+    <bean name="MultiRowType2">
+        <var name="id" type="int"/>
+        <var name="x" type="int"/>
+        <var name="y" type="float"/>
+    </bean>
+    
+    <bean name="MultiRowType3">
+        <var name="id" type="int"/>
+        <var name="items" type="list,MultiRowType1"/>
+    </bean>
+    
+    <bean name="MultiRowRecord">
+        <var name="id" type="int"/>
+        <var name="name" type="string"/>
+        <var name="one_rows" type="list,MultiRowType1"/>
+        <var name="multi_rows1" type="list,MultiRowType1"/>
+        <var name="multi_rows2" type="array,MultiRowType1"/>
+        <!--var name="multi_rows3" type="set,MultiRowType2"/-->
+        <var name="multi_rows4" type="map,int,MultiRowType2"/>
+        <var name="multi_rows5" type="list,MultiRowType3"/>
+        <var name="multi_rows6" type="map,int,MultiRowType2"/>
+        <var name="multi_rows7" type="map,int,int"/>
+    </bean>
+    
+    <table name="TbMultiRowRecord" value="MultiRowRecord" input="test/multi_rows_record.xlsx"/>
+    
+    <bean name="Foo">
+        <var name="y1" type="int"/>
+        <var name="y2" type="int"/>
+        <var name="y3" type="int"/>
+    </bean>
+    <bean name="TestMultiColumn">
+        <var name="id" type="int"/>
+        <var name="a" type="Foo"/>
+        <var name="b" type="Foo"/>
+        <var name="c" type="Foo"/>
+    </bean>
+    <table name="TbTestMultiColumn" value="TestMultiColumn" input="test/multi_column.xlsx"/>
+    
+    <enum name="ETestUeType">
+        <var name="WHITE" alias="白"/>
+        <var name="BLACK"/>
+    </enum>
+    
+    <enum name="ETestEmptyEnum">
+    
+    </enum>
+    
+    <enum name="ETestEmptyEnum2">
+        <var name="SMALL_THAN_256" value="255"/>
+        <var name="X_256" value="256"/>
+        <var name="X_257" value="257"/>
+    </enum>
+    
+    <bean name="TestUeType">
+        <var name="x1" type="bool"/>
+        <var name="x2" type="byte"/>
+        <var name="x3" type="short"/>
+        <var name="x4" type="int"/>
+        <var name="x5" type="long"/>
+        <var name="x6" type="float"/>
+        <var name="x10" type="string"/>
+        <var name="x12" type="DemoType1"/>
+        <var name="x13" type="ETestUeType"/>
+        <var name="v2" type="vector2"/>
+        <var name="v3" type="vector3"/>
+        <var name="v4" type="vector4"/>
+        
+        <var name="t1" type="datetime"/>
+        <var name="k1" type="array,int"/>
+        
+        <var name="k2" type="list,int"/>
+        <var name="k5" type="set,int"/>
+        <var name="k8" type="map,int,int"/>
+        <var name="k9" type="list,DemoE2"/>
+    </bean> 
+    
+    
+    <bean name="H1">
+        <var name="y2" type="H2"/>
+        <var name="y3" type="int"/>
+    </bean>
+    <bean name="H2">
+        <var name="z2" type="int"/>
+        <var name="z3" type="int"/>
+    </bean>
+    
+    <bean name="MultiRowTitle">
+        <var name="id" type="int"/>
+        <var name="name" type="string"/>
+        <var name="x1" type="H1"/>
+        <var name="x2_0" type="H2?"/>
+        <var name="x2" type="list,H2"/>
+        <var name="x3" type="array,H2"/>
+        <var name="x4" type="array,H2"/>
+    </bean>
+    <table name="TbMultiRowTitle" value="MultiRowTitle" input="test/multi_level_title.xlsx"/>
+    
+    
+    <bean name="TestNull">
+        <var name="id" type="int"/>
+        <var name="x1" type="int?"/>
+        <var name="x2" type="DemoEnum?"/>
+        <var name="x3" type="DemoType1?"/>
+        <var name="x4" type="DemoDynamic?"/>
+        <var name="s1" type="string?"/>
+        <var name="s2" type="text?"/>
+    </bean>
+    <table name="TbTestNull" value="TestNull" input="test/test_null_datas"/>
+    
+    <bean name="DemoPrimitiveTypesTable">
+        <var name="x1" type="bool"/>
+        <var name="x2" type="byte"/>
+        <var name="x3" type="short"/>
+        <var name="x4" type="int" />
+        <var name="x5" type="long" />
+        <var name="x6" type="float"/>
+        <var name="x7" type="double"/>
+        <var name="s1" type="string" />
+        <var name="s2" type="text"/>
+        <var name="v2" type="vector2"/>
+        <var name="v3" type="vector3"/>
+        <var name="v4" type="vector4"/>
+        <var name="t1" type="datetime"/>
+    </bean>
+
+    <table name="TbDemoPrimitive" index="x4" value="DemoPrimitiveTypesTable" input="test/demo_primitive.xlsx"/>
+    
+    
+    <bean name="CompactString">
+        <var name="id" type="int"/>
+        <var name="s2" type="string"/>
+        <var name="s3" type="string"/>
+    </bean>
+    
+    <bean name="TestString">
+        <var name="id" type="int"/>
+        <var name="s1" type="string"/>
+        <var name="cs1" type="CompactString"/>
+        <var name="cs2" type="CompactString"/>
+    </bean>
+    
+    <table name="TbTestString" value="TestString" input="test/test_string.xlsx"/>
+    
+    <bean name="InnerGroup">
+        <var name="y1" type="int"/> 默认属于所有分组c,s,e
+        <var name="y2" type="int" group="c"/>属于 c 分组
+        <var name="y3" type="int" group="s"/>属于s分组
+        <var name="y4" type="int" group="c,s"/>属于c,s分组
+    </bean>
+    
+    <bean name="DemoGroup">
+        <var name="id" type="int"/>
+        <var name="x1" type="int" ref="test.TbDemoGroup_C"/> 默认属于所有分组c,s,e
+        <var name="x2" type="int" ref="test.TbDemoGroup_S" group="c"/>属于 c 分组
+        <var name="x3" type="int" ref="test.TbDemoGroup_E" group="s"/>属于s分组
+        <var name="x4" type="int" group="c,s"/>属于c,s分组
+        <var name="x5" type="InnerGroup"/>
+    </bean>
+    <table name="TbDemoGroup" value="DemoGroup" input="test/demo_group.xlsx"/>
+    
+    
+    <table name="TbDemoGroup_C" value="DemoGroup" group="c" input="test/demo_group.xlsx"/> 此表只属于c分组
+    <table name="TbDemoGroup_S" value="DemoGroup" group="s" input="test/demo_group.xlsx"/> 此表只属于s分组
+    <table name="TbDemoGroup_E" value="DemoGroup" group="e" input="test/demo_group.xlsx"/> 此表只属于e分组
+    
+    <bean name="TestGlobal">
+        <var name="unlock_equip" type="int"/>
+        <var name="unlock_hero" type="int"/>
+    </bean>
+    <table name="TbTestGlobal" value="TestGlobal" mode="one" input="test/global.xlsx"/>
+    
+    
+    <bean name="TestBeRef">
+        <var name="id" type="int"/>
+        <var name="count" type="int"/>
+    </bean>
+    <table name="TbTestBeRef" value="TestBeRef" input="be_ref1@test/test_ref.xlsx"/>
+    
+    <table name="TbTestBeRef2" value="TestBeRef" input="be_ref2@test/test_ref.xlsx"/>
+    
+    <refgroup name="test_ref_group" ref="test.TbTestBeRef,test.TbTestBeRef2"/>
+    <refgroup name="test_ref_group2" ref="test.TbTestBeRef"/>
+    
+	<bean name="RefDynamicBase">
+		<var name="x" type="int" ref="test.TbTestBeRef"/>
+		<bean name="RefBean">
+			<var name="arr" type="(list#sep=|),(int#ref=test.TbTestBeRef)"/>
+		</bean>
+	</bean>
+    
+	
+    <bean name="TestRef">
+        <var name="id" type="int"/>
+        <var name="x1" type="int" ref="test.TbTestBeRef"/> var中的ref属性纯粹是语法糖，理论上只应该如x2那样定义在type里
+        <var name="x1_2" type="int" ref="test.TbTestBeRef,test.TbTestBeRef"/> var中的ref属性纯粹是语法糖，理论上只应该如x2那样定义在type里
+        <var name="x2" type="int#ref=test_ref_group2"/>
+        <var name="x3" type="int#ref=test_ref_group"/>
+		<var name="x4" type="int#ref=tag.TbTestTag"/>
+        
+        <var name="a1" type="array,int" ref="test.TbTestBeRef"/>
+        <var name="a2" type="array,int#ref=(test.TbTestBeRef)"/>
+        <var name="b1" type="list,int" ref="test.TbTestBeRef"/>
+        <var name="b2" type="list,int#ref=test.TbTestBeRef"/>
+        <var name="c1" type="set,int" ref="test.TbTestBeRef"/>
+        <var name="c2" type="set,int#ref=test.TbTestBeRef"/>
+        <var name="d1" type="(map#aaa=5),int#ref=test.TbTestBeRef,int#ref=test.TbTestBeRef"/>
+        <var name="d2" type="map#aaa=5;int#ref=test.TbTestBeRef;int#ref=test.TbTestBeRef"/>
+        
+        <var name="e1" type="int" ref="id1@test.TbMultiIndexList"/>
+        <var name="e2" type="long" ref="id2@test.TbMultiIndexList"/>
+        <var name="e3" type="string" ref="id3@test.TbMultiIndexList"/>
+        
+        <var name="f1" type="int" ref="id1@test.TbMultiIndexList"/>
+        <var name="f2" type="long" ref="id2@test.TbMultiIndexList"/>
+        <var name="f3" type="string" ref="id3@test.TbMultiIndexList"/>
+		<var name="s1" type="RefDynamicBase"/>
+    </bean>
+    
+    <table name="TbTestRef" value="TestRef" input="ref@test/test_ref.xlsx"/>
+    
+    <bean name="TestSize">
+        <var name="id" type="int"/>
+        <var name="x1" type="(array#size=2),int"/>
+        <var name="x2" type="(list#(size=[1, 3])),int"/>
+        <var name="x3" type="(set#(size=[1,])),int"/>
+        <var name="x4" type="(map#(size=(1, 3))),int,int"/>
+    </bean>
+    <table name="TbTestSize" value="TestSize" input="test/test_size.xlsx"/>
+    
+    <bean name="TestSet">
+        <var name="id" type="int"/>
+        <var name="x0" type="string#(set=ab,cd)"/>
+        <var name="x1" type="list,int#set=1,2,3,4,5"/>
+        <var name="x2" type="list,long#set=2,3,4,5"/>
+        <var name="x3" type="list,string#set=ab,cd"/>
+        <var name="x4" type="list,DemoEnum#set=A,B"/>
+    </bean>
+    <table name="TbTestSet" value="TestSet" input="test/test_set.xlsx"/>
+    
+    <bean name="DetectEncoding">
+        <var name="id" type="int"/>
+        <var name="name" type="string"/>
+    </bean>
+    <table name="TbDetectCsvEncoding" value="DetectEncoding" input="test/detect_csv_encoding_utf8.csv,test/detect_csv_encoding_ansi.csv,test/detect_csv_encoding_big5.csv,test/detect_csv_encoding_gb2312.csv,"/>
+    
+    <bean name="ItemBase">
+        <var name="id" type="int"/>
+        <var name="name" type="string"/>
+        <var name="desc" type="string"/>
+        <bean name="Item">
+            <var name="num" type="int"/>
+            <var name="price" type="int"/>
+        </bean>
+        <bean name="Equipment">
+            <var name="attr" type="DemoEnum"/>
+            <var name="value" type="int"/>
+        </bean>
+        <bean name="Decorator">
+            <var name="duration" type="int"/>
+        </bean>
+    </bean>
+    <table name="TbItem2" value="ItemBase" input="test/item.xlsx"/>
+    
+    <table name="TbDefineFromExcel" value="DefineFromExcel" input="test/define_from_excel.xlsx" define_from_file="1"/>
+    <table name="TbDefineFromExcelOne" value="DefineFromExcelOne" mode="one" input="test/define_from_excel_one.xlsx" define_from_file="1"/>
+ 
+ 
+ 
+    <!--bean name="TestJson2">
+        <var name="id" type="int"/>
+        <var name="m1" type="map,int,int"/>
+        <var name="m2" type="map,long,int"/>
+        <var name="m3" type="map,string,int"/>
+        <var name="m4" type="map,string,DemoType1"/>
+    </bean>
+    <table name="TbTestMap2" value="TestJson2" input="test/test_json2.xlsx"/-->
+    
+    <bean name="TestIndex">
+        <var name="id" type="int"/>
+        <var name="eles" type="list,DemoType1#index=x1"/>
+    </bean>
+    <table name="TbTestIndex" value="TestIndex" input="test/test_index.xlsx"/>
+ 
+    <bean name="TestMap">
+        <var name="id" type="int" ref="test.TbTestIndex"/>
+        <var name="x1" type="map,int,int"/>
+        <var name="x2" type="map,long,int"/>
+        <var name="x3" type="map,string,int"/>
+        <var name="x4" type="map,DemoEnum,int"/>
+    </bean>
+    <table name="TbTestMap" value="TestMap" input="test/test_map.xlsx"/>
+    
+    
+    <bean name="ExcelFromJson">
+        <var name="x4" type="int" />
+        <var name="x1" type="bool"/>
+        <var name="x5" type="long" />
+        <var name="x6" type="float"/>
+        <var name="s1" type="string"/>
+        <var name="s2" type="text"/>
+        <var name="v2" type="vector2"/>
+        <var name="v3" type="vector3"/>
+        <var name="v4" type="vector4"/>
+        <var name="t1" type="datetime"/>
+        
+        <var name="x12" type="DemoType1"/>
+        <var name="x13" type="DemoEnum"/>
+        <var name="x14" type="DemoDynamic"/>多态数据结构
+
+        <var name="k1" type="array,int"/>
+        <var name="k8" type="map,int,int"/>
+        <var name="k9" type="list,DemoE2"/>
+        <var name="k15" type="array,DemoDynamic"/> 
+    </bean>
+    <table name="TbExcelFromJson" value="ExcelFromJson" input="test/excel_jsons"/>
+    
+   <bean name="CompositeJsonTable1">
+        <var name="id" type="int"/>
+        <var name="x" type="string"/>
+   </bean>
+   <bean name="CompositeJsonTable2">
+        <var name="id" type="int"/>
+        <var name="y" type="int"/>
+   </bean>
+   <bean name="CompositeJsonTable3">
+        <var name="a" type="int"/>
+        <var name="b" type="int"/>
+   </bean>
+   <table name="TbCompositeJsonTable1" value="CompositeJsonTable1" input="*table1@test/composite_tables.json,*@test/composite_tables2.json"/>
+   <table name="TbCompositeJsonTable2" value="CompositeJsonTable2" input="*table2@test/composite_tables.json"/>
+   <table name="TbCompositeJsonTable3" value="CompositeJsonTable3" mode="one" input="table3@test/composite_tables.json"/>
+    
+    <bean name="Test3">
+        <var name="x" type="int"/>
+        <var name="y" type="int"/>
+    </bean>
+    <bean name="TestRow">
+        <var name="x" type="int"/>
+        <var name="y" type="bool"/>
+        <var name="z" type="string"/>
+        <var name="a" type="Test3"/>
+        <var name="b" type="list,int"/>
+    </bean>
+    <bean name="ExcelFromJsonMultiRow">
+        <var name="id" type="int"/>
+        <var name="x" type="int"/>
+        <var name="items" type="list,TestRow"/>
+    </bean>
+    <table name="TbExcelFromJsonMultiRow" value="ExcelFromJsonMultiRow" input="test/excel_multi_row_jsons"/>
+ 
+ 
+    <bean name="SepVector" sep=",">
+        <var name="x" type="int"/>
+        <var name="y" type="int"/>
+        <var name="z" type="int"/>
+    </bean>
+ 
+    <bean name="SepBean1">
+        <var name="a" type="int"/>
+        <var name="b" type="int"/>
+        <var name="c" type="string"/>
+    </bean>
+    
+    <table name="TbTestSep" value="TestSep" define_from_file="1" input="test/test_sep.xlsx"/>
+ 
+ 
+    <bean name="TestScriptableObject">
+        <var name="id" type="int"/>
+        <var name="desc" type="string"/>
+        <var name="rate" type="float"/>
+        <var name="num" type="int"/>
+        <var name="v2" type="vector2"/>
+        <var name="v3" type="vector3"/>
+        <var name="v4" type="vector4"/>
+    </bean>
+    <table name="TbTestScriptableObject" value="TestScriptableObject" input="test/unity_scriptable_objects"/>
+ 
+ 
+    <enum name="AudioType">
+        <var name="UNKNOWN" value="0"/>
+        <var name="ACC" value="1"/>
+        <var name="AIFF" value="2"/>
+    </enum>
+    
+    <externaltype name="unity_audio_type" origin_type_name="test.AudioType">
+        <mapper lan="cs" selector="unity_cs">
+            <target_type_name>UnityEngine.AudioType</target_type_name>
+        </mapper>
+    </externaltype>
+    
+    <bean name="Color" sep=",">
+        <var name="r" type="float"/>
+        <var name="g" type="float"/>
+        <var name="b" type="float"/>
+        <var name="a" type="float"/>
+    </bean>
+    <externaltype name="unity_color" origin_type_name="test.Color">
+        <mapper lan="cs" selector="unity_cs">
+            <target_type_name>UnityEngine.Color</target_type_name>
+            <create_external_object_function>ExternalTypeUtil.NewFromCfgColor</create_external_object_function>
+        </mapper>
+    </externaltype>
+    
+    <externaltype name="unity_vector2" origin_type_name="vector2">
+        <mapper lan="cs" selector="unity_cs">
+            <target_type_name>System.Numerics.Vector2</target_type_name>
+            <create_external_object_function>ExternalTypeUtil.NewFromVector2</create_external_object_function>
+        </mapper>
+    </externaltype>
+    
+    <externaltype name="cs_datetime" origin_type_name="datetime">
+        <mapper lan="cs" selector="unity_cs">
+            <target_type_name>System.DateTime</target_type_name>
+            <create_external_object_function>ExternalTypeUtil.NewDatetime</create_external_object_function>
+        </mapper>
+    </externaltype>
+    
+    <table name="TbTestExternalType" value="TestExternalType" define_from_file="1" input="test/external_type.xlsx"/>
+    
+    <module name="login">
+        支持在一个定义文件中 定义多个模块。 一般来说一个定义文件中一个模块比较好，但有些情况下为了方便可以定义多个。
+        <bean name="RoleInfo" parent="test.DemoD3">
+            <var name="role_id" type="long"/>
+        </bean>
+    </module>
+    
+</module>

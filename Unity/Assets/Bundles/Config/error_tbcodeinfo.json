@@ -1,0 +1,166 @@
+[
+  {
+    "code": 6,
+    "key": "EXAMPLE_FLASH"
+  },
+  {
+    "code": 7,
+    "key": "EXAMPLE_MSGBOX"
+  },
+  {
+    "code": 8,
+    "key": "EXAMPLE_DLG_OK"
+  },
+  {
+    "code": 9,
+    "key": "EXAMPLE_DLG_OK_CANCEL"
+  },
+  {
+    "code": 100,
+    "key": "ROLE_CREATE_NAME_INVALID_CHAR"
+  },
+  {
+    "code": 101,
+    "key": "ROLE_CREATE_NAME_EMPTY"
+  },
+  {
+    "code": 102,
+    "key": "ROLE_CREATE_NAME_EXCEED_MAX_LENGTH"
+  },
+  {
+    "code": 103,
+    "key": "ROLE_CREATE_ROLE_LIST_FULL"
+  },
+  {
+    "code": 104,
+    "key": "ROLE_CREATE_INVALID_PROFESSION"
+  },
+  {
+    "code": 200,
+    "key": "PARAM_ILLEGAL"
+  },
+  {
+    "code": 202,
+    "key": "ITEM_CAN_NOT_USE"
+  },
+  {
+    "code": 204,
+    "key": "BAG_IS_FULL"
+  },
+  {
+    "code": 205,
+    "key": "ITEM_NOT_ENOUGH"
+  },
+  {
+    "code": 206,
+    "key": "ITEM_IN_BAG"
+  },
+  {
+    "code": 300,
+    "key": "GENDER_NOT_MATCH"
+  },
+  {
+    "code": 301,
+    "key": "LEVEL_TOO_LOW"
+  },
+  {
+    "code": 302,
+    "key": "LEVEL_TOO_HIGH"
+  },
+  {
+    "code": 303,
+    "key": "EXCEED_LIMIT"
+  },
+  {
+    "code": 304,
+    "key": "OVER_TIME"
+  },
+  {
+    "code": 400,
+    "key": "SKILL_NOT_IN_LIST"
+  },
+  {
+    "code": 401,
+    "key": "SKILL_NOT_COOLDOWN"
+  },
+  {
+    "code": 402,
+    "key": "SKILL_TARGET_NOT_EXIST"
+  },
+  {
+    "code": 403,
+    "key": "SKILL_ANOTHER_CASTING"
+  },
+  {
+    "code": 700,
+    "key": "MAIL_TYPE_ERROR"
+  },
+  {
+    "code": 702,
+    "key": "MAIL_HAVE_DELETED"
+  },
+  {
+    "code": 703,
+    "key": "MAIL_AWARD_HAVE_RECEIVED"
+  },
+  {
+    "code": 704,
+    "key": "MAIL_OPERATE_TYPE_ERROR"
+  },
+  {
+    "code": 705,
+    "key": "MAIL_CONDITION_NOT_MEET"
+  },
+  {
+    "code": 707,
+    "key": "MAIL_NO_AWARD"
+  },
+  {
+    "code": 708,
+    "key": "MAIL_BOX_IS_FULL"
+  },
+  {
+    "code": 605,
+    "key": "NO_INTERACTION_COMPONENT"
+  },
+  {
+    "code": 2,
+    "key": "HAS_BIND_SERVER"
+  },
+  {
+    "code": 3,
+    "key": "AUTH_FAIL"
+  },
+  {
+    "code": 4,
+    "key": "NOT_BIND_SERVER"
+  },
+  {
+    "code": 5,
+    "key": "SERVER_ACCESS_FAIL"
+  },
+  {
+    "code": 1,
+    "key": "SERVER_NOT_EXISTS"
+  },
+  {
+    "code": 900,
+    "key": "SUIT_NOT_UNLOCK"
+  },
+  {
+    "code": 901,
+    "key": "SUIT_COMPONENT_NOT_UNLOCK"
+  },
+  {
+    "code": 902,
+    "key": "SUIT_STATE_ERROR"
+  },
+  {
+    "code": 903,
+    "key": "SUIT_COMPONENT_STATE_ERROR"
+  },
+  {
+    "code": 904,
+    "key": "SUIT_COMPONENT_NO_NEED_LEARN"
+  }
+]

@@ -1,0 +1,14 @@
+<module name="l10n">
+	<bean name="L10NDemo">
+		<var name="id" type="int"/>
+		<var name="text" type="text"/>
+	</bean>
+	
+	<table name="TbL10NDemo" value="L10NDemo" input="l10n/Demo.xlsx"/>
+	
+	<bean name="PatchDemo">
+		<var name="id" type="int"/>
+		<var name="value" type="int"/>
+	</bean>
+	<table name="TbPatchDemo" value="PatchDemo" input="l10n/Patch.xlsx" patch_input="cn:l10n/Patch_CN_1.xlsx,l10n/Patch_CN_2.xlsx|en:l10n/Patch_En.xlsx"/>
+</module>

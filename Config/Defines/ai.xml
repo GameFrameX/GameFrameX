@@ -1,0 +1,231 @@
+<module name="ai">
+
+
+<enum name="EExecutor">
+	<var name="CLIENT"/>
+	<var name="SERVER"/>
+</enum>
+
+<enum name="EKeyType">
+	<var name="BOOL" value="1"/>
+	<var name="INT" value="2"/>
+	<var name="FLOAT" value="3"/>
+	<var name="STRING" value="4"/>
+	
+	<var name="VECTOR" value="5"/> vector3
+	<var name="ROTATOR" value="6"/> vector3
+	
+	<var name="NAME" value="7"/>
+	<var name="CLASS" value="8"/> type name
+	
+	<var name="ENUM" value="9"/>
+	<var name="OBJECT" value="10"/>
+</enum>
+
+<bean name="BlackboardKey">
+	<var name="name" type="string"/>
+	<var name="desc" type="string"/>
+	<var name="is_static" type="bool"/> 是否为全局共享字段。 对应 ue 里 InstanceSynced 字段
+	<var name="type" type="EKeyType"/>
+	<var name="type_class_name" type="string"/> 具体类型名. 只对 ENUM,OBJECT 类型有意义
+</bean>
+
+<bean name="Blackboard">
+	<var name="name" type="string"/>
+	<var name="desc" type="string"/>
+	<var name="parent_name" type="string" ref="ai.TbBlackboard?"/>
+	<var name="keys" type="list,BlackboardKey"/>
+</bean>
+
+<table name="TbBlackboard" value="Blackboard" input="ai/blackboards"/>
+
+
+<enum name="EFlowAbortMode">
+	<var name="NONE"/>
+	<var name="LOWER_PRIORITY"/>
+	<var name="SELF"/>
+	<var name="BOTH"/>
+</enum>
+
+<enum name="EFinishMode">
+	<var name="IMMEDIATE"/>
+	<var name="DELAYED"/>
+</enum>
+
+<enum name="ENotifyObserverMode">
+	<var name="ON_VALUE_CHANGE"/> 当值改变时就通知
+	<var name="ON_RESULT_CHANGE"/> 当PerformaConditionCheck计算结果发生变化时通知
+</enum>
+
+<enum name="EOperator">
+	<var name="IS_EQUAL_TO"/>
+	<var name="IS_NOT_EQUAL_TO"/>
+	<var name="IS_LESS_THAN"/>
+	<var name="IS_LESS_THAN_OR_EQUAL_TO"/>
+	<var name="IS_GREAT_THAN"/>
+	<var name="IS_GREAT_THAN_OR_EQUAL_TO"/>
+	<var name="CONTAINS"/>
+	<var name="NOT_CONTAINS"/>
+</enum>
+
+<bean name="KeyData">
+	<bean name="FloatKeyData">
+		<var name="value" type="float"/>
+	</bean>
+	<bean name="IntKeyData">
+		<var name="value" type="int"/>
+	</bean>
+	<bean name="StringKeyData">
+		<var name="value" type="string"/>
+	</bean>
+	<bean name="BlackboardKeyData">
+		<var name="value" type="string"/>
+	</bean>
+</bean>
+
+<bean name="KeyQueryOperator">
+	<bean name="IsSet"/>
+	<bean name="IsNotSet"/> 这两个类型只对 bool,class,enum,name,object,rotator,vector 有效
+	
+	<bean name="BinaryOperator">
+		<var name="oper" type="EOperator"/>
+		<var name="data" type="KeyData"/>
+	</bean>
+</bean>
+
+对于与ue4内置节点完全一致的实现，我们都加上Ue前缀。
+
+
+<bean name="Node">
+	<var name="id" type="int"/>
+	<var name="node_name" type="string"/>
+	
+	<bean name="Service">
+		<bean name="UeSetDefaultFocus"> NOT
+			<var name="keyboard_key" type="string"/>
+		</bean>
+		<bean name="ExecuteTimeStatistic"> 统计子节点执行时间.执行完毕后打印日志
+		</bean>
+		<bean name="ChooseTarget">
+			<var name="result_target_key" type="string"/> actor
+		</bean>
+		<bean name="KeepFaceTarget"> 
+			<var name="target_actor_key" type="string"/> actor
+		</bean>
+		<bean name="GetOwnerPlayer">
+			<var name="player_actor_key" type="string"/> player
+		</bean>
+		<bean name="UpdateDailyBehaviorProps">
+			<var name="satiety_key" type="string"/>
+			<var name="energy_key" type="string"/>
+			<var name="mood_key" type="string"/>
+			<var name="satiety_lower_threshold_key" type="string"/>
+			<var name="satiety_upper_threshold_key" type="string"/>
+			<var name="energy_lower_threshold_key" type="string"/>
+			<var name="energy_upper_threshold_key" type="string"/>
+			<var name="mood_lower_threshold_key" type="string"/>
+			<var name="mood_upper_threshold_key" type="string"/>			
+		</bean>		
+	</bean>
+
+	<bean name="Decorator">
+		<var name="flow_abort_mode" type="EFlowAbortMode"/>
+		<bean name="UeLoop">
+			<var name="num_loops" type="int"/>
+			<var name="infinite_loop" type="bool"/>
+			<var name="infinite_loop_timeout_time" type="float"/>
+		</bean>
+		<bean name="UeCooldown">
+			<var name="cooldown_time" type="float"/>
+		</bean>
+		<bean name="UeTimeLimit">
+			<var name="limit_time" type="float"/>
+		</bean>
+		<bean name="UeBlackboard">
+			<var name="notify_observer" type="ENotifyObserverMode"/>
+			<var name="blackboard_key" type="string"/>
+			<var name="key_query" type="KeyQueryOperator"/>
+		</bean>
+		<bean name="UeForceSuccess"/>
+		<bean name="IsAtLocation"> NOT
+			<var name="acceptable_radius" type="float"/>
+			<var name="keyboard_key" type="string"/>
+			<var name="inverse_condition" type="bool"/>
+		</bean>
+		
+		<bean name="DistanceLessThan">
+			<var name="actor1_key" type="string"/> actor 对象1
+			<var name="actor2_key" type="string"/> actor 对象2
+			<var name="distance" type="float"/> float 距离 
+			<var name="reverse_result" type="bool"/> 是否取反结果
+		</bean>
+	</bean>
+	<bean name="FlowNode">
+		<var name="decorators" type="list,Decorator"/>
+		<var name="services" type="list,Service"/>
+		<bean name="ComposeNode">
+			<bean name="Sequence">
+				<var name="children" type="list,FlowNode"/>
+			</bean>
+			<bean name="Selector">
+				<var name="children" type="list,FlowNode"/>
+			</bean>
+			<bean name="SimpleParallel">
+				<var name="finish_mode" type="EFinishMode"/>
+				<var name="main_task" type="Task"/>
+				<var name="background_node" type="FlowNode"/>
+			</bean>
+		</bean>
+
+		<bean name="Task">
+			<var name="ignore_restart_self" type="bool"/>
+			<!--bean name="TickableTask">
+				<var name="tick_interval" type="float"/>
+				<bean name="RandomMove">一个演示用的，随机移动的 Task
+					<var name="total_time" type="float"/>
+					<var name="speed" type="float"/>
+				</bean>
+			</bean-->
+			<bean name="UeWait">
+				<var name="wait_time" type="float"/>
+				<var name="random_deviation" type="float"/>
+			</bean>
+			<bean name="UeWaitBlackboardTime">
+				<var name="blackboard_key" type="string"/> float
+			</bean>
+			<bean name="MoveToTarget">
+				<var name="target_actor_key" type="string"/> actor
+				<var name="acceptable_radius" type="float"/> float
+			</bean>
+			<bean name="ChooseSkill">
+				<var name="target_actor_key" type="string"/> actor
+				<var name="result_skill_id_key" type="string"/> int
+			</bean>
+			<bean name="MoveToRandomLocation">
+				<var name="origin_position_key" type="string"/> vector3
+				<var name="radius" type="float"/>
+			</bean>
+			<bean name="MoveToLocation">
+				<var name="location" type="vector3"/> vector3
+				<var name="acceptable_radius" type="float"/>
+			</bean>
+			<bean name="DebugPrint">
+				<var name="text" type="string"/>
+			</bean>
+		</bean>
+	</bean>
+
+</bean>
+
+<bean name="BehaviorTree">
+	<var name="id" type="int"/>
+	<var name="name" type="string"/>
+	<var name="desc" type="string"/>
+	<var name="blackboard_id" type="string" ref="ai.TbBlackboard"/>
+
+	<var name="root" type="ComposeNode"/>
+</bean>
+
+<table name="TbBehaviorTree" value="BehaviorTree" input="ai/behaviortrees"/>
+
+</module>

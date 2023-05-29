@@ -1,5 +1,0 @@
-{"list":[
-{"_id":101,"Name":"初始宝箱","CanSell":"0","Show":"1","SellNum":"","Desc":"打开可获得[初始宝箱+1],[经验丹+2],[强化石+1]","UseType":"1","Param":"101+1;102+2;104+1"}
-,{"_id":102,"Name":"经验丹","CanSell":"1","Show":"1","SellNum":"103+100","Desc":"使用后等级+1","UseType":"2","Param":"1"}
-,{"_id":103,"Name":"金币","CanSell":"","Show":"","SellNum":"","Desc":"市面流通货币","UseType":"","Param":""}
-]}
