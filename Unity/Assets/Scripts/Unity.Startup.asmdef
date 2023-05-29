@@ -1,0 +1,21 @@
+{
+    "name": "Unity.Startup",
+    "references": [
+        "GameFramework.Runtime",
+        "UnityGameFramework.Runtime",
+        "YooAsset.Runtime",
+        "UnityGameFramework.Runtime.Extension",
+        "UniTask",
+        "FairyGUI.Runtime",
+        "BlankGetChannel.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

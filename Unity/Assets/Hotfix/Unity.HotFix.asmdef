@@ -16,7 +16,9 @@
         "GameFramework.Runtime",
         "GameAnalytics.Runtime",
         "MessagePack.Runtime",
-        "MessagePack.Annotations"
+        "MessagePack.Annotations",
+        "LuBan.Runtime",
+        "Unity.Startup"
     ],
     "includePlatforms": [
         "Editor"

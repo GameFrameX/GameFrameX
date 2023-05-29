@@ -15,10 +15,6 @@ namespace UnityGameFramework.Procedure
             var entryType = ass.GetType("Hotfix.HotfixLauncher");
             var method = entryType.GetMethod("Main");
             method?.Invoke(null, null);
-
-            var gameNetworkComponent = GameEntry.GetComponent<GameNetworkComponent>();
-            gameNetworkComponent.ConnectedToServer("127.0.0.1", 20000);
-            // await gameNetworkComponent.Call(new CSHeartBeatMessage());
         }
     }
 }
