@@ -95,8 +95,8 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         public void PrepareForConnecting()
         {
-            m_NetworkChannel.Socket.ReceiveBufferSize = 1024 * 64;
-            m_NetworkChannel.Socket.SendBufferSize = 1024 * 64;
+            m_NetworkChannel.SocketConnection.Socket.ReceiveBufferSize = 1024 * 64;
+            m_NetworkChannel.SocketConnection.Socket.SendBufferSize = 1024 * 64;
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace UnityGameFramework.Runtime
                 return;
             }
 
-            Log.Info("Network channel '{0}' connected, local address '{1}', remote address '{2}'.", ne.NetworkChannel.Name, ne.NetworkChannel.Socket.LocalEndPoint.ToString(), ne.NetworkChannel.Socket.RemoteEndPoint.ToString());
+            Log.Info("Network channel '{0}' connected, local address '{1}', remote address '{2}'.", ne.NetworkChannel.Name, ne.NetworkChannel.SocketConnection.LocalEndPoint.ToString(), ne.NetworkChannel.SocketConnection.RemoteEndPoint.ToString());
         }
 
         private void OnNetworkClosed(object sender, GameEventArgs e)

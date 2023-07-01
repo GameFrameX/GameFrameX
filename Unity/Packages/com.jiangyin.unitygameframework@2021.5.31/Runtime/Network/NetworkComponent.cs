@@ -25,13 +25,7 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 获取网络频道数量。
         /// </summary>
-        public int NetworkChannelCount
-        {
-            get
-            {
-                return m_NetworkManager.NetworkChannelCount;
-            }
-        }
+        public int NetworkChannelCount => m_NetworkManager.NetworkChannelCount;
 
         /// <summary>
         /// 游戏框架组件初始化。
@@ -67,21 +61,21 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 检查是否存在网络频道。
         /// </summary>
-        /// <param name="name">网络频道名称。</param>
+        /// <param name="channelName">网络频道名称。</param>
         /// <returns>是否存在网络频道。</returns>
-        public bool HasNetworkChannel(string name)
+        public bool HasNetworkChannel(string channelName)
         {
-            return m_NetworkManager.HasNetworkChannel(name);
+            return m_NetworkManager.HasNetworkChannel(channelName);
         }
 
         /// <summary>
         /// 获取网络频道。
         /// </summary>
-        /// <param name="name">网络频道名称。</param>
+        /// <param name="channelName">网络频道名称。</param>
         /// <returns>要获取的网络频道。</returns>
-        public INetworkChannel GetNetworkChannel(string name)
+        public INetworkChannel GetNetworkChannel(string channelName)
         {
-            return m_NetworkManager.GetNetworkChannel(name);
+            return m_NetworkManager.GetNetworkChannel(channelName);
         }
 
         /// <summary>
@@ -105,23 +99,22 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建网络频道。
         /// </summary>
-        /// <param name="name">网络频道名称。</param>
-        /// <param name="serviceType">网络服务类型。</param>
+        /// <param name="channelName">网络频道名称。</param>
         /// <param name="networkChannelHelper">网络频道辅助器。</param>
         /// <returns>要创建的网络频道。</returns>
-        public INetworkChannel CreateNetworkChannel(string name, ServiceType serviceType, INetworkChannelHelper networkChannelHelper)
+        public INetworkChannel CreateNetworkChannel(string channelName, INetworkChannelHelper networkChannelHelper)
         {
-            return m_NetworkManager.CreateNetworkChannel(name, serviceType, networkChannelHelper);
+            return m_NetworkManager.CreateNetworkChannel(channelName, networkChannelHelper);
         }
 
         /// <summary>
         /// 销毁网络频道。
         /// </summary>
-        /// <param name="name">网络频道名称。</param>
+        /// <param name="channelName">网络频道名称。</param>
         /// <returns>是否销毁网络频道成功。</returns>
-        public bool DestroyNetworkChannel(string name)
+        public bool DestroyNetworkChannel(string channelName)
         {
-            return m_NetworkManager.DestroyNetworkChannel(name);
+            return m_NetworkManager.DestroyNetworkChannel(channelName);
         }
 
         private void OnNetworkConnected(object sender, GameFramework.Network.NetworkConnectedEventArgs e)

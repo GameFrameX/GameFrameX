@@ -150,7 +150,7 @@ namespace UnityGameFramework.Runtime
             {
                 if (!NetworkChannel.Connected)
                 {
-                    NetworkChannel.Connect(IPAddress.Parse(host), port);
+                    NetworkChannel.Connect(host, port);
                 }
             }
         }
@@ -158,9 +158,9 @@ namespace UnityGameFramework.Runtime
         public void Reconnected()
         {
             NetworkChannelHelper = new NetworkChannelHelper();
-            NetworkChannel = Network.CreateNetworkChannel(GameChannelName, ServiceType.Tcp, NetworkChannelHelper);
+            NetworkChannel = Network.CreateNetworkChannel(GameChannelName, NetworkChannelHelper);
             NetworkChannel.SetDefaultHandler(PacketHandler);
-            NetworkChannel.Connect(IPAddress.Parse(toHost), toPort);
+            NetworkChannel.Connect(toHost, toPort);
         }
     }
 }
