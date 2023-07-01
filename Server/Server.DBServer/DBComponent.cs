@@ -1,9 +1,8 @@
-﻿using MongoDB.Bson;
-
-namespace Geek.Server.DBServer;
-
+﻿using System.Collections.Concurrent;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Collections.Concurrent;
+
+namespace Server.DBServer;
 
 public sealed class DBComponent
 {
@@ -62,7 +61,6 @@ public sealed class DBComponent
     public async Task<List<BsonDocument>> FindAsync(string collectionName, CancellationToken cancellationToken)
     {
         var filter = await DequeueFilterAsync(cancellationToken);
-        if (filter == null) return null;
         return await FindAsync(collectionName, filter);
     }
 

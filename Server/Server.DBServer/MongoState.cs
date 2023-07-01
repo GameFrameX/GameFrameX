@@ -1,4 +1,4 @@
-﻿namespace Geek.Server.Core.Storage
+﻿namespace Server.DBServer
 {
     public class MongoState
     {
@@ -13,6 +13,5 @@
         public long Timestamp { get; set; }
 
         public byte[] Data { get; set; }
-
     }
 }

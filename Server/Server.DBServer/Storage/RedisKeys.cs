@@ -1,4 +1,4 @@
-﻿namespace Geek.Server.Core.Storage
+﻿namespace Server.DBServer.Storage
 {
     /// <summary>
     /// 该特性用于兼容旧版本的redis key, 可以实现key类名与值不同;<br/>
@@ -29,10 +29,14 @@
         public class Guild
         {
             [Value("NAME")]
-            public class Name { }
+            public class Name
+            {
+            }
 
             [Value("LEVEL")]
-            public class Level { }
+            public class Level
+            {
+            }
         }
 
 
@@ -40,24 +44,33 @@
         public class Role
         {
             [Value("SNAPSHOT")]
-            public class Snapshot { }
-
+            public class Snapshot
+            {
+            }
         }
 
         [Value("RANK")]
-        public class Rank { }
+        public class Rank
+        {
+        }
 
         [Value("RANK_SURFIX")]
-        public class RankSurfix { }
+        public class RankSurfix
+        {
+        }
 
 
         [Value("SERVER")]
         public class Server
         {
             [Value("DAY")]
-            public class Day { }
+            public class Day
+            {
+            }
 
-            public class Level { }
+            public class Level
+            {
+            }
         }
 
         [Value("CENTER")]
@@ -67,35 +80,73 @@
             public class RankedMatches
             {
                 [Value("STATUS")]
-                public class Status { }
-                [Value("SEASON")]
-                public class Season { }
-                [Value("ZONE")]
-                public class Zone { }
-                [Value("RANK")]
-                public class Rank { }
-                [Value("RANK_SURFIX")]
-                public class RankSurfix { }
-                [Value("POWER")]
-                public class Power { }
-                public class Pool { }
-                public class Promote { }
-                public class NextPromote { }
-                public class RoleCold { }
+                public class Status
+                {
+                }
 
+                [Value("SEASON")]
+                public class Season
+                {
+                }
+
+                [Value("ZONE")]
+                public class Zone
+                {
+                }
+
+                [Value("RANK")]
+                public class Rank
+                {
+                }
+
+                [Value("RANK_SURFIX")]
+                public class RankSurfix
+                {
+                }
+
+                [Value("POWER")]
+                public class Power
+                {
+                }
+
+                public class Pool
+                {
+                }
+
+                public class Promote
+                {
+                }
+
+                public class NextPromote
+                {
+                }
+
+                public class RoleCold
+                {
+                }
             }
 
             public class TopFinal
             {
-                public class Version { }
+                public class Version
+                {
+                }
 
-                public class Status { }
+                public class Status
+                {
+                }
 
-                public class NextStatus { }
+                public class NextStatus
+                {
+                }
 
-                public class NextTime { }
+                public class NextTime
+                {
+                }
 
-                public class LastStatus { }
+                public class LastStatus
+                {
+                }
 
                 /// <summary>
                 /// (int serverId)
@@ -103,7 +154,6 @@
                 /// </summary>
                 public class Server
                 {
-
                     public const string Group = "Group";
 
                     public const string Camp = "Camp";
@@ -111,16 +161,27 @@
 
                 public class LastWeek
                 {
-                    public class Server { }
-                    public class Rank { }
+                    public class Server
+                    {
+                    }
+
+                    public class Rank
+                    {
+                    }
+
                     public class Replay
                     {
-                        public class Role { }
+                        public class Role
+                        {
+                        }
+
                         public class Camp
                         {
                             public class Final
                             {
-                                public class TeamNum { }
+                                public class TeamNum
+                                {
+                                }
                             }
                         }
                     }
@@ -132,11 +193,17 @@
                 /// </summary>
                 public class Group
                 {
-                    public class MainServer { }
+                    public class MainServer
+                    {
+                    }
 
-                    public class Rank { }
+                    public class Rank
+                    {
+                    }
 
-                    public class RankNo { }
+                    public class RankNo
+                    {
+                    }
 
                     public class Camp
                     {
@@ -148,52 +215,100 @@
                         public const string IslandServer = "IslandServer";
                     }
 
-                    public class FinalResult { }
-                    public class Servers { }
+                    public class FinalResult
+                    {
+                    }
+
+                    public class Servers
+                    {
+                    }
                 }
 
                 public class Replay
                 {
-                    public class Role { }
+                    public class Role
+                    {
+                    }
+
                     public class Camp
                     {
                         public class Normal
                         {
-                            public class TeamNum { }
+                            public class TeamNum
+                            {
+                            }
                         }
+
                         public class Final
                         {
-                            public class TeamNum { }
+                            public class TeamNum
+                            {
+                            }
                         }
                     }
 
-                    public class LastTime { }
+                    public class LastTime
+                    {
+                    }
                 }
-
             }
 
             public class Guild
             {
                 public class Contend
                 {
-                    public class Status { }
-                    public class NextStatus { }
-                    public class EndTime { }
-                    public class BossId { }
-                    public class RoleRank { }
-                    public class RoleScore { }
-                    public class GuildRank { }
-                    public class GuildScore { }
-                    public class RankSurfix { }
-                    public class JoinNum { }
-                    public class CrossOpened { }
-                    public class Sqrt { }
+                    public class Status
+                    {
+                    }
+
+                    public class NextStatus
+                    {
+                    }
+
+                    public class EndTime
+                    {
+                    }
+
+                    public class BossId
+                    {
+                    }
+
+                    public class RoleRank
+                    {
+                    }
+
+                    public class RoleScore
+                    {
+                    }
+
+                    public class GuildRank
+                    {
+                    }
+
+                    public class GuildScore
+                    {
+                    }
+
+                    public class RankSurfix
+                    {
+                    }
+
+                    public class JoinNum
+                    {
+                    }
+
+                    public class CrossOpened
+                    {
+                    }
+
+                    public class Sqrt
+                    {
+                    }
                 }
             }
 
             public class Island
             {
-
                 public class Common
                 {
                     public const string Status = "Status";
@@ -204,24 +319,34 @@
 
             public class Raft
             {
-                public class Status { }
+                public class Status
+                {
+                }
 
-                public class Day { }
+                public class Day
+                {
+                }
 
                 /// <summary>
                 /// hash key:serverId value:mainServer
                 /// </summary>
-                public class MainServer { }
+                public class MainServer
+                {
+                }
 
                 /// <summary>
                 /// hash key:mainServer value:mainServer+server1+server2+...
                 /// </summary>
-                public class Group { }
+                public class Group
+                {
+                }
 
                 /// <summary>
                 /// hash key:serverId value:roleNum+averagePower
                 /// </summary>
-                public class Server { }
+                public class Server
+                {
+                }
             }
 
             public class Boss
@@ -229,12 +354,16 @@
                 /// <summary>
                 /// hash key:serverId value:mainServer
                 /// </summary>
-                public class MainServer { }
+                public class MainServer
+                {
+                }
 
                 /// <summary>
                 /// hash key:mainServer value:mainServer+server1+server2+...
                 /// </summary>
-                public class Group { }
+                public class Group
+                {
+                }
             }
         }
 
@@ -242,25 +371,33 @@
         {
             public class DrawRank
             {
-
             }
 
             public class DrawRankNew
             {
-                public class Group { }
+                public class Group
+                {
+                }
 
-                public class MainSever { }
+                public class MainSever
+                {
+                }
 
-                public class CurRank { }
+                public class CurRank
+                {
+                }
 
-                public class PreRank { }
+                public class PreRank
+                {
+                }
             }
 
             public class Anniversary
             {
-                public class Group { }
+                public class Group
+                {
+                }
             }
         }
-
     }
 }

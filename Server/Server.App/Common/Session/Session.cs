@@ -8,12 +8,18 @@ namespace Server.App.Common.Session
         /// <summary>
         /// 全局标识符
         /// </summary>
-        public long Id { set; get; }
+        public long Id { get; }
+
+        public Session(long id)
+        {
+            Id = id;
+            CreateTime = DateTime.Now;
+        }
 
         /// <summary>
         /// 连接时间
         /// </summary>
-        public DateTime Time { set; get; }
+        public DateTime CreateTime { get; }
 
         /// <summary>
         /// 连接上下文

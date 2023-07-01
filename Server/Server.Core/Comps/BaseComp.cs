@@ -14,7 +14,10 @@ namespace Server.Core.Comps
             lock (_cacheAgentLock)
             {
                 if (_cacheAgent != null && !HotfixMgr.DoingHotfix)
+                {
                     return _cacheAgent;
+                }
+
                 var agent = HotfixMgr.GetAgent<ICompAgent>(this, refAssemblyType);
                 _cacheAgent = agent;
                 return agent;
@@ -38,14 +41,17 @@ namespace Server.Core.Comps
             return Task.CompletedTask;
         }
 
-        public virtual async Task Deactive()
+        public virtual async Task DeActive()
         {
             var agent = GetAgent();
             if (agent != null)
                 await agent.Deactive();
         }
 
-        internal virtual Task SaveState() { return Task.CompletedTask; }
+        internal virtual Task SaveState()
+        {
+            return Task.CompletedTask;
+        }
 
         internal virtual bool ReadyToDeactive => true;
     }

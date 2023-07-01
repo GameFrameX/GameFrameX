@@ -6,17 +6,17 @@ namespace Server.Utility
     public static class AppExitHandler
     {
         static readonly Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-        static Action callBack;
+        private static Action _existCallBack;
 
         public static void Init(Action existCallBack)
         {
-            callBack = existCallBack;
+            _existCallBack = existCallBack;
             //退出监听
-            AppDomain.CurrentDomain.ProcessExit += (s, e) => { callBack?.Invoke(); };
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => { _existCallBack?.Invoke(); };
             //Fetal异常监听
             AppDomain.CurrentDomain.UnhandledException += (s, e) => { HandleFetalException(e.ExceptionObject); };
             //ctrl+c
-            Console.CancelKeyPress += (s, e) => { callBack?.Invoke(); };
+            Console.CancelKeyPress += (s, e) => { _existCallBack?.Invoke(); };
         }
 
         private static void HandleFetalException(object e)
@@ -26,14 +26,16 @@ namespace Server.Utility
             if (e is IEnumerable arr)
             {
                 foreach (var ex in arr)
+                {
                     LOGGER.Error($"Unhandled Exception:{ex}");
+                }
             }
             else
             {
                 LOGGER.Error($"Unhandled Exception:{e}");
             }
 
-            callBack?.Invoke();
+            _existCallBack?.Invoke();
         }
     }
 }

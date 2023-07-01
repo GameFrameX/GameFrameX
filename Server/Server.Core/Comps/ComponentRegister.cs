@@ -4,10 +4,11 @@ using Server.Core.Actors;
 using Server.Core.Hotfix;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Utility;
+using Server.Extension;
 
 namespace Server.Core.Comps
 {
-    public static class CompRegister
+    public static class ComponentRegister
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -46,14 +47,20 @@ namespace Server.Core.Comps
         public static Task Init(Assembly assembly = null)
         {
             if (assembly == null)
+            {
                 assembly = Assembly.GetEntryAssembly();
+            }
+
             Type baseCompName = typeof(BaseComp);
-            foreach (var type in assembly.GetTypes())
+            var types = assembly.GetTypes();
+            foreach (var type in types)
             {
                 if (type.IsAbstract || !type.IsSubclassOf(baseCompName))
+                {
                     continue;
+                }
 
-                if (type.GetCustomAttribute(typeof(CompAttribute)) is CompAttribute compAttr)
+                if (type.GetCustomAttribute(typeof(ComponentTypeAttribute)) is ComponentTypeAttribute compAttr)
                 {
                     var actorType = compAttr.ActorType;
                     var compTypes = ActorCompDic.GetOrAdd(actorType);

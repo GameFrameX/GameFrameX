@@ -40,7 +40,7 @@ namespace Server.Core.Actors
         public static Task<T> GetCompAgent<T>() where T : ICompAgent
         {
             var compType = HotfixMgr.GetCompType(typeof(T));
-            var actorType = CompRegister.GetActorType(compType);
+            var actorType = ComponentRegister.GetActorType(compType);
             return GetCompAgent<T>(IdGenerator.GetActorID(actorType));
         }
 
@@ -79,6 +79,7 @@ namespace Server.Core.Actors
             {
                 tasks.Add(actor.SendAsync(() => true));
             }
+
             return Task.WhenAll(tasks);
         }
 
@@ -86,6 +87,7 @@ namespace Server.Core.Actors
 
         private static readonly List<WorkerActor> workerActors = new();
         private const int workerCount = 10;
+
         static ActorMgr()
         {
             for (int i = 0; i < workerCount; i++)
@@ -96,7 +98,7 @@ namespace Server.Core.Actors
 
         private static WorkerActor GetLifeActor(long actorId)
         {
-            return workerActors[(int)(actorId % workerCount)];
+            return workerActors[(int) (actorId % workerCount)];
         }
 
         /// <summary>
@@ -111,17 +113,17 @@ namespace Server.Core.Actors
                     actor.Tell(async () =>
                     {
                         if (actor.AutoRecycle
-                        && (DateTime.Now - activeTimeDic[actor.Id]).TotalMinutes > 15)
+                            && (DateTime.Now - activeTimeDic[actor.Id]).TotalMinutes > 15)
                         {
                             await GetLifeActor(actor.Id).SendAsync(async () =>
                             {
                                 if (activeTimeDic.TryGetValue(actor.Id, out var activeTime)
-                                && (DateTime.Now - activeTimeDic[actor.Id]).TotalMinutes > 15)
+                                    && (DateTime.Now - activeTimeDic[actor.Id]).TotalMinutes > 15)
                                 {
                                     // 防止定时回存失败时State被直接移除
                                     if (actor.ReadyToDeactive)
                                     {
-                                        await actor.Deactive();
+                                        await actor.DeActive();
                                         actorDic.TryRemove(actor.Id, out var _);
                                         Log.Debug($"actor回收 id:{actor.Id} type:{actor.Type}");
                                     }
@@ -131,16 +133,18 @@ namespace Server.Core.Actors
                                         activeTimeDic[actor.Id] = DateTime.Now;
                                     }
                                 }
+
                                 return true;
                             });
                         }
                     });
                 }
             }
+
             return Task.CompletedTask;
         }
 
-       
+
         public static async Task SaveAll()
         {
             try
@@ -151,17 +155,20 @@ namespace Server.Core.Actors
                 {
                     taskList.Add(actor.SendAsync(async () => await actor.SaveAllState()));
                 }
+
                 await Task.WhenAll(taskList);
                 Log.Info($"save all state, use: {(DateTime.Now - begin).TotalMilliseconds}ms");
             }
             catch (Exception e)
             {
-                Log.Error($"save all state error \n{e}"); throw;
+                Log.Error($"save all state error \n{e}");
+                throw;
             }
         }
 
         //public static readonly StatisticsTool statisticsTool = new();
         const int ONCE_SAVE_COUNT = 1000;
+
         /// <summary>
         ///  定时回存所有数据
         /// </summary>
@@ -208,6 +215,7 @@ namespace Server.Core.Actors
                     actor.Tell(() => actor.CrossDay(openServerDay));
                 }
             }
+
             return Task.CompletedTask;
         }
 
@@ -237,6 +245,7 @@ namespace Server.Core.Actors
                     });
                 }
             }
+
             while (a < b)
             {
                 if ((DateTime.Now - begin).TotalSeconds > CROSS_DAY_GLOBAL_WAIT_SECONDS)
@@ -244,8 +253,10 @@ namespace Server.Core.Actors
                     Log.Warn($"全局comp跨天耗时过久，不阻止其他comp跨天，当前已过{CROSS_DAY_GLOBAL_WAIT_SECONDS}秒");
                     break;
                 }
+
                 await Task.Delay(TimeSpan.FromMilliseconds(10));
             }
+
             var globalCost = (DateTime.Now - begin).TotalMilliseconds;
             Log.Info($"全局comp跨天完成 耗时：{globalCost:f4}ms");
             a = 0;
@@ -262,6 +273,7 @@ namespace Server.Core.Actors
                     });
                 }
             }
+
             while (a < b)
             {
                 if ((DateTime.Now - begin).TotalSeconds > CROSS_DAY_NOT_ROLE_WAIT_SECONDS)
@@ -269,8 +281,10 @@ namespace Server.Core.Actors
                     Log.Warn($"非玩家comp跨天耗时过久，不阻止玩家comp跨天，当前已过{CROSS_DAY_NOT_ROLE_WAIT_SECONDS}秒");
                     break;
                 }
+
                 await Task.Delay(TimeSpan.FromMilliseconds(10));
             }
+
             var otherCost = (DateTime.Now - begin).TotalMilliseconds - globalCost;
             Log.Info($"非玩家comp跨天完成 耗时：{otherCost:f4}ms");
         }
@@ -280,8 +294,9 @@ namespace Server.Core.Actors
             var tasks = new List<Task>();
             foreach (var actor in actorDic.Values)
             {
-                tasks.Add(actor.Deactive());
+                tasks.Add(actor.DeActive());
             }
+
             await Task.WhenAll(tasks);
         }
 
@@ -289,8 +304,9 @@ namespace Server.Core.Actors
         {
             if (actorDic.Remove(actorId, out var actor))
             {
-                actor.Tell(actor.Deactive);
+                actor.Tell(actor.DeActive);
             }
+
             return Task.CompletedTask;
         }
 
@@ -298,7 +314,7 @@ namespace Server.Core.Actors
         {
             var agentType = typeof(T);
             var compType = HotfixMgr.GetCompType(agentType);
-            var actorType = CompRegister.GetActorType(compType);
+            var actorType = ComponentRegister.GetActorType(compType);
             foreach (var actor in actorDic.Values)
             {
                 if (actor.Type == actorType)
@@ -316,7 +332,7 @@ namespace Server.Core.Actors
         {
             var agentType = typeof(T);
             var compType = HotfixMgr.GetCompType(agentType);
-            var actorType = CompRegister.GetActorType(compType);
+            var actorType = ComponentRegister.GetActorType(compType);
             foreach (var actor in actorDic.Values)
             {
                 if (actor.Type == actorType)

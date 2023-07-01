@@ -1,61 +1,41 @@
-﻿namespace Geek.Server.Core.Storage
+﻿using Server.DBServer.Storage;
+
+namespace Server.DBServer
 {
-    public enum DBModel
-    {
-        /// <summary>
-        /// 内嵌做主存,mongodb备份
-        /// </summary>
-        Embeded,
-
-        /// <summary>
-        /// mongodb主存,存储失败再存内嵌
-        /// </summary>
-        Mongodb,
-    }
-
-    public interface IGameDB
-    {
-        public void Open(string url, string dbName);
-        public void Close();
-        public Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : CacheState, new();
-        public Task SaveState<TState>(TState state) where TState : CacheState;
-    }
-
-    public class GameDB
+    public static class GameDb
     {
         static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 
-        private static IGameDB dbImpler;
-
+        private static IGameDbService _dbServiceImpler;
 
         public static void Init()
         {
-            dbImpler = new MongoDBConnection();
+            _dbServiceImpler = new MongoDbServiceConnection();
         }
 
-        public static T As<T>() where T : IGameDB
+        public static T As<T>() where T : IGameDbService
         {
-            return (T) dbImpler;
+            return (T) _dbServiceImpler;
         }
 
-        public static void Open(string MongoUrl,string MongoDBName)
+        public static void Open(string mongoUrl, string mongoDbName)
         {
-            dbImpler.Open(MongoUrl, MongoDBName);
+            _dbServiceImpler.Open(mongoUrl, mongoDbName);
         }
 
         public static void Close()
         {
-            dbImpler.Close();
+            _dbServiceImpler.Close();
         }
 
         public static Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : CacheState, new()
         {
-            return dbImpler.LoadState(id, defaultGetter);
+            return _dbServiceImpler.LoadState(id, defaultGetter);
         }
 
         public static Task SaveState<TState>(TState state) where TState : CacheState
         {
-            return dbImpler.SaveState(state);
+            return _dbServiceImpler.SaveState(state);
         }
 
 

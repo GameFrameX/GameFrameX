@@ -3,7 +3,6 @@ using Server.Utility;
 
 namespace Server.Core.Events
 {
-
     /// <summary>
     /// 每个实例其实都是单例的
     /// </summary>

@@ -1,5 +1,6 @@
 ﻿using Server.Core.Actors;
 using Server.Core.Hotfix;
+using Server.Extension;
 using Server.Utility;
 
 namespace Server.Core.Events

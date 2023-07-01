@@ -1,4 +1,5 @@
-﻿using Server.Utility;
+﻿using Server.Extension;
+using Server.Utility;
 #if CLIENT
 using System;
 using System.Collections.Generic;

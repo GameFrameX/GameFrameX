@@ -11,7 +11,9 @@ namespace Server.App.Common.Net
             base.OnDisconnection(channel);
             var sessionId = channel.GetSessionId();
             if (sessionId > 0)
+            {
                 SessionManager.Remove(sessionId);
+            }
         }
     }
 }

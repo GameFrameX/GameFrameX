@@ -2,15 +2,17 @@
 
 namespace Server.Core.Comps
 {
+    /// <summary>
+    /// 组件类型标记
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class CompAttribute : Attribute
+    public class ComponentTypeAttribute : Attribute
     {
-        public CompAttribute(ActorType type)
+        public ComponentTypeAttribute(ActorType type)
         {
             ActorType = type;
         }
 
         public ActorType ActorType { get; }
-
     }
 }

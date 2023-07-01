@@ -9,7 +9,7 @@ using Server.Core.Net.Tcp.Handler;
 
 namespace Server.Core.Hotfix
 {
-    public class HotfixMgr
+    public static class HotfixMgr
     {
         internal static volatile bool DoingHotfix = false;
 
@@ -24,13 +24,16 @@ namespace Server.Core.Hotfix
         public static async Task<bool> LoadHotfixModule(string dllVersion = "")
         {
             var dllPath = Path.Combine(Environment.CurrentDirectory, string.IsNullOrEmpty(dllVersion) ? "hotfix/Server.Hotfix.dll" : $"{dllVersion}/Server.Hotfix.dll");
-            var newModule = new HotfixModule(dllPath);
+            var hotfixModule = new HotfixModule(dllPath);
             bool reload = module != null;
             // 起服时失败会有异常抛出
-            var success = newModule.Init(reload);
+            var success = hotfixModule.Init(reload);
             if (!success)
+            {
                 return false;
-            return await Load(newModule, reload);
+            }
+
+            return await Load(hotfixModule, reload);
         }
 
         public static Task<bool> LoadSelfModule()
@@ -90,6 +93,7 @@ namespace Server.Core.Hotfix
                         return old.GetAgent<T>(comp);
                 }
             }
+
             return module.GetAgent<T>(comp);
         }
 
@@ -103,15 +107,29 @@ namespace Server.Core.Hotfix
             return module.GetHttpHandler(cmd);
         }
 
-        static Func<int, Type> msgGetter;
+        static Func<Type, int> _msgGetterByGetId;
+
+        public static void SetMsgGetterByGetId(Func<Type, int> msgGetter)
+        {
+            _msgGetterByGetId = msgGetter;
+        }
+
+        public static int GetMsgType(Type type)
+        {
+            return _msgGetterByGetId(type);
+        }
+
+        static Func<int, Type> _msgGetterByGetType;
+
         public static void SetMsgGetter(Func<int, Type> msgGetter)
         {
-            HotfixMgr.msgGetter = msgGetter;
+            _msgGetterByGetType = msgGetter;
         }
+
 
         public static Type GetMsgType(int msgId)
         {
-            return msgGetter(msgId);
+            return _msgGetterByGetType(msgId);
         }
 
         public static List<IEventListener> FindListeners(ActorType actorType, int evtId)
@@ -139,6 +157,7 @@ namespace Server.Core.Hotfix
                         return old.GetInstance<T>(typeName);
                 }
             }
+
             return module.GetInstance<T>(typeName);
         }
     }

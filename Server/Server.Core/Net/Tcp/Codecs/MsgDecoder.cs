@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.Text;
 using Microsoft.AspNetCore.Connections;
 using Server.Core.Hotfix;
 using Server.Core.Net.Messages;
@@ -34,12 +35,13 @@ namespace Server.Core.Net.Tcp.Codecs
                 return null;
             }
 
-            Message msg = null; // MessagePack.MessagePackSerializer.Deserialize<Message>(reader.UnreadSequence);
-            if (msg.MsgId != msgId)
-            {
-                LOGGER.Error("后台解析消息失败，注册消息id和消息无法对应.real:{0}, register:{1}", msg.MsgId, msgId);
-                return null;
-            }
+            MemoryStream memoryStream = new MemoryStream(reader.UnreadSequence.ToArray());
+            Message msg = ProtoBuf.Serializer.Deserialize<Message>(memoryStream);
+            // if (msg.MsgId != msgId)
+            // {
+            //     LOGGER.Error("后台解析消息失败，注册消息id和消息无法对应.real:{0}, register:{1}", msg.MsgId, msgId);
+            //     return null;
+            // }
 
             return msg;
         }
@@ -78,7 +80,23 @@ namespace Server.Core.Net.Tcp.Codecs
                 return null;
             }
 
-            Message protoMsg = null; // MessagePack.MessagePackSerializer.Deserialize<Message>(reader.UnreadSequence);
+            MemoryStream memoryStream = new MemoryStream();
+            memoryStream.Write(reader.UnreadSequence.ToArray());
+            // var buffer = memoryStream.ToArray();
+            // StringBuilder stringBuilder = new StringBuilder();
+            // for (var index = 0; index < buffer.Length; index++)
+            // {
+            //     var b = buffer[index];
+            //     // var b = buffer[index];
+            //     stringBuilder.Append(b);
+            //     stringBuilder.Append("  ");
+            // }
+            //
+            // LOGGER.Info($"消息数据:[{stringBuilder}]"); 
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            Message protoMsg = (Message) ProtoBuf.Serializer.Deserialize(msgType, memoryStream);
+            protoMsg.MsgId = msgId;
+            // Message protoMsg = null;  MessagePack.MessagePackSerializer.Deserialize<Message>(reader.UnreadSequence);
             if (protoMsg.MsgId != msgId)
             {
                 LOGGER.Error("后台解析消息失败，注册消息id和消息无法对应.real:{0}, register:{1}", protoMsg.MsgId, msgId);

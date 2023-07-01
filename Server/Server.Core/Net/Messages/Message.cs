@@ -7,6 +7,6 @@
         /// </summary>
         public int UniId { get; set; }
 
-        public virtual int MsgId { get; }
+        public int MsgId { get; set; }
     }
 }

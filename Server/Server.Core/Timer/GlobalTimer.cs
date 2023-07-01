@@ -1,6 +1,7 @@
-﻿using Geek.Server.Core.Storage;
-using Server.Core.Actors;
+﻿using Server.Core.Actors;
 using Server.Core.Utility;
+using Server.DBServer;
+using Server.Extension;
 using Server.Utility;
 
 namespace Server.Core.Timer
@@ -32,7 +33,7 @@ namespace Server.Core.Timer
                 if (!working)
                     break;
                 var startTime = DateTime.Now;
-                await GameDB.TimerSave();
+                await GameDb.TimerSave();
                 var cost = (DateTime.Now - startTime).TotalMilliseconds;
                 Log.Info($"定时回存完成 耗时: {cost:f4}ms");
 
@@ -73,8 +74,8 @@ namespace Server.Core.Timer
         {
             working = false;
             await LoopTask;
-            await GameDB.SaveAll();
-            GameDB.Close();
+            await GameDb.SaveAll();
+            GameDb.Close();
             Log.Info($"停止全局定时完成");
         }
     }

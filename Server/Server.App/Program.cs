@@ -7,7 +7,7 @@ using Server.Utility;
 
 namespace Server.App
 {
-    class Program
+    internal static class Program
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -23,7 +23,9 @@ namespace Server.App
                 GameLoopTask = AppStartUp.Enter();
                 await GameLoopTask;
                 if (ShutDownTask != null)
+                {
                     await ShutDownTask;
+                }
             }
             catch (Exception e)
             {
@@ -39,14 +41,17 @@ namespace Server.App
                     Console.WriteLine(error);
                 }
 
-                File.WriteAllText("server_error.txt", $"{error}", Encoding.UTF8);
+                await File.WriteAllTextAsync("server_error.txt", $"{error}", Encoding.UTF8);
             }
         }
 
         private static void HandleExit()
         {
             if (ExitCalled)
+            {
                 return;
+            }
+
             ExitCalled = true;
             Log.Info($"监听到退出程序消息");
             ShutDownTask = Task.Run(() =>

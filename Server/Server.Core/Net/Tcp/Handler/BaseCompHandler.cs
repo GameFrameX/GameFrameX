@@ -5,7 +5,6 @@ using Server.Core.Utility;
 
 namespace Server.Core.Net.Tcp.Handler
 {
-
     public abstract class BaseCompHandler : BaseTcpHandler
     {
         protected long ActorId { get; set; }
@@ -20,7 +19,10 @@ namespace Server.Core.Net.Tcp.Handler
         {
             await InitActor();
             if (CacheComp == null)
+            {
                 CacheComp = await ActorMgr.GetCompAgent(ActorId, CompAgentType);
+                Console.WriteLine(CacheComp);
+            }
         }
 
         public override Task InnerAction()
@@ -53,9 +55,10 @@ namespace Server.Core.Net.Tcp.Handler
             if (ActorId <= 0)
             {
                 var compType = CompAgentType.BaseType.GetGenericArguments()[0];
-                ActorType actorType = CompRegister.GetActorType(compType);
+                ActorType actorType = ComponentRegister.GetActorType(compType);
                 ActorId = IdGenerator.GetActorID(actorType);
             }
+
             return Task.CompletedTask;
         }
     }
@@ -63,13 +66,12 @@ namespace Server.Core.Net.Tcp.Handler
     public abstract class RoleCompHandler<T> : RoleCompHandler where T : ICompAgent
     {
         protected override Type CompAgentType => typeof(T);
-        protected T Comp => (T)CacheComp;
+        protected T Comp => (T) CacheComp;
     }
 
     public abstract class GlobalCompHandler<T> : GlobalCompHandler where T : ICompAgent
     {
         protected override Type CompAgentType => typeof(T);
-        protected T Comp => (T)CacheComp;
+        protected T Comp => (T) CacheComp;
     }
-
 }

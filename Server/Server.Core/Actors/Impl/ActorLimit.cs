@@ -15,10 +15,12 @@ namespace Server.Core.Actors.Impl
         public enum RuleType
         {
             None,
+
             /// <summary>
             /// 分等级(高等级不能【等待】调用低等级)
             /// </summary>
             ByLevel,
+
             /// <summary>
             /// 禁止双向调用
             /// </summary>
@@ -33,29 +35,31 @@ namespace Server.Core.Actors.Impl
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private static IRule rule;
-        private static readonly Dictionary<ActorType, int> levelDic = new();
+        private static IRule _rule;
+        private static readonly Dictionary<ActorType, int> LevelDic = new Dictionary<ActorType, int>(128);
+
         public static void Init(RuleType type)
         {
             switch (type)
             {
                 case RuleType.ByLevel:
-                    rule = new ByLevelRule();
+                    _rule = new ByLevelRule();
                     try
                     {
                         foreach (ActorTypeLevel foo in Enum.GetValues(typeof(ActorTypeLevel)))
                         {
-                            ActorType actorType = (ActorType)Enum.Parse(typeof(ActorType), foo.ToString());
-                            levelDic.Add(actorType, (int)foo);
+                            ActorType actorType = (ActorType) Enum.Parse(typeof(ActorType), foo.ToString());
+                            LevelDic.Add(actorType, (int) foo);
                         }
                     }
                     catch (Exception)
                     {
                         throw;
                     }
+
                     break;
                 case RuleType.NoBidirectionCall:
-                    rule = new NoBidirectionCallRule();
+                    _rule = new NoBidirectionCallRule();
                     break;
                 case RuleType.None:
                     break;
@@ -67,13 +71,14 @@ namespace Server.Core.Actors.Impl
 
         public static bool AllowCall(long target)
         {
-            if(rule != null)
-                return rule.AllowCall(target); 
+            if (_rule != null)
+                return _rule.AllowCall(target);
             return true;
         }
 
 
         #region ByLevelRule
+
         class ByLevelRule : IRule
         {
             public bool AllowCall(long target)
@@ -84,25 +89,29 @@ namespace Server.Core.Actors.Impl
                     return true;
                 ActorType curType = IdGenerator.GetActorType(actorId);
                 ActorType targetType = IdGenerator.GetActorType(target);
-                if (levelDic.ContainsKey(targetType) && levelDic.ContainsKey(curType))
+                if (LevelDic.ContainsKey(targetType) && LevelDic.ContainsKey(curType))
                 {
                     //等级高的不能【等待】调用等级低的
-                    if (levelDic[curType] > levelDic[targetType])
+                    if (LevelDic[curType] > LevelDic[targetType])
                     {
                         Log.Error($"不合法的调用路径:{curType}==>{targetType}");
                         return false;
                     }
                 }
+
                 return true;
             }
         }
+
         #endregion
 
 
         #region NoBidirectionCallRule
+
         class NoBidirectionCallRule : IRule
         {
             internal readonly ConcurrentDictionary<long, ConcurrentDictionary<long, bool>> CrossDic = new();
+
             private bool AllowCall(long self, long target)
             {
                 // 自己入自己的队允许，会直接执行
@@ -130,7 +139,7 @@ namespace Server.Core.Actors.Impl
                 return AllowCall(actorId, target);
             }
         }
-        #endregion
 
+        #endregion
     }
 }

@@ -23,13 +23,14 @@ namespace Server.Core.Hotfix
 
         class HostAssemblyLoadContext : AssemblyLoadContext
         {
-            public HostAssemblyLoadContext() : base(true) { }
+            public HostAssemblyLoadContext() : base(true)
+            {
+            }
 
             protected override Assembly Load(AssemblyName assemblyName)
             {
                 return null;
             }
         }
-
     }
 }

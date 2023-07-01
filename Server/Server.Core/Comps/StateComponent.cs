@@ -1,19 +1,20 @@
 ﻿using System.Collections.Concurrent;
-using Geek.Server.Core.Storage;
 using MongoDB.Driver;
 using NLog;
 using Server.Core.Actors;
 using Server.Core.Timer;
 using Server.Core.Utility;
+using Server.DBServer;
+using Server.DBServer.Storage;
+using Server.Extension;
 using Server.Utility;
 
 namespace Server.Core.Comps
 {
-
-    public sealed class StateComp
+    public sealed class StateComponent
     {
-
         #region 仅DBModel.Mongodb调用
+
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private static readonly ConcurrentBag<Func<bool, bool, Task>> saveFuncs = new();
@@ -39,6 +40,7 @@ namespace Server.Core.Comps
                 {
                     tasks.Add(saveFunc(true, force));
                 }
+
                 await Task.WhenAll(tasks);
                 Log.Info($"save all state, use: {(DateTime.Now - begin).TotalMilliseconds}ms");
             }
@@ -70,12 +72,12 @@ namespace Server.Core.Comps
         }
 
         public static readonly StatisticsTool statisticsTool = new();
+
         #endregion
     }
 
     public abstract class StateComp<TState> : BaseComp, IState where TState : CacheState, new()
     {
-
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         static readonly ConcurrentDictionary<long, TState> stateDic = new();
@@ -84,23 +86,28 @@ namespace Server.Core.Comps
 
         static StateComp()
         {
-            if (Settings.DBModel == (int)DBModel.Mongodb)
-                StateComp.AddShutdownSaveFunc(SaveAll);
+            if (Settings.DBModel == (int) DbModel.Mongodb)
+            {
+                StateComponent.AddShutdownSaveFunc(SaveAll);
+            }
         }
 
         public override async Task Active()
         {
             await base.Active();
             if (State != null)
+            {
                 return;
+            }
+
             await ReadStateAsync();
         }
 
-        public override Task Deactive()
+        public override Task DeActive()
         {
-            if (Settings.DBModel == (int)DBModel.Mongodb)
+            if (Settings.DBModel == (int) DbModel.Mongodb)
                 stateDic.TryRemove(ActorId, out _);
-            return base.Deactive();
+            return base.DeActive();
         }
 
 
@@ -110,7 +117,7 @@ namespace Server.Core.Comps
         {
             try
             {
-                await GameDB.SaveState(State);
+                await GameDb.SaveState(State);
             }
             catch (Exception e)
             {
@@ -120,8 +127,8 @@ namespace Server.Core.Comps
 
         public async Task ReadStateAsync()
         {
-            State = await GameDB.LoadState<TState>(ActorId);
-            if (Settings.DBModel == (int)DBModel.Mongodb)
+            State = await GameDb.LoadState<TState>(ActorId);
+            if (Settings.DBModel == (int) DbModel.Mongodb)
             {
                 stateDic.TryRemove(State.Id, out _);
                 stateDic.TryAdd(State.Id, State);
@@ -130,12 +137,14 @@ namespace Server.Core.Comps
 
         public Task WriteStateAsync()
         {
-            return GameDB.SaveState(State);
+            return GameDb.SaveState(State);
         }
 
 
         #region 仅DBModel.Mongodb调用
+
         const int ONCE_SAVE_COUNT = 500;
+
         public static async Task SaveAll(bool shutdown, bool force = false)
         {
             static void AddReplaceModel(List<ReplaceOneModel<MongoState>> writeList, bool isChanged, long stateId, byte[] data)
@@ -149,7 +158,7 @@ namespace Server.Core.Comps
                         Timestamp = TimeUtils.CurrentTimeMillisUTC()
                     };
                     var filter = Builders<MongoState>.Filter.Eq(CacheState.UniqueId, mongoState.Id);
-                    writeList.Add(new ReplaceOneModel<MongoState>(filter, mongoState) { IsUpsert = true });
+                    writeList.Add(new ReplaceOneModel<MongoState>(filter, mongoState) {IsUpsert = true});
                 }
             }
 
@@ -183,9 +192,9 @@ namespace Server.Core.Comps
             if (!writeList.IsNullOrEmpty())
             {
                 var stateName = typeof(TState).FullName;
-                StateComp.statisticsTool.Count(stateName, writeList.Count);
+                StateComponent.statisticsTool.Count(stateName, writeList.Count);
                 Log.Debug($"状态回存 {stateName} count:{writeList.Count}");
-                var db = GameDB.As<MongoDBConnection>().CurDB; 
+                var db = GameDb.As<MongoDbServiceConnection>().CurrentDatabase;
                 var col = db.GetCollection<MongoState>(stateName);
                 for (int idx = 0; idx < writeList.Count; idx += ONCE_SAVE_COUNT)
                 {
@@ -194,7 +203,7 @@ namespace Server.Core.Comps
                     bool save = false;
                     try
                     {
-                        var result = await col.BulkWriteAsync(list, MongoDBConnection.BULK_WRITE_OPTIONS);
+                        var result = await col.BulkWriteAsync(list, MongoDbServiceConnection.BULK_WRITE_OPTIONS);
                         if (result.IsAcknowledged)
                         {
                             list.ForEach(model =>
@@ -215,6 +224,7 @@ namespace Server.Core.Comps
                     {
                         Log.Error($"保存数据异常，类型:{typeof(TState).FullName}，{ex}");
                     }
+
                     if (!save && shutdown)
                     {
                         await FileBackup.SaveToFile(list, stateName);
@@ -222,7 +232,7 @@ namespace Server.Core.Comps
                 }
             }
         }
-        #endregion
 
+        #endregion
     }
 }

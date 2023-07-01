@@ -8,23 +8,26 @@ namespace Server.Core.Net.Messages
     /// </summary>
     public struct NMessage
     {
-        public ReadOnlySequence<byte> Payload { get; } = default;
+        public ReadOnlySequence<byte> Payload { get; }
 
         public NMessage(ReadOnlySequence<byte> payload)
         {
+            Msg = null;
             Payload = payload;
         }
 
-        public Message Msg { get; } = null;
+        public Message Msg { get; }
 
         public NMessage(Message msg)
         {
             Msg = msg;
+            Payload = default;
         }
 
         public void Serialize(IBufferWriter<byte> writer)
         {
-            // RuntimeTypeModel.Default.Serialize(writer.GetMemory(), Msg);
+            MemoryStream memoryStream = new MemoryStream(writer.GetMemory().ToArray());
+            RuntimeTypeModel.Default.Serialize(memoryStream, Msg);
         }
 
         public byte[] Serialize()

@@ -1,16 +1,17 @@
-﻿using Geek.Server.Core.Storage;
-using NLog;
+﻿using NLog;
 using NLog.Config;
 using NLog.LayoutRenderers;
+using Server.Config;
 using Server.Core.Actors.Impl;
 using Server.Core.Comps;
 using Server.Core.Hotfix;
 using Server.Core.Utility;
+using Server.DBServer;
 using Server.Utility;
 
 namespace Server.App.Common
 {
-    internal class AppStartUp
+    internal static class AppStartUp
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -19,16 +20,30 @@ namespace Server.App.Common
             try
             {
                 var flag = Start();
-                if (!flag) return; //启动服务器失败
+                if (!flag)
+                {
+                    return; //启动服务器失败
+                }
 
-                Log.Info($"launch embedded db...");
+                Log.Info($"Load Config Start...");
+                ConfigManager.Instance.LoadConfig();
+                // var it = ConfigManager.Instance.Tables.TbItem.Get(1);
+                // Console.WriteLine(it);
+                Log.Info($"Load Config End...");
+
+                Log.Info($"launch db service start...");
                 ActorLimit.Init(ActorLimit.RuleType.None);
-                GameDB.Init();
-                GameDB.Open(Settings.MongoUrl, Settings.MongoDBName);
-                Log.Info($"regist comps...");
-                await CompRegister.Init();
-                Log.Info($"load hotfix module");
+                GameDb.Init();
+                GameDb.Open(Settings.MongoUrl, Settings.MongoDBName);
+                Log.Info($"launch db service end...");
+
+                Log.Info($"regist comps start...");
+                await ComponentRegister.Init();
+                Log.Info($"regist comps end...");
+
+                Log.Info($"load hotfix module start");
                 await HotfixMgr.LoadHotfixModule();
+                Log.Info($"load hotfix module end");
 
                 Log.Info("进入游戏主循环...");
                 Console.WriteLine("***进入游戏主循环***");
@@ -60,10 +75,6 @@ namespace Server.App.Common
                 LayoutRenderer.Register<NLogConfigurationLayoutRender>("logConfiguration");
                 LogManager.Configuration = new XmlLoggingConfiguration("Configs/app_log.config");
                 LogManager.AutoShutdown = false;
-
-                // PolymorphicTypeMapper.Register(typeof(AppStartUp).Assembly); //app
-                // PolymorphicResolver.Init();
-
                 return true;
             }
             catch (Exception e)

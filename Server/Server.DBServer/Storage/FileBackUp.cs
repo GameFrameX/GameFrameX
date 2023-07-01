@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Geek.Server.Core.Storage
+namespace Server.DBServer.Storage
 {
     public static class FileBackup
     {
@@ -16,7 +16,7 @@ namespace Geek.Server.Core.Storage
 
                 try
                 {
-                    var curDataBase = GameDB.As<MongoDBConnection>().CurDB;
+                    var curDataBase = GameDb.As<MongoDbServiceConnection>().CurrentDatabase;
                     var root = new DirectoryInfo(folder);
                     foreach (var dir in root.GetDirectories())
                     {

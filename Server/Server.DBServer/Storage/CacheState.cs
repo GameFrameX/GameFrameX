@@ -1,9 +1,9 @@
-﻿using NLog;
-using ProtoBuf;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using NLog;
 using Server.Google.ProtoBuf;
 using Server.Utility;
 
-namespace Geek.Server.Core.Storage
+namespace Server.DBServer.Storage
 {
     /// <summary>
     /// 回存时间戳
@@ -34,6 +34,7 @@ namespace Geek.Server.Core.Storage
     }
 
     // [MessagePackObject(true)]
+    [BsonSerializer]
     public abstract class CacheState
     {
         public const string UniqueId = nameof(Id);
@@ -84,7 +85,7 @@ namespace Geek.Server.Core.Storage
 
         public void AfterSaveToDB()
         {
-            stateHash.AfterSaveToDB();
+            stateHash.AfterSaveToDb();
         }
 
         #endregion
@@ -92,14 +93,6 @@ namespace Geek.Server.Core.Storage
 
 
     #region xxhash
-
-    public static class xxHashExt
-    {
-        public static bool IsDefault(this Standart.Hash.xxHash.uint128 self)
-        {
-            return (self.high64 == 0) && (self.low64 == 0);
-        }
-    }
 
     class StateHash
     {
@@ -127,7 +120,7 @@ namespace Geek.Server.Core.Storage
             return (CacheHash.IsDefault() || !toSaveHash.Equals(CacheHash), data);
         }
 
-        public void AfterSaveToDB()
+        public void AfterSaveToDb()
         {
             if (CacheHash.Equals(ToSaveHash))
             {
@@ -156,35 +149,39 @@ namespace Geek.Server.Core.Storage
 
         private CacheState State { get; }
 
-        public StateMd5(CacheState state, bool isNew)
+        public StateMd5(CacheState state, bool isNew, string cacheMd5, string toSaveMd5)
         {
             State = state;
+            CacheMd5 = cacheMd5;
+            ToSaveMd5 = toSaveMd5;
             if (!isNew)
-                CacheMD5 = GetMD5AndData(state).md5;
+            {
+                CacheMd5 = GetMd5AndData(state).md5;
+            }
         }
 
-        private string CacheMD5 { get; set; }
+        private string CacheMd5 { get; set; }
 
-        private string ToSaveMD5 { get; set; }
+        private string ToSaveMd5 { get; set; }
 
         public (bool, byte[]) IsChanged()
         {
-            var (toSaveMD5, data) = GetMD5AndData(State);
-            ToSaveMD5 = toSaveMD5;
-            return (CacheMD5 == default || toSaveMD5 != CacheMD5, data);
+            var (toSaveMd5, data) = GetMd5AndData(State);
+            ToSaveMd5 = toSaveMd5;
+            return (CacheMd5 == default || toSaveMd5 != CacheMd5, data);
         }
 
-        public void AfterSaveToDB()
+        public void AfterSaveToDb()
         {
-            if (CacheMD5 == ToSaveMD5)
+            if (CacheMd5 == ToSaveMd5)
             {
                 Log.Error($"调用AfterSaveToDB前CacheMD5已经等于ToSaveMD5 {State}");
             }
 
-            CacheMD5 = ToSaveMD5;
+            CacheMd5 = ToSaveMd5;
         }
 
-        private static (string md5, byte[] data) GetMD5AndData(CacheState state)
+        private static (string md5, byte[] data) GetMd5AndData(CacheState state)
         {
             var data = SerializerHelper.Serialize(state);
             var md5Str = Md5Helper.Md5(data);

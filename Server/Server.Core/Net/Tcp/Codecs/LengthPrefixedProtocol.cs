@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using Server.Core.Hotfix;
 using Server.Core.Net.Bedrock.Protocols;
 using Server.Core.Net.Messages;
 using Server.Utility;
@@ -17,7 +18,7 @@ namespace Server.Core.Net.Tcp.Codecs
                 return false;
             }
 
-            var payload = input.Slice(reader.Position, length - 4);//length已经被TryReadBigEndian读取
+            var payload = input.Slice(reader.Position, length - 4); //length已经被TryReadBigEndian读取
             message = new NMessage(payload);
 
             consumed = payload.End;
@@ -32,7 +33,8 @@ namespace Server.Core.Net.Tcp.Codecs
             var span = output.GetSpan(len);
             int offset = 0;
             XBuffer.WriteInt(len, span, ref offset);
-            XBuffer.WriteInt(nmsg.Msg.MsgId, span, ref offset);
+            var msgId = HotfixMgr.GetMsgType(nmsg.Msg.GetType());
+            XBuffer.WriteInt(msgId, span, ref offset);
             XBuffer.WriteBytesWithoutLength(bytes, span, ref offset);
             output.Advance(len);
         }

@@ -6,12 +6,11 @@ using Server.Core.Timer;
 
 namespace Server.Core.Actors
 {
-    sealed public class Actor
+    public sealed class Actor
     {
-
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private readonly ConcurrentDictionary<Type, BaseComp> compDic = new();
+        private readonly ConcurrentDictionary<Type, BaseComp> compDic = new ConcurrentDictionary<Type, BaseComp>();
 
         public long Id { get; init; }
 
@@ -21,25 +20,22 @@ namespace Server.Core.Actors
 
         public bool AutoRecycle { get; private set; } = false;
 
-        public HashSet<long> ScheduleIdSet = new();
+        public HashSet<long> ScheduleIdSet = new HashSet<long>();
 
         public void SetAutoRecycle(bool autoRecycle)
         {
-            Tell(() =>
-            {
-                AutoRecycle = autoRecycle;
-            });
+            Tell(() => { AutoRecycle = autoRecycle; });
         }
 
         public async Task<T> GetCompAgent<T>() where T : ICompAgent
         {
-            return (T)await GetCompAgent(typeof(T));
+            return (T) await GetCompAgent(typeof(T));
         }
 
         public async Task<ICompAgent> GetCompAgent(Type agentType)
         {
             var compType = agentType.BaseType.GetGenericArguments()[0];
-            var comp = compDic.GetOrAdd(compType, k => CompRegister.NewComp(this, k));
+            var comp = compDic.GetOrAdd(compType, k => ComponentRegister.NewComp(this, k));
             var agent = comp.GetAgent();
             if (!comp.IsActive)
             {
@@ -49,6 +45,7 @@ namespace Server.Core.Actors
                     agent.Active();
                 });
             }
+
             return agent;
         }
 
@@ -58,7 +55,7 @@ namespace Server.Core.Actors
         {
             Id = id;
             Type = type;
-            WorkerActor = new(id);
+            WorkerActor = new WorkerActor(id);
 
             if (type == ActorType.Role)
             {
@@ -66,7 +63,7 @@ namespace Server.Core.Actors
             }
             else
             {
-                Tell(() => CompRegister.ActiveComps(this));
+                Tell(() => ComponentRegister.ActiveComps(this));
             }
         }
 
@@ -97,19 +94,20 @@ namespace Server.Core.Actors
         {
             foreach (var item in compDic)
             {
-               await item.Value.SaveState();
+                await item.Value.SaveState();
             }
         }
 
-        public async Task Deactive()
+        public async Task DeActive()
         {
             foreach (var item in compDic.Values)
             {
-                await item.Deactive();
+                await item.DeActive();
             }
         }
 
         #region actor 入队
+
         public void Tell(Action work, int timeout = TIME_OUT)
         {
             WorkerActor.Tell(work, timeout);
@@ -144,6 +142,7 @@ namespace Server.Core.Actors
         {
             return WorkerActor.SendAsync(work, timeout);
         }
+
         #endregion
 
         public override string ToString()
