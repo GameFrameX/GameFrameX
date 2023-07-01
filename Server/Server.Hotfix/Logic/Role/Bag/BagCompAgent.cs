@@ -46,7 +46,7 @@ namespace Server.Hotfix.Logic.Role.Bag
             //.....
 
             //合成成功后分发一个获得宠物的事件(在PetCompAgent中监听此事件)
-            this.Dispatch(EventID.GotNewPet, new OneParam<int>(1000));
+            this.Dispatch(EventId.GotNewPet, new OneParam<int>(1000));
 
             var res = new ResComposePet();
             res.PetId = 1000;

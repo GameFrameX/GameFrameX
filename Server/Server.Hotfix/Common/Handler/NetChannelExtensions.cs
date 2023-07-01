@@ -17,7 +17,7 @@ public static class NetChannelExtensions
 
         if (uniId > 0)
         {
-            ResErrorCode res = new ResErrorCode
+            RespErrorCode res = new RespErrorCode
             {
                 // UniId = uniId,
                 ErrCode = (int) code,

@@ -34,7 +34,7 @@ namespace Server.Hotfix.Logic.Role.Base
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
 
-        [Event(EventID.SessionRemove)]
+        [Event(EventId.SessionRemove)]
         private class EL : EventListener<RoleCompAgent>
         {
             protected override Task HandleEvent(RoleCompAgent agent, Event evt)
@@ -43,7 +43,7 @@ namespace Server.Hotfix.Logic.Role.Base
             }
         }
 
-        public async Task<ResLogin> OnLogin(ReqLogin reqLogin, bool isNewRole)
+        public async Task<RespLogin> OnLogin(ReqLogin reqLogin, bool isNewRole)
         {
             SetAutoRecycle(false);
             if (isNewRole)
@@ -70,9 +70,9 @@ namespace Server.Hotfix.Logic.Role.Base
             QuartzTimer.Unschedule(ScheduleIdSet);
         }
 
-        private ResLogin BuildLoginMsg()
+        private RespLogin BuildLoginMsg()
         {
-            var res = new ResLogin()
+            var res = new RespLogin()
             {
                 Code = 0,
                 UserInfo = new UserInfo()

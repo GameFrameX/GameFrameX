@@ -1,5 +1,6 @@
 ﻿using ProtoBuf;
 using System.Collections.Generic;
+using Protocol;
 
 namespace Hotfix.Message.Proto
 {
@@ -23,8 +24,9 @@ namespace Hotfix.Message.Proto
 	/// <summary>
 	/// 玩家基础信息
 	/// </summary>
+	
 	[ProtoContract]
-	public partial class UserInfo
+	public partial class UserInfo : Protocol.Message
 	{
 		/// <summary>
 		///  角色名
@@ -77,8 +79,9 @@ namespace Hotfix.Message.Proto
 
 	}
 
+	
 	[ProtoContract]
-	public partial class PhoneNumber
+	public partial class PhoneNumber : Protocol.Message
 	{
 		/// <summary>
 		/// 
@@ -94,8 +97,9 @@ namespace Hotfix.Message.Proto
 
 	}
 
+	
 	[ProtoContract]
-	public partial class Person
+	public partial class Person : Protocol.Message
 	{
 		/// <summary>
 		/// 
@@ -126,8 +130,9 @@ namespace Hotfix.Message.Proto
 	/// <summary>
 	/// Ouraddressbookfileisjustoneofthese.
 	/// </summary>
+	
 	[ProtoContract]
-	public partial class AddressBook
+	public partial class AddressBook : Protocol.Message
 	{
 		/// <summary>
 		/// 

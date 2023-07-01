@@ -24,8 +24,9 @@ namespace Server.Proto
 	/// <summary>
 	/// 玩家基础信息
 	/// </summary>
+	
 	[ProtoContract]
-	public partial class UserInfo: Message
+	public partial class UserInfo : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		///  角色名
@@ -78,8 +79,9 @@ namespace Server.Proto
 
 	}
 
+	
 	[ProtoContract]
-	public partial class PhoneNumber: Message
+	public partial class PhoneNumber : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		/// 
@@ -95,8 +97,9 @@ namespace Server.Proto
 
 	}
 
+	
 	[ProtoContract]
-	public partial class Person: Message
+	public partial class Person : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		/// 
@@ -127,8 +130,9 @@ namespace Server.Proto
 	/// <summary>
 	/// Ouraddressbookfileisjustoneofthese.
 	/// </summary>
+	
 	[ProtoContract]
-	public partial class AddressBook: Message
+	public partial class AddressBook : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		/// 

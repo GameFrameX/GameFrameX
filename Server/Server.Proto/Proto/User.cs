@@ -4,8 +4,12 @@ using Server.Core.Net.Messages;
 
 namespace Server.Proto
 {
+	/// <summary>
+	/// 请求登录
+	/// </summary>
+	[MessageTypeHandler(10)]
 	[ProtoContract]
-	public partial class ReqLogin: Message
+	public partial class ReqLogin : Server.Core.Net.Messages.Message, IRequestMessage
 	{
 		/// <summary>
 		/// 
@@ -39,8 +43,12 @@ namespace Server.Proto
 
 	}
 
+	/// <summary>
+	/// 请求登录返回
+	/// </summary>
+	[MessageTypeHandler(10)]
 	[ProtoContract]
-	public partial class ResLogin: Message
+	public partial class RespLogin : Server.Core.Net.Messages.Message, IResponseMessage
 	{
 		/// <summary>
 		/// 
@@ -59,8 +67,9 @@ namespace Server.Proto
 	/// <summary>
 	/// 客户端每次请求都会回复错误码
 	/// </summary>
+	
 	[ProtoContract]
-	public partial class ResErrorCode: Message
+	public partial class RespErrorCode : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		///  0:表示无错误
@@ -76,8 +85,9 @@ namespace Server.Proto
 
 	}
 
+	[MessageTypeHandler(200)]
 	[ProtoContract]
-	public partial class ResPrompt: Message
+	public partial class RespPrompt : Server.Core.Net.Messages.Message, IResponseMessage
 	{
 		/// <summary>
 		///  提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）

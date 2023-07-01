@@ -7,16 +7,18 @@ namespace Server.Proto
 	/// <summary>
 	/// 请求背包数据
 	/// </summary>
+	[MessageTypeHandler(100)]
 	[ProtoContract]
-	public partial class ReqBagInfo: Message
+	public partial class ReqBagInfo : Server.Core.Net.Messages.Message, IRequestMessage
 	{
 	}
 
 	/// <summary>
 	/// 返回背包数据
 	/// </summary>
+	[MessageTypeHandler(100)]
 	[ProtoContract]
-	public partial class ResBagInfo: Message
+	public partial class ResBagInfo : Server.Core.Net.Messages.Message, IResponseMessage
 	{
 		/// <summary>
 		/// 
@@ -29,8 +31,9 @@ namespace Server.Proto
 	/// <summary>
 	/// 请求背包数据
 	/// </summary>
+	[MessageTypeHandler(101)]
 	[ProtoContract]
-	public partial class ReqComposePet: Message
+	public partial class ReqComposePet : Server.Core.Net.Messages.Message, IRequestMessage
 	{
 		/// <summary>
 		///  碎片id
@@ -43,8 +46,9 @@ namespace Server.Proto
 	/// <summary>
 	/// 返回背包数据
 	/// </summary>
+	[MessageTypeHandler(101)]
 	[ProtoContract]
-	public partial class ResComposePet: Message
+	public partial class ResComposePet : Server.Core.Net.Messages.Message, IResponseMessage
 	{
 		/// <summary>
 		///  合成宠物的Id
@@ -57,8 +61,9 @@ namespace Server.Proto
 	/// <summary>
 	/// 请求背包数据
 	/// </summary>
+	[MessageTypeHandler(102)]
 	[ProtoContract]
-	public partial class ReqUseItem: Message
+	public partial class ReqUseItem : Server.Core.Net.Messages.Message, IRequestMessage
 	{
 		/// <summary>
 		///  道具id
@@ -71,8 +76,9 @@ namespace Server.Proto
 	/// <summary>
 	/// 出售道具
 	/// </summary>
+	[MessageTypeHandler(103)]
 	[ProtoContract]
-	public partial class ReqSellItem: Message
+	public partial class ReqSellItem : Server.Core.Net.Messages.Message, IRequestMessage
 	{
 		/// <summary>
 		///  道具id
@@ -85,8 +91,9 @@ namespace Server.Proto
 	/// <summary>
 	/// 出售道具
 	/// </summary>
+	[MessageTypeHandler(103)]
 	[ProtoContract]
-	public partial class ResItemChange: Message
+	public partial class ResItemChange : Server.Core.Net.Messages.Message, IResponseMessage
 	{
 		/// <summary>
 		///  变化的道具

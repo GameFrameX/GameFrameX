@@ -12,14 +12,14 @@ namespace Server.Hotfix.Logic.Role.Pet
     {
         readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 
-        [Event(EventID.GotNewPet)]
+        [Event(EventId.GotNewPet)]
         class EL : EventListener<PetCompAgent>
         {
             protected override async Task HandleEvent(PetCompAgent agent, Event evt)
             {
-                switch ((EventID) evt.EventId)
+                switch ((EventId) evt.EventId)
                 {
-                    case EventID.GotNewPet:
+                    case EventId.GotNewPet:
                         await agent.OnGotNewPet((OneParam<int>) evt.Data);
                         break;
                     default:

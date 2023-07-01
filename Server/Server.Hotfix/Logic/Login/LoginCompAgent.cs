@@ -46,10 +46,8 @@ namespace Server.Hotfix.Logic.Login
             }
 
             //添加到session
-            var session = new Session
+            var session = new Session(roleId)
             {
-                Id = roleId,
-                Time = DateTime.Now,
                 Channel = channel,
                 Sign = reqLogin.Device
             };
@@ -75,6 +73,7 @@ namespace Server.Hotfix.Logic.Login
                     return roleId;
                 return 0;
             }
+
             return 0;
         }
 
@@ -90,9 +89,9 @@ namespace Server.Hotfix.Logic.Login
                 info.UserName = userName;
                 State.PlayerMap[playerId] = info;
             }
+
             info.IsChanged = true;
             info.RoleMap[Settings.ServerId] = roleId;
         }
-
     }
 }
