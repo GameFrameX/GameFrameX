@@ -83,7 +83,7 @@ namespace Base.Net
             span.WriteLong(3333, ref offset);
             span.WriteInt(11111111, ref offset);
             var messageType = msg.GetType();
-            var msgId = HotfixMessageIdHandler.GetReqMessageIdByType(messageType);
+            var msgId = ProtoMessageIdHandler.GetReqMessageIdByType(messageType);
             span.WriteInt(msgId, ref offset);
             span.WriteBytesWithoutLength(writeMemoryStream.GetBuffer(), ref offset);
             output.Advance(len);

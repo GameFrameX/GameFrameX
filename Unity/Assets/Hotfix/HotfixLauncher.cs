@@ -25,6 +25,7 @@ namespace Hotfix
             GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<AnimancerComponent>();
             GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World Lua')");
 
+            ProtoMessageIdHandler.Init(typeof(HotfixLauncher).Assembly);
             LoadConfig();
             // MemoryStream memoryStream = new MemoryStream();
             // var userInfo = new CSHeartBeat();
