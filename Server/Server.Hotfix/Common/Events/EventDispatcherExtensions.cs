@@ -4,6 +4,7 @@ using Server.Core.Actors;
 using Server.Core.Events;
 using Server.Core.Hotfix;
 using Server.Core.Hotfix.Agent;
+using Server.Extension;
 using Server.Hotfix.Logic.Server;
 using Server.Utility;
 
@@ -25,7 +26,7 @@ namespace Server.Hotfix.Common.Events
             // 自己处理
             SelfHandle(agent, evtId, evt);
 
-            if ((EventID)evtId > EventID.RoleSeparator && agent.OwnerType > ActorType.Separator)
+            if ((EventId)evtId > EventId.RoleSeparator && agent.OwnerType > ActorType.Separator)
             {
                 // 全局非玩家事件，抛给所有玩家
                 agent.Tell(()
@@ -53,7 +54,7 @@ namespace Server.Hotfix.Common.Events
             }
         }
 
-        public static void Dispatch(this ICompAgent agent, EventID evtId, Param args = null)
+        public static void Dispatch(this ICompAgent agent, EventId evtId, Param args = null)
         {
             Dispatch(agent, (int)evtId, args);
         }
