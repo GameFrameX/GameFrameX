@@ -202,7 +202,13 @@ namespace Luban.Editor
             Preview();
             GenUtils.Gen(_GetCommand(), before_gen, after_gen);
         }
-
+        
+        // [MenuItem("Tools/LuBan Gen &B")]
+        // public static void AutoGen()
+        // {
+        //     CreateInstance<LubanExportConfig>()?.Gen();
+        // }
+        
         [Button("删除")]
         public void Delete()
         {
@@ -249,6 +255,7 @@ namespace Luban.Editor
                     continue;
                 }
 
+                
                 if (string.Equals(value, "True"))
                 {
                     value = string.Empty;

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package Basic;
+
+// 请求心跳
+message ReqHeartBeat { // IRequestMessage 1
+  int64 Timestamp = 1; // 时间戳
+}
+// 返回心跳
+message RespHeartBeat { // IResponseMessage 1
+  int64 Timestamp = 1; // 时间戳
+}

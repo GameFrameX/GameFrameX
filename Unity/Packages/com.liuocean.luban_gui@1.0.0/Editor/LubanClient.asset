@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fed7fb4ed3b748f8a9f245b9b9bc97fa, type: 3}
-  m_Name: Luban
+  m_Name: LubanClient
   m_EditorClassIdentifier: 
   before_gen: Luban.Editor.TestBeforeGen
   after_gen: Luban.Editor.TestAfterGen
