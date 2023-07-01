@@ -1,14 +1,12 @@
-﻿using Geek.Server.Core.Storage;
-using Server.Core.Actors;
+﻿using Server.Core.Actors;
 using Server.Core.Comps;
+using Server.DBServer.Storage;
 
 namespace Server.App.Logic.Role.Base
 {
-
-    [Comp(ActorType.Role)]
+    [ComponentType(ActorType.Role)]
     public class RoleComp : StateComp<RoleState>
     {
-
     }
 
     public class RoleState : CacheState

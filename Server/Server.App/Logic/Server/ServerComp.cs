@@ -1,6 +1,6 @@
-﻿using Geek.Server.Core.Storage;
-using Server.Core.Actors;
+﻿using Server.Core.Actors;
 using Server.Core.Comps;
+using Server.DBServer.Storage;
 
 namespace Server.App.Logic.Server
 {
@@ -12,8 +12,7 @@ namespace Server.App.Logic.Server
         public int WorldLevel { get; set; } = 1;
     }
 
-
-    [Comp(ActorType.Server)]
+    [ComponentType(ActorType.Server)]
     public class ServerComp : StateComp<ServerState>
     {
         /// <summary>

@@ -1,16 +1,14 @@
-﻿using Geek.Server.Core.Storage;
-using Server.Core.Actors;
+﻿using Server.Core.Actors;
 using Server.Core.Comps;
+using Server.DBServer.Storage;
 
 namespace Server.App.Logic.Role.Pet
 {
-
     public class PetState : CacheState
     {
-
     }
 
-    [Comp(ActorType.Role)]
+    [ComponentType(ActorType.Role)]
     public class PetComp : StateComp<PetState>
     {
     }

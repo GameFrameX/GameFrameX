@@ -1,11 +1,10 @@
 ﻿using System.Collections.Concurrent;
-using Geek.Server.Core.Storage;
 using Server.Core.Actors;
 using Server.Core.Comps;
+using Server.DBServer.Storage;
 
 namespace Server.App.Logic.Login
 {
-
     public class PlayerInfo : InnerState
     {
         //player相对特殊，id不是long，所以不继承DBState，自定义mongoDB的id
@@ -16,8 +15,7 @@ namespace Server.App.Logic.Login
         //这里设定每个账号在1服只有能创建1个角色
         public Dictionary<int, long> RoleMap = new Dictionary<int, long>();
 
-        [BsonIgnore]
-        public bool IsChanged;
+        [BsonIgnore] public bool IsChanged;
     }
 
     public class LoginState : CacheState
@@ -26,10 +24,8 @@ namespace Server.App.Logic.Login
     }
 
 
-    [Comp(ActorType.Server)]
+    [ComponentType(ActorType.Server)]
     public class LoginComp : StateComp<LoginState>
     {
-
     }
-
 }
