@@ -31,6 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Server.Config\Server.Config.csproj" />
 		<ProjectReference Include="..\Server.Core\Server.Core.csproj" />
 		<ProjectReference Include="..\Server.DBServer\Server.DBServer.csproj" />
 		<ProjectReference Include="..\Server.Generate\Server.Generate.csproj" />
