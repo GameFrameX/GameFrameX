@@ -191,9 +191,19 @@ namespace Proto2CS.Editor
             string s = File.ReadAllText(proto);
 
             StringBuilder sb = new StringBuilder();
+            StringBuilder sbTemp = new StringBuilder();
             // sb.Append("using ETModel;\n");
             sb.Append("using ProtoBuf;\n");
             sb.Append("using System.Collections.Generic;\n");
+            if (isServer)
+            {
+                sb.AppendLine("using Server.Core.Net.Messages;");
+            }
+            else
+            {
+                sb.AppendLine("using Protocol;");
+            }
+
             sb.AppendLine();
             sb.Append($"namespace {ns}\n");
             sb.Append("{\n");
@@ -202,7 +212,7 @@ namespace Proto2CS.Editor
             foreach (string line in s.Split('\n'))
             {
                 string newline = line.Trim();
-
+                sbTemp.Clear();
                 if (newline == "")
                 {
                     continue;
@@ -243,7 +253,13 @@ namespace Proto2CS.Editor
                         //sb.Append($"\t[NetMessage({opcodeClassName}.{msgName})]\n");
                     }
 
+                    // if (isServer)
+                    {
+                        sb.Append($"\t######\n");
+                    }
+
                     sb.Append($"\t[ProtoContract]\n");
+
                     // if (msgName.StartsWith("Res"))
                     // {
                     //     sb.Append($"\tpublic partial class {msgName} : PacketHandlerBase");
@@ -252,11 +268,11 @@ namespace Proto2CS.Editor
                     {
                         if (isServer)
                         {
-                            sb.Append($"\tpublic partial class {msgName}: Message");
+                            sb.Append($"\tpublic partial class {msgName} : Server.Core.Net.Messages.Message");
                         }
                         else
                         {
-                            sb.Append($"\tpublic partial class {msgName}");
+                            sb.Append($"\tpublic partial class {msgName} : Protocol.Message");
                         }
                     }
 
@@ -270,17 +286,33 @@ namespace Proto2CS.Editor
                     //     parentClass = "IResponseMessage";
                     // }
 
-                    if (parentClass == "IActorMessage" || parentClass == "IActorRequest" || parentClass == "IActorResponse")
+                    if (parentClass == "IActorMessage" || parentClass.Contains("IRequestMessage") || parentClass.Contains("IResponseMessage"))
                     {
-                        sb.Append($", {parentClass}\n");
+                        // if (isServer)
+                        {
+                            var parentCsList = parentClass.Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries);
+                            if (parentCsList.Length > 1)
+                            {
+                                sb.Append($", {parentCsList[0]}\n");
+                                sb.Replace("######", $"[MessageTypeHandler({parentCsList[1]})]");
+                            }
+                        }
                     }
-                    else if (parentClass != "")
-                    {
-                        sb.Append($", {parentClass}\n");
-                    }
+                    // else if (parentClass != "")
+                    // {
+                    //     if (isServer)
+                    //     {
+                    //         sb.Append($", {parentClass}\n");
+                    //     }
+                    // }
                     else
                     {
                         sb.Append("\n");
+                    }
+
+                    // if (isServer)
+                    {
+                        sb.Replace("######", string.Empty);
                     }
 
                     sb.Append("\t{\n");
