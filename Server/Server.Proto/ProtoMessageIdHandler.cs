@@ -102,6 +102,7 @@ namespace Server.Proto
                     }
                 }
             }
+            Log.Info(" 注册消息ID类型: 结束");
         }
     }
 }
