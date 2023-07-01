@@ -1,4 +1,4 @@
-﻿namespace System
+﻿namespace Server.Extension
 { 
     public static class DateTimeExtensions
     {

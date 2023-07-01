@@ -1,4 +1,4 @@
-﻿namespace Server.Utility
+﻿namespace Server.Extension
 {
     /// <summary>
     /// 线程私有random对象

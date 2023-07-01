@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿namespace Server.Extension;
 
 public static class StringExtension
 {

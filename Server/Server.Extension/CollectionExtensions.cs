@@ -1,6 +1,4 @@
-﻿using Server.Utility;
-
-namespace System.Collections.Generic
+﻿namespace Server.Extension
 {
     public static class CollectionExtensions
     {
