@@ -10,6 +10,7 @@ using Server.Core.Net.Http;
 using Server.Core.Net.Tcp;
 using Server.Core.Timer;
 using Server.Core.Utility;
+using Server.Proto;
 using Server.Utility;
 
 namespace Server.Hotfix.Common
@@ -29,7 +30,17 @@ namespace Server.Hotfix.Common
             }
 
             // PolymorphicTypeMapper.Register(this.GetType().Assembly);
-            // HotfixMgr.SetMsgGetter(MsgFactory.GetType);
+            ProtoMessageIdHandler.Init();
+            HotfixMgr.SetMsgGetterByGetId((type) =>
+            {
+                Log.Debug("MsgType:" + type);
+                return ProtoMessageIdHandler.GetRespMessageIdByType(type);
+            });
+            HotfixMgr.SetMsgGetter((messageId) =>
+            {
+                Log.Debug("MsgID:" + messageId);
+                return ProtoMessageIdHandler.GetReqTypeById(messageId);
+            });
             //await TcpServer.Start(Settings.TcpPort);
             await TcpServer.Start(Settings.TcpPort, builder => builder.UseConnectionHandler<AppTcpConnectionHandler>());
             Log.Info("tcp 服务启动完成...");
@@ -40,7 +51,7 @@ namespace Server.Hotfix.Common
                 throw new Exception($"载入配置表失败... {msg}");
 
             GlobalTimer.Start();
-            await CompRegister.ActiveGlobalComps();
+            await ComponentRegister.ActiveGlobalComps();
             return true;
         }
 
