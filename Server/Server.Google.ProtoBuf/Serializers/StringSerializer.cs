@@ -1,5 +1,6 @@
 ﻿#if !NO_RUNTIME
 using System;
+
 #if FEAT_IKVM
 using Type = IKVM.Reflection.Type;
 using IKVM.Reflection;
@@ -22,13 +23,26 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(string));
 #endif
         }
-        public Type ExpectedType { get { return expectedType; } }
+
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
+
         public void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteString((string)value, dest);
+            ProtoWriter.WriteString((string) value, dest);
         }
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 
         public object Read(object value, ProtoReader source)
         {

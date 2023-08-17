@@ -18,7 +18,7 @@ namespace ProtoBuf
 #if FX11
     sealed
 #else
-    static
+        static
 #endif
         class ExtensibleUtil
     {
@@ -70,7 +70,8 @@ namespace ProtoBuf
             Stream stream = extn.BeginQuery();
             object value = null;
             ProtoReader reader = null;
-            try {
+            try
+            {
                 SerializationContext ctx = new SerializationContext();
                 reader = ProtoReader.Create(stream, model, ctx, ProtoReader.TO_EOF);
                 while (model.TryDeserializeAuxiliaryType(reader, format, tag, type, ref value, true, false, false, false, null) && value != null)
@@ -85,6 +86,7 @@ namespace ProtoBuf
                         value = null; // fresh item each time
                     }
                 }
+
                 if (singleton && value != null)
                 {
 #if FX11
@@ -98,11 +100,13 @@ namespace ProtoBuf
                 result.CopyTo(resultArr, 0);
                 return resultArr;
 #endif
-            } finally {
+            }
+            finally
+            {
                 ProtoReader.Recycle(reader);
                 extn.EndQuery(stream);
             }
-#endif       
+#endif
         }
 
         internal static void AppendExtendValue(TypeModel model, IExtensible instance, int tag, DataFormat format, object value)
@@ -110,8 +114,8 @@ namespace ProtoBuf
 #if FEAT_IKVM
             throw new NotSupportedException();
 #else
-            if(instance == null) throw new ArgumentNullException("instance");
-            if(value == null) throw new ArgumentNullException("value");
+            if (instance == null) throw new ArgumentNullException("instance");
+            if (value == null) throw new ArgumentNullException("value");
 
             // TODO
             //model.CheckTagNotInUse(tag);
@@ -121,14 +125,18 @@ namespace ProtoBuf
             if (extn == null) throw new InvalidOperationException("No extension object available; appended data would be lost.");
             bool commit = false;
             Stream stream = extn.BeginAppend();
-            try {
-                using(ProtoWriter writer = new ProtoWriter(stream, model, null)) {
+            try
+            {
+                using (ProtoWriter writer = new ProtoWriter(stream, model, null))
+                {
                     model.TrySerializeAuxiliaryType(writer, null, format, tag, value, false, null);
                     writer.Close();
                 }
+
                 commit = true;
             }
-            finally {
+            finally
+            {
                 extn.EndAppend(stream, commit);
             }
 #endif
@@ -147,5 +155,4 @@ namespace ProtoBuf
 //        }
 //#endif
     }
-
 }

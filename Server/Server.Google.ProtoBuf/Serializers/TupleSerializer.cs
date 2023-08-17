@@ -16,6 +16,7 @@ namespace ProtoBuf.Serializers
         private readonly MemberInfo[] members;
         private readonly ConstructorInfo ctor;
         private IProtoSerializer[] tails;
+
         public TupleSerializer(RuntimeTypeModel model, ConstructorInfo ctor, MemberInfo[] members)
         {
             if (ctor == null) throw new ArgumentNullException("ctor");
@@ -41,6 +42,7 @@ namespace ProtoBuf.Serializers
                 {
                     asReference = model[tmp].AsReferenceDefault;
                 }
+
                 IProtoSerializer tail = ValueMember.TryGetCoreSerializer(model, DataFormat.Default, tmp, out wireType, asReference, false, false, true), serializer;
                 if (tail == null)
                 {
@@ -63,9 +65,11 @@ namespace ProtoBuf.Serializers
                         serializer = ListDecorator.Create(model, finalType, defaultType, tail, i + 1, false, wireType, true, false, false);
                     }
                 }
+
                 tails[i] = serializer;
             }
         }
+
         public bool HasCallbacks(Meta.TypeModel.CallbackType callbackType)
         {
             return false;
@@ -80,10 +84,16 @@ namespace ProtoBuf.Serializers
         }
 
 
-
 #if !FEAT_IKVM
-        void IProtoTypeSerializer.Callback(object value, Meta.TypeModel.CallbackType callbackType, SerializationContext context) { }
-        object IProtoTypeSerializer.CreateInstance(ProtoReader source) { throw new NotSupportedException(); }
+        void IProtoTypeSerializer.Callback(object value, Meta.TypeModel.CallbackType callbackType, SerializationContext context)
+        {
+        }
+
+        object IProtoTypeSerializer.CreateInstance(ProtoReader source)
+        {
+            throw new NotSupportedException();
+        }
+
         private object GetValue(object obj, int index)
         {
             PropertyInfo prop;
@@ -107,6 +117,7 @@ namespace ProtoBuf.Serializers
                 throw new InvalidOperationException();
             }
         }
+
         public object Read(object value, ProtoReader source)
         {
             object[] values = new object[members.Length];
@@ -115,6 +126,7 @@ namespace ProtoBuf.Serializers
             {
                 invokeCtor = true;
             }
+
             for (int i = 0; i < values.Length; i++)
                 values[i] = GetValue(value, i);
             int field;
@@ -131,8 +143,10 @@ namespace ProtoBuf.Serializers
                     source.SkipField();
                 }
             }
+
             return invokeCtor ? ctor.Invoke(values) : value;
         }
+
         public void Write(object value, ProtoWriter dest)
         {
             for (int i = 0; i < tails.Length; i++)
@@ -151,13 +165,18 @@ namespace ProtoBuf.Serializers
         {
             get { return false; }
         }
+
         Type GetMemberType(int index)
         {
             Type result = Helpers.GetMemberType(members[index]);
             if (result == null) throw new InvalidOperationException();
             return result;
         }
-        bool IProtoTypeSerializer.CanCreateInstance() { return false; }
+
+        bool IProtoTypeSerializer.CanCreateInstance()
+        {
+            return false;
+        }
 
 #if FEAT_COMPILER
         public void EmitWrite(Compiler.CompilerContext ctx, Compiler.Local valueFrom)

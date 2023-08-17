@@ -24,12 +24,16 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(System.Type));
 #endif
         }
-        public Type ExpectedType { get { return expectedType; } }
+
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
 
 #if !FEAT_IKVM
         void IProtoSerializer.Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteType((Type)value, dest);
+            ProtoWriter.WriteType((Type) value, dest);
         }
 
         object IProtoSerializer.Read(object value, ProtoReader source)
@@ -38,8 +42,15 @@ namespace ProtoBuf.Serializers
             return source.ReadType();
         }
 #endif
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 
 #if FEAT_COMPILER
         void IProtoSerializer.EmitWrite(Compiler.CompilerContext ctx, Compiler.Local valueFrom)

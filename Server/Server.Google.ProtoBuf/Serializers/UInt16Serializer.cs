@@ -24,19 +24,31 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(ushort));
 #endif
         }
-        public virtual Type ExpectedType { get { return expectedType; } }
 
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        public virtual Type ExpectedType
+        {
+            get { return expectedType; }
+        }
+
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 #if !FEAT_IKVM
         public virtual object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // since replaces
             return source.ReadUInt16();
         }
+
         public virtual void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteUInt16((ushort)value, dest);
+            ProtoWriter.WriteUInt16((ushort) value, dest);
         }
 #endif
 #if FEAT_COMPILER

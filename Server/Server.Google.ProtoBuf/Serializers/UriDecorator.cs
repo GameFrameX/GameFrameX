@@ -24,21 +24,33 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(Uri));
 #endif
         }
-        public override Type ExpectedType { get { return expectedType; } }
-        public override bool RequiresOldValue { get { return false; } }
-        public override bool ReturnsValue { get { return true; } }
-        
+
+        public override Type ExpectedType
+        {
+            get { return expectedType; }
+        }
+
+        public override bool RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        public override bool ReturnsValue
+        {
+            get { return true; }
+        }
+
 
 #if !FEAT_IKVM
         public override void Write(object value, ProtoWriter dest)
         {
-            Tail.Write(((Uri)value).OriginalString, dest);
+            Tail.Write(((Uri) value).OriginalString, dest);
         }
 
         public override object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // not expecting incoming
-            string s = (string)Tail.Read(null, source);
+            string s = (string) Tail.Read(null, source);
             return s.Length == 0 ? null : new Uri(s, UriKind.RelativeOrAbsolute);
         }
 #endif
@@ -65,7 +77,7 @@ namespace ProtoBuf.Serializers
             ctx.EmitCtor(ctx.MapType(typeof(Uri)), ctx.MapType(typeof(string)), ctx.MapType(typeof(UriKind)));
             ctx.MarkLabel(@end);
         }
-#endif 
+#endif
     }
 }
 #endif

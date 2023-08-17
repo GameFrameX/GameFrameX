@@ -14,6 +14,7 @@ namespace ProtoBuf
         /// Describes the data-format used to store the key
         /// </summary>
         public DataFormat KeyFormat { get; set; }
+
         /// <summary>
         /// Describes the data-format used to store the value
         /// </summary>

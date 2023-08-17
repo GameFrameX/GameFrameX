@@ -19,7 +19,10 @@ namespace ProtoBuf.Serializers
 #else
         static readonly Type expectedType = typeof(float);
 #endif
-        public Type ExpectedType { get { return expectedType; } }
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
 
         public SingleSerializer(TypeModel model)
         {
@@ -27,17 +30,26 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(float));
 #endif
         }
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 #if !FEAT_IKVM
         public object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // since replaces
             return source.ReadSingle();
         }
+
         public void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteSingle((float)value, dest);
+            ProtoWriter.WriteSingle((float) value, dest);
         }
 #endif
 

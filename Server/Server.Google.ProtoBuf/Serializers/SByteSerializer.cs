@@ -23,20 +23,32 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(sbyte));
 #endif
         }
-        public Type ExpectedType { get { return expectedType; } }
+
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
 
 
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 #if !FEAT_IKVM
         public object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // since replaces
             return source.ReadSByte();
         }
+
         public void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteSByte((sbyte)value, dest);
+            ProtoWriter.WriteSByte((sbyte) value, dest);
         }
 #endif
 #if FEAT_COMPILER
@@ -49,7 +61,6 @@ namespace ProtoBuf.Serializers
             ctx.EmitBasicRead("ReadSByte", ExpectedType);
         }
 #endif
-
     }
 }
 #endif

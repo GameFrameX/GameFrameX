@@ -3,6 +3,7 @@ using System;
 #if COREFX
 using System.Reflection;
 #endif
+
 #if FEAT_COMPILER
 using System.Reflection.Emit;
 #endif
@@ -16,7 +17,10 @@ namespace ProtoBuf.Serializers
 {
     sealed class BlobSerializer : IProtoSerializer
     {
-        public Type ExpectedType { get { return expectedType; } }
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
 
 #if FEAT_IKVM
         readonly Type expectedType;
@@ -30,19 +34,28 @@ namespace ProtoBuf.Serializers
 #endif
             this.overwriteList = overwriteList;
         }
+
         private readonly bool overwriteList;
 #if !FEAT_IKVM
         public object Read(object value, ProtoReader source)
         {
-            return ProtoReader.AppendBytes(overwriteList ? null : (byte[])value, source);
+            return ProtoReader.AppendBytes(overwriteList ? null : (byte[]) value, source);
         }
+
         public void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteBytes((byte[])value, dest);
+            ProtoWriter.WriteBytes((byte[]) value, dest);
         }
 #endif
-        bool IProtoSerializer.RequiresOldValue { get { return !overwriteList; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return !overwriteList; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 #if FEAT_COMPILER
         void IProtoSerializer.EmitWrite(Compiler.CompilerContext ctx, Compiler.Local valueFrom)
         {

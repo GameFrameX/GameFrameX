@@ -3,15 +3,16 @@ using System.Collections;
 
 namespace ProtoBuf.Meta
 {
-
     internal sealed class MutableList : BasicList
     {
         /*  Like BasicList, but allows existing values to be changed
-         */ 
-        public new object this[int index] {
+         */
+        public new object this[int index]
+        {
             get { return head[index]; }
             set { head[index] = value; }
         }
+
         public void RemoveLast()
         {
             head.RemoveLastWithMutate();
@@ -22,6 +23,7 @@ namespace ProtoBuf.Meta
             head.Clear();
         }
     }
+
     internal class BasicList : IEnumerable
     {
         /* Requirements:
@@ -37,51 +39,87 @@ namespace ProtoBuf.Meta
          *     be mutable (i.e. array is fine as long as we don't screw it up)
          */
         private static readonly Node nil = new Node(null, 0);
+
         public void CopyTo(Array array, int offset)
         {
             head.CopyTo(array, offset);
         }
+
         protected Node head = nil;
+
         public int Add(object value)
         {
             return (head = head.Append(value)).Length - 1;
         }
-        public object this[int index] { get { return head[index]; } }
+
+        public object this[int index]
+        {
+            get { return head[index]; }
+        }
+
         //public object TryGet(int index)
         //{
         //    return head.TryGet(index);
         //}
-        public void Trim() { head = head.Trim(); }
-        public int Count { get { return head.Length; } }
-        IEnumerator IEnumerable.GetEnumerator() { return new NodeEnumerator(head); }
-        public NodeEnumerator GetEnumerator() { return new NodeEnumerator(head); }
+        public void Trim()
+        {
+            head = head.Trim();
+        }
+
+        public int Count
+        {
+            get { return head.Length; }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new NodeEnumerator(head);
+        }
+
+        public NodeEnumerator GetEnumerator()
+        {
+            return new NodeEnumerator(head);
+        }
 
         public struct NodeEnumerator : IEnumerator
         {
             private int position;
             private readonly Node node;
+
             internal NodeEnumerator(Node node)
             {
                 this.position = -1;
                 this.node = node;
             }
-            void IEnumerator.Reset() { position = -1; }
-            public object Current { get { return node[position]; } }
+
+            void IEnumerator.Reset()
+            {
+                position = -1;
+            }
+
+            public object Current
+            {
+                get { return node[position]; }
+            }
+
             public bool MoveNext()
             {
                 int len = node.Length;
                 return (position <= len) && (++position < len);
             }
         }
+
         internal sealed class Node
         {
             public object this[int index]
             {
-                get {
+                get
+                {
                     if (index >= 0 && index < length)
                     {
                         return data[index];
                     }
+
                     throw new ArgumentOutOfRangeException("index");
                 }
                 set
@@ -96,27 +134,35 @@ namespace ProtoBuf.Meta
                     }
                 }
             }
+
             //public object TryGet(int index)
             //{
             //    return (index >= 0 && index < length) ? data[index] : null;
             //}
             private readonly object[] data;
-            
+
             private int length;
-            public int Length { get { return length; } }
+
+            public int Length
+            {
+                get { return length; }
+            }
+
             internal Node(object[] data, int length)
             {
                 Helpers.DebugAssert((data == null && length == 0) ||
-                    (data != null && length > 0 && length <= data.Length));
+                                    (data != null && length > 0 && length <= data.Length));
                 this.data = data;
 
                 this.length = length;
             }
+
             public void RemoveLastWithMutate()
             {
                 if (length == 0) throw new InvalidOperationException();
                 length -= 1;
             }
+
             public Node Append(object value)
             {
                 object[] newData;
@@ -129,13 +175,16 @@ namespace ProtoBuf.Meta
                 {
                     newData = new object[data.Length * 2];
                     Array.Copy(data, newData, length);
-                } else
+                }
+                else
                 {
                     newData = data;
                 }
+
                 newData[length] = value;
                 return new Node(newData, newLength);
             }
+
             public Node Trim()
             {
                 if (length == 0 || length == data.Length) return this;
@@ -148,25 +197,30 @@ namespace ProtoBuf.Meta
             {
                 for (int i = 0; i < length; i++)
                 {
-                    if ((string)value == (string)data[i]) return i;
+                    if ((string) value == (string) data[i]) return i;
                 }
+
                 return -1;
             }
+
             internal int IndexOfReference(object instance)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    if ((object)instance == (object)data[i]) return i;
+                    if ((object) instance == (object) data[i]) return i;
                 } // ^^^ (object) above should be preserved, even if this was typed; needs
-                  // to be a reference check
+
+                // to be a reference check
                 return -1;
             }
+
             internal int IndexOf(MatchPredicate predicate, object ctx)
             {
                 for (int i = 0; i < length; i++)
                 {
                     if (predicate(data[i], ctx)) return i;
                 }
+
                 return -1;
             }
 
@@ -180,10 +234,11 @@ namespace ProtoBuf.Meta
 
             internal void Clear()
             {
-                if(data != null)
+                if (data != null)
                 {
                     Array.Clear(data, 0, data.Length);
                 }
+
                 length = 0;
             }
         }
@@ -192,10 +247,12 @@ namespace ProtoBuf.Meta
         {
             return head.IndexOf(predicate, ctx);
         }
+
         internal int IndexOfString(string value)
         {
             return head.IndexOfString(value);
         }
+
         internal int IndexOfReference(object instance)
         {
             return head.IndexOfReference(instance);
@@ -209,18 +266,22 @@ namespace ProtoBuf.Meta
             {
                 if (object.Equals(obj, value)) return true;
             }
+
             return false;
         }
+
         internal sealed class Group
         {
             public readonly int First;
             public readonly BasicList Items;
+
             public Group(int first)
             {
                 this.First = first;
                 this.Items = new BasicList();
             }
         }
+
         internal static BasicList GetContiguousGroups(int[] keys, object[] values)
         {
             if (keys == null) throw new ArgumentNullException("keys");
@@ -230,17 +291,21 @@ namespace ProtoBuf.Meta
             Group group = null;
             for (int i = 0; i < keys.Length; i++)
             {
-                if (i == 0 || keys[i] != keys[i - 1]) { group = null; }
+                if (i == 0 || keys[i] != keys[i - 1])
+                {
+                    group = null;
+                }
+
                 if (group == null)
                 {
                     group = new Group(keys[i]);
                     outer.Add(group);
                 }
+
                 group.Items.Add(values[i]);
             }
+
             return outer;
         }
     }
-
-
 }

@@ -1,5 +1,6 @@
 ﻿#if !NO_RUNTIME
 using ProtoBuf.Meta;
+
 namespace ProtoBuf.Serializers
 {
     interface IProtoTypeSerializer : IProtoSerializer

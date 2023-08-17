@@ -14,15 +14,21 @@ namespace ProtoBuf.Meta
     {
 #if DEBUG
         [Obsolete("Please use AttributeType instead")]
-        new public Type GetType() { return AttributeType; }
+        new public Type GetType()
+        {
+            return AttributeType;
+        }
 #endif
         public override string ToString() => AttributeType?.FullName ?? "";
         public abstract bool TryGet(string key, bool publicOnly, out object value);
+
         public bool TryGet(string key, out object value)
         {
             return TryGet(key, true, out value);
         }
+
         public abstract Type AttributeType { get; }
+
         public static AttributeMap[] Create(TypeModel model, Type type, bool inherit)
         {
 #if FEAT_IKVM
@@ -41,13 +47,14 @@ namespace ProtoBuf.Meta
 #else
             //object[] all = type.GetCustomAttributes(inherit);
             // 过滤掉null的Attribute
-            object[] all = type.GetCustomAttributes(inherit).Where((x)=>x != null).ToArray();
+            object[] all = type.GetCustomAttributes(inherit).Where((x) => x != null).ToArray();
 #endif
             AttributeMap[] result = new AttributeMap[all.Length];
-            for(int i = 0 ; i < all.Length ; i++)
+            for (int i = 0; i < all.Length; i++)
             {
-                result[i] = new ReflectionAttributeMap((Attribute)all[i]);
+                result[i] = new ReflectionAttributeMap((Attribute) all[i]);
             }
+
             return result;
 #endif
         }
@@ -69,19 +76,20 @@ namespace ProtoBuf.Meta
 #else
             //object[] all = member.GetCustomAttributes(inherit);
             // 过滤掉null的Attribute
-            object[] all = member.GetCustomAttributes(inherit).Where((x)=>x != null).ToArray();
+            object[] all = member.GetCustomAttributes(inherit).Where((x) => x != null).ToArray();
 #endif
             AttributeMap[] result = new AttributeMap[all.Length];
-            for(int i = 0 ; i < all.Length ; i++)
+            for (int i = 0; i < all.Length; i++)
             {
-                result[i] = new ReflectionAttributeMap((Attribute)all[i]);
+                result[i] = new ReflectionAttributeMap((Attribute) all[i]);
             }
+
             return result;
 #endif
         }
+
         public static AttributeMap[] Create(TypeModel model, Assembly assembly)
         {
-
 #if FEAT_IKVM
             const bool inherit = false;
             System.Collections.Generic.IList<CustomAttributeData> all = assembly.__GetCustomAttributes(model.MapType(typeof(Attribute)), inherit);
@@ -99,13 +107,14 @@ namespace ProtoBuf.Meta
             const bool inherit = false;
             //object[] all = assembly.GetCustomAttributes(inherit);
             // 过滤掉null的Attribute
-            object[] all = assembly.GetCustomAttributes(inherit).Where((x)=>x != null).ToArray();
+            object[] all = assembly.GetCustomAttributes(inherit).Where((x) => x != null).ToArray();
 #endif
             AttributeMap[] result = new AttributeMap[all.Length];
-            for(int i = 0 ; i < all.Length ; i++)
+            for (int i = 0; i < all.Length; i++)
             {
-                result[i] = new ReflectionAttributeMap((Attribute)all[i]);
+                result[i] = new ReflectionAttributeMap((Attribute) all[i]);
             }
+
             return result;
 #endif
         }
@@ -155,10 +164,12 @@ namespace ProtoBuf.Meta
             {
                 get { return attribute; }
             }
+
             public override Type AttributeType
             {
                 get { return attribute.GetType(); }
             }
+
             public override bool TryGet(string key, bool publicOnly, out object value)
             {
                 MemberInfo[] members = Helpers.GetInstanceFieldsAndProperties(attribute.GetType(), publicOnly);
@@ -171,13 +182,16 @@ namespace ProtoBuf.Meta
 #endif
                     {
                         PropertyInfo prop = member as PropertyInfo;
-                        if (prop != null) {
+                        if (prop != null)
+                        {
                             //value = prop.GetValue(attribute, null);
                             value = prop.GetGetMethod(true).Invoke(attribute, null);
                             return true;
                         }
+
                         FieldInfo field = member as FieldInfo;
-                        if (field != null) {
+                        if (field != null)
+                        {
                             value = field.GetValue(attribute);
                             return true;
                         }
@@ -185,10 +199,13 @@ namespace ProtoBuf.Meta
                         throw new NotSupportedException(member.GetType().Name);
                     }
                 }
+
                 value = null;
                 return false;
             }
+
             private readonly Attribute attribute;
+
             public ReflectionAttributeMap(Attribute attribute)
             {
                 this.attribute = attribute;

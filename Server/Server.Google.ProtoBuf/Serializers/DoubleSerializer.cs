@@ -1,5 +1,6 @@
 ﻿#if !NO_RUNTIME
 using System;
+
 #if FEAT_IKVM
 using Type = IKVM.Reflection.Type;
 using IKVM.Reflection;
@@ -23,18 +24,30 @@ namespace ProtoBuf.Serializers
 #endif
         }
 
-        public Type ExpectedType { get { return expectedType; } }
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
+
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 #if !FEAT_IKVM
         public object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // since replaces
             return source.ReadDouble();
         }
+
         public void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteDouble((double)value, dest);
+            ProtoWriter.WriteDouble((double) value, dest);
         }
 #endif
 #if FEAT_COMPILER

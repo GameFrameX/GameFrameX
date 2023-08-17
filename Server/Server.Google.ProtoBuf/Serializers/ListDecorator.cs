@@ -27,14 +27,15 @@ namespace ProtoBuf.Serializers
                     return false;
             }
         }
+
         private readonly byte options;
 
         private const byte OPTIONS_IsList = 1,
-                           OPTIONS_SuppressIList = 2,
-                           OPTIONS_WritePacked = 4,
-                           OPTIONS_ReturnList = 8,
-                           OPTIONS_OverwriteList = 16,
-                           OPTIONS_SupportNull = 32;
+            OPTIONS_SuppressIList = 2,
+            OPTIONS_WritePacked = 4,
+            OPTIONS_ReturnList = 8,
+            OPTIONS_OverwriteList = 16,
+            OPTIONS_SupportNull = 32;
 
         private readonly Type declaredType, concreteType;
 
@@ -42,11 +43,31 @@ namespace ProtoBuf.Serializers
 
         private readonly int fieldNumber;
 
-        private bool IsList { get { return (options & OPTIONS_IsList) != 0; } }
-        private bool SuppressIList { get { return (options & OPTIONS_SuppressIList) != 0; } }
-        private bool WritePacked { get { return (options & OPTIONS_WritePacked) != 0; } }
-        private bool SupportNull { get { return (options & OPTIONS_SupportNull) != 0; } }
-        private bool ReturnList { get { return (options & OPTIONS_ReturnList) != 0; } }
+        private bool IsList
+        {
+            get { return (options & OPTIONS_IsList) != 0; }
+        }
+
+        private bool SuppressIList
+        {
+            get { return (options & OPTIONS_SuppressIList) != 0; }
+        }
+
+        private bool WritePacked
+        {
+            get { return (options & OPTIONS_WritePacked) != 0; }
+        }
+
+        private bool SupportNull
+        {
+            get { return (options & OPTIONS_SupportNull) != 0; }
+        }
+
+        private bool ReturnList
+        {
+            get { return (options & OPTIONS_ReturnList) != 0; }
+        }
+
         protected readonly WireType packedWireType;
 
 
@@ -76,7 +97,7 @@ namespace ProtoBuf.Serializers
             {
                 if (writePacked) throw new InvalidOperationException("Only simple data-types can use packed encoding");
                 packedWireType = WireType.None;
-            }            
+            }
 
             this.fieldNumber = fieldNumber;
             if (writePacked) options |= OPTIONS_WritePacked;
@@ -85,7 +106,7 @@ namespace ProtoBuf.Serializers
             if (declaredType.IsArray) throw new ArgumentException("Cannot treat arrays as lists", "declaredType");
             this.declaredType = declaredType;
             this.concreteType = concreteType;
-            
+
             // look for a public list.Add(typedObject) method
             if (RequireAdd)
             {
@@ -96,19 +117,35 @@ namespace ProtoBuf.Serializers
                     options |= OPTIONS_IsList;
                     string fullName = declaredType.FullName;
                     if (fullName != null && fullName.StartsWith("System.Data.Linq.EntitySet`1[["))
-                    { // see http://stackoverflow.com/questions/6194639/entityset-is-there-a-sane-reason-that-ilist-add-doesnt-set-assigned
+                    {
+                        // see http://stackoverflow.com/questions/6194639/entityset-is-there-a-sane-reason-that-ilist-add-doesnt-set-assigned
                         options |= OPTIONS_SuppressIList;
                     }
                 }
+
                 if (add == null) throw new InvalidOperationException("Unable to resolve a suitable Add method for " + declaredType.FullName);
             }
-
         }
-        protected virtual bool RequireAdd { get { return true; } }
 
-        public override Type ExpectedType { get { return declaredType;  } }
-        public override bool RequiresOldValue { get { return AppendToCollection; } }
-        public override bool ReturnsValue { get { return ReturnList; } }
+        protected virtual bool RequireAdd
+        {
+            get { return true; }
+        }
+
+        public override Type ExpectedType
+        {
+            get { return declaredType; }
+        }
+
+        public override bool RequiresOldValue
+        {
+            get { return AppendToCollection; }
+        }
+
+        public override bool ReturnsValue
+        {
+            get { return ReturnList; }
+        }
 
         protected bool AppendToCollection
         {
@@ -313,13 +350,13 @@ namespace ProtoBuf.Serializers
 #if WINRT || COREFX
         private static readonly TypeInfo ienumeratorType = typeof(IEnumerator).GetTypeInfo(), ienumerableType = typeof (IEnumerable).GetTypeInfo();
 #else
-        private static readonly System.Type ienumeratorType = typeof (IEnumerator), ienumerableType = typeof (IEnumerable);
+        private static readonly System.Type ienumeratorType = typeof(IEnumerator), ienumerableType = typeof(IEnumerable);
 #endif
         protected MethodInfo GetEnumeratorInfo(TypeModel model, out MethodInfo moveNext, out MethodInfo current)
             => GetEnumeratorInfo(model, ExpectedType, Tail.ExpectedType, out moveNext, out current);
+
         internal static MethodInfo GetEnumeratorInfo(TypeModel model, Type expectedType, Type itemType, out MethodInfo moveNext, out MethodInfo current)
         {
-
 #if WINRT || COREFX
             TypeInfo enumeratorType = null, iteratorType;
 #else
@@ -345,19 +382,21 @@ namespace ProtoBuf.Serializers
                 {
                     moveNext = Helpers.GetInstanceMethod(model.MapType(ienumeratorType), "MoveNext", null);
                 }
+
                 // fully typed
                 if (moveNext != null && moveNext.ReturnType == model.MapType(typeof(bool))
-                    && current != null && current.ReturnType == itemType)
+                                     && current != null && current.ReturnType == itemType)
                 {
                     return getEnumerator;
                 }
+
                 moveNext = current = getEnumerator = null;
             }
-            
+
 #if !NO_GENERICS
             // try IEnumerable<T>
             Type tmp = model.MapType(typeof(System.Collections.Generic.IEnumerable<>), false);
-            
+
             if (tmp != null)
             {
                 tmp = tmp.MakeGenericType(itemType);
@@ -368,7 +407,8 @@ namespace ProtoBuf.Serializers
                 enumeratorType = tmp;
 #endif
             }
-;
+
+            ;
             if (enumeratorType != null && enumeratorType.IsAssignableFrom(expectedType
 #if WINRT || COREFX
                 .GetTypeInfo()
@@ -399,7 +439,7 @@ namespace ProtoBuf.Serializers
 #endif
                 ;
             moveNext = Helpers.GetInstanceMethod(iteratorType, "MoveNext");
-            current = Helpers.GetGetMethod(Helpers.GetProperty(iteratorType,"Current", false), false, false);
+            current = Helpers.GetGetMethod(Helpers.GetProperty(iteratorType, "Current", false), false, false);
             return getEnumerator;
         }
 #if FEAT_COMPILER
@@ -480,25 +520,32 @@ namespace ProtoBuf.Serializers
                 ProtoWriter.WriteFieldHeader(fieldNumber, WireType.String, dest);
                 if (fixedSizePacked)
                 {
-                    ProtoWriter.WritePackedPrefix(((ICollection)value).Count, packedWireType, dest);
+                    ProtoWriter.WritePackedPrefix(((ICollection) value).Count, packedWireType, dest);
                     token = default(SubItemToken);
                 }
                 else
                 {
                     token = ProtoWriter.StartSubItem(value, dest);
                 }
+
                 ProtoWriter.SetPackedField(fieldNumber, dest);
             }
             else
             {
                 token = new SubItemToken(); // default
             }
+
             bool checkForNull = !SupportNull;
-            foreach (object subItem in (IEnumerable)value)
+            foreach (object subItem in (IEnumerable) value)
             {
-                if (checkForNull && subItem == null) { throw new NullReferenceException(); }
+                if (checkForNull && subItem == null)
+                {
+                    throw new NullReferenceException();
+                }
+
                 Tail.Write(subItem, dest);
             }
+
             if (writePacked)
             {
                 if (fixedSizePacked)
@@ -512,9 +559,10 @@ namespace ProtoBuf.Serializers
             }
         }
 
-		private bool CanUsePackedPrefix(object obj) {
-			return ArrayDecorator.CanUsePackedPrefix (packedWireType, Tail.ExpectedType);
-		}
+        private bool CanUsePackedPrefix(object obj)
+        {
+            return ArrayDecorator.CanUsePackedPrefix(packedWireType, Tail.ExpectedType);
+        }
 
         public override object Read(object value, ProtoReader source)
         {
@@ -529,7 +577,7 @@ namespace ProtoBuf.Serializers
                     SubItemToken token = ProtoReader.StartSubItem(source);
                     if (isList)
                     {
-                        IList list = (IList)value;
+                        IList list = (IList) value;
                         while (ProtoReader.HasSubValue(packedWireType, source))
                         {
                             list.Add(Tail.Read(null, source));
@@ -544,13 +592,14 @@ namespace ProtoBuf.Serializers
                             add.Invoke(value, args);
                         }
                     }
+
                     ProtoReader.EndSubItem(token, source);
                 }
                 else
                 {
                     if (isList)
                     {
-                        IList list = (IList)value;
+                        IList list = (IList) value;
                         do
                         {
                             list.Add(Tail.Read(null, source));
@@ -566,15 +615,16 @@ namespace ProtoBuf.Serializers
                         } while (source.TryReadFieldHeader(field));
                     }
                 }
+
                 return origValue == value ? null : value;
-            } catch(TargetInvocationException tie)
+            }
+            catch (TargetInvocationException tie)
             {
                 if (tie.InnerException != null) throw tie.InnerException;
                 throw;
             }
         }
 #endif
-
     }
 }
 #endif

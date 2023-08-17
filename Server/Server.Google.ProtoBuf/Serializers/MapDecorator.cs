@@ -17,8 +17,8 @@ namespace ProtoBuf.Serializers
         internal MapDecorator(TypeModel model, Type concreteType, IProtoSerializer keyTail, IProtoSerializer valueTail,
             int fieldNumber, WireType wireType, WireType keyWireType, WireType valueWireType, bool overwriteList)
             : base(DefaultValue == null
-                  ? (IProtoSerializer)new TagDecorator(2, valueWireType, false, valueTail)
-                  : (IProtoSerializer)new DefaultValueDecorator(model, DefaultValue, new TagDecorator(2, valueWireType, false, valueTail)))
+                ? (IProtoSerializer) new TagDecorator(2, valueWireType, false, valueTail)
+                : (IProtoSerializer) new DefaultValueDecorator(model, DefaultValue, new TagDecorator(2, valueWireType, false, valueTail)))
         {
             this.wireType = wireType;
             this.keyTail = new DefaultValueDecorator(model, DefaultKey, new TagDecorator(1, keyWireType, false, keyTail));
@@ -31,7 +31,7 @@ namespace ProtoBuf.Serializers
 
             AppendToCollection = !overwriteList;
         }
-		#if FEAT_COMPILER
+#if FEAT_COMPILER
         private static readonly MethodInfo indexerSet = GetIndexerSetter();
 
         private static MethodInfo GetIndexerSetter()
@@ -51,10 +51,10 @@ namespace ProtoBuf.Serializers
             }
             throw new InvalidOperationException("Unable to resolve indexer for map");
         }
-		#endif
+#endif
 
-        private static readonly TKey DefaultKey = (typeof(TKey) == typeof(string)) ? (TKey)(object)"" : default(TKey);
-        private static readonly TValue DefaultValue = (typeof(TValue) == typeof(string)) ? (TValue)(object)"" : default(TValue);
+        private static readonly TKey DefaultKey = (typeof(TKey) == typeof(string)) ? (TKey) (object) "" : default(TKey);
+        private static readonly TValue DefaultValue = (typeof(TValue) == typeof(string)) ? (TValue) (object) "" : default(TValue);
         public override Type ExpectedType => typeof(TDictionary);
 
         public override bool ReturnsValue => true;
@@ -65,8 +65,8 @@ namespace ProtoBuf.Serializers
 
         public override object Read(object untyped, ProtoReader source)
         {
-            TDictionary typed = AppendToCollection ? ((TDictionary)untyped) : null;
-            if (typed == null) typed = (TDictionary)Activator.CreateInstance(concreteType);
+            TDictionary typed = AppendToCollection ? ((TDictionary) untyped) : null;
+            if (typed == null) typed = (TDictionary) Activator.CreateInstance(concreteType);
 
             do
             {
@@ -79,10 +79,10 @@ namespace ProtoBuf.Serializers
                     switch (field)
                     {
                         case 1:
-                            key = (TKey)keyTail.Read(null, source);
+                            key = (TKey) keyTail.Read(null, source);
                             break;
                         case 2:
-                            value = (TValue)Tail.Read(Tail.RequiresOldValue ? (object)value : null, source);
+                            value = (TValue) Tail.Read(Tail.RequiresOldValue ? (object) value : null, source);
                             break;
                         default:
                             source.SkipField();
@@ -99,7 +99,7 @@ namespace ProtoBuf.Serializers
 
         public override void Write(object untyped, ProtoWriter dest)
         {
-            foreach (var pair in (TDictionary)untyped)
+            foreach (var pair in (TDictionary) untyped)
             {
                 ProtoWriter.WriteFieldHeader(fieldNumber, wireType, dest);
                 var token = ProtoWriter.StartSubItem(null, dest);
@@ -108,7 +108,7 @@ namespace ProtoBuf.Serializers
                 ProtoWriter.EndSubItem(token, dest);
             }
         }
-		#if FEAT_COMPILER
+#if FEAT_COMPILER
         protected override void EmitWrite(CompilerContext ctx, Local valueFrom)
         {
             Type itemType = typeof(KeyValuePair<TKey, TValue>);
@@ -282,6 +282,6 @@ namespace ProtoBuf.Serializers
                 }
             }
         }
-		#endif
+#endif
     }
 }

@@ -23,19 +23,31 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(short));
 #endif
         }
-        public Type ExpectedType { get { return expectedType; } }
 
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
+
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 #if !FEAT_IKVM
         public object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // since replaces
             return source.ReadInt16();
         }
+
         public void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteInt16((short)value, dest);
+            ProtoWriter.WriteInt16((short) value, dest);
         }
 #endif
 #if FEAT_COMPILER
@@ -48,7 +60,6 @@ namespace ProtoBuf.Serializers
             ctx.EmitBasicRead("ReadInt16", ExpectedType);
         }
 #endif
-
     }
 }
 #endif

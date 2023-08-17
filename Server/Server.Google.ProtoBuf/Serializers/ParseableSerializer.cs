@@ -13,6 +13,7 @@ namespace ProtoBuf.Serializers
     sealed class ParseableSerializer : IProtoSerializer
     {
         private readonly MethodInfo parse;
+
         public static ParseableSerializer TryCreate(Type type, TypeModel model)
         {
             if (type == null) throw new ArgumentNullException("type");
@@ -35,7 +36,7 @@ namespace ProtoBuf.Serializers
 #else
             MethodInfo method = type.GetMethod("Parse",
                 BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly,
-                null, new Type[] { model.MapType(typeof(string)) }, null);
+                null, new Type[] {model.MapType(typeof(string))}, null);
 #endif
             if (method != null && method.ReturnType == type)
             {
@@ -44,10 +45,13 @@ namespace ProtoBuf.Serializers
                     MethodInfo toString = GetCustomToString(type);
                     if (toString == null || toString.ReturnType != model.MapType(typeof(string))) return null; // need custom ToString, fools
                 }
+
                 return new ParseableSerializer(method);
             }
+
             return null;
         }
+
         private static MethodInfo GetCustomToString(Type type)
         {
 #if WINRT
@@ -63,24 +67,37 @@ namespace ProtoBuf.Serializers
 #else
 
             return type.GetMethod("ToString", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly,
-                        null, Helpers.EmptyTypes, null);
+                null, Helpers.EmptyTypes, null);
 #endif
         }
+
         private ParseableSerializer(MethodInfo parse)
         {
             this.parse = parse;
         }
-        public Type ExpectedType { get { return parse.DeclaringType; } }
 
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        public Type ExpectedType
+        {
+            get { return parse.DeclaringType; }
+        }
+
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 
 #if !FEAT_IKVM
         public object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // since replaces
-            return parse.Invoke(null, new object[] { source.ReadString() });
+            return parse.Invoke(null, new object[] {source.ReadString()});
         }
+
         public void Write(object value, ProtoWriter dest)
         {
             ProtoWriter.WriteString(value.ToString(), dest);
@@ -113,7 +130,6 @@ namespace ProtoBuf.Serializers
             ctx.EmitCall(parse);
         }
 #endif
-
     }
 }
 #endif

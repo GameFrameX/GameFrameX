@@ -25,6 +25,7 @@ namespace ProtoBuf
                 if (rootObject == null) throw new ProtoException("No root object assigned");
                 return rootObject;
             }
+
             BasicList list = List;
 
             if (key < 0 || key >= list.Count)
@@ -38,6 +39,7 @@ namespace ProtoBuf
             {
                 throw new ProtoException("A deferred key does not have a value yet");
             }
+
             return tmp;
         }
 
@@ -46,7 +48,7 @@ namespace ProtoBuf
             if (key-- == Root)
             {
                 if (value == null) throw new ArgumentNullException("value");
-                if (rootObject != null && ((object)rootObject != (object)value)) throw new ProtoException("The root object cannot be reassigned");
+                if (rootObject != null && ((object) rootObject != (object) value)) throw new ProtoException("The root object cannot be reassigned");
                 rootObject = value;
             }
             else
@@ -59,7 +61,7 @@ namespace ProtoBuf
                     {
                         list[key] = value;
                     }
-                    else if (!ReferenceEquals(oldVal, value) )
+                    else if (!ReferenceEquals(oldVal, value))
                     {
                         throw new ProtoException("Reference-tracked objects cannot change reference");
                     } // otherwise was the same; nothing to do
@@ -72,12 +74,14 @@ namespace ProtoBuf
         }
 
         private object rootObject;
+
         internal int AddObjectKey(object value, out bool existing)
         {
             if (value == null) throw new ArgumentNullException("value");
 
-            if ((object)value == (object)rootObject) // (object) here is no-op, but should be
-            {                                        // preserved even if this was typed - needs ref-check
+            if ((object) value == (object) rootObject) // (object) here is no-op, but should be
+            {
+                // preserved even if this was typed - needs ref-check
                 existing = true;
                 return Root;
             }
@@ -87,7 +91,6 @@ namespace ProtoBuf
             int index;
 
 #if NO_GENERICS
-            
             if(s == null)
             {
                 if (objectKeys == null)
@@ -116,12 +119,12 @@ namespace ProtoBuf
             }
 #else
 
-            if(s == null)
+            if (s == null)
             {
 #if CF || PORTABLE // CF has very limited proper object ref-tracking; so instead, we'll search it the hard way
                 index = list.IndexOfReference(value);
 #else
-                if (objectKeys == null) 
+                if (objectKeys == null)
                 {
                     objectKeys = new System.Collections.Generic.Dictionary<object, int>(ReferenceComparer.Default);
                     index = -1;
@@ -138,7 +141,7 @@ namespace ProtoBuf
                 {
                     stringKeys = new System.Collections.Generic.Dictionary<string, int>();
                     index = -1;
-                } 
+                }
                 else
                 {
                     if (!stringKeys.TryGetValue(s, out index)) index = -1;
@@ -161,11 +164,12 @@ namespace ProtoBuf
                     stringKeys.Add(s, index);
                 }
             }
+
             return index + 1;
         }
 
         private int trapStartIndex; // defaults to 0 - optimization for RegisterTrappedObject
-                                    // to make it faster at seeking to find deferred-objects
+        // to make it faster at seeking to find deferred-objects
 
         internal void RegisterTrappedObject(object value)
         {
@@ -175,17 +179,17 @@ namespace ProtoBuf
             }
             else
             {
-                if(underlyingList != null)
+                if (underlyingList != null)
                 {
                     for (int i = trapStartIndex; i < underlyingList.Count; i++)
                     {
                         trapStartIndex = i + 1; // things never *become* null; whether or
-                                                // not the next item is null, it will never
-                                                // need to be checked again
+                        // not the next item is null, it will never
+                        // need to be checked again
 
-                        if(underlyingList[i] == null)
+                        if (underlyingList[i] == null)
                         {
-                            underlyingList[i] = value;    
+                            underlyingList[i] = value;
                             break;
                         }
                     }
@@ -205,7 +209,7 @@ namespace ProtoBuf
             {
                 return item == key;
             }
-        }   
+        }
 #else
 
         private System.Collections.Generic.Dictionary<string, int> stringKeys;
@@ -215,7 +219,10 @@ namespace ProtoBuf
         private sealed class ReferenceComparer : System.Collections.Generic.IEqualityComparer<object>
         {
             public readonly static ReferenceComparer Default = new ReferenceComparer();
-            private ReferenceComparer() {}
+
+            private ReferenceComparer()
+            {
+            }
 
             bool System.Collections.Generic.IEqualityComparer<object>.Equals(object x, object y)
             {

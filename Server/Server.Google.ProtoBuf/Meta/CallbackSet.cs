@@ -16,11 +16,13 @@ namespace ProtoBuf.Meta
     public class CallbackSet
     {
         private readonly MetaType metaType;
+
         internal CallbackSet(MetaType metaType)
         {
             if (metaType == null) throw new ArgumentNullException("metaType");
             this.metaType = metaType;
         }
+
         internal MethodInfo this[TypeModel.CallbackType callbackType]
         {
             get
@@ -35,21 +37,28 @@ namespace ProtoBuf.Meta
                 }
             }
         }
+
         internal static bool CheckCallbackParameters(TypeModel model, MethodInfo method)
         {
             ParameterInfo[] args = method.GetParameters();
             for (int i = 0; i < args.Length; i++)
             {
                 Type paramType = args[i].ParameterType;
-                if(paramType == model.MapType(typeof(SerializationContext))) {}
-                else if(paramType == model.MapType(typeof(System.Type))) {}
+                if (paramType == model.MapType(typeof(SerializationContext)))
+                {
+                }
+                else if (paramType == model.MapType(typeof(System.Type)))
+                {
+                }
 #if PLAT_BINARYFORMATTER
                 else if(paramType == model.MapType(typeof(System.Runtime.Serialization.StreamingContext))) {}
 #endif
                 else return false;
             }
+
             return true;
         }
+
         private MethodInfo SanityCheckCallback(TypeModel model, MethodInfo callback)
         {
             metaType.ThrowIfFrozen();
@@ -60,37 +69,45 @@ namespace ProtoBuf.Meta
             {
                 throw CreateInvalidCallbackSignature(callback);
             }
+
             return callback;
         }
+
         internal static Exception CreateInvalidCallbackSignature(MethodInfo method)
         {
             return new NotSupportedException("Invalid callback signature in " + method.DeclaringType.FullName + "." + method.Name);
         }
+
         private MethodInfo beforeSerialize, afterSerialize, beforeDeserialize, afterDeserialize;
+
         /// <summary>Called before serializing an instance</summary>
         public MethodInfo BeforeSerialize
         {
             get { return beforeSerialize; }
             set { beforeSerialize = SanityCheckCallback(metaType.Model, value); }
         }
+
         /// <summary>Called before deserializing an instance</summary>
         public MethodInfo BeforeDeserialize
         {
             get { return beforeDeserialize; }
             set { beforeDeserialize = SanityCheckCallback(metaType.Model, value); }
         }
+
         /// <summary>Called after serializing an instance</summary>
         public MethodInfo AfterSerialize
         {
             get { return afterSerialize; }
             set { afterSerialize = SanityCheckCallback(metaType.Model, value); }
         }
+
         /// <summary>Called after deserializing an instance</summary>
         public MethodInfo AfterDeserialize
         {
             get { return afterDeserialize; }
             set { afterDeserialize = SanityCheckCallback(metaType.Model, value); }
         }
+
         /// <summary>
         /// True if any callback is set, else False
         /// </summary>
@@ -99,7 +116,7 @@ namespace ProtoBuf.Meta
             get
             {
                 return beforeSerialize != null || beforeDeserialize != null
-                    || afterSerialize != null || afterDeserialize != null;
+                                               || afterSerialize != null || afterDeserialize != null;
             }
         }
     }

@@ -24,17 +24,22 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(char));
 #endif
         }
-        public override Type ExpectedType { get { return expectedType; } }
+
+        public override Type ExpectedType
+        {
+            get { return expectedType; }
+        }
 
 #if !FEAT_IKVM
         public override void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteUInt16((ushort)(char)value, dest);
+            ProtoWriter.WriteUInt16((ushort) (char) value, dest);
         }
+
         public override object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // since replaces
-            return (char)source.ReadUInt16();
+            return (char) source.ReadUInt16();
         }
 #endif
         // no need for any special IL here; ushort and char are

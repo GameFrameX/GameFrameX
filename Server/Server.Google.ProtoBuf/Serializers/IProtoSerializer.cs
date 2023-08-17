@@ -36,16 +36,14 @@ namespace ProtoBuf.Serializers
         /// discarded, and should be passed in as null.
         /// </summary>
         bool RequiresOldValue { get; }
+
         /// <summary>
         /// Now all Read operations return a value (although most do); if false no
         /// value should be expected.
         /// </summary>
         bool ReturnsValue { get; }
-        
+
 #if FEAT_COMPILER
-
-
-
         /// <summary>Emit the IL necessary to perform the given actions
         /// to serialize this data.
         /// </summary>

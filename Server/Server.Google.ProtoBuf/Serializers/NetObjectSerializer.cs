@@ -11,7 +11,6 @@ using IKVM.Reflection;
 
 namespace ProtoBuf.Serializers
 {
-
     sealed class NetObjectSerializer : IProtoSerializer
     {
         private readonly int key;
@@ -31,10 +30,12 @@ namespace ProtoBuf.Serializers
         {
             get { return type; }
         }
+
         public bool ReturnsValue
         {
             get { return true; }
         }
+
         public bool RequiresOldValue
         {
             get { return true; }
@@ -44,6 +45,7 @@ namespace ProtoBuf.Serializers
         {
             return BclHelpers.ReadNetObject(value, source, key, type == typeof(object) ? null : type, options);
         }
+
         public void Write(object value, ProtoWriter dest)
         {
             BclHelpers.WriteNetObject(value, dest, key, options);

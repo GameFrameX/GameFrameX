@@ -1,5 +1,6 @@
 ﻿#if !NO_RUNTIME
 using System;
+
 #if FEAT_IKVM
 using Type = IKVM.Reflection.Type;
 using IKVM.Reflection;
@@ -13,7 +14,12 @@ namespace ProtoBuf.Serializers
     {
         public abstract Type ExpectedType { get; }
         protected readonly IProtoSerializer Tail;
-        protected ProtoDecoratorBase(IProtoSerializer tail) { this.Tail = tail; }
+
+        protected ProtoDecoratorBase(IProtoSerializer tail)
+        {
+            this.Tail = tail;
+        }
+
         public abstract bool ReturnsValue { get; }
         public abstract bool RequiresOldValue { get; }
 #if !FEAT_IKVM

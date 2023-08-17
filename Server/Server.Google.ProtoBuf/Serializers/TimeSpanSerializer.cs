@@ -9,7 +9,6 @@ using IKVM.Reflection;
 #endif
 
 
-
 namespace ProtoBuf.Serializers
 {
     sealed class TimeSpanSerializer : IProtoSerializer
@@ -20,6 +19,7 @@ namespace ProtoBuf.Serializers
         static readonly Type expectedType = typeof(TimeSpan);
 #endif
         private readonly bool wellKnown;
+
         public TimeSpanSerializer(DataFormat dataFormat, ProtoBuf.Meta.TypeModel model)
         {
 #if FEAT_IKVM
@@ -27,6 +27,7 @@ namespace ProtoBuf.Serializers
 #endif
             wellKnown = dataFormat == DataFormat.WellKnown;
         }
+
         public Type ExpectedType => expectedType;
 
         bool IProtoSerializer.RequiresOldValue => false;
@@ -44,15 +45,16 @@ namespace ProtoBuf.Serializers
                 return BclHelpers.ReadTimeSpan(source);
             }
         }
+
         public void Write(object value, ProtoWriter dest)
         {
             if (wellKnown)
             {
-                BclHelpers.WriteDuration((TimeSpan)value, dest);
+                BclHelpers.WriteDuration((TimeSpan) value, dest);
             }
             else
             {
-                BclHelpers.WriteTimeSpan((TimeSpan)value, dest);
+                BclHelpers.WriteTimeSpan((TimeSpan) value, dest);
             }
         }
 #endif
@@ -70,7 +72,6 @@ namespace ProtoBuf.Serializers
                 ExpectedType);
         }
 #endif
-
     }
 }
 #endif

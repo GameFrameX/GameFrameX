@@ -12,7 +12,12 @@ namespace ProtoBuf
         /// <summary>
         /// Gets or sets the defined name of the type.
         /// </summary>
-        public string Name { get { return name; } set { name = value; } }
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
         private string name;
 
         /// <summary>
@@ -28,6 +33,7 @@ namespace ProtoBuf
                 implicitFirstTag = value;
             }
         }
+
         private int implicitFirstTag;
 
         /// <summary>
@@ -54,7 +60,12 @@ namespace ProtoBuf
         /// for members. This option should be used in advanced scenarios only.
         /// Please review the important notes against the ImplicitFields enumeration.
         /// </summary>
-        public ImplicitFields ImplicitFields { get { return implicitFields; } set { implicitFields = value; } }
+        public ImplicitFields ImplicitFields
+        {
+            get { return implicitFields; }
+            set { implicitFields = value; }
+        }
+
         private ImplicitFields implicitFields;
 
 
@@ -70,7 +81,8 @@ namespace ProtoBuf
         public bool InferTagFromName
         {
             get { return HasFlag(OPTIONS_InferTagFromName); }
-            set {
+            set
+            {
                 SetFlag(OPTIONS_InferTagFromName, value);
                 SetFlag(OPTIONS_InferTagFromNameHasValue, true);
             }
@@ -80,7 +92,8 @@ namespace ProtoBuf
         /// Has a InferTagFromName value been explicitly set? if not, the default from the type-model is assumed.
         /// </summary>
         internal bool InferTagFromNameHasValue
-        { // note that this property is accessed via reflection and should not be removed
+        {
+            // note that this property is accessed via reflection and should not be removed
             get { return HasFlag(OPTIONS_InferTagFromNameHasValue); }
         }
 
@@ -117,9 +130,7 @@ namespace ProtoBuf
         public bool AsReferenceDefault
         {
             get { return HasFlag(OPTIONS_AsReferenceDefault); }
-            set {
-                SetFlag(OPTIONS_AsReferenceDefault, value);
-            }
+            set { SetFlag(OPTIONS_AsReferenceDefault, value); }
         }
 
         /// <summary>
@@ -128,17 +139,18 @@ namespace ProtoBuf
         public bool IsGroup
         {
             get { return HasFlag(OPTIONS_IsGroup); }
-            set
-            {
-                SetFlag(OPTIONS_IsGroup, value);
-            }
+            set { SetFlag(OPTIONS_IsGroup, value); }
         }
 
-        private bool HasFlag(ushort flag) { return (flags & flag) == flag; }
+        private bool HasFlag(ushort flag)
+        {
+            return (flags & flag) == flag;
+        }
+
         private void SetFlag(ushort flag, bool value)
         {
             if (value) flags |= flag;
-            else flags = (ushort)(flags & ~flag);
+            else flags = (ushort) (flags & ~flag);
         }
 
         private ushort flags;
@@ -161,7 +173,8 @@ namespace ProtoBuf
         public bool EnumPassthru
         {
             get { return HasFlag(OPTIONS_EnumPassthru); }
-            set {
+            set
+            {
                 SetFlag(OPTIONS_EnumPassthru, value);
                 SetFlag(OPTIONS_EnumPassthruHasValue, true);
             }
@@ -171,7 +184,8 @@ namespace ProtoBuf
         /// Has a EnumPassthru value been explicitly set?
         /// </summary>
         internal bool EnumPassthruHasValue
-        { // note that this property is accessed via reflection and should not be removed
+        {
+            // note that this property is accessed via reflection and should not be removed
             get { return HasFlag(OPTIONS_EnumPassthruHasValue); }
         }
     }

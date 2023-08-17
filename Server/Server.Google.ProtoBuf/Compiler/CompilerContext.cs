@@ -687,7 +687,7 @@ namespace ProtoBuf.Compiler
             }
             else
             {
-                ConstructorInfo ctor =  Helpers.GetConstructor(type
+                ConstructorInfo ctor = Helpers.GetConstructor(type
 #if COREFX
                 .GetTypeInfo()
 #endif

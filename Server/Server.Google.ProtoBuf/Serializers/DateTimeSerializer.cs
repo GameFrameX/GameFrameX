@@ -34,7 +34,7 @@ namespace ProtoBuf.Serializers
 #if !FEAT_IKVM
         public object Read(object value, ProtoReader source)
         {
-            if(wellKnown)
+            if (wellKnown)
             {
                 return BclHelpers.ReadTimestamp(source);
             }
@@ -42,16 +42,17 @@ namespace ProtoBuf.Serializers
             {
                 Helpers.DebugAssert(value == null); // since replaces
                 return BclHelpers.ReadDateTime(source);
-            }            
+            }
         }
+
         public void Write(object value, ProtoWriter dest)
         {
-            if(wellKnown)
-                BclHelpers.WriteTimestamp((DateTime)value, dest);
-            else if(includeKind)
-                BclHelpers.WriteDateTimeWithKind((DateTime)value, dest);
+            if (wellKnown)
+                BclHelpers.WriteTimestamp((DateTime) value, dest);
+            else if (includeKind)
+                BclHelpers.WriteDateTimeWithKind((DateTime) value, dest);
             else
-                BclHelpers.WriteDateTime((DateTime)value, dest);
+                BclHelpers.WriteDateTime((DateTime) value, dest);
         }
 #endif
 #if FEAT_COMPILER
@@ -69,7 +70,6 @@ namespace ProtoBuf.Serializers
                 ExpectedType);
         }
 #endif
-
     }
 }
 #endif

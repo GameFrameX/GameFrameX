@@ -22,16 +22,27 @@ namespace ProtoBuf.Serializers
 #endif
         }
 
-        public Type ExpectedType { get { return expectedType; } }
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
 
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 
 #if !FEAT_IKVM
         public void Write(object value, ProtoWriter dest)
         {
-            BclHelpers.WriteGuid((Guid)value, dest);
+            BclHelpers.WriteGuid((Guid) value, dest);
         }
+
         public object Read(object value, ProtoReader source)
         {
             Helpers.DebugAssert(value == null); // since replaces
@@ -49,7 +60,6 @@ namespace ProtoBuf.Serializers
             ctx.EmitBasicRead(ctx.MapType(typeof(BclHelpers)), "ReadGuid", ExpectedType);
         }
 #endif
-
     }
 }
 #endif

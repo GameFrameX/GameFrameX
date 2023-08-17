@@ -23,10 +23,21 @@ namespace ProtoBuf.Serializers
             expectedType = model.MapType(typeof(ulong));
 #endif
         }
-        public Type ExpectedType { get { return expectedType; } }
 
-        bool IProtoSerializer.RequiresOldValue { get { return false; } }
-        bool IProtoSerializer.ReturnsValue { get { return true; } }
+        public Type ExpectedType
+        {
+            get { return expectedType; }
+        }
+
+        bool IProtoSerializer.RequiresOldValue
+        {
+            get { return false; }
+        }
+
+        bool IProtoSerializer.ReturnsValue
+        {
+            get { return true; }
+        }
 
 #if !FEAT_IKVM
         public object Read(object value, ProtoReader source)
@@ -34,9 +45,10 @@ namespace ProtoBuf.Serializers
             Helpers.DebugAssert(value == null); // since replaces
             return source.ReadUInt64();
         }
+
         public void Write(object value, ProtoWriter dest)
         {
-            ProtoWriter.WriteUInt64((ulong)value, dest);
+            ProtoWriter.WriteUInt64((ulong) value, dest);
         }
 #endif
 

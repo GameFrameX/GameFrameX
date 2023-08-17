@@ -9,6 +9,7 @@
         /// https://developers.google.com/protocol-buffers/docs/proto
         /// </summary>
         Proto2 = 0,
+
         /// <summary>
         /// https://developers.google.com/protocol-buffers/docs/proto3
         /// </summary>

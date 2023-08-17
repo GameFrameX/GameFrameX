@@ -28,6 +28,7 @@ namespace ProtoBuf
         {
             return GetExtensionObject(createIfMissing);
         }
+
         /// <summary>
         /// Retrieves the <see cref="IExtension">extension</see> object for the current
         /// instance, optionally creating it if it does not already exist.
@@ -61,6 +62,7 @@ namespace ProtoBuf
             {
                 extensionObject = new BufferExtension();
             }
+
             return extensionObject;
         }
 
@@ -99,6 +101,7 @@ namespace ProtoBuf
         {
             ExtensibleUtil.AppendExtendValue(RuntimeTypeModel.Default, instance, tag, format, value);
         }
+
         /// <summary>
         /// Queries an extensible object for an additional (unexpected) data-field for the instance.
         /// The value returned is the composed value after merging any duplicated content; if the
@@ -247,6 +250,7 @@ namespace ProtoBuf
 
             return set;
         }
+
         /// <summary>
         /// Queries an extensible object for an additional (unexpected) data-field for the instance.
         /// Each occurrence of the field is yielded separately, making this usage suitable for "repeated"
@@ -281,6 +285,5 @@ namespace ProtoBuf
         {
             ExtensibleUtil.AppendExtendValue(model, instance, tag, format, value);
         }
-        
-    }   
+    }
 }

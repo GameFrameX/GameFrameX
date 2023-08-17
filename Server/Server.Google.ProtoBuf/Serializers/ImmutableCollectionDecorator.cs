@@ -14,7 +14,10 @@ namespace ProtoBuf.Serializers
 {
     sealed class ImmutableCollectionDecorator : ListDecorator
     {
-        protected override bool RequireAdd { get { return false; } }
+        protected override bool RequireAdd
+        {
+            get { return false; }
+        }
 #if !NO_GENERICS
 
         static Type ResolveIReadOnlyCollection(Type declaredType, Type t)
@@ -38,17 +41,19 @@ namespace ProtoBuf.Serializers
             {
                 if (intImpl.IsGenericType && intImpl.Name.StartsWith("IReadOnlyCollection`"))
                 {
-                    if(t != null)
+                    if (t != null)
                     {
                         Type[] typeArgs = intImpl.GetGenericArguments();
                         if (typeArgs.Length != 1 && typeArgs[0] != t) continue;
                     }
+
                     return intImpl;
                 }
             }
 #endif
             return null;
         }
+
         internal static bool IdentifyImmutable(TypeModel model, Type declaredType, out MethodInfo builderFactory, out MethodInfo add, out MethodInfo addRange, out MethodInfo finish)
         {
             builderFactory = add = addRange = finish = null;
@@ -60,7 +65,7 @@ namespace ProtoBuf.Serializers
 #endif
 
             // try to detect immutable collections; firstly, they are all generic, and all implement IReadOnlyCollection<T> for some T
-            if(!declaredTypeInfo.IsGenericType) return false;
+            if (!declaredTypeInfo.IsGenericType) return false;
 
 #if WINRT || COREFX
             Type[] typeArgs = declaredTypeInfo.GenericTypeArguments, effectiveType;
@@ -76,7 +81,7 @@ namespace ProtoBuf.Serializers
                     Type kvp = model.MapType(typeof(System.Collections.Generic.KeyValuePair<,>));
                     if (kvp == null) return false;
                     kvp = kvp.MakeGenericType(typeArgs);
-                    effectiveType = new Type[] { kvp };
+                    effectiveType = new Type[] {kvp};
                     break;
                 default:
                     return false; // no clue!
@@ -96,6 +101,7 @@ namespace ProtoBuf.Serializers
             {
                 outerType = model.GetType(declaredType.Namespace + ".ImmutableHashSet", declaredTypeInfo.Assembly);
             }
+
             if (outerType == null) return false;
 
 #if WINRT
@@ -110,6 +116,7 @@ namespace ProtoBuf.Serializers
                 builderFactory = method.MakeGenericMethod(typeArgs);
                 break;
             }
+
             Type voidType = model.MapType(typeof(void));
             if (builderFactory == null || builderFactory.ReturnType == null || builderFactory.ReturnType == voidType) return false;
 
@@ -122,13 +129,13 @@ namespace ProtoBuf.Serializers
 
             if (!(finish.ReturnType == declaredType || Helpers.IsAssignableFrom(declaredType, finish.ReturnType))) return false;
 
-            addRange = Helpers.GetInstanceMethod(builderFactory.ReturnType, "AddRange", new Type[] { declaredType });
+            addRange = Helpers.GetInstanceMethod(builderFactory.ReturnType, "AddRange", new Type[] {declaredType});
             if (addRange == null)
             {
                 Type enumerable = model.MapType(typeof(System.Collections.Generic.IEnumerable<>), false);
                 if (enumerable != null)
                 {
-                    addRange = Helpers.GetInstanceMethod(builderFactory.ReturnType, "AddRange", new Type[] { enumerable.MakeGenericType(effectiveType) });
+                    addRange = Helpers.GetInstanceMethod(builderFactory.ReturnType, "AddRange", new Type[] {enumerable.MakeGenericType(effectiveType)});
                 }
             }
 
@@ -151,16 +158,16 @@ namespace ProtoBuf.Serializers
             object builderInstance = builderFactory.Invoke(null, null);
             int field = source.FieldNumber;
             object[] args = new object[1];
-            if (AppendToCollection && value != null && ((ICollection)value).Count != 0)
-            {   
-                if(addRange !=null)
+            if (AppendToCollection && value != null && ((ICollection) value).Count != 0)
+            {
+                if (addRange != null)
                 {
                     args[0] = value;
                     addRange.Invoke(builderInstance, args);
                 }
                 else
                 {
-                    foreach(object item in (ICollection)value)
+                    foreach (object item in (ICollection) value)
                     {
                         args[0] = item;
                         add.Invoke(builderInstance, args);
@@ -176,6 +183,7 @@ namespace ProtoBuf.Serializers
                     args[0] = Tail.Read(null, source);
                     add.Invoke(builderInstance, args);
                 }
+
                 ProtoReader.EndSubItem(token, source);
             }
             else
@@ -279,6 +287,6 @@ namespace ProtoBuf.Serializers
             }
         }
 #endif
-                }
+    }
 }
 #endif

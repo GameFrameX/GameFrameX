@@ -22,7 +22,7 @@ namespace ProtoBuf
 #if FX11
     sealed
 #else
-    static
+        static
 #endif
         class BclHelpers
     {
@@ -71,7 +71,8 @@ namespace ProtoBuf
 #endif
         const int FieldTimeSpanValue = 0x01, FieldTimeSpanScale = 0x02, FieldTimeSpanKind = 0x03;
 
-        internal static readonly DateTime[] EpochOrigin = {
+        internal static readonly DateTime[] EpochOrigin =
+        {
             new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
             new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Local)
@@ -80,7 +81,7 @@ namespace ProtoBuf
         /// <summary>
         /// The default value for dates that are following google.protobuf.Timestamp semantics
         /// </summary>
-        private static readonly DateTime TimestampEpoch = EpochOrigin[(int)DateTimeKind.Utc];
+        private static readonly DateTime TimestampEpoch = EpochOrigin[(int) DateTimeKind.Utc];
 
 
         /// <summary>
@@ -90,11 +91,12 @@ namespace ProtoBuf
         {
             WriteTimeSpanImpl(timeSpan, dest, DateTimeKind.Unspecified);
         }
+
         private static void WriteTimeSpanImpl(TimeSpan timeSpan, ProtoWriter dest, DateTimeKind kind)
         {
             if (dest == null) throw new ArgumentNullException("dest");
             long value;
-            switch(dest.WireType)
+            switch (dest.WireType)
             {
                 case WireType.String:
                 case WireType.StartGroup:
@@ -141,20 +143,25 @@ namespace ProtoBuf
                     }
 
                     SubItemToken token = ProtoWriter.StartSubItem(null, dest);
-            
-                    if(value != 0) {
+
+                    if (value != 0)
+                    {
                         ProtoWriter.WriteFieldHeader(FieldTimeSpanValue, WireType.SignedVariant, dest);
                         ProtoWriter.WriteInt64(value, dest);
                     }
-                    if(scale != TimeSpanScale.Days) {
+
+                    if (scale != TimeSpanScale.Days)
+                    {
                         ProtoWriter.WriteFieldHeader(FieldTimeSpanScale, WireType.Variant, dest);
-                        ProtoWriter.WriteInt32((int)scale, dest);
+                        ProtoWriter.WriteInt32((int) scale, dest);
                     }
-                    if(kind != DateTimeKind.Unspecified)
+
+                    if (kind != DateTimeKind.Unspecified)
                     {
                         ProtoWriter.WriteFieldHeader(FieldTimeSpanKind, WireType.Variant, dest);
-                        ProtoWriter.WriteInt32((int)kind, dest);
+                        ProtoWriter.WriteInt32((int) kind, dest);
                     }
+
                     ProtoWriter.EndSubItem(token, dest);
                     break;
                 case WireType.Fixed64:
@@ -164,6 +171,7 @@ namespace ProtoBuf
                     throw new ProtoException("Unexpected wire-type: " + dest.WireType.ToString());
             }
         }
+
         /// <summary>
         /// Parses a TimeSpan from a protobuf stream using protobuf-net's own representation, bcl.TimeSpan
         /// </summary>        
@@ -200,6 +208,7 @@ namespace ProtoBuf
                         break;
                 }
             }
+
             ProtoReader.EndSubItem(token, source);
             return FromDurationSeconds(seconds, nanos);
         }
@@ -209,10 +218,11 @@ namespace ProtoBuf
         /// </summary>
         public static void WriteDuration(TimeSpan value, ProtoWriter dest)
         {
-			int nanos;
+            int nanos;
             var seconds = ToDurationSeconds(value, out nanos);
             WriteSecondsNanos(seconds, nanos, dest);
         }
+
         private static void WriteSecondsNanos(long seconds, int nanos, ProtoWriter dest)
         {
             SubItemToken token = ProtoWriter.StartSubItem(null, dest);
@@ -221,11 +231,13 @@ namespace ProtoBuf
                 ProtoWriter.WriteFieldHeader(1, WireType.Variant, dest);
                 ProtoWriter.WriteInt64(seconds, dest);
             }
+
             if (nanos != 0)
             {
                 ProtoWriter.WriteFieldHeader(2, WireType.Variant, dest);
                 ProtoWriter.WriteInt32(nanos, dest);
             }
+
             ProtoWriter.EndSubItem(token, dest);
         }
 
@@ -245,30 +257,32 @@ namespace ProtoBuf
         /// </summary>
         public static void WriteTimestamp(DateTime value, ProtoWriter dest)
         {
-			int nanos;
+            int nanos;
             var seconds = ToDurationSeconds(value - TimestampEpoch, out nanos);
-            
+
             if (nanos < 0)
-            {   // from Timestamp.proto:
+            {
+                // from Timestamp.proto:
                 // "Negative second values with fractions must still have
                 // non -negative nanos values that count forward in time."
                 seconds--;
                 nanos += 1000000000;
             }
+
             WriteSecondsNanos(seconds, nanos, dest);
         }
-        
+
         static TimeSpan FromDurationSeconds(long seconds, int nanos)
         {
-            
             long ticks = checked((seconds * TimeSpan.TicksPerSecond)
-                + (nanos * TimeSpan.TicksPerMillisecond) / 1000000);
+                                 + (nanos * TimeSpan.TicksPerMillisecond) / 1000000);
             return TimeSpan.FromTicks(ticks);
         }
+
         static long ToDurationSeconds(TimeSpan value, out int nanos)
         {
-            nanos = (int)(((value.Ticks % TimeSpan.TicksPerSecond) * 1000000)
-                / TimeSpan.TicksPerMillisecond);
+            nanos = (int) (((value.Ticks % TimeSpan.TicksPerSecond) * 1000000)
+                           / TimeSpan.TicksPerMillisecond);
             return value.Ticks / TimeSpan.TicksPerSecond;
         }
 
@@ -281,7 +295,7 @@ namespace ProtoBuf
             long ticks = ReadTimeSpanTicks(source, out kind);
             if (ticks == long.MinValue) return DateTime.MinValue;
             if (ticks == long.MaxValue) return DateTime.MaxValue;
-            return EpochOrigin[(int)kind].AddTicks(ticks);
+            return EpochOrigin[(int) kind].AddTicks(ticks);
         }
 
         /// <summary>
@@ -291,6 +305,7 @@ namespace ProtoBuf
         {
             WriteDateTimeImpl(value, dest, false);
         }
+
         /// <summary>
         /// Writes a DateTime to a protobuf stream, including the <c>Kind</c>
         /// </summary>
@@ -321,15 +336,18 @@ namespace ProtoBuf
                     {
                         delta = value - EpochOrigin[0];
                     }
+
                     break;
                 default:
                     delta = value - EpochOrigin[0];
                     break;
             }
+
             WriteTimeSpanImpl(delta, dest, includeKind ? value.Kind : DateTimeKind.Unspecified);
         }
 
-        private static long ReadTimeSpanTicks(ProtoReader source, out DateTimeKind kind) {
+        private static long ReadTimeSpanTicks(ProtoReader source, out DateTimeKind kind)
+        {
             kind = DateTimeKind.Unspecified;
             switch (source.WireType)
             {
@@ -344,15 +362,15 @@ namespace ProtoBuf
                         switch (fieldNumber)
                         {
                             case FieldTimeSpanScale:
-                                scale = (TimeSpanScale)source.ReadInt32();
+                                scale = (TimeSpanScale) source.ReadInt32();
                                 break;
                             case FieldTimeSpanValue:
                                 source.Assert(WireType.SignedVariant);
                                 value = source.ReadInt64();
                                 break;
                             case FieldTimeSpanKind:
-                                kind = (DateTimeKind)source.ReadInt32();
-                                switch(kind)
+                                kind = (DateTimeKind) source.ReadInt32();
+                                switch (kind)
                                 {
                                     case DateTimeKind.Unspecified:
                                     case DateTimeKind.Utc:
@@ -361,12 +379,14 @@ namespace ProtoBuf
                                     default:
                                         throw new ProtoException("Invalid date/time kind: " + kind.ToString());
                                 }
+
                                 break;
                             default:
                                 source.SkipField();
                                 break;
                         }
                     }
+
                     ProtoReader.EndSubItem(token, source);
                     switch (scale)
                     {
@@ -416,54 +436,68 @@ namespace ProtoBuf
             {
                 switch (fieldNumber)
                 {
-                    case FieldDecimalLow: low = reader.ReadUInt64(); break;
-                    case FieldDecimalHigh: high = reader.ReadUInt32(); break;
-                    case FieldDecimalSignScale: signScale = reader.ReadUInt32(); break;
-                    default: reader.SkipField(); break;
+                    case FieldDecimalLow:
+                        low = reader.ReadUInt64();
+                        break;
+                    case FieldDecimalHigh:
+                        high = reader.ReadUInt32();
+                        break;
+                    case FieldDecimalSignScale:
+                        signScale = reader.ReadUInt32();
+                        break;
+                    default:
+                        reader.SkipField();
+                        break;
                 }
-                
             }
+
             ProtoReader.EndSubItem(token, reader);
 
             if (low == 0 && high == 0) return decimal.Zero;
 
-            int lo = (int)(low & 0xFFFFFFFFL),
-                mid = (int)((low >> 32) & 0xFFFFFFFFL),
-                hi = (int)high;
+            int lo = (int) (low & 0xFFFFFFFFL),
+                mid = (int) ((low >> 32) & 0xFFFFFFFFL),
+                hi = (int) high;
             bool isNeg = (signScale & 0x0001) == 0x0001;
-            byte scale = (byte)((signScale & 0x01FE) >> 1);
+            byte scale = (byte) ((signScale & 0x01FE) >> 1);
             return new decimal(lo, mid, hi, isNeg, scale);
         }
+
         /// <summary>
         /// Writes a decimal to a protobuf stream
         /// </summary>
         public static void WriteDecimal(decimal value, ProtoWriter writer)
         {
             int[] bits = decimal.GetBits(value);
-            ulong a = ((ulong)bits[1]) << 32, b = ((ulong)bits[0]) & 0xFFFFFFFFL;
+            ulong a = ((ulong) bits[1]) << 32, b = ((ulong) bits[0]) & 0xFFFFFFFFL;
             ulong low = a | b;
-            uint high = (uint)bits[2];
-            uint signScale = (uint)(((bits[3] >> 15) & 0x01FE) | ((bits[3] >> 31) & 0x0001));
+            uint high = (uint) bits[2];
+            uint signScale = (uint) (((bits[3] >> 15) & 0x01FE) | ((bits[3] >> 31) & 0x0001));
 
             SubItemToken token = ProtoWriter.StartSubItem(null, writer);
-            if (low != 0) {
+            if (low != 0)
+            {
                 ProtoWriter.WriteFieldHeader(FieldDecimalLow, WireType.Variant, writer);
                 ProtoWriter.WriteUInt64(low, writer);
             }
+
             if (high != 0)
             {
                 ProtoWriter.WriteFieldHeader(FieldDecimalHigh, WireType.Variant, writer);
                 ProtoWriter.WriteUInt32(high, writer);
             }
+
             if (signScale != 0)
             {
                 ProtoWriter.WriteFieldHeader(FieldDecimalSignScale, WireType.Variant, writer);
                 ProtoWriter.WriteUInt32(signScale, writer);
             }
+
             ProtoWriter.EndSubItem(token, writer);
         }
 
         const int FieldGuidLow = 1, FieldGuidHigh = 2;
+
         /// <summary>
         /// Writes a Guid to a protobuf stream
         /// </summary>        
@@ -479,8 +513,10 @@ namespace ProtoBuf
                 ProtoWriter.WriteFieldHeader(FieldGuidHigh, WireType.Fixed64, dest);
                 ProtoWriter.WriteBytes(blob, 8, 8, dest);
             }
+
             ProtoWriter.EndSubItem(token, dest);
         }
+
         /// <summary>
         /// Parses a Guid from a protobuf stream
         /// </summary>
@@ -493,18 +529,24 @@ namespace ProtoBuf
             {
                 switch (fieldNumber)
                 {
-                    case FieldGuidLow: low = source.ReadUInt64(); break;
-                    case FieldGuidHigh: high = source.ReadUInt64(); break;
-                    default: source.SkipField(); break;
+                    case FieldGuidLow:
+                        low = source.ReadUInt64();
+                        break;
+                    case FieldGuidHigh:
+                        high = source.ReadUInt64();
+                        break;
+                    default:
+                        source.SkipField();
+                        break;
                 }
             }
+
             ProtoReader.EndSubItem(token, source);
-            if(low == 0 && high == 0) return Guid.Empty;
-            uint a = (uint)(low >> 32), b = (uint)low, c = (uint)(high >> 32), d= (uint)high;
-            return new Guid((int)b, (short)a, (short)(a >> 16), 
-                (byte)d, (byte)(d >> 8), (byte)(d >> 16), (byte)(d >> 24),
-                (byte)c, (byte)(c >> 8), (byte)(c >> 16), (byte)(c >> 24));
-            
+            if (low == 0 && high == 0) return Guid.Empty;
+            uint a = (uint) (low >> 32), b = (uint) low, c = (uint) (high >> 32), d = (uint) high;
+            return new Guid((int) b, (short) a, (short) (a >> 16),
+                (byte) d, (byte) (d >> 8), (byte) (d >> 16), (byte) (d >> 24),
+                (byte) c, (byte) (c >> 8), (byte) (c >> 16), (byte) (c >> 24));
         }
 
 
@@ -515,6 +557,7 @@ namespace ProtoBuf
             FieldNewTypeKey = 4,
             FieldTypeName = 8,
             FieldObject = 10;
+
         /// <summary>
         /// Optional behaviours that introduce .NET-specific functionality
         /// </summary>
@@ -525,24 +568,29 @@ namespace ProtoBuf
             /// No special behaviour
             /// </summary>
             None = 0,
+
             /// <summary>
             /// Enables full object-tracking/full-graph support.
             /// </summary>
             AsReference = 1,
+
             /// <summary>
             /// Embeds the type information into the stream, allowing usage with types not known in advance.
             /// </summary>
             DynamicType = 2,
+
             /// <summary>
             /// If false, the constructor for the type is bypassed during deserialization, meaning any field initializers
             /// or other initialization code is skipped.
             /// </summary>
             UseConstructor = 4,
+
             /// <summary>
             /// Should the object index be reserved, rather than creating an object promptly
             /// </summary>
             LateSet = 8
         }
+
         /// <summary>
         /// Reads an *implementation specific* bundled .NET object, including (as options) type-metadata, identity/re-use, etc.
         /// </summary>
@@ -567,7 +615,7 @@ namespace ProtoBuf
                         break;
                     case FieldExistingTypeKey:
                         tmp = source.ReadInt32();
-                        type = (Type)source.NetCache.GetKeyedObject(tmp);
+                        type = (Type) source.NetCache.GetKeyedObject(tmp);
                         key = source.GetTypeKey(ref type);
                         break;
                     case FieldNewTypeKey:
@@ -576,10 +624,11 @@ namespace ProtoBuf
                     case FieldTypeName:
                         string typeName = source.ReadString();
                         type = source.DeserializeType(typeName);
-                        if(type == null)
+                        if (type == null)
                         {
                             throw new ProtoException("Unable to resolve type: " + typeName + " (you can use the TypeModel.DynamicTypeFormatting event to provide a custom mapping)");
                         }
+
                         if (type == typeof(string))
                         {
                             key = -1;
@@ -590,12 +639,13 @@ namespace ProtoBuf
                             if (key < 0)
                                 throw new InvalidOperationException("Dynamic type is not a contract-type: " + type.Name);
                         }
+
                         break;
                     case FieldObject:
                         bool isString = type == typeof(string);
                         bool wasNull = value == null;
                         bool lateSet = wasNull && (isString || ((options & NetObjectOptions.LateSet) != 0));
-                        
+
                         if (newObjectKey >= 0 && !lateSet)
                         {
                             if (value == null)
@@ -606,8 +656,10 @@ namespace ProtoBuf
                             {
                                 source.NetCache.SetKeyedObject(newObjectKey, value);
                             }
+
                             if (newTypeKey >= 0) source.NetCache.SetKeyedObject(newTypeKey, type);
                         }
+
                         object oldValue = value;
                         if (isString)
                         {
@@ -617,43 +669,52 @@ namespace ProtoBuf
                         {
                             value = ProtoReader.ReadTypedObject(oldValue, key, source, type);
                         }
-                        
+
                         if (newObjectKey >= 0)
                         {
-                            if(wasNull && !lateSet)
-                            { // this both ensures (via exception) that it *was* set, and makes sure we don't shout
+                            if (wasNull && !lateSet)
+                            {
+                                // this both ensures (via exception) that it *was* set, and makes sure we don't shout
                                 // about changed references
                                 oldValue = source.NetCache.GetKeyedObject(newObjectKey);
                             }
+
                             if (lateSet)
                             {
                                 source.NetCache.SetKeyedObject(newObjectKey, value);
                                 if (newTypeKey >= 0) source.NetCache.SetKeyedObject(newTypeKey, type);
                             }
                         }
+
                         if (newObjectKey >= 0 && !lateSet && !ReferenceEquals(oldValue, value))
                         {
                             throw new ProtoException("A reference-tracked object changed reference during deserialization");
                         }
+
                         if (newObjectKey < 0 && newTypeKey >= 0)
-                        {  // have a new type, but not a new object
+                        {
+                            // have a new type, but not a new object
                             source.NetCache.SetKeyedObject(newTypeKey, type);
                         }
+
                         break;
                     default:
                         source.SkipField();
                         break;
                 }
             }
-            if(newObjectKey >= 0 && (options & NetObjectOptions.AsReference) == 0)
+
+            if (newObjectKey >= 0 && (options & NetObjectOptions.AsReference) == 0)
             {
                 throw new ProtoException("Object key in input stream, but reference-tracking was not expected");
             }
+
             ProtoReader.EndSubItem(token, source);
 
             return value;
 #endif
         }
+
         /// <summary>
         /// Writes an *implementation specific* bundled .NET object, including (as options) type-metadata, identity/re-use, etc.
         /// </summary>
@@ -664,7 +725,7 @@ namespace ProtoBuf
 #else
             if (dest == null) throw new ArgumentNullException("dest");
             bool dynamicType = (options & NetObjectOptions.DynamicType) != 0,
-                 asReference = (options & NetObjectOptions.AsReference) != 0;
+                asReference = (options & NetObjectOptions.AsReference) != 0;
             WireType wireType = dest.WireType;
             SubItemToken token = ProtoWriter.StartSubItem(null, dest);
             bool writeObject = true;
@@ -692,6 +753,7 @@ namespace ProtoBuf
                         key = dest.GetTypeKey(ref type);
                         if (key < 0) throw new InvalidOperationException("Dynamic type is not a contract-type: " + type.Name);
                     }
+
                     int typeKey = dest.NetCache.AddObjectKey(type, out existing);
                     ProtoWriter.WriteFieldHeader(existing ? FieldExistingTypeKey : FieldNewTypeKey, WireType.Variant, dest);
                     ProtoWriter.WriteInt32(typeKey, dest);
@@ -700,17 +762,19 @@ namespace ProtoBuf
                         ProtoWriter.WriteFieldHeader(FieldTypeName, WireType.String, dest);
                         ProtoWriter.WriteString(dest.SerializeType(type), dest);
                     }
-                    
                 }
+
                 ProtoWriter.WriteFieldHeader(FieldObject, wireType, dest);
                 if (value is string)
                 {
-                    ProtoWriter.WriteString((string)value, dest);
+                    ProtoWriter.WriteString((string) value, dest);
                 }
-                else { 
+                else
+                {
                     ProtoWriter.WriteObject(value, key, dest);
                 }
             }
+
             ProtoWriter.EndSubItem(token, dest);
 #endif
         }
