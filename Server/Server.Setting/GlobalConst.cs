@@ -1,0 +1,28 @@
+﻿namespace Server.Setting;
+
+/// <summary>
+/// 全局常量类
+/// </summary>
+public static class GlobalConst
+{
+    public const int SECOND_MASK = 0x3FFFFFFF;
+    public const int MAX_GLOBAL_ID = 10_000_000;
+    public const int MIN_SERVER_ID = 1000;
+    public const int MAX_SERVER_ID = 9999;
+    public const int MAX_ACTOR_INCREASE = 4095; // 4095
+    public const int MAX_UNIQUE_INCREASE = 524287; //524287
+
+
+    public const int SERVERID_OR_MODULEID_MASK = 49; //49+14=63
+    public const int ACTORTYPE_MASK = 42; //42+7 = 49
+    public const int TIMESTAMP_MASK = 12; //12+30 =42
+    public const int MODULEID_TIMESTAMP_MASK = 19; //19+30 =42
+
+
+    #region GlobalTimer 全局计时器
+
+    public const int SAVE_INTERVAL_IN_MilliSECONDS = 300_000; //300_000;
+    public const int MAGIC = 60;
+
+    #endregion
+}
