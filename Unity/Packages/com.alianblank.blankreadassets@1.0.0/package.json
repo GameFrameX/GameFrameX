@@ -1,16 +1,17 @@
 {
   "name": "com.alianblank.readassets",
   "displayName": "Blank Read Assets",
-  "category": "Blank",
-  "description": "通过同步接口的方式读取StreamingAssets 下的文件",
-  "version": "2018.1.0",
+  "version": "1.0.0",
   "unity": "2017.1",
-  "keywords": [
-    "ReadAssets",
-    "Blank"
-  ],
+  "description": "通过同步接口的方式读取StreamingAssets 下的文件",
   "author": {
     "name": "alianblank",
-    "url": "https://alianblank.com"
-  }
+    "url": "https://github.com/AlianBlank/BlankReadAssets"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlianBlank/BlankReadAssets.git"
+  },
+  "relatedPackages": {},
+  "type": "library"
 }
