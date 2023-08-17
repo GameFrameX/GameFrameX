@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using NLog;
 using Server.Core.Net.Messages;
 using Server.Extension;
@@ -70,6 +71,7 @@ namespace Server.Proto
             RespDictionary.Clear();
             var assembly = typeof(ProtoMessageIdHandler).Assembly;
             var types = assembly.GetTypes();
+            StringBuilder stringBuilder = new StringBuilder();
             foreach (var type in types)
             {
                 var attribute = type.GetCustomAttribute(typeof(MessageTypeHandler));
@@ -78,7 +80,7 @@ namespace Server.Proto
                     continue;
                 }
 
-                Log.Debug(" 注册消息ID类型: " + type);
+                stringBuilder.AppendLine(" 注册消息ID类型: " + type);
 
                 if (attribute is MessageTypeHandler messageIdHandler)
                 {
@@ -102,6 +104,8 @@ namespace Server.Proto
                     }
                 }
             }
+
+            Log.Debug(stringBuilder.ToString());
             Log.Info(" 注册消息ID类型: 结束");
         }
     }

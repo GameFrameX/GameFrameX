@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+    </PropertyGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Server.Core\Server.Core.csproj" />
-	  <ProjectReference Include="..\Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Server.Core\Server.Core.csproj"/>
+        <ProjectReference Include="..\Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj"/>
+    </ItemGroup>
 
 </Project>
