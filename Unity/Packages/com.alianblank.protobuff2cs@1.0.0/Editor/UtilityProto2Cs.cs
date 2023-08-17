@@ -193,8 +193,9 @@ namespace Proto2CS.Editor
             StringBuilder sb = new StringBuilder();
             StringBuilder sbTemp = new StringBuilder();
             // sb.Append("using ETModel;\n");
-            sb.Append("using ProtoBuf;\n");
-            sb.Append("using System.Collections.Generic;\n");
+            sb.AppendLine("using System;");
+            sb.AppendLine("using ProtoBuf;");
+            sb.AppendLine("using System.Collections.Generic;");
             if (isServer)
             {
                 sb.AppendLine("using Server.Core.Net.Messages;");
