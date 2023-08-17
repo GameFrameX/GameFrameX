@@ -12,6 +12,7 @@ namespace Server.Utility
         public const int BoolSize = sizeof(bool);
 
         #region WriteSpan
+
         public static unsafe void WriteInt(int value, Span<byte> buffer, ref int offset)
         {
             if (offset + IntSize > buffer.Length)
@@ -21,7 +22,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(int*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
+                *(int*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
                 offset += IntSize;
             }
         }
@@ -35,7 +36,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(short*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
+                *(short*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
                 offset += ShortSize;
             }
         }
@@ -49,7 +50,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(long*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
+                *(long*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
                 offset += LongSize;
             }
         }
@@ -63,8 +64,8 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(float*)(ptr + offset) = value;
-                *(int*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(*(int*)(ptr + offset));
+                *(float*) (ptr + offset) = value;
+                *(int*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(*(int*) (ptr + offset));
                 offset += FloatSize;
             }
         }
@@ -78,8 +79,8 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(double*)(ptr + offset) = value;
-                *(long*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(*(long*)(ptr + offset));
+                *(double*) (ptr + offset) = value;
+                *(long*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(*(long*) (ptr + offset));
                 offset += DoubleSize;
             }
         }
@@ -150,7 +151,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(sbyte*)(ptr + offset) = value;
+                *(sbyte*) (ptr + offset) = value;
                 offset += SbyteSize;
             }
         }
@@ -170,7 +171,7 @@ namespace Server.Utility
                 throw new ArgumentException($"xbuffer write out of index {offset + len + ShortSize}, {buffer.Length}");
             }
 
-            WriteShort((short)len, buffer, ref offset);
+            WriteShort((short) len, buffer, ref offset);
             var val = System.Text.Encoding.UTF8.GetBytes(value);
             fixed (byte* ptr = buffer, valPtr = val)
             {
@@ -191,17 +192,16 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(bool*)(ptr + offset) = value;
+                *(bool*) (ptr + offset) = value;
                 offset += BoolSize;
             }
         }
 
-
         #endregion
 
 
-
         #region ReadSpan
+
         public static unsafe int ReadInt(Span<byte> buffer, ref int offset)
         {
             if (offset > buffer.Length + IntSize)
@@ -209,7 +209,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(int*)(ptr + offset);
+                var value = *(int*) (ptr + offset);
                 offset += IntSize;
                 return System.Net.IPAddress.NetworkToHostOrder(value);
             }
@@ -222,7 +222,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(short*)(ptr + offset);
+                var value = *(short*) (ptr + offset);
                 offset += ShortSize;
                 return System.Net.IPAddress.NetworkToHostOrder(value);
             }
@@ -235,7 +235,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(long*)(ptr + offset);
+                var value = *(long*) (ptr + offset);
                 offset += LongSize;
                 return System.Net.IPAddress.NetworkToHostOrder(value);
             }
@@ -248,8 +248,8 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(int*)(ptr + offset) = System.Net.IPAddress.NetworkToHostOrder(*(int*)(ptr + offset));
-                var value = *(float*)(ptr + offset);
+                *(int*) (ptr + offset) = System.Net.IPAddress.NetworkToHostOrder(*(int*) (ptr + offset));
+                var value = *(float*) (ptr + offset);
                 offset += FloatSize;
                 return value;
             }
@@ -262,8 +262,8 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(long*)(ptr + offset) = System.Net.IPAddress.NetworkToHostOrder(*(long*)(ptr + offset));
-                var value = *(double*)(ptr + offset);
+                *(long*) (ptr + offset) = System.Net.IPAddress.NetworkToHostOrder(*(long*) (ptr + offset));
+                var value = *(double*) (ptr + offset);
                 offset += DoubleSize;
                 return value;
             }
@@ -303,7 +303,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(sbyte*)(ptr + offset);
+                var value = *(sbyte*) (ptr + offset);
                 offset += ByteSize;
                 return value;
             }
@@ -330,11 +330,12 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(bool*)(ptr + offset);
+                var value = *(bool*) (ptr + offset);
                 offset += BoolSize;
                 return value;
             }
         }
+
         #endregion
 
 
@@ -350,7 +351,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(int*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
+                *(int*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
                 offset += IntSize;
             }
         }
@@ -365,7 +366,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(short*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
+                *(short*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
                 offset += ShortSize;
             }
         }
@@ -380,7 +381,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(long*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
+                *(long*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(value);
                 offset += LongSize;
             }
         }
@@ -395,8 +396,8 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(float*)(ptr + offset) = value;
-                *(int*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(*(int*)(ptr + offset));
+                *(float*) (ptr + offset) = value;
+                *(int*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(*(int*) (ptr + offset));
                 offset += FloatSize;
             }
         }
@@ -411,8 +412,8 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(double*)(ptr + offset) = value;
-                *(long*)(ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(*(long*)(ptr + offset));
+                *(double*) (ptr + offset) = value;
+                *(long*) (ptr + offset) = System.Net.IPAddress.HostToNetworkOrder(*(long*) (ptr + offset));
                 offset += DoubleSize;
             }
         }
@@ -461,7 +462,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(sbyte*)(ptr + offset) = value;
+                *(sbyte*) (ptr + offset) = value;
                 offset += SbyteSize;
             }
         }
@@ -486,7 +487,7 @@ namespace Server.Utility
             fixed (byte* ptr = buffer)
             {
                 System.Text.Encoding.UTF8.GetBytes(value, 0, value.Length, buffer, offset + ShortSize);
-                WriteShort((short)len, buffer, ref offset);
+                WriteShort((short) len, buffer, ref offset);
                 offset += len;
             }
         }
@@ -501,10 +502,11 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(bool*)(ptr + offset) = value;
+                *(bool*) (ptr + offset) = value;
                 offset += BoolSize;
             }
         }
+
         #endregion
 
         #region Read
@@ -516,7 +518,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(int*)(ptr + offset);
+                var value = *(int*) (ptr + offset);
                 offset += IntSize;
                 return System.Net.IPAddress.NetworkToHostOrder(value);
             }
@@ -529,7 +531,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(short*)(ptr + offset);
+                var value = *(short*) (ptr + offset);
                 offset += ShortSize;
                 return System.Net.IPAddress.NetworkToHostOrder(value);
             }
@@ -542,7 +544,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(long*)(ptr + offset);
+                var value = *(long*) (ptr + offset);
                 offset += LongSize;
                 return System.Net.IPAddress.NetworkToHostOrder(value);
             }
@@ -555,8 +557,8 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(int*)(ptr + offset) = System.Net.IPAddress.NetworkToHostOrder(*(int*)(ptr + offset));
-                var value = *(float*)(ptr + offset);
+                *(int*) (ptr + offset) = System.Net.IPAddress.NetworkToHostOrder(*(int*) (ptr + offset));
+                var value = *(float*) (ptr + offset);
                 offset += FloatSize;
                 return value;
             }
@@ -569,8 +571,8 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                *(long*)(ptr + offset) = System.Net.IPAddress.NetworkToHostOrder(*(long*)(ptr + offset));
-                var value = *(double*)(ptr + offset);
+                *(long*) (ptr + offset) = System.Net.IPAddress.NetworkToHostOrder(*(long*) (ptr + offset));
+                var value = *(double*) (ptr + offset);
                 offset += DoubleSize;
                 return value;
             }
@@ -609,7 +611,7 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(sbyte*)(ptr + offset);
+                var value = *(sbyte*) (ptr + offset);
                 offset += ByteSize;
                 return value;
             }
@@ -637,12 +639,12 @@ namespace Server.Utility
 
             fixed (byte* ptr = buffer)
             {
-                var value = *(bool*)(ptr + offset);
+                var value = *(bool*) (ptr + offset);
                 offset += BoolSize;
                 return value;
             }
         }
-        #endregion
 
+        #endregion
     }
 }

@@ -6,15 +6,15 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
 {
     private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
 
-    public const int FRACTION_BITS = 14;                                                    // 小数位位数 14
-    private const int INTEGER_BITS = sizeof(long) * 8 - FRACTION_BITS;          // 整数位位数 50
-    
-    private const int FRACTION_MASK = (int)(uint.MaxValue >> INTEGER_BITS);    // 2^14-1 = 16384-1 =16383 == 01111111111111
-    private const int INTEGER_MASK = (int)(-1 & ~FRACTION_MASK);                    // -16384
-    private const int FRACTION_RANGE = FRACTION_MASK + 1;                             // 16384 == 10000000000000
+    public const int FRACTION_BITS = 14; // 小数位位数 14
+    private const int INTEGER_BITS = sizeof(long) * 8 - FRACTION_BITS; // 整数位位数 50
 
-    public const long Max = 562949953421311;     // 2^50 = 1125899906842624 - 1
-    public const long FMax = 9999;                       //  2^14-1 = 16384-1 =16383 == 01111111111111
+    private const int FRACTION_MASK = (int) (uint.MaxValue >> INTEGER_BITS); // 2^14-1 = 16384-1 =16383 == 01111111111111
+    private const int INTEGER_MASK = (int) (-1 & ~FRACTION_MASK); // -16384
+    private const int FRACTION_RANGE = FRACTION_MASK + 1; // 16384 == 10000000000000
+
+    public const long Max = 562949953421311; // 2^50 = 1125899906842624 - 1
+    public const long FMax = 9999; //  2^14-1 = 16384-1 =16383 == 01111111111111
 
     public static readonly LNumber MaxValue = Create_Row(Max);
     public static readonly LNumber MinValue = Create_Row(-Max);
@@ -35,7 +35,7 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
             LNumber r;
             r.raw = (raw + FRACTION_MASK) & INTEGER_MASK;
 
-            return (long)r;
+            return (long) r;
         }
     }
 
@@ -46,7 +46,7 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
             LNumber r;
             r.raw = raw & INTEGER_MASK;
 
-            return (long)r;
+            return (long) r;
         }
     }
 
@@ -94,7 +94,7 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
 
     public override bool Equals(object obj)
     {
-        return (obj is LNumber && ((LNumber)obj) == this);
+        return (obj is LNumber && ((LNumber) obj) == this);
     }
 
     public override int GetHashCode()
@@ -104,12 +104,12 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
 
     public override string ToString()
     {
-        return ((double)this).ToString("f4");
+        return ((double) this).ToString("f4");
     }
 
     public string ToString(string str)
     {
-        return ((double)this).ToString(str);
+        return ((double) this).ToString(str);
     }
 
 
@@ -159,10 +159,12 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
                 LOGGER.Error("LNumber*已越界>" + c.ToString());
                 r.raw = long.MinValue;
             }
-        }else
+        }
+        else
         {
             r.raw = (lhs.raw * rhs.raw + (FRACTION_RANGE >> 1)) >> FRACTION_BITS;
         }
+
         return r;
     }
 
@@ -173,6 +175,7 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
         {
             return 0;
         }
+
         var factor = 1;
         if (rhs.raw < 0)
             factor = -1;
@@ -182,9 +185,9 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
             //Debug.LogError("除0了");
             return 0;
         }
-        
+
         LNumber r;
-        if(lhs.raw > (1L << (62 - FRACTION_BITS)))
+        if (lhs.raw > (1L << (62 - FRACTION_BITS)))
         {
             //可能越界了
             BigInteger a = lhs.raw;
@@ -208,6 +211,7 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
         {
             r.raw = ((lhs.raw << (FRACTION_BITS + 1)) / rhs.raw + factor) >> 1;
         }
+
         return r;
     }
 
@@ -277,13 +281,13 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
     // double类型转换
     public static explicit operator double(LNumber number)
     {
-        return (number.raw >> FRACTION_BITS) + (number.raw & FRACTION_MASK) / (double)FRACTION_RANGE;
+        return (number.raw >> FRACTION_BITS) + (number.raw & FRACTION_MASK) / (double) FRACTION_RANGE;
     }
 
     // float 类型转换
     public static implicit operator float(LNumber number)
     {
-        return (float)(double)number;
+        return (float) (double) number;
     }
 
     /**********************赋值运算*****************************/
@@ -332,5 +336,4 @@ public static LNumber Convert(float f)
     r.raw = (long)(f * Muti_FACTOR);
     return r;
 }*/
-
 }

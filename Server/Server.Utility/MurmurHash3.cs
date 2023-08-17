@@ -2,12 +2,13 @@
 {
     public class MurmurHash3
     {
-        static public uint Hash(string str, uint seed = 27)
+        public static uint Hash(string str, uint seed = 27)
         {
             var data = System.Text.Encoding.UTF8.GetBytes(str);
-            return Hash(data, (uint)data.Length, seed);
+            return Hash(data, (uint) data.Length, seed);
         }
-        static public uint Hash(byte[] data, uint length, uint seed)
+
+        public static uint Hash(byte[] data, uint length, uint seed)
         {
             uint nblocks = length >> 2;
 
@@ -46,13 +47,16 @@
             uint tailLength = length & 3;
 
             if (tailLength == 3)
-                k1 ^= (uint)data[2 + nblocks] << 16;
+                k1 ^= (uint) data[2 + nblocks] << 16;
             if (tailLength >= 2)
-                k1 ^= (uint)data[1 + nblocks] << 8;
+                k1 ^= (uint) data[1 + nblocks] << 8;
             if (tailLength >= 1)
             {
                 k1 ^= data[nblocks];
-                k1 *= c1; k1 = rotl32(k1, 15); k1 *= c2; h1 ^= k1;
+                k1 *= c1;
+                k1 = rotl32(k1, 15);
+                k1 *= c2;
+                h1 ^= k1;
             }
 
             //----------

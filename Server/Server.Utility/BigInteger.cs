@@ -141,7 +141,8 @@ public class BigInteger
 
     // primes smaller than 2000 to test the generated prime number
 
-    public static readonly int[] primesBelow2000 = {
+    public static readonly int[] primesBelow2000 =
+    {
         2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,
         101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199,
         211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293,
@@ -161,11 +162,12 @@ public class BigInteger
         1601, 1607, 1609, 1613, 1619, 1621, 1627, 1637, 1657, 1663, 1667, 1669, 1693, 1697, 1699,
         1709, 1721, 1723, 1733, 1741, 1747, 1753, 1759, 1777, 1783, 1787, 1789,
         1801, 1811, 1823, 1831, 1847, 1861, 1867, 1871, 1873, 1877, 1879, 1889,
-        1901, 1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, 1993, 1997, 1999 };
+        1901, 1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, 1993, 1997, 1999
+    };
 
 
-    private uint[] data = null;             // stores bytes from the Big Integer
-    public int dataLength;                 // number of actual chars used
+    private uint[] data = null; // stores bytes from the Big Integer
+    public int dataLength; // number of actual chars used
 
 
     //***********************************************************************
@@ -194,17 +196,17 @@ public class BigInteger
         dataLength = 0;
         while (value != 0 && dataLength < maxLength)
         {
-            data[dataLength] = (uint)(value & 0xFFFFFFFF);
+            data[dataLength] = (uint) (value & 0xFFFFFFFF);
             value >>= 32;
             dataLength++;
         }
 
-        if (tempVal > 0)         // overflow check for +ve value
+        if (tempVal > 0) // overflow check for +ve value
         {
             if (value != 0 || (data[maxLength - 1] & 0x80000000) != 0)
                 throw (new ArithmeticException("Positive overflow in constructor."));
         }
-        else if (tempVal < 0)    // underflow check for -ve value
+        else if (tempVal < 0) // underflow check for -ve value
         {
             if (value != -1 || (data[dataLength - 1] & 0x80000000) == 0)
                 throw (new ArithmeticException("Negative underflow in constructor."));
@@ -229,7 +231,7 @@ public class BigInteger
         dataLength = 0;
         while (value != 0 && dataLength < maxLength)
         {
-            data[dataLength] = (uint)(value & 0xFFFFFFFF);
+            data[dataLength] = (uint) (value & 0xFFFFFFFF);
             value >>= 32;
             dataLength++;
         }
@@ -240,7 +242,6 @@ public class BigInteger
         if (dataLength == 0)
             dataLength = 1;
     }
-
 
 
     //***********************************************************************
@@ -295,14 +296,14 @@ public class BigInteger
 
         for (int i = value.Length - 1; i >= limit; i--)
         {
-            int posVal = (int)value[i];
+            int posVal = (int) value[i];
 
             if (posVal >= '0' && posVal <= '9')
                 posVal -= '0';
             else if (posVal >= 'A' && posVal <= 'Z')
                 posVal = (posVal - 'A') + 10;
             else
-                posVal = 9999999;       // arbitrary large
+                posVal = 9999999; // arbitrary large
 
 
             if (posVal >= radix)
@@ -319,12 +320,12 @@ public class BigInteger
             }
         }
 
-        if (value[0] == '-')     // negative values
+        if (value[0] == '-') // negative values
         {
             if ((result.data[maxLength - 1] & 0x80000000) == 0)
                 throw (new ArithmeticException("Negative underflow in constructor."));
         }
-        else    // positive values
+        else // positive values
         {
             if ((result.data[maxLength - 1] & 0x80000000) != 0)
                 throw (new ArithmeticException("Positive overflow in constructor."));
@@ -360,7 +361,7 @@ public class BigInteger
         dataLength = inData.Length >> 2;
 
         int leftOver = inData.Length & 0x3;
-        if (leftOver != 0)         // length not multiples of 4
+        if (leftOver != 0) // length not multiples of 4
             dataLength++;
 
 
@@ -371,16 +372,16 @@ public class BigInteger
 
         for (int i = inData.Length - 1, j = 0; i >= 3; i -= 4, j++)
         {
-            data[j] = (uint)((inData[i - 3] << 24) + (inData[i - 2] << 16) +
-                             (inData[i - 1] << 8) + inData[i]);
+            data[j] = (uint) ((inData[i - 3] << 24) + (inData[i - 2] << 16) +
+                              (inData[i - 1] << 8) + inData[i]);
         }
 
         if (leftOver == 1)
-            data[dataLength - 1] = (uint)inData[0];
+            data[dataLength - 1] = (uint) inData[0];
         else if (leftOver == 2)
-            data[dataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
+            data[dataLength - 1] = (uint) ((inData[0] << 8) + inData[1]);
         else if (leftOver == 3)
-            data[dataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
+            data[dataLength - 1] = (uint) ((inData[0] << 16) + (inData[1] << 8) + inData[2]);
 
 
         while (dataLength > 1 && data[dataLength - 1] == 0)
@@ -400,7 +401,7 @@ public class BigInteger
         dataLength = inLen >> 2;
 
         int leftOver = inLen & 0x3;
-        if (leftOver != 0)         // length not multiples of 4
+        if (leftOver != 0) // length not multiples of 4
             dataLength++;
 
         if (dataLength > maxLength || inLen > inData.Length)
@@ -411,16 +412,16 @@ public class BigInteger
 
         for (int i = inLen - 1, j = 0; i >= 3; i -= 4, j++)
         {
-            data[j] = (uint)((inData[i - 3] << 24) + (inData[i - 2] << 16) +
-                             (inData[i - 1] << 8) + inData[i]);
+            data[j] = (uint) ((inData[i - 3] << 24) + (inData[i - 2] << 16) +
+                              (inData[i - 1] << 8) + inData[i]);
         }
 
         if (leftOver == 1)
-            data[dataLength - 1] = (uint)inData[0];
+            data[dataLength - 1] = (uint) inData[0];
         else if (leftOver == 2)
-            data[dataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
+            data[dataLength - 1] = (uint) ((inData[0] << 8) + inData[1]);
         else if (leftOver == 3)
-            data[dataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
+            data[dataLength - 1] = (uint) ((inData[0] << 16) + (inData[1] << 8) + inData[2]);
 
 
         if (dataLength == 0)
@@ -473,12 +474,12 @@ public class BigInteger
 
     public static implicit operator BigInteger(int value)
     {
-        return (new BigInteger((long)value));
+        return (new BigInteger((long) value));
     }
 
     public static implicit operator BigInteger(uint value)
     {
-        return (new BigInteger((ulong)value));
+        return (new BigInteger((ulong) value));
     }
 
 
@@ -495,14 +496,14 @@ public class BigInteger
         long carry = 0;
         for (int i = 0; i < result.dataLength; i++)
         {
-            long sum = (long)bi1.data[i] + (long)bi2.data[i] + carry;
+            long sum = (long) bi1.data[i] + (long) bi2.data[i] + carry;
             carry = sum >> 32;
-            result.data[i] = (uint)(sum & 0xFFFFFFFF);
+            result.data[i] = (uint) (sum & 0xFFFFFFFF);
         }
 
         if (carry != 0 && result.dataLength < maxLength)
         {
-            result.data[result.dataLength] = (uint)(carry);
+            result.data[result.dataLength] = (uint) (carry);
             result.dataLength++;
         }
 
@@ -535,10 +536,10 @@ public class BigInteger
 
         while (carry != 0 && index < maxLength)
         {
-            val = (long)(result.data[index]);
+            val = (long) (result.data[index]);
             val++;
 
-            result.data[index] = (uint)(val & 0xFFFFFFFF);
+            result.data[index] = (uint) (val & 0xFFFFFFFF);
             carry = val >> 32;
 
             index++;
@@ -563,6 +564,7 @@ public class BigInteger
         {
             throw (new ArithmeticException("Overflow in ++."));
         }
+
         return result;
     }
 
@@ -582,8 +584,8 @@ public class BigInteger
         {
             long diff;
 
-            diff = (long)bi1.data[i] - (long)bi2.data[i] - carryIn;
-            result.data[i] = (uint)(diff & 0xFFFFFFFF);
+            diff = (long) bi1.data[i] - (long) bi2.data[i] - carryIn;
+            result.data[i] = (uint) (diff & 0xFFFFFFFF);
 
             if (diff < 0)
                 carryIn = 1;
@@ -630,10 +632,10 @@ public class BigInteger
 
         while (carryIn && index < maxLength)
         {
-            val = (long)(result.data[index]);
+            val = (long) (result.data[index]);
             val--;
 
-            result.data[index] = (uint)(val & 0xFFFFFFFF);
+            result.data[index] = (uint) (val & 0xFFFFFFFF);
 
             if (val >= 0)
                 carryIn = false;
@@ -675,16 +677,21 @@ public class BigInteger
         // take the absolute value of the inputs
         try
         {
-            if ((bi1.data[lastPos] & 0x80000000) != 0)     // bi1 negative
+            if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
             {
-                bi1Neg = true; bi1 = -bi1;
+                bi1Neg = true;
+                bi1 = -bi1;
             }
-            if ((bi2.data[lastPos] & 0x80000000) != 0)     // bi2 negative
+
+            if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
             {
-                bi2Neg = true; bi2 = -bi2;
+                bi2Neg = true;
+                bi2 = -bi2;
             }
         }
-        catch (Exception) { }
+        catch (Exception)
+        {
+        }
 
         BigInteger result = new BigInteger();
 
@@ -699,15 +706,15 @@ public class BigInteger
                 for (int j = 0, k = i; j < bi2.dataLength; j++, k++)
                 {
                     // k = i + j
-                    ulong val = ((ulong)bi1.data[i] * (ulong)bi2.data[j]) +
-                                (ulong)result.data[k] + mcarry;
+                    ulong val = ((ulong) bi1.data[i] * (ulong) bi2.data[j]) +
+                                (ulong) result.data[k] + mcarry;
 
-                    result.data[k] = (uint)(val & 0xFFFFFFFF);
+                    result.data[k] = (uint) (val & 0xFFFFFFFF);
                     mcarry = (val >> 32);
                 }
 
                 if (mcarry != 0)
-                    result.data[i + bi2.dataLength] = (uint)mcarry;
+                    result.data[i + bi2.dataLength] = (uint) mcarry;
             }
         }
         catch (Exception)
@@ -726,7 +733,7 @@ public class BigInteger
         // overflow check (result is -ve)
         if ((result.data[lastPos] & 0x80000000) != 0)
         {
-            if (bi1Neg != bi2Neg && result.data[lastPos] == 0x80000000)    // different sign
+            if (bi1Neg != bi2Neg && result.data[lastPos] == 0x80000000) // different sign
             {
                 // handle the special case where multiplication produces
                 // a max negative number in 2's complement.
@@ -756,7 +763,6 @@ public class BigInteger
 
         return result;
     }
-
 
 
     //***********************************************************************
@@ -792,10 +798,10 @@ public class BigInteger
             ulong carry = 0;
             for (int i = 0; i < bufLen; i++)
             {
-                ulong val = ((ulong)buffer[i]) << shiftAmount;
+                ulong val = ((ulong) buffer[i]) << shiftAmount;
                 val |= carry;
 
-                buffer[i] = (uint)(val & 0xFFFFFFFF);
+                buffer[i] = (uint) (val & 0xFFFFFFFF);
                 carry = val >> 32;
             }
 
@@ -803,12 +809,14 @@ public class BigInteger
             {
                 if (bufLen + 1 <= buffer.Length)
                 {
-                    buffer[bufLen] = (uint)carry;
+                    buffer[bufLen] = (uint) carry;
                     bufLen++;
                 }
             }
+
             count -= shiftAmount;
         }
+
         return bufLen;
     }
 
@@ -817,7 +825,7 @@ public class BigInteger
     // Overloading of unary >> operators
     //***********************************************************************
 
-    public static BigInteger operator >>(BigInteger bi1, int shiftVal)
+    public static BigInteger operator >> (BigInteger bi1, int shiftVal)
     {
         BigInteger result = new BigInteger(bi1);
         result.dataLength = shiftRight(result.data, shiftVal);
@@ -837,6 +845,7 @@ public class BigInteger
                 result.data[result.dataLength - 1] |= mask;
                 mask >>= 1;
             }
+
             result.dataLength = maxLength;
         }
 
@@ -868,11 +877,11 @@ public class BigInteger
             ulong carry = 0;
             for (int i = bufLen - 1; i >= 0; i--)
             {
-                ulong val = ((ulong)buffer[i]) >> shiftAmount;
+                ulong val = ((ulong) buffer[i]) >> shiftAmount;
                 val |= carry;
 
-                carry = ((ulong)buffer[i]) << invShift;
-                buffer[i] = (uint)(val);
+                carry = ((ulong) buffer[i]) << invShift;
+                buffer[i] = (uint) (val);
             }
 
             count -= shiftAmount;
@@ -894,7 +903,7 @@ public class BigInteger
         BigInteger result = new BigInteger(bi1);
 
         for (int i = 0; i < maxLength; i++)
-            result.data[i] = (uint)(~(bi1.data[i]));
+            result.data[i] = (uint) (~(bi1.data[i]));
 
         result.dataLength = maxLength;
 
@@ -921,7 +930,7 @@ public class BigInteger
 
         // 1's complement
         for (int i = 0; i < maxLength; i++)
-            result.data[i] = (uint)(~(bi1.data[i]));
+            result.data[i] = (uint) (~(bi1.data[i]));
 
         // add one to result of 1's complement
         long val, carry = 1;
@@ -929,10 +938,10 @@ public class BigInteger
 
         while (carry != 0 && index < maxLength)
         {
-            val = (long)(result.data[index]);
+            val = (long) (result.data[index]);
             val++;
 
-            result.data[index] = (uint)(val & 0xFFFFFFFF);
+            result.data[index] = (uint) (val & 0xFFFFFFFF);
             carry = val >> 32;
 
             index++;
@@ -976,7 +985,7 @@ public class BigInteger
 
     public override bool Equals(object o)
     {
-        BigInteger bi = (BigInteger)o;
+        BigInteger bi = (BigInteger) o;
 
         if (this.dataLength != bi.dataLength)
             return false;
@@ -986,6 +995,7 @@ public class BigInteger
             if (this.data[i] != bi.data[i])
                 return false;
         }
+
         return true;
     }
 
@@ -1022,6 +1032,7 @@ public class BigInteger
                 return true;
             return false;
         }
+
         return false;
     }
 
@@ -1048,6 +1059,7 @@ public class BigInteger
                 return true;
             return false;
         }
+
         return false;
     }
 
@@ -1085,7 +1097,8 @@ public class BigInteger
 
         while (mask != 0 && (val & mask) == 0)
         {
-            shift++; mask >>= 1;
+            shift++;
+            mask >>= 1;
         }
 
         //Console.WriteLine("shift = {0}", shift);
@@ -1115,7 +1128,7 @@ public class BigInteger
 
         while (j > 0)
         {
-            ulong dividend = ((ulong)remainder[pos] << 32) + (ulong)remainder[pos - 1];
+            ulong dividend = ((ulong) remainder[pos] << 32) + (ulong) remainder[pos - 1];
             //Console.WriteLine("dividend = {0}", dividend);
 
             ulong q_hat = dividend / firstDivisorByte;
@@ -1143,7 +1156,7 @@ public class BigInteger
                 dividendPart[h] = remainder[pos - h];
 
             BigInteger kk = new BigInteger(dividendPart);
-            BigInteger ss = bi2 * (long)q_hat;
+            BigInteger ss = bi2 * (long) q_hat;
 
             //Console.WriteLine("ss before = " + ss);
             while (ss > kk)
@@ -1152,6 +1165,7 @@ public class BigInteger
                 ss -= bi2;
                 //Console.WriteLine(ss);
             }
+
             BigInteger yy = kk - ss;
 
             //Console.WriteLine("ss = " + ss);
@@ -1168,7 +1182,7 @@ public class BigInteger
         Console.WriteLine("\n************ q_hat = {0:X}\n", q_hat);
         */
 
-            result[resultPos++] = (uint)q_hat;
+            result[resultPos++] = (uint) q_hat;
 
             pos--;
             j--;
@@ -1215,9 +1229,9 @@ public class BigInteger
         while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
             outRemainder.dataLength--;
 
-        ulong divisor = (ulong)bi2.data[0];
+        ulong divisor = (ulong) bi2.data[0];
         int pos = outRemainder.dataLength - 1;
-        ulong dividend = (ulong)outRemainder.data[pos];
+        ulong dividend = (ulong) outRemainder.data[pos];
 
         //Console.WriteLine("divisor = " + divisor + " dividend = " + dividend);
         //Console.WriteLine("divisor = " + bi2 + "\ndividend = " + bi1);
@@ -1225,22 +1239,23 @@ public class BigInteger
         if (dividend >= divisor)
         {
             ulong quotient = dividend / divisor;
-            result[resultPos++] = (uint)quotient;
+            result[resultPos++] = (uint) quotient;
 
-            outRemainder.data[pos] = (uint)(dividend % divisor);
+            outRemainder.data[pos] = (uint) (dividend % divisor);
         }
+
         pos--;
 
         while (pos >= 0)
         {
             //Console.WriteLine(pos);
 
-            dividend = ((ulong)outRemainder.data[pos + 1] << 32) + (ulong)outRemainder.data[pos];
+            dividend = ((ulong) outRemainder.data[pos + 1] << 32) + (ulong) outRemainder.data[pos];
             ulong quotient = dividend / divisor;
-            result[resultPos++] = (uint)quotient;
+            result[resultPos++] = (uint) quotient;
 
             outRemainder.data[pos + 1] = 0;
-            outRemainder.data[pos--] = (uint)(dividend % divisor);
+            outRemainder.data[pos--] = (uint) (dividend % divisor);
             //Console.WriteLine(">>>> " + bi1);
         }
 
@@ -1274,12 +1289,13 @@ public class BigInteger
         int lastPos = maxLength - 1;
         bool divisorNeg = false, dividendNeg = false;
 
-        if ((bi1.data[lastPos] & 0x80000000) != 0)     // bi1 negative
+        if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
         {
             bi1 = -bi1;
             dividendNeg = true;
         }
-        if ((bi2.data[lastPos] & 0x80000000) != 0)     // bi2 negative
+
+        if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
         {
             bi2 = -bi2;
             divisorNeg = true;
@@ -1317,12 +1333,13 @@ public class BigInteger
         int lastPos = maxLength - 1;
         bool dividendNeg = false;
 
-        if ((bi1.data[lastPos] & 0x80000000) != 0)     // bi1 negative
+        if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
         {
             bi1 = -bi1;
             dividendNeg = true;
         }
-        if ((bi2.data[lastPos] & 0x80000000) != 0)     // bi2 negative
+
+        if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
             bi2 = -bi2;
 
         if (bi1 < bi2)
@@ -1357,7 +1374,7 @@ public class BigInteger
 
         for (int i = 0; i < len; i++)
         {
-            uint sum = (uint)(bi1.data[i] & bi2.data[i]);
+            uint sum = (uint) (bi1.data[i] & bi2.data[i]);
             result.data[i] = sum;
         }
 
@@ -1382,7 +1399,7 @@ public class BigInteger
 
         for (int i = 0; i < len; i++)
         {
-            uint sum = (uint)(bi1.data[i] | bi2.data[i]);
+            uint sum = (uint) (bi1.data[i] | bi2.data[i]);
             result.data[i] = sum;
         }
 
@@ -1407,7 +1424,7 @@ public class BigInteger
 
         for (int i = 0; i < len; i++)
         {
-            uint sum = (uint)(bi1.data[i] ^ bi2.data[i]);
+            uint sum = (uint) (bi1.data[i] ^ bi2.data[i]);
             result.data[i] = sum;
         }
 
@@ -1443,7 +1460,6 @@ public class BigInteger
             return (new BigInteger(this));
         else
             return (new BigInteger(bi));
-
     }
 
 
@@ -1499,7 +1515,9 @@ public class BigInteger
             {
                 a = -a;
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
         }
 
         BigInteger quotient = new BigInteger();
@@ -1517,10 +1535,11 @@ public class BigInteger
                 if (remainder.data[0] < 10)
                     result = remainder.data[0] + result;
                 else
-                    result = charSet[(int)remainder.data[0] - 10] + result;
+                    result = charSet[(int) remainder.data[0] - 10] + result;
 
                 a = quotient;
             }
+
             if (negative)
                 result = "-" + result;
         }
@@ -1556,7 +1575,6 @@ public class BigInteger
     }
 
 
-
     //***********************************************************************
     // Modulo Exponentiation
     //***********************************************************************
@@ -1570,15 +1588,15 @@ public class BigInteger
         BigInteger tempNum;
         bool thisNegative = false;
 
-        if ((this.data[maxLength - 1] & 0x80000000) != 0)   // negative this
+        if ((this.data[maxLength - 1] & 0x80000000) != 0) // negative this
         {
             tempNum = -this % n;
             thisNegative = true;
         }
         else
-            tempNum = this % n;  // ensures (tempNum * tempNum) < b^(2k)
+            tempNum = this % n; // ensures (tempNum * tempNum) < b^(2k)
 
-        if ((n.data[maxLength - 1] & 0x80000000) != 0)   // negative n
+        if ((n.data[maxLength - 1] & 0x80000000) != 0) // negative n
             n = -n;
 
         // calculate constant = b^(2k) / m
@@ -1610,22 +1628,22 @@ public class BigInteger
 
                 if (tempNum.dataLength == 1 && tempNum.data[0] == 1)
                 {
-                    if (thisNegative && (exp.data[0] & 0x1) != 0)    //odd exp
+                    if (thisNegative && (exp.data[0] & 0x1) != 0) //odd exp
                         return -resultNum;
                     return resultNum;
                 }
+
                 count++;
                 if (count == totalBits)
                     break;
             }
         }
 
-        if (thisNegative && (exp.data[0] & 0x1) != 0)    //odd exp
+        if (thisNegative && (exp.data[0] & 0x1) != 0) //odd exp
             return -resultNum;
 
         return resultNum;
     }
-
 
 
     //***********************************************************************
@@ -1685,22 +1703,23 @@ public class BigInteger
             for (int j = 0; j < n.dataLength && t < kPlusOne; j++, t++)
             {
                 // t = i + j
-                ulong val = ((ulong)q3.data[i] * (ulong)n.data[j]) +
-                            (ulong)r2.data[t] + mcarry;
+                ulong val = ((ulong) q3.data[i] * (ulong) n.data[j]) +
+                            (ulong) r2.data[t] + mcarry;
 
-                r2.data[t] = (uint)(val & 0xFFFFFFFF);
+                r2.data[t] = (uint) (val & 0xFFFFFFFF);
                 mcarry = (val >> 32);
             }
 
             if (t < kPlusOne)
-                r2.data[t] = (uint)mcarry;
+                r2.data[t] = (uint) mcarry;
         }
+
         r2.dataLength = kPlusOne;
         while (r2.dataLength > 1 && r2.data[r2.dataLength - 1] == 0)
             r2.dataLength--;
 
         r1 -= r2;
-        if ((r1.data[maxLength - 1] & 0x80000000) != 0)        // negative
+        if ((r1.data[maxLength - 1] & 0x80000000) != 0) // negative
         {
             BigInteger val = new BigInteger();
             val.data[kPlusOne] = 0x00000001;
@@ -1724,12 +1743,12 @@ public class BigInteger
         BigInteger x;
         BigInteger y;
 
-        if ((data[maxLength - 1] & 0x80000000) != 0)     // negative
+        if ((data[maxLength - 1] & 0x80000000) != 0) // negative
             x = -this;
         else
             x = this;
 
-        if ((bi.data[maxLength - 1] & 0x80000000) != 0)     // negative
+        if ((bi.data[maxLength - 1] & 0x80000000) != 0) // negative
             y = -bi;
         else
             y = bi;
@@ -1763,17 +1782,17 @@ public class BigInteger
             throw (new ArithmeticException("Number of required bits > maxLength."));
 
         for (int i = 0; i < dwords; i++)
-            data[i] = (uint)(rand.NextDouble() * 0x100000000);
+            data[i] = (uint) (rand.NextDouble() * 0x100000000);
 
         for (int i = dwords; i < maxLength; i++)
             data[i] = 0;
 
         if (remBits != 0)
         {
-            uint mask = (uint)(0x01 << (remBits - 1));
+            uint mask = (uint) (0x01 << (remBits - 1));
             data[dwords - 1] |= mask;
 
-            mask = (uint)(0xFFFFFFFF >> (32 - remBits));
+            mask = (uint) (0xFFFFFFFF >> (32 - remBits));
             data[dwords - 1] &= mask;
         }
         else
@@ -1810,6 +1829,7 @@ public class BigInteger
             bits--;
             mask >>= 1;
         }
+
         bits += ((dataLength - 1) << 5);
 
         return bits;
@@ -1840,7 +1860,7 @@ public class BigInteger
     public bool FermatLittleTest(int confidence)
     {
         BigInteger thisVal;
-        if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+        if ((this.data[maxLength - 1] & 0x80000000) != 0) // negative
             thisVal = -this;
         else
             thisVal = this;
@@ -1854,7 +1874,7 @@ public class BigInteger
                 return true;
         }
 
-        if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+        if ((thisVal.data[0] & 0x1) == 0) // even numbers
             return false;
 
         int bits = thisVal.bitCount();
@@ -1866,13 +1886,13 @@ public class BigInteger
         {
             bool done = false;
 
-            while (!done)       // generate a < n
+            while (!done) // generate a < n
             {
                 int testBits = 0;
 
                 // make sure "a" has at least 2 bits
                 while (testBits < 2)
-                    testBits = (int)(rand.NextDouble() * bits);
+                    testBits = (int) (rand.NextDouble() * bits);
 
                 a.genRandomBits(testBits, rand);
 
@@ -1930,7 +1950,7 @@ public class BigInteger
     public bool RabinMillerTest(int confidence)
     {
         BigInteger thisVal;
-        if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+        if ((this.data[maxLength - 1] & 0x80000000) != 0) // negative
             thisVal = -this;
         else
             thisVal = this;
@@ -1944,7 +1964,7 @@ public class BigInteger
                 return true;
         }
 
-        if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+        if ((thisVal.data[0] & 0x1) == 0) // even numbers
             return false;
 
 
@@ -1960,9 +1980,10 @@ public class BigInteger
             {
                 if ((p_sub1.data[index] & mask) != 0)
                 {
-                    index = p_sub1.dataLength;      // to break the outer loop
+                    index = p_sub1.dataLength; // to break the outer loop
                     break;
                 }
+
                 mask <<= 1;
                 s++;
             }
@@ -1978,13 +1999,13 @@ public class BigInteger
         {
             bool done = false;
 
-            while (!done)       // generate a < n
+            while (!done) // generate a < n
             {
                 int testBits = 0;
 
                 // make sure "a" has at least 2 bits
                 while (testBits < 2)
-                    testBits = (int)(rand.NextDouble() * bits);
+                    testBits = (int) (rand.NextDouble() * bits);
 
                 a.genRandomBits(testBits, rand);
 
@@ -2011,12 +2032,12 @@ public class BigInteger
 
             bool result = false;
 
-            if (b.dataLength == 1 && b.data[0] == 1)         // a^t mod p = 1
+            if (b.dataLength == 1 && b.data[0] == 1) // a^t mod p = 1
                 result = true;
 
             for (int j = 0; result == false && j < s; j++)
             {
-                if (b == p_sub1)         // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+                if (b == p_sub1) // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
                 {
                     result = true;
                     break;
@@ -2028,6 +2049,7 @@ public class BigInteger
             if (result == false)
                 return false;
         }
+
         return true;
     }
 
@@ -2055,7 +2077,7 @@ public class BigInteger
     public bool SolovayStrassenTest(int confidence)
     {
         BigInteger thisVal;
-        if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+        if ((this.data[maxLength - 1] & 0x80000000) != 0) // negative
             thisVal = -this;
         else
             thisVal = this;
@@ -2069,7 +2091,7 @@ public class BigInteger
                 return true;
         }
 
-        if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+        if ((thisVal.data[0] & 0x1) == 0) // even numbers
             return false;
 
 
@@ -2084,13 +2106,13 @@ public class BigInteger
         {
             bool done = false;
 
-            while (!done)       // generate a < n
+            while (!done) // generate a < n
             {
                 int testBits = 0;
 
                 // make sure "a" has at least 2 bits
                 while (testBits < 2)
-                    testBits = (int)(rand.NextDouble() * bits);
+                    testBits = (int) (rand.NextDouble() * bits);
 
                 a.genRandomBits(testBits, rand);
 
@@ -2144,7 +2166,7 @@ public class BigInteger
     public bool LucasStrongTest()
     {
         BigInteger thisVal;
-        if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+        if ((this.data[maxLength - 1] & 0x80000000) != 0) // negative
             thisVal = -this;
         else
             thisVal = this;
@@ -2158,7 +2180,7 @@ public class BigInteger
                 return true;
         }
 
-        if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+        if ((thisVal.data[0] & 0x1) == 0) // even numbers
             return false;
 
         return LucasStrongTestHelper(thisVal);
@@ -2180,10 +2202,10 @@ public class BigInteger
             int Jresult = BigInteger.Jacobi(D, thisVal);
 
             if (Jresult == -1)
-                done = true;    // J(D, this) = 1
+                done = true; // J(D, this) = 1
             else
             {
-                if (Jresult == 0 && Math.Abs(D) < thisVal)       // divisor found
+                if (Jresult == 0 && Math.Abs(D) < thisVal) // divisor found
                     return false;
 
                 if (dCount == 20)
@@ -2198,6 +2220,7 @@ public class BigInteger
                 D = (Math.Abs(D) + 2) * sign;
                 sign = -sign;
             }
+
             dCount++;
         }
 
@@ -2222,9 +2245,10 @@ public class BigInteger
             {
                 if ((p_add1.data[index] & mask) != 0)
                 {
-                    index = p_add1.dataLength;      // to break the outer loop
+                    index = p_add1.dataLength; // to break the outer loop
                     break;
                 }
+
                 mask <<= 1;
                 s++;
             }
@@ -2266,17 +2290,17 @@ public class BigInteger
                     isPrime = true;
             }
 
-            lucas[2] = thisVal.BarrettReduction(lucas[2] * lucas[2], thisVal, constant);     //Q^k
+            lucas[2] = thisVal.BarrettReduction(lucas[2] * lucas[2], thisVal, constant); //Q^k
         }
 
 
-        if (isPrime)     // additional checks for composite numbers
+        if (isPrime) // additional checks for composite numbers
         {
             // If n is prime and gcd(n, Q) == 1, then
             // Q^((n+1)/2) = Q * Q^((n-1)/2) is congruent to (Q * J(Q, n)) mod n
 
             BigInteger g = thisVal.gcd(Q);
-            if (g.dataLength == 1 && g.data[0] == 1)         // gcd(this, Q) == 1
+            if (g.dataLength == 1 && g.data[0] == 1) // gcd(this, Q) == 1
             {
                 if ((lucas[2].data[maxLength - 1] & 0x80000000) != 0)
                     lucas[2] += thisVal;
@@ -2305,7 +2329,7 @@ public class BigInteger
     public bool isProbablePrime(int confidence)
     {
         BigInteger thisVal;
-        if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+        if ((this.data[maxLength - 1] & 0x80000000) != 0) // negative
             thisVal = -this;
         else
             thisVal = this;
@@ -2365,7 +2389,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
     public bool isProbablePrime()
     {
         BigInteger thisVal;
-        if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+        if ((this.data[maxLength - 1] & 0x80000000) != 0) // negative
             thisVal = -this;
         else
             thisVal = this;
@@ -2379,7 +2403,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
                 return true;
         }
 
-        if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+        if ((thisVal.data[0] & 0x1) == 0) // even numbers
             return false;
 
 
@@ -2415,9 +2439,10 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
             {
                 if ((p_sub1.data[index] & mask) != 0)
                 {
-                    index = p_sub1.dataLength;      // to break the outer loop
+                    index = p_sub1.dataLength; // to break the outer loop
                     break;
                 }
+
                 mask <<= 1;
                 s++;
             }
@@ -2432,12 +2457,12 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
         BigInteger b = a.modPow(t, thisVal);
         bool result = false;
 
-        if (b.dataLength == 1 && b.data[0] == 1)         // a^t mod p = 1
+        if (b.dataLength == 1 && b.data[0] == 1) // a^t mod p = 1
             result = true;
 
         for (int j = 0; result == false && j < s; j++)
         {
-            if (b == p_sub1)         // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+            if (b == p_sub1) // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
             {
                 result = true;
                 break;
@@ -2454,14 +2479,13 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
     }
 
 
-
     //***********************************************************************
     // Returns the lowest 4 bytes of the BigInteger as an int.
     //***********************************************************************
 
     public int IntValue()
     {
-        return (int)data[0];
+        return (int) data[0];
     }
 
 
@@ -2473,15 +2497,16 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
     {
         long val = 0;
 
-        val = (long)data[0];
+        val = (long) data[0];
         try
-        {       // exception if maxLength = 1
-            val |= (long)data[1] << 32;
+        {
+            // exception if maxLength = 1
+            val |= (long) data[1] << 32;
         }
         catch (Exception)
         {
             if ((data[0] & 0x80000000) != 0) // negative
-                val = (int)data[0];
+                val = (int) data[0];
         }
 
         return val;
@@ -2500,12 +2525,12 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
             throw (new ArgumentException("Jacobi defined only for odd integers."));
 
         if (a >= b) a %= b;
-        if (a.dataLength == 1 && a.data[0] == 0) return 0;  // a == 0
-        if (a.dataLength == 1 && a.data[0] == 1) return 1;  // a == 1
+        if (a.dataLength == 1 && a.data[0] == 0) return 0; // a == 0
+        if (a.dataLength == 1 && a.data[0] == 1) return 1; // a == 1
 
         if (a < 0)
         {
-            if ((((b - 1).data[0]) & 0x2) == 0)       //if( (((b-1) >> 1).data[0] & 0x1) == 0)
+            if ((((b - 1).data[0]) & 0x2) == 0) //if( (((b-1) >> 1).data[0] & 0x1) == 0)
                 return Jacobi(-a, b);
             else
                 return -Jacobi(-a, b);
@@ -2520,9 +2545,10 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
             {
                 if ((a.data[index] & mask) != 0)
                 {
-                    index = a.dataLength;      // to break the outer loop
+                    index = a.dataLength; // to break the outer loop
                     break;
                 }
+
                 mask <<= 1;
                 e++;
             }
@@ -2544,7 +2570,6 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
     }
 
 
-
     //***********************************************************************
     // Generates a positive BigInteger that is probably prime.
     //***********************************************************************
@@ -2557,11 +2582,12 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
         while (!done)
         {
             result.genRandomBits(bits, rand);
-            result.data[0] |= 0x01;     // make it odd
+            result.data[0] |= 0x01; // make it odd
 
             // prime test
             done = result.isProbablePrime(confidence);
         }
+
         return result;
     }
 
@@ -2598,9 +2624,9 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
     public BigInteger modInverse(BigInteger modulus)
     {
-        BigInteger[] p = { 0, 1 };
-        BigInteger[] q = new BigInteger[2];    // quotients
-        BigInteger[] r = { 0, 0 };             // remainders
+        BigInteger[] p = {0, 1};
+        BigInteger[] q = new BigInteger[2]; // quotients
+        BigInteger[] r = {0, 0}; // remainders
 
         int step = 0;
 
@@ -2633,7 +2659,8 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
             q[0] = q[1];
             r[0] = r[1];
-            q[1] = quotient; r[1] = remainder;
+            q[1] = quotient;
+            r[1] = remainder;
 
             a = b;
             b = remainder;
@@ -2647,7 +2674,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
         BigInteger result = ((p[0] - (p[1] * q[0])) % modulus);
 
         if ((result.data[maxLength - 1] & 0x80000000) != 0)
-            result += modulus;  // get the least positive modulus
+            result += modulus; // get the least positive modulus
 
         return result;
     }
@@ -2674,24 +2701,24 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
         uint tempVal, val = data[dataLength - 1];
 
         if ((tempVal = (val >> 24 & 0xFF)) != 0)
-            result[pos++] = (byte)tempVal;
+            result[pos++] = (byte) tempVal;
         if ((tempVal = (val >> 16 & 0xFF)) != 0)
-            result[pos++] = (byte)tempVal;
+            result[pos++] = (byte) tempVal;
         if ((tempVal = (val >> 8 & 0xFF)) != 0)
-            result[pos++] = (byte)tempVal;
+            result[pos++] = (byte) tempVal;
         if ((tempVal = (val & 0xFF)) != 0)
-            result[pos++] = (byte)tempVal;
+            result[pos++] = (byte) tempVal;
 
         for (int i = dataLength - 2; i >= 0; i--, pos += 4)
         {
             val = data[i];
-            result[pos + 3] = (byte)(val & 0xFF);
+            result[pos + 3] = (byte) (val & 0xFF);
             val >>= 8;
-            result[pos + 2] = (byte)(val & 0xFF);
+            result[pos + 2] = (byte) (val & 0xFF);
             val >>= 8;
-            result[pos + 1] = (byte)(val & 0xFF);
+            result[pos + 1] = (byte) (val & 0xFF);
             val >>= 8;
-            result[pos] = (byte)(val & 0xFF);
+            result[pos] = (byte) (val & 0xFF);
         }
 
         return result;
@@ -2705,14 +2732,14 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
     public void setBit(uint bitNum)
     {
-        uint bytePos = bitNum >> 5;             // divide by 32
-        byte bitPos = (byte)(bitNum & 0x1F);    // get the lowest 5 bits
+        uint bytePos = bitNum >> 5; // divide by 32
+        byte bitPos = (byte) (bitNum & 0x1F); // get the lowest 5 bits
 
-        uint mask = (uint)1 << bitPos;
+        uint mask = (uint) 1 << bitPos;
         this.data[bytePos] |= mask;
 
         if (bytePos >= this.dataLength)
-            this.dataLength = (int)bytePos + 1;
+            this.dataLength = (int) bytePos + 1;
     }
 
 
@@ -2727,9 +2754,9 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
         if (bytePos < this.dataLength)
         {
-            byte bitPos = (byte)(bitNum & 0x1F);
+            byte bitPos = (byte) (bitNum & 0x1F);
 
-            uint mask = (uint)1 << bitPos;
+            uint mask = (uint) 1 << bitPos;
             uint mask2 = 0xFFFFFFFF ^ mask;
 
             this.data[bytePos] &= mask2;
@@ -2751,15 +2778,15 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
     public BigInteger sqrt()
     {
-        uint numBits = (uint)this.bitCount();
+        uint numBits = (uint) this.bitCount();
 
-        if ((numBits & 0x1) != 0)        // odd number of bits
+        if ((numBits & 0x1) != 0) // odd number of bits
             numBits = (numBits >> 1) + 1;
         else
             numBits = (numBits >> 1);
 
         uint bytePos = numBits >> 5;
-        byte bitPos = (byte)(numBits & 0x1F);
+        byte bitPos = (byte) (numBits & 0x1F);
 
         uint mask;
 
@@ -2768,12 +2795,13 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
             mask = 0x80000000;
         else
         {
-            mask = (uint)1 << bitPos;
+            mask = (uint) 1 << bitPos;
             bytePos++;
         }
-        result.dataLength = (int)bytePos;
 
-        for (int i = (int)bytePos - 1; i >= 0; i--)
+        result.dataLength = (int) bytePos;
+
+        for (int i = (int) bytePos - 1; i >= 0; i--)
         {
             while (mask != 0)
             {
@@ -2786,8 +2814,10 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
                 mask >>= 1;
             }
+
             mask = 0x80000000;
         }
+
         return result;
     }
 
@@ -2831,7 +2861,9 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
         {
             BigInteger[] result = new BigInteger[3];
 
-            result[0] = 0; result[1] = 2 % n; result[2] = 1 % n;
+            result[0] = 0;
+            result[1] = 2 % n;
+            result[2] = 1 % n;
             return result;
         }
 
@@ -2856,9 +2888,10 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
             {
                 if ((k.data[index] & mask) != 0)
                 {
-                    index = k.dataLength;      // to break the outer loop
+                    index = k.dataLength; // to break the outer loop
                     break;
                 }
+
                 mask <<= 1;
                 s++;
             }
@@ -2888,23 +2921,25 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
             throw (new ArgumentException("Argument k must be odd."));
 
         int numbits = k.bitCount();
-        uint mask = (uint)0x1 << ((numbits & 0x1F) - 1);
+        uint mask = (uint) 0x1 << ((numbits & 0x1F) - 1);
 
         // v = v0, v1 = v1, u1 = u1, Q_k = Q^0
 
-        BigInteger v = 2 % n, Q_k = 1 % n,
-            v1 = P % n, u1 = Q_k;
+        BigInteger v = 2 % n,
+            Q_k = 1 % n,
+            v1 = P % n,
+            u1 = Q_k;
         bool flag = true;
 
-        for (int i = k.dataLength - 1; i >= 0; i--)     // iterate on the binary expansion of k
+        for (int i = k.dataLength - 1; i >= 0; i--) // iterate on the binary expansion of k
         {
             //Console.WriteLine("round");
             while (mask != 0)
             {
-                if (i == 0 && mask == 0x00000001)        // last bit
+                if (i == 0 && mask == 0x00000001) // last bit
                     break;
 
-                if ((k.data[i] & mask) != 0)             // bit is set
+                if ((k.data[i] & mask) != 0) // bit is set
                 {
                     // index doubling with addition
 
@@ -2941,6 +2976,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
                 mask >>= 1;
             }
+
             mask = 0x80000000;
         }
 
