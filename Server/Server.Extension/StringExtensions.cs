@@ -19,6 +19,7 @@ public static class StringExtension
             if (int.TryParse(arr[i], out var t))
                 ret[i] = t;
         }
+
         return ret;
     }
 
