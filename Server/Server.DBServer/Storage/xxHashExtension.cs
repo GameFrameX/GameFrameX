@@ -1,6 +1,6 @@
 namespace Server.DBServer.Storage;
 
-public static class xxHashExtension
+public static class XxHashExtension
 {
     /// <summary>
     /// 判断是否是默认值

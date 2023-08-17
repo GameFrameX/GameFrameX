@@ -1,4 +1,6 @@
-﻿using Server.DBServer.Storage;
+﻿using System.Linq.Expressions;
+using Server.DBServer.State;
+using Server.DBServer.Storage;
 
 namespace Server.DBServer;
 
@@ -29,10 +31,44 @@ public interface IGameDbService
     public Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : CacheState, new();
 
     /// <summary>
+    /// 查询单条数据
+    /// </summary>
+    /// <param name="filter">查询条件</param>
+    /// <typeparam name="TState"></typeparam>
+    /// <returns></returns>
+    public Task<TState> FindAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new();
+
+    /// <summary>
+    /// 查询数据
+    /// </summary>
+    /// <param name="filter">查询条件</param>
+    /// <typeparam name="TState"></typeparam>
+    /// <returns></returns>
+    public Task<List<TState>> FindListAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new();
+
+
+    /// <summary>
+    /// 查询数据长度
+    /// </summary>
+    /// <param name="filter">查询条件</param>
+    /// <typeparam name="TState"></typeparam>
+    /// <returns></returns>
+    public Task<long> CountAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new();
+
+
+    /// <summary>
     /// 保存数据
     /// </summary>
     /// <param name="state"></param>
     /// <typeparam name="TState"></typeparam>
     /// <returns></returns>
-    public Task SaveState<TState>(TState state) where TState : CacheState;
+    public Task AddAsync<TState>(TState state) where TState : CacheState, new();
+
+    /// <summary>
+    /// 保存数据
+    /// </summary>
+    /// <param name="state"></param>
+    /// <typeparam name="TState"></typeparam>
+    /// <returns></returns>
+    public Task SaveAsync<TState>(TState state) where TState : CacheState, new();
 }

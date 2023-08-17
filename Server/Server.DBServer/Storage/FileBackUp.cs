@@ -1,5 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Server.DBServer.DbService.MongoDB;
+using Server.DBServer.State;
 
 namespace Server.DBServer.Storage
 {
@@ -82,7 +84,10 @@ namespace Server.DBServer.Storage
         public static void CreateAsDirectory(this string path, bool isFile = false)
         {
             if (isFile)
+            {
                 path = Path.GetDirectoryName(path);
+            }
+
             if (!Directory.Exists(path))
             {
                 CreateAsDirectory(path, true);

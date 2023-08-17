@@ -1,16 +1,17 @@
-﻿using Server.DBServer.Storage;
+﻿using System.Linq.Expressions;
+using Server.DBServer.State;
 
 namespace Server.DBServer
 {
     public static class GameDb
     {
-        static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
+        static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         private static IGameDbService _dbServiceImpler;
 
-        public static void Init()
+        public static void Init(IGameDbService dbService)
         {
-            _dbServiceImpler = new MongoDbServiceConnection();
+            _dbServiceImpler = dbService;
         }
 
         public static T As<T>() where T : IGameDbService
@@ -28,25 +29,58 @@ namespace Server.DBServer
             _dbServiceImpler.Close();
         }
 
+        public static Task<List<TState>> FindListAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        {
+            return _dbServiceImpler.FindListAsync<TState>(filter);
+        }
+
+        public static Task<long> CountAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        {
+            return _dbServiceImpler.CountAsync<TState>(filter);
+        }
+
+        public static Task<TState> FindAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        {
+            return _dbServiceImpler.FindAsync<TState>(filter);
+        }
+
         public static Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : CacheState, new()
         {
             return _dbServiceImpler.LoadState(id, defaultGetter);
         }
 
-        public static Task SaveState<TState>(TState state) where TState : CacheState
+        public static Task SaveState<TState>(TState state) where TState : CacheState, new()
         {
-            return _dbServiceImpler.SaveState(state);
+            return _dbServiceImpler.SaveAsync<TState>(state);
         }
 
+        public static Task SaveOneAsync<TState>(TState state) where TState : CacheState, new()
+        {
+            return _dbServiceImpler.AddAsync<TState>(state);
+        }
 
         public static async Task SaveAll()
         {
-            // await StateComp.SaveAll();
+            // if (GlobalSettings.DBModel == (int) DbModel.Embeded)
+            // {
+            //     await ActorMgr.SaveAll();
+            // }
+            // else if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
+            // {
+            //     await StateComp.SaveAll();
+            // }
         }
 
         public static async Task TimerSave()
         {
-            // await StateComp.TimerSave();
+            // if (GlobalSettings.DBModel == (int) DbModel.Embeded)
+            // {
+            //     await ActorMgr.TimerSave();
+            // }
+            // else if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
+            // {
+            //     await StateComp.TimerSave();
+            // }
         }
     }
 }
