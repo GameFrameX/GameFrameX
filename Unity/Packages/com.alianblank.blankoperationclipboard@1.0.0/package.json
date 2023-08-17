@@ -1,15 +1,24 @@
 {
   "name": "com.alianblank.blankoperationclipboard",
   "displayName": "Blank Operation Clipboard",
-  "category": "Blank",
-  "description": "操作粘贴板",
   "version": "1.0.0",
   "unity": "2017.1",
-  "keywords": [
-    "BlankOperationClipboard"
-  ],
+  "description": "操作粘贴板",
   "author": {
     "name": "alianblank",
-    "url": "https://alianblank.com"
-  }
+    "url": "https://github.com/AlianBlank/BlankOperationClipboard"
+  },
+  "samples": [
+    {
+      "displayName": "Samples",
+      "description": "Samples",
+      "path": "Samples~"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlianBlank/BlankOperationClipboard.git"
+  },
+  "relatedPackages": {},
+  "type": "library"
 }
