@@ -1,6 +1,8 @@
 {
-    "name": "BlankGetChannel.Runtime",
-    "references": [],
+    "name": "BlankGetChannel.Sample",
+    "references": [
+        "BlankGetChannel.Runtime"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
