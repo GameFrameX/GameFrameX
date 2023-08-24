@@ -1,6 +1,5 @@
 ﻿using System;
 using GameFramework.Network;
-using ProtoBuf;
 
 namespace UnityGameFramework.Runtime
 {
@@ -21,9 +20,9 @@ namespace UnityGameFramework.Runtime
         /// 消息码
         /// </summary>
         public int Code { get; set; }
-#if UNITY_EDITOR
+// #if UNITY_EDITOR
         public Type MessageType { get; set; }
-#endif
+// #endif
         /// <summary>
         /// 消息内容
         /// </summary>

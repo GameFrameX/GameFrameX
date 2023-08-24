@@ -6,11 +6,11 @@
 //------------------------------------------------------------
 
 
-using ProtoBuf;
+// using ProtoBuf;
 
 namespace UnityGameFramework.Runtime
 {
-    [ProtoContract]
+    // [ProtoContract]
     public partial class SCHeartBeat : SCPacketBodyBase
     {
         public override int Id => 1;
@@ -18,7 +18,7 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 时间戳
         /// </summary>
-        [ProtoMember(1)]
+        // [ProtoMember(1)]
         public long Timestamp { get; set; }
 
         public override void Clear()

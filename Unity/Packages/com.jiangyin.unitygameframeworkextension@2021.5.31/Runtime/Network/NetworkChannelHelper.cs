@@ -13,8 +13,6 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using ProtoBuf;
-using ProtoBuf.Meta;
 using UnityEngine;
 
 namespace UnityGameFramework.Runtime
@@ -110,7 +108,7 @@ namespace UnityGameFramework.Runtime
             data.Timestamp = GameTimeHelper.UnixTimeMilliseconds();
             req.Code = data.Id;
             req.MessageType = typeof(CSHeartBeat);
-            req.Data = ProtobufHelper.ToBytes(data);
+            // req.Data = ProtobufHelper.ToBytes(data);
             ReferencePool.Release(data);
             m_NetworkChannel.Send(req);
             return true;
@@ -137,15 +135,15 @@ namespace UnityGameFramework.Runtime
                 return false;
             }
 #if UNITY_EDITOR
-            if (packet is CSMessagePackage cs)
-            {
-                using (MemoryStream desMemoryStream = new MemoryStream(cs.Data))
-                {
-                    var deserializedData = Serializer.Deserialize(cs.MessageType, desMemoryStream);
-                    var json = Utility.Json.ToJson(deserializedData);
-                    Log.Info("网络CS:" + json);
-                }
-            }
+            // if (packet is CSMessagePackage cs)
+            // {
+            //     using (MemoryStream desMemoryStream = new MemoryStream(cs.Data))
+            //     {
+            //         var deserializedData = Serializer.Deserialize(cs.MessageType, desMemoryStream);
+            //         var json = Utility.Json.ToJson(deserializedData);
+            //         Log.Info("网络CS:" + json);
+            //     }
+            // }
 #endif
             m_CachedStream.SetLength(m_CachedStream.Capacity); // 此行防止 Array.Copy 的数据无法写入
             m_CachedStream.Position = 0L;
@@ -196,7 +194,9 @@ namespace UnityGameFramework.Runtime
                 return scHeader;
             }
 
-            return (IPacketHeader) RuntimeTypeModel.Default.Deserialize(source, scHeader, typeof(SCPacketHeaderBase));
+            return null;
+
+            // return (IPacketHeader) RuntimeTypeModel.Default.Deserialize(source, scHeader, typeof(SCPacketHeaderBase));
         }
 
         /// <summary>
@@ -226,13 +226,13 @@ namespace UnityGameFramework.Runtime
                 {
                     var type = ReferencePool.Acquire(packetType);
 
-                    var origin = RuntimeTypeModel.Default.Deserialize(source, type, packetType);
-#if UNITY_EDITOR
-                    var json = Utility.Json.ToJson(origin);
-                    Log.Info("网络SC:" + json);
-#endif
+//                     var origin = RuntimeTypeModel.Default.Deserialize(source, type, packetType);
+// #if UNITY_EDITOR
+//                     var json = Utility.Json.ToJson(origin);
+//                     Log.Info("网络SC:" + json);
+// #endif
 
-                    packet = (Packet) origin;
+                    // packet = (Packet) origin;
                 }
                 else
                 {
