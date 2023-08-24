@@ -8,6 +8,7 @@ message ReqLogin { // IRequestMessage 10
 	int32 SdkType = 3;
 	string SdkToken = 4;
 	string Device = 5;
+	string Password = 6; // 密码
 }
 
 // 请求登录返回
