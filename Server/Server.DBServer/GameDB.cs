@@ -49,14 +49,24 @@ namespace Server.DBServer
             return _dbServiceImpler.LoadState(id, defaultGetter);
         }
 
-        public static Task SaveState<TState>(TState state) where TState : CacheState, new()
+        public static Task<TState> UpdateAsync<TState>(TState state) where TState : CacheState, new()
         {
-            return _dbServiceImpler.SaveAsync<TState>(state);
+            return _dbServiceImpler.UpdateAsync<TState>(state);
         }
 
         public static Task SaveOneAsync<TState>(TState state) where TState : CacheState, new()
         {
             return _dbServiceImpler.AddAsync<TState>(state);
+        }
+
+        public static Task<long> DeleteAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        {
+            return _dbServiceImpler.DeleteAsync<TState>(filter);
+        }
+
+        public static Task<long> DeleteAsync<TState>(TState state) where TState : CacheState, new()
+        {
+            return _dbServiceImpler.DeleteAsync<TState>(state);
         }
 
         public static async Task SaveAll()

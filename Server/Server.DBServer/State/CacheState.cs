@@ -11,6 +11,7 @@ namespace Server.DBServer.State
         /// <summary>
         /// 唯一ID
         /// </summary>
+        [BsonId]
         public long Id { get; set; }
 
         public override string ToString()

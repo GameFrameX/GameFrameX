@@ -1,6 +1,6 @@
+using MessagePack;
 using NLog;
 using Server.DBServer.State;
-using Server.Google.ProtoBuf;
 using Server.Utility;
 
 namespace Server.DBServer.Storage;
@@ -45,7 +45,7 @@ class StateMd5
 
     private static (string md5, byte[] data) GetMd5AndData(CacheState state)
     {
-        var data = SerializerHelper.Serialize(state);
+        var data = MessagePackSerializer.Serialize(state);
         var md5Str = Md5Helper.Md5(data);
         return (md5Str, data);
     }

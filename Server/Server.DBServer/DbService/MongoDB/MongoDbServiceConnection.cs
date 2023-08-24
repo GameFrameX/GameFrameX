@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using NLog;
@@ -9,13 +10,13 @@ namespace Server.DBServer.DbService.MongoDB
 {
     public class MongoDbServiceConnection : IGameDbService
     {
-        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public MongoClient Client { get; private set; }
 
         public IMongoDatabase CurrentDatabase { get; private set; }
 
-        public void Open(string url, string dbName)
+        public async void Open(string url, string dbName)
         {
             try
             {
@@ -31,10 +32,18 @@ namespace Server.DBServer.DbService.MongoDB
             }
         }
 
+        IMongoCollection<TState> GetCollection<TState>() where TState : CacheState, new()
+        {
+            var collectionName = typeof(TState).Name;
+            IMongoCollection<TState>? collection = CurrentDatabase.GetCollection<TState>(collectionName);
+            return collection;
+        }
+
         public async Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : CacheState, new()
         {
             var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, id);
-            var col = CurrentDatabase.GetCollection<TState>();
+
+            var col = GetCollection<TState>();
             using var cursor = await col.FindAsync(filter);
             var state = await cursor.FirstOrDefaultAsync();
             bool isNew = state == null;
@@ -72,7 +81,7 @@ namespace Server.DBServer.DbService.MongoDB
         public async Task<List<TState>> FindListAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
         {
             var result = new List<TState>();
-            var collection = CurrentDatabase.GetCollection<TState>();
+            var collection = GetCollection<TState>();
             using var cursor = await collection.FindAsync<TState>(GetDefaultFindExpression(filter));
             while (await cursor.MoveNextAsync())
             {
@@ -90,8 +99,10 @@ namespace Server.DBServer.DbService.MongoDB
         /// <returns></returns>
         public async Task<TState> FindAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
         {
-            var collection = CurrentDatabase.GetCollection<TState>();
-            using var cursor = await collection.FindAsync<TState>(GetDefaultFindExpression(filter));
+            var collection = GetCollection<TState>();
+            var findExpression = GetDefaultFindExpression(filter);
+            var filterDefinition = Builders<TState>.Filter.Where(findExpression);
+            using var cursor = await collection.FindAsync<TState>(filterDefinition);
             var state = await cursor.FirstOrDefaultAsync();
             return state;
         }
@@ -104,10 +115,28 @@ namespace Server.DBServer.DbService.MongoDB
         /// <returns></returns>
         public async Task<long> CountAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
         {
-            var collection = CurrentDatabase.GetCollection<TState>();
+            var collection = GetCollection<TState>();
             var newFilter = GetDefaultFindExpression(filter);
             var count = await collection.CountDocumentsAsync<TState>(newFilter);
             return count;
+        }
+
+        /// <summary>
+        /// 删除数据
+        /// </summary>
+        /// <param name="filter">查询条件</param>
+        /// <typeparam name="TState"></typeparam>
+        /// <returns></returns>
+        public async Task<long> DeleteAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        {
+            // var newFilter = Builders<TState>.Filter.Where(filter);
+            // var collectionName = typeof(TState).Name;
+            // var collection = CurrentDatabase.GetCollection<TState>(collectionName);
+            // state.DeleteTime = DateTime.UtcNow;
+            // state.IsDeleted = true;
+            // var result = await collection.ReplaceOneAsync(filter, state, ReplaceOptions);
+            // return result.ModifiedCount;
+            return -1;
         }
 
         /// <summary>
@@ -115,14 +144,14 @@ namespace Server.DBServer.DbService.MongoDB
         /// </summary>
         /// <param name="state"></param>
         /// <typeparam name="TState"></typeparam>
-        public async Task DeleteAsync<TState>(TState state) where TState : CacheState, new()
+        public async Task<long> DeleteAsync<TState>(TState state) where TState : CacheState, new()
         {
             var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, state.Id);
-            var collectionName = typeof(TState).Name;
-            var collection = CurrentDatabase.GetCollection<TState>(collectionName);
+            var collection = GetCollection<TState>();
             state.DeleteTime = DateTime.UtcNow;
             state.IsDeleted = true;
-            _ = await collection.ReplaceOneAsync(filter, state, ReplaceOptions);
+            var result = await collection.ReplaceOneAsync(filter, state, ReplaceOptions);
+            return result.ModifiedCount;
         }
 
         /// <summary>
@@ -132,8 +161,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <typeparam name="TState"></typeparam>
         public async Task AddAsync<TState>(TState state) where TState : CacheState, new()
         {
-            var collectionName = typeof(TState).Name;
-            var collection = CurrentDatabase.GetCollection<TState>(collectionName);
+            var collection = GetCollection<TState>();
             state.CreateTime = DateTime.UtcNow;
             await collection.InsertOneAsync(state);
         }
@@ -145,9 +173,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <typeparam name="TState"></typeparam>
         public async Task AddListAsync<TState>(List<TState> states) where TState : CacheState, new()
         {
-            var collectionName = typeof(TState).Name;
-            var collection = CurrentDatabase.GetCollection<TState>(collectionName);
-
+            var collection = GetCollection<TState>();
             var cacheStates = states.ToList();
             foreach (var cacheState in cacheStates)
             {
@@ -163,34 +189,36 @@ namespace Server.DBServer.DbService.MongoDB
         /// <param name="state"></param>
         /// <typeparam name="TState"></typeparam>
         /// <returns></returns>
-        public async Task SaveAsync<TState>(TState state) where TState : CacheState, new()
+        public async Task<TState> UpdateAsync<TState>(TState state) where TState : CacheState, new()
         {
-            var (isChanged, data) = state.IsChanged();
-            if (isChanged)
+            // var (isChanged, data) = state.IsChanged();
+            // if (isChanged)
             {
-                var cacheState = BsonSerializer.Deserialize<TState>(data);
-                cacheState.UpdateTime = DateTime.UtcNow;
-                cacheState.UpdateCount++;
+                // var cacheState = BsonSerializer.Deserialize<TState>(data);
+                state.UpdateTime = DateTime.UtcNow;
+                state.UpdateCount++;
                 var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, state.Id);
-                var col = CurrentDatabase.GetCollection<TState>();
-                var result = await col.ReplaceOneAsync(filter, cacheState, ReplaceOptions);
+                var collection = GetCollection<TState>();
+                var result = await collection.ReplaceOneAsync(filter, state, ReplaceOptions);
                 if (result.IsAcknowledged)
                 {
                     state.AfterSaveToDB();
                 }
             }
+
+            return state;
         }
 
         public static readonly ReplaceOptions ReplaceOptions = new() {IsUpsert = true};
 
         public static readonly BulkWriteOptions BulkWriteOptions = new() {IsOrdered = false};
 
-        public Task CreateIndex<TState>(string indexKey)
+        public Task CreateIndex<TState>(string indexKey) where TState : CacheState, new()
         {
-            var col = CurrentDatabase.GetCollection<TState>();
+            var collection = GetCollection<TState>();
             var key = Builders<TState>.IndexKeys.Ascending(indexKey);
             var model = new CreateIndexModel<TState>(key);
-            return col.Indexes.CreateOneAsync(model);
+            return collection.Indexes.CreateOneAsync(model);
         }
 
         public void Close()

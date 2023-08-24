@@ -55,6 +55,21 @@ public interface IGameDbService
     /// <returns></returns>
     public Task<long> CountAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new();
 
+    /// <summary>
+    /// 删除数据
+    /// </summary>
+    /// <param name="filter">查询条件</param>
+    /// <typeparam name="TState"></typeparam>
+    /// <returns></returns>
+    public Task<long> DeleteAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new();
+
+    /// <summary>
+    /// 删除数据
+    /// </summary>
+    /// <param name="state"></param>
+    /// <typeparam name="TState"></typeparam>
+    /// <returns></returns>
+    public Task<long> DeleteAsync<TState>(TState state) where TState : CacheState, new();
 
     /// <summary>
     /// 保存数据
@@ -70,5 +85,5 @@ public interface IGameDbService
     /// <param name="state"></param>
     /// <typeparam name="TState"></typeparam>
     /// <returns></returns>
-    public Task SaveAsync<TState>(TState state) where TState : CacheState, new();
+    public Task<TState> UpdateAsync<TState>(TState state) where TState : CacheState, new();
 }

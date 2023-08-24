@@ -1,6 +1,6 @@
+using MessagePack;
 using NLog;
 using Server.DBServer.State;
-using Server.Google.ProtoBuf;
 
 namespace Server.DBServer.Storage;
 
@@ -42,7 +42,7 @@ class StateHash
 
     private static (Standart.Hash.xxHash.uint128 md5, byte[] data) GetHashAndData(CacheState state)
     {
-        var data = SerializerHelper.Serialize(state);
+        var data = MessagePackSerializer.Serialize(state);
         var md5Str = Standart.Hash.xxHash.xxHash128.ComputeHash(data, data.Length);
         return (md5Str, data);
     }
