@@ -1,0 +1,19 @@
+{
+    "name": "Unity.HotFix.Proto",
+    "references": [
+        "MessagePack.Annotations",
+        "MessagePack.Runtime",
+        "GameFramework.Runtime",
+        "UnityGameFramework.Runtime",
+        "UnityGameFramework.Runtime.Extension"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

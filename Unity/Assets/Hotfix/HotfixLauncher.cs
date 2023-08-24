@@ -1,13 +1,9 @@
-﻿using System;
-using System.IO;
-using Animancer;
+﻿using Animancer;
 using Base.Net;
 using Cysharp.Threading.Tasks;
 using Framework.Asset;
-using GameFramework;
-using Hotfix.Message.Proto;
+using Hotfix.Proto.Proto;
 using Net;
-using ProtoBuf;
 using SimpleJSON;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -27,6 +23,16 @@ namespace Hotfix
 
             ProtoMessageIdHandler.Init(typeof(HotfixLauncher).Assembly);
             LoadConfig();
+
+            NetManager.Singleton.Init();
+            NetManager.Singleton.Connect(serverIp, serverPort);
+
+            NetTest();
+
+            // var gameNetworkComponent = GameEntry.GetComponent<GameNetworkComponent>();
+            // gameNetworkComponent.ConnectedToServer(serverIp, serverPort);
+
+
             // MemoryStream memoryStream = new MemoryStream();
             // var userInfo = new CSHeartBeat();
             // userInfo.Timestamp = 11111111;
@@ -39,6 +45,26 @@ namespace Hotfix
             //     Log.Warning(Utility.Json.ToJson(deserializedData));
             // }
         }
+
+        private static async void NetTest()
+        {
+            await UniTask.Delay(3000);
+
+
+            var req = new ReqLogin
+            {
+                SdkType = 0,
+                SdkToken = "",
+                UserName = "Blank",
+                Password = "123456",
+                Device = SystemInfo.deviceUniqueIdentifier
+            };
+            req.Platform = PathHelper.GetPlatformName;
+            NetManager.Singleton.Send(req);
+
+            // NetManager.Singleton.Send(new ReqHeartBeat() {Timestamp = 2222});
+        }
+
         static void LoadConfig()
         {
             // var tables = new cfg.Tables(file =>

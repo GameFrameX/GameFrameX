@@ -1,20 +1,20 @@
-﻿using ProtoBuf;
+﻿using System;
+using MessagePack;
 using System.Collections.Generic;
 using Protocol;
 
-namespace Hotfix.Message.Proto
+namespace Hotfix.Proto.Proto
 {
 	/// <summary>
 	/// 请求心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class ReqHeartBeat : Protocol.Message, IRequestMessage
 	{
 		/// <summary>
 		///  时间戳
 		/// </summary>
-		[ProtoMember(1)]
 		public long Timestamp { get; set; }
 
 	}
@@ -23,13 +23,12 @@ namespace Hotfix.Message.Proto
 	/// 返回心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class RespHeartBeat : Protocol.Message, IResponseMessage
 	{
 		/// <summary>
 		///  时间戳
 		/// </summary>
-		[ProtoMember(1)]
 		public long Timestamp { get; set; }
 
 	}

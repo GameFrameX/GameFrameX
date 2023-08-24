@@ -11,14 +11,14 @@
         "XLua.Runtime",
         "DOTween.Runtime.Modules",
         "UniTask",
-        "ProtoBuffer.Runtime",
         "YooAsset.Runtime",
         "GameFramework.Runtime",
         "GameAnalytics.Runtime",
         "MessagePack.Runtime",
         "MessagePack.Annotations",
         "LuBan.Runtime",
-        "Unity.Startup"
+        "Unity.Startup",
+        "Unity.HotFix.Proto"
     ],
     "includePlatforms": [
         "Editor"

@@ -8,10 +8,15 @@ namespace UnityGameFramework.Procedure
     {
         public static async void StartHotfix()
         {
-            var assetPath = AssetUtility.GetCodePath("Hotfix.dll");
-            var assetOperationHandle = await GameApp.Asset.LoadAssetAsync<UnityEngine.Object>(assetPath);
-            var assemblyData = assetOperationHandle.GetAssetObject<UnityEngine.TextAsset>().bytes; // 从你的资源管理系统中获得热更新dll的数据
-            var ass = Assembly.Load(assemblyData);
+            var assetHotfixProtoPath = AssetUtility.GetCodePath("Unity.Hotfix.Proto.dll");
+            var assetHotfixProtoOperationHandle = await GameApp.Asset.LoadAssetAsync<UnityEngine.Object>(assetHotfixProtoPath);
+            var assemblyDataHotfixProto = assetHotfixProtoOperationHandle.GetAssetObject<UnityEngine.TextAsset>().bytes;
+            Assembly.Load(assemblyDataHotfixProto);
+
+            var assetHotfixPath = AssetUtility.GetCodePath("Unity.Hotfix.dll");
+            var assetHotfixOperationHandle = await GameApp.Asset.LoadAssetAsync<UnityEngine.Object>(assetHotfixPath);
+            var assemblyDataHotfix = assetHotfixOperationHandle.GetAssetObject<UnityEngine.TextAsset>().bytes;
+            var ass = Assembly.Load(assemblyDataHotfix);
             var entryType = ass.GetType("Hotfix.HotfixLauncher");
             var method = entryType.GetMethod("Main");
             method?.Invoke(null, null);

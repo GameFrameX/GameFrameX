@@ -1,14 +1,15 @@
-﻿using ProtoBuf;
+﻿using System;
+using MessagePack;
 using System.Collections.Generic;
 using Protocol;
 
-namespace Hotfix.Message.Proto
+namespace Hotfix.Proto.Proto
 {
 	/// <summary>
 	/// 请求背包数据
 	/// </summary>
 	[MessageTypeHandler(100)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class ReqBagInfo : Protocol.Message, IRequestMessage
 	{
 	}
@@ -17,13 +18,12 @@ namespace Hotfix.Message.Proto
 	/// 返回背包数据
 	/// </summary>
 	[MessageTypeHandler(100)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class ResBagInfo : Protocol.Message, IResponseMessage
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		[ProtoMember(1)]
 		public Dictionary<int, long> ItemDic { get; set; }
 
 	}
@@ -32,13 +32,12 @@ namespace Hotfix.Message.Proto
 	/// 请求背包数据
 	/// </summary>
 	[MessageTypeHandler(101)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class ReqComposePet : Protocol.Message, IRequestMessage
 	{
 		/// <summary>
 		///  碎片id
 		/// </summary>
-		[ProtoMember(1)]
 		public int FragmentId { get; set; }
 
 	}
@@ -47,13 +46,12 @@ namespace Hotfix.Message.Proto
 	/// 返回背包数据
 	/// </summary>
 	[MessageTypeHandler(101)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class ResComposePet : Protocol.Message, IResponseMessage
 	{
 		/// <summary>
 		///  合成宠物的Id
 		/// </summary>
-		[ProtoMember(1)]
 		public int PetId { get; set; }
 
 	}
@@ -62,13 +60,12 @@ namespace Hotfix.Message.Proto
 	/// 请求背包数据
 	/// </summary>
 	[MessageTypeHandler(102)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class ReqUseItem : Protocol.Message, IRequestMessage
 	{
 		/// <summary>
 		///  道具id
 		/// </summary>
-		[ProtoMember(1)]
 		public int ItemId { get; set; }
 
 	}
@@ -77,13 +74,12 @@ namespace Hotfix.Message.Proto
 	/// 出售道具
 	/// </summary>
 	[MessageTypeHandler(103)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class ReqSellItem : Protocol.Message, IRequestMessage
 	{
 		/// <summary>
 		///  道具id
 		/// </summary>
-		[ProtoMember(1)]
 		public int ItemId { get; set; }
 
 	}
@@ -92,13 +88,12 @@ namespace Hotfix.Message.Proto
 	/// 出售道具
 	/// </summary>
 	[MessageTypeHandler(103)]
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class ResItemChange : Protocol.Message, IResponseMessage
 	{
 		/// <summary>
 		///  变化的道具
 		/// </summary>
-		[ProtoMember(1)]
 		public Dictionary<int, long> ItemDic { get; set; }
 
 	}
