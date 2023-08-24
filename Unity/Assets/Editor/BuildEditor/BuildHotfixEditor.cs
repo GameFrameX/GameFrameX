@@ -13,11 +13,9 @@ namespace Unity.Editor
         private const string HotFixAssembliesDir = "Library/ScriptAssemblies";
         private static readonly string ScriptAssembliesDir = $"HybridCLRData/HotUpdateDlls/{EditorUserBuildSettings.activeBuildTarget}";
 
-        //热更代码dll文件
-        private const string HotfixDll = "Unity.Hotfix.dll";
 
-        //热更代码pdb文件
-        private const string HotfixPdb = "Unity.Hotfix.pdb";
+        private static readonly string[] HotfixDlls = new string[] {"Unity.Hotfix.dll", "Unity.Hotfix.pdb", "Unity.Hotfix.Proto.dll", "Unity.Hotfix.Proto.pdb"};
+
 
         //热更代码存放位置
         private const string CodeDir = "Assets/Bundles/Code/";
@@ -36,7 +34,7 @@ namespace Unity.Editor
         /// <summary>
         /// 复制代码
         /// </summary>
-        [MenuItem("Tools/Build/CopyCode")]
+        [MenuItem("Tools/Build/Copy Hotfix Code")]
         static void CopyCode()
         {
             if (!Directory.Exists(CodeDir))
@@ -44,18 +42,18 @@ namespace Unity.Editor
                 Directory.CreateDirectory(CodeDir);
             }
 
-            if (Directory.Exists(ScriptAssembliesDir))
+            foreach (var hotfix in HotfixDlls)
             {
-                File.Copy(Path.Combine(ScriptAssembliesDir, HotfixDll), Path.Combine(CodeDir, "Hotfix.dll.bytes"), true);
-                File.Copy(Path.Combine(ScriptAssembliesDir, HotfixPdb), Path.Combine(CodeDir, "Hotfix.pdb.bytes"), true);
-            }
-            else
-            {
-                File.Copy(Path.Combine(HotFixAssembliesDir, HotfixDll), Path.Combine(CodeDir, "Hotfix.dll.bytes"), true);
-                File.Copy(Path.Combine(HotFixAssembliesDir, HotfixPdb), Path.Combine(CodeDir, "Hotfix.pdb.bytes"), true);
+                string srcPath = Path.Combine(ScriptAssembliesDir, hotfix);
+                if (!File.Exists(srcPath))
+                {
+                    srcPath = Path.Combine(HotFixAssembliesDir, hotfix);
+                }
+
+                File.Copy(srcPath, Path.Combine(CodeDir, hotfix + ".bytes"), true);
             }
 
-            Debug.Log($"复制Hotfix.dll, Hotfix.pdb到{CodeDir}完成");
+            Debug.Log($"复制Hotfix DLL, Hotfix pdb到{CodeDir}完成");
             AssetDatabase.Refresh();
         }
     }
