@@ -45,41 +45,105 @@ public static class GlobalSettings
         set => _instance.AppRunning = value;
     }
 
+    /// <summary>
+    /// 服务器类型
+    /// </summary>
     public static ServerType ServerType => _instance.ServerType;
 
+    /// <summary>
+    /// 是否是Debug 模式
+    /// </summary>
     public static bool IsDebug => _instance.IsDebug;
 
+    /// <summary>
+    /// 服务器ID
+    /// </summary>
     public static int ServerId => _instance.ServerId;
 
+    /// <summary>
+    /// 服务器名称
+    /// </summary>
     public static string ServerName => _instance.ServerName;
+
+    /// <summary>
+    /// 本地IP
+    /// </summary>
 
     public static string LocalIp => _instance.LocalIp;
 
+    /// <summary>
+    /// HTTP 响应码
+    /// </summary>
     public static string HttpCode => _instance.HttpCode;
+
+    /// <summary>
+    /// Http 地址
+    /// </summary>
 
     public static string HttpUrl => _instance.HttpUrl;
 
+    /// <summary>
+    /// HTTP 端口
+    /// </summary>
     public static int HttpPort => _instance.HttpPort;
 
+    /// <summary>
+    /// TCP 端口
+    /// </summary>
     public static int TcpPort => _instance.TcpPort;
 
+    /// <summary>
+    /// GRPC 端口
+    /// </summary>
     public static int GrpcPort => _instance.GrpcPort;
 
-    public static string MongoUrl => _instance.MongoUrl;
+    /// <summary>
+    /// 数据库 地址
+    /// </summary>
+    public static string DataBaseUrl => _instance.MongoUrl;
 
-    public static string MongoDBName => _instance.MongoDBName;
+    /// <summary>
+    /// 数据库名称
+    /// </summary>
+    public static string DataBaseName => _instance.MongoDBName;
+
+    /// <summary>
+    /// 本地数据库前缀
+    /// </summary>
 
     public static string LocalDBPrefix => _instance.LocalDBPrefix;
 
+    /// <summary>
+    /// 本地数据库路径
+    /// </summary>
+
     public static string LocalDBPath => _instance.LocalDBPath;
+
+    /// <summary>
+    /// 语言
+    /// </summary>
 
     public static string Language => _instance.Language;
 
+    /// <summary>
+    /// 数据中心
+    /// </summary>
+
     public static string DataCenter => _instance.DataCenter;
 
+    /// <summary>
+    /// 数据中心地址
+    /// </summary>
     public static string CenterUrl => _instance.CenterUrl;
+
+    /// <summary>
+    /// SDK 类型
+    /// </summary>
 
     public static int SDKType => _instance.SDKType;
 
+    /// <summary>
+    /// 数据库模式
+    /// </summary>
     public static int DBModel => _instance.DBModel;
 }

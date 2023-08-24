@@ -1,26 +1,32 @@
 namespace Server.Setting;
 
+/// <summary>
+/// 服务器类型
+/// </summary>
 public enum ServerType
 {
+    /// <summary>
+    /// 空值
+    /// </summary>
     None = 0,
 
     ///<summary>
     /// 游戏服
     /// </summary>
-    Game,
+    Game = 1,
 
     ///<summary>
     /// 中心服
     /// </summary>
-    Center,
+    Center = 2,
 
     ///<summary>
     /// 充值服
     /// </summary>
-    Recharge,
+    Recharge = 3,
 
     ///<summary>
     /// 远程备份
     /// </summary>
-    Backup
+    Backup = 4
 }

@@ -6,9 +6,22 @@
 public static class GlobalConst
 {
     public const int SECOND_MASK = 0x3FFFFFFF;
+
+    /// <summary>
+    /// 最大全局ID
+    /// </summary>
     public const int MAX_GLOBAL_ID = 10_000_000;
+
+    /// <summary>
+    /// 最小服务器ID
+    /// </summary>
     public const int MIN_SERVER_ID = 1000;
+
+    /// <summary>
+    /// 最大服务器ID
+    /// </summary>
     public const int MAX_SERVER_ID = 9999;
+
     public const int MAX_ACTOR_INCREASE = 4095; // 4095
     public const int MAX_UNIQUE_INCREASE = 524287; //524287
 

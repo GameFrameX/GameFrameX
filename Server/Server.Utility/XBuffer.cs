@@ -165,7 +165,7 @@ namespace Server.Utility
             if (len > short.MaxValue)
                 throw new ArgumentException($"string length exceed short.MaxValue {len}, {short.MaxValue}");
 
-            //Ԥ���Ѿ����������ˣ�ֱ�Ӽ��㳤�Ⱦ�����
+            //??????????????????????????????
             if (offset + len + ShortSize > buffer.Length)
             {
                 throw new ArgumentException($"xbuffer write out of index {offset + len + ShortSize}, {buffer.Length}");
@@ -285,7 +285,7 @@ namespace Server.Utility
         public static unsafe byte[] ReadBytes(Span<byte> buffer, ref int offset)
         {
             var len = ReadInt(buffer, ref offset);
-            //���ݲ�����
+            //?????????
             if (len <= 0 || offset > buffer.Length + len * ByteSize)
                 return new byte[0];
 
@@ -312,7 +312,7 @@ namespace Server.Utility
         public static unsafe string ReadString(Span<byte> buffer, ref int offset)
         {
             var len = ReadShort(buffer, ref offset);
-            //���ݲ�����
+            //?????????
             if (len <= 0 || offset > buffer.Length + len * ByteSize)
                 return "";
             fixed (byte* ptr = buffer)
@@ -477,7 +477,7 @@ namespace Server.Utility
             if (len > short.MaxValue)
                 throw new ArgumentException($"string length exceed short.MaxValue {len}, {short.MaxValue}");
 
-            //Ԥ���Ѿ����������ˣ�ֱ�Ӽ��㳤�Ⱦ�����
+            //??????????????????????????????
             if (offset + len + ShortSize > buffer.Length)
             {
                 offset += len + ShortSize;
@@ -594,7 +594,7 @@ namespace Server.Utility
         public static unsafe byte[] ReadBytes(byte[] buffer, ref int offset)
         {
             var len = ReadInt(buffer, ref offset);
-            //���ݲ�����
+            //?????????
             if (len <= 0 || offset > buffer.Length + len * ByteSize)
                 return new byte[0];
 
@@ -622,7 +622,7 @@ namespace Server.Utility
             fixed (byte* ptr = buffer)
             {
                 var len = ReadShort(buffer, ref offset);
-                //���ݲ�����
+                //?????????
                 if (len <= 0 || offset > buffer.Length + len * ByteSize)
                     return "";
 

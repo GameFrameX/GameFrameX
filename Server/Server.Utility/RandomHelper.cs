@@ -2,7 +2,7 @@
 
 namespace Server.Utility
 {
-    public static class GRandom
+    public static class RandomHelper
     {
         /// <summary>
         /// 从1~n中随机选取m个数，m < n

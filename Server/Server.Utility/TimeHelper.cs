@@ -1,6 +1,9 @@
 ﻿namespace Server.Utility
 {
-    public static class TimeUtils
+    /// <summary>
+    /// 时间帮助工具类
+    /// </summary>
+    public static class TimeHelper
     {
         private static readonly DateTime epochLocal = TimeZoneInfo.ConvertTime(new DateTime(1970, 1, 1), TimeZoneInfo.Local);
         private static readonly DateTime epochUtc = TimeZoneInfo.ConvertTime(new DateTime(1970, 1, 1), TimeZoneInfo.Utc);
@@ -8,6 +11,42 @@
         public static long CurrentTimeMillis()
         {
             return TimeMillis(DateTime.Now, false);
+        }
+
+        /// <summary>
+        /// 当前UTC 时间 秒时间戳
+        /// </summary>
+        /// <returns></returns>
+        public static long UnixTimeSeconds()
+        {
+            return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+        }
+
+        /// <summary>
+        /// 当前UTC 时间 毫秒时间戳 
+        /// </summary>
+        /// <returns></returns>
+        public static long UnixTimeMilliseconds()
+        {
+            return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+        }
+
+        /// <summary>
+        /// 当前时区时间 秒时间戳
+        /// </summary>
+        /// <returns></returns>
+        public static long TimeSeconds()
+        {
+            return new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+        }
+
+        /// <summary>
+        /// 当前时区时间 毫秒时间戳 
+        /// </summary>
+        /// <returns></returns>
+        public static long TimeMilliseconds()
+        {
+            return new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
         }
 
         public static long CurrentTimeMillisUTC()
@@ -96,9 +135,7 @@
             // 让start是较早的时间
             if (start > end)
             {
-                DateTime temp = start;
-                start = end;
-                end = temp;
+                (start, end) = (end, start);
             }
 
             int dayOfWeek = (int) start.DayOfWeek;
