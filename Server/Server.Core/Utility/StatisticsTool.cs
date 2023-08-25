@@ -29,6 +29,7 @@ namespace Server.Core.Utility
                             sb.Append('\t').Append(time).Append('\t').Append(count).Append('\t').Append(type).Append('\n');
                     }
                 }
+
                 return sb.ToString();
             });
         }
@@ -60,6 +61,7 @@ namespace Server.Core.Utility
                     cd = new Dictionary<string, int>();
                     countDic[timeStr] = cd;
                 }
+
                 var old = cd.GetValueOrDefault(key, 0);
                 cd[key] = old + num;
             });

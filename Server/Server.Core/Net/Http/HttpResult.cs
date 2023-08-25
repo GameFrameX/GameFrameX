@@ -4,34 +4,38 @@ using System.Text.Unicode;
 
 namespace Server.Core.Net.Http
 {
-
-
-
     public class HttpResult
     {
         public enum Stauts
         {
             ///<summary>成功</summary>
             Success = 200,
+
             ///<summary>未定义的命令</summary>
             Undefine = 11,
+
             ///<summary>非法</summary>
             Illegal = 12,
+
             ///<summary>参数错误</summary>
             ParamErr = 13,
+
             ///<summary>验证失败</summary>
             CheckFailed = 14,
+
             ///<summary>操作失败</summary>
             ActionFailed = 15
         }
 
         public readonly static HttpResult Success = new HttpResult(Stauts.Success, "ok");
         public readonly static HttpResult Undefine = new HttpResult(Stauts.Undefine, "undefine command");
+
         private readonly JsonSerializerOptions options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
             //WriteIndented = true
         };
+
         public static HttpResult CreateOk(string retMsg = "")
         {
             return new HttpResult(Stauts.Success, retMsg);
@@ -50,6 +54,7 @@ namespace Server.Core.Net.Http
         public string Code { get; set; }
         public string Msg { get; set; }
         public Dictionary<string, string> ExtraMap { get; set; }
+
         public HttpResult(Stauts retCode = Stauts.Success, string retMsg = "ok")
         {
             Code = retCode.ToString();

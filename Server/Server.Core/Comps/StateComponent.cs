@@ -1,12 +1,17 @@
 ﻿using System.Collections.Concurrent;
+using System.Linq.Expressions;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using NLog;
 using Server.Core.Actors;
 using Server.Core.Timer;
 using Server.Core.Utility;
 using Server.DBServer;
+using Server.DBServer.DbService.MongoDB;
+using Server.DBServer.State;
 using Server.DBServer.Storage;
 using Server.Extension;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.Core.Comps
@@ -86,7 +91,7 @@ namespace Server.Core.Comps
 
         static StateComp()
         {
-            if (Settings.DBModel == (int) DbModel.Mongodb)
+            if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
             {
                 StateComponent.AddShutdownSaveFunc(SaveAll);
             }
@@ -103,21 +108,21 @@ namespace Server.Core.Comps
             await ReadStateAsync();
         }
 
-        public override Task DeActive()
+        public override Task Inactive()
         {
-            if (Settings.DBModel == (int) DbModel.Mongodb)
+            if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
                 stateDic.TryRemove(ActorId, out _);
-            return base.DeActive();
+            return base.Inactive();
         }
 
 
-        internal override bool ReadyToDeactive => State == null || !State.IsChanged().isChanged;
+        internal override bool ReadyToInactive => State == null || !State.IsChanged().isChanged;
 
         internal override async Task SaveState()
         {
             try
             {
-                await GameDb.SaveState(State);
+                await GameDb.UpdateAsync(State);
             }
             catch (Exception e)
             {
@@ -128,7 +133,7 @@ namespace Server.Core.Comps
         public async Task ReadStateAsync()
         {
             State = await GameDb.LoadState<TState>(ActorId);
-            if (Settings.DBModel == (int) DbModel.Mongodb)
+            if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
             {
                 stateDic.TryRemove(State.Id, out _);
                 stateDic.TryAdd(State.Id, State);
@@ -137,7 +142,7 @@ namespace Server.Core.Comps
 
         public Task WriteStateAsync()
         {
-            return GameDb.SaveState(State);
+            return GameDb.UpdateAsync(State);
         }
 
 
@@ -155,7 +160,7 @@ namespace Server.Core.Comps
                     {
                         Data = data,
                         Id = stateId.ToString(),
-                        Timestamp = TimeUtils.CurrentTimeMillisUTC()
+                        Timestamp = TimeHelper.CurrentTimeMillisUTC()
                     };
                     var filter = Builders<MongoState>.Filter.Eq(CacheState.UniqueId, mongoState.Id);
                     writeList.Add(new ReplaceOneModel<MongoState>(filter, mongoState) {IsUpsert = true});
@@ -167,12 +172,12 @@ namespace Server.Core.Comps
             foreach (var state in stateDic.Values)
             {
                 var actor = ActorMgr.GetActor(state.Id);
-                bool isChanged;
-                byte[] data;
                 if (actor != null)
                 {
                     if (force)
                     {
+                        bool isChanged;
+                        byte[] data;
                         (isChanged, data) = state.IsChanged();
                         AddReplaceModel(writeList, isChanged, state.Id, data);
                     }
@@ -194,8 +199,8 @@ namespace Server.Core.Comps
                 var stateName = typeof(TState).FullName;
                 StateComponent.statisticsTool.Count(stateName, writeList.Count);
                 Log.Debug($"状态回存 {stateName} count:{writeList.Count}");
-                var db = GameDb.As<MongoDbServiceConnection>().CurrentDatabase;
-                var col = db.GetCollection<MongoState>(stateName);
+                var currentDatabase = GameDb.As<MongoDbServiceConnection>().CurrentDatabase;
+                var mongoCollection = currentDatabase.GetCollection<MongoState>(stateName);
                 for (int idx = 0; idx < writeList.Count; idx += ONCE_SAVE_COUNT)
                 {
                     var list = writeList.GetRange(idx, Math.Min(ONCE_SAVE_COUNT, writeList.Count - idx));
@@ -203,14 +208,14 @@ namespace Server.Core.Comps
                     bool save = false;
                     try
                     {
-                        var result = await col.BulkWriteAsync(list, MongoDbServiceConnection.BULK_WRITE_OPTIONS);
+                        var result = await mongoCollection.BulkWriteAsync(list, MongoDbServiceConnection.BulkWriteOptions);
                         if (result.IsAcknowledged)
                         {
                             list.ForEach(model =>
                             {
-                                if (stateDic.TryGetValue(long.Parse(model.Replacement.Id), out var st))
+                                if (stateDic.TryGetValue(long.Parse(model.Replacement.Id), out var cacheState))
                                 {
-                                    st.AfterSaveToDB();
+                                    cacheState.AfterSaveToDB();
                                 }
                             });
                             save = true;
@@ -232,6 +237,19 @@ namespace Server.Core.Comps
                 }
             }
         }
+
+
+        // public static async Task<MongoState> FindAsync<TState>(FilterDefinition<BsonDocument> filter, int limit = 0)
+        // {
+        //     var stateName = typeof(TState).FullName;
+        //     var _database = GameDb.As<MongoDbServiceConnection>().CurrentDatabase;
+        //     var collection = _database.GetCollection<MongoState>(stateName);
+        //     // var result = new List<BsonDocument>();
+        //     using (var cursor = await collection.FindAsync(filter, new FindOptions<MongoState> {Limit = limit}))
+        //     {
+        //         return await cursor.FirstOrDefaultAsync();
+        //     }
+        // }
 
         #endregion
     }

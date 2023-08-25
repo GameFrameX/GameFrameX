@@ -11,14 +11,24 @@
         None,
 
         /// <summary>
+        /// 账号
+        /// </summary>
+        Account,
+
+        /// <summary>
         /// 角色
         /// </summary>
-        Role,
+        Player,
 
         /// <summary>
         /// 公会
         /// </summary>
         Guild,
+
+        /// <summary>
+        /// 网关
+        /// </summary>
+        Gate,
 
         Separator = 128, /*分割线(勿调整,勿用于业务逻辑)*/
 

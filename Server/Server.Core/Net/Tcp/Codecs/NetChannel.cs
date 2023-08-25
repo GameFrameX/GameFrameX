@@ -47,8 +47,8 @@ namespace Server.Core.Net.Tcp.Codecs
 
         public long GetSessionId()
         {
-            if (Context.Items.TryGetValue(SESSIONID, out object idObj))
-                return (long)idObj;
+            if (Context.Items.TryGetValue(SESSIONID, out var idObj))
+                return (long) idObj;
             return 0;
         }
 
@@ -62,13 +62,14 @@ namespace Server.Core.Net.Tcp.Codecs
         public async ValueTask WriteAsync(NMessage msg)
         {
             if (Writer != null)
+            {
                 await Writer.WriteAsync(Protocol, msg);
+            }
         }
 
         public void WriteAsync(Message msg)
         {
             _ = WriteAsync(new NMessage(msg));
         }
-
     }
 }

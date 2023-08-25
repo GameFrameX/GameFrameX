@@ -11,7 +11,6 @@ namespace Server.Core.Timer
 {
     public static class QuartzTimer
     {
-
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         public static readonly StatisticsTool statisticsTool = new();
@@ -31,7 +30,9 @@ namespace Server.Core.Timer
                     scheduler.DeleteJob(JobKey.Create(id + ""));
             }
         }
+
         #region 热更定时器
+
         /// <summary>
         /// 每隔一段时间执行一次
         /// </summary>
@@ -55,6 +56,7 @@ namespace Server.Core.Timer
             {
                 builder = TriggerBuilder.Create().StartAt(firstTimeOffset).WithSimpleSchedule(x => x.WithInterval(interval).WithRepeatCount(repeatCount));
             }
+
             scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), builder.Build());
             return id;
         }
@@ -96,6 +98,7 @@ namespace Server.Core.Timer
             {
                 throw new ArgumentOutOfRangeException($"定时器参数错误 TimerHandler:{typeof(T).FullName} {nameof(hour)}:{hour} {nameof(minute)}:{minute}");
             }
+
             var id = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hour, minute)).Build();
             scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
@@ -111,6 +114,7 @@ namespace Server.Core.Timer
             {
                 throw new ArgumentNullException($"定时每周执行 参数为空：{nameof(dayOfWeeks)} TimerHandler:{typeof(T).FullName} actorId:{actorId} actorType:{IdGenerator.GetActorType(actorId)}");
             }
+
             var id = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.AtHourAndMinuteOnGivenDaysOfWeek(hour, minute, dayOfWeeks)).Build();
             scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
@@ -137,14 +141,17 @@ namespace Server.Core.Timer
             {
                 throw new ArgumentException($"定时器参数错误 TimerHandler:{typeof(T).FullName} {nameof(dayOfMonth)}:{dayOfMonth} actorId:{actorId} actorType:{IdGenerator.GetActorType(actorId)}");
             }
+
             var id = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(dayOfMonth, hour, minute)).Build();
             scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
             return id;
         }
+
         #endregion
 
         #region 非热更定时器
+
         /// <summary>
         /// 每隔一段时间执行一次
         /// </summary>
@@ -168,6 +175,7 @@ namespace Server.Core.Timer
             {
                 builder = TriggerBuilder.Create().StartAt(firstTimeOffset).WithSimpleSchedule(x => x.WithInterval(interval).WithRepeatCount(repeatCount));
             }
+
             scheduler.ScheduleJob(GetJobDetail<T>(id, param), builder.Build());
             return id;
         }
@@ -209,6 +217,7 @@ namespace Server.Core.Timer
             {
                 throw new ArgumentOutOfRangeException($"定时器参数错误 TimerHandler:{typeof(T).FullName} {nameof(hour)}:{hour} {nameof(minute)}:{minute}");
             }
+
             var id = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hour, minute)).Build();
             scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
@@ -224,6 +233,7 @@ namespace Server.Core.Timer
             {
                 throw new ArgumentNullException($"定时每周执行 参数为空：{nameof(dayOfWeeks)} TimerHandler:{typeof(T).FullName}");
             }
+
             var id = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.AtHourAndMinuteOnGivenDaysOfWeek(hour, minute, dayOfWeeks)).Build();
             scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
@@ -250,14 +260,17 @@ namespace Server.Core.Timer
             {
                 throw new ArgumentException($"定时器参数错误 TimerHandler:{typeof(T).FullName} {nameof(dayOfMonth)}:{dayOfMonth}");
             }
+
             var id = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(dayOfMonth, hour, minute)).Build();
             scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
             return id;
         }
+
         #endregion
 
         #region 调度
+
         static IScheduler scheduler = null;
 
         /// <summary>
@@ -282,6 +295,7 @@ namespace Server.Core.Timer
         }
 
         private static long id = DateTime.Now.Ticks;
+
         private static long NextId()
         {
             return Interlocked.Increment(ref id);
@@ -302,7 +316,6 @@ namespace Server.Core.Timer
                         var agentType = handler.GetType().BaseType.GenericTypeArguments[0];
                         var comp = await ActorMgr.GetCompAgent(actorId, agentType);
                         comp.Tell(() => handler.InnerHandleTimer(comp, param));
-
                     }
                     else
                     {
@@ -328,6 +341,7 @@ namespace Server.Core.Timer
             {
                 throw new Exception("定时器代码需要在热更项目里");
             }
+
             var job = JobBuilder.Create<TimerJob>().WithIdentity(id + "").Build();
             job.JobDataMap.Add(PARAM_KEY, param);
             job.JobDataMap.Add(ACTOR_ID_KEY, actorId);
@@ -353,7 +367,6 @@ namespace Server.Core.Timer
                     {
                         if (level < LogLevel.Warn)
                         {
-
                         }
                         else if (level == LogLevel.Warn)
                         {
@@ -364,6 +377,7 @@ namespace Server.Core.Timer
                             Log.Error(func(), parameters);
                         }
                     }
+
                     return true;
                 };
             }
@@ -378,6 +392,7 @@ namespace Server.Core.Timer
                 throw new NotImplementedException();
             }
         }
+
         #endregion
     }
 }

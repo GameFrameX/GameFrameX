@@ -9,6 +9,7 @@ using Server.Core.Net.Http;
 using Server.Core.Net.Tcp.Handler;
 using Server.Core.Utility;
 using Server.Extension;
+using Server.Setting;
 
 namespace Server.Core.Hotfix
 {
@@ -95,7 +96,7 @@ namespace Server.Core.Hotfix
             if (_dllLoader != null)
             {
                 var weak = _dllLoader.Unload();
-                if (Settings.IsDebug)
+                if (GlobalSettings.IsDebug)
                 {
                     //检查hotfix dll是否已经释放
                     Task.Run(async () =>
@@ -148,7 +149,7 @@ namespace Server.Core.Hotfix
                     if ((HotfixBridge == null && type.GetInterface(fullName) != null))
                     {
                         var bridge = (IHotfixBridge) Activator.CreateInstance(type);
-                        if (bridge.BridgeType == Settings.ServerType)
+                        if (bridge.BridgeType == GlobalSettings.ServerType)
                         {
                             HotfixBridge = bridge;
                         }
@@ -247,13 +248,13 @@ namespace Server.Core.Hotfix
                 return false;
             }
 
-            if (type.FullName == "Server.App.Logic.Server.ServerComp")
+            var fullName = type.FullName;
+            if (fullName == "Server.App.Logic.Server.ServerComp")
             {
                 return false;
             }
 
-//&& type.FullName.EndsWith("Wrapper")
-            if (type.FullName.StartsWith("Server.Hotfix."))
+            if (fullName.StartsWith("Server.Hotfix.") && fullName.EndsWith("Wrapper"))
             {
                 agentAgentWrapperMap[type.BaseType] = type;
                 return true;

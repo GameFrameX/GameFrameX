@@ -19,27 +19,21 @@ namespace Server.Core.Net.Http
         {
             var builder = WebApplication.CreateBuilder();
             builder.WebHost.UseKestrel(options =>
-            {
-                // HTTP 
-                if (httpPort > 0)
                 {
-                    options.ListenAnyIP(httpPort);
-                }
-
-                // HTTPS
-                if (httpsPort > 0)
-                {
-                    options.ListenAnyIP(httpsPort, builder =>
+                    // HTTP 
+                    if (httpPort > 0)
                     {
-                        builder.UseHttps();
-                    });
-                }
-            })
-            .ConfigureLogging(logging =>
-            {
-                logging.SetMinimumLevel(LogLevel.Error);
-            })
-            .UseNLog();
+                        options.ListenAnyIP(httpPort);
+                    }
+
+                    // HTTPS
+                    if (httpsPort > 0)
+                    {
+                        options.ListenAnyIP(httpsPort, builder => { builder.UseHttps(); });
+                    }
+                })
+                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
+                .UseNLog();
 
             app = builder.Build();
             app.MapGet("/game/{text}", (HttpContext context) => HttpHandler.HandleRequest(context));
@@ -59,6 +53,7 @@ namespace Server.Core.Net.Http
                 app = null;
                 return task;
             }
+
             return Task.CompletedTask;
         }
     }

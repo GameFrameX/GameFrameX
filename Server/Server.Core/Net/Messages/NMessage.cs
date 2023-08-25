@@ -1,5 +1,5 @@
 ﻿using System.Buffers;
-using ProtoBuf.Meta;
+using MessagePack;
 
 namespace Server.Core.Net.Messages
 {
@@ -26,17 +26,14 @@ namespace Server.Core.Net.Messages
 
         public void Serialize(IBufferWriter<byte> writer)
         {
-            MemoryStream memoryStream = new MemoryStream(writer.GetMemory().ToArray());
-            RuntimeTypeModel.Default.Serialize(memoryStream, Msg);
+            MessagePackSerializer.Serialize(writer, Msg);
         }
 
         public byte[] Serialize()
         {
             try
             {
-                using MemoryStream memoryStream = new MemoryStream();
-                RuntimeTypeModel.Default.Serialize(memoryStream, Msg);
-                return memoryStream.ToArray();
+                return MessagePackSerializer.Serialize(Msg);
             }
             catch (System.Exception)
             {

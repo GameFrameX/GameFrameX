@@ -68,7 +68,7 @@ namespace Server.Core.Comps
 
                     CompActorDic[type] = actorType;
 
-                    if (actorType == ActorType.Role)
+                    if (actorType == ActorType.Player)
                     {
                         if (type.GetCustomAttribute(typeof(FuncAttribute)) is FuncAttribute funcAttr)
                         {
@@ -92,10 +92,9 @@ namespace Server.Core.Comps
         {
             try
             {
-                foreach (var kv in ActorCompDic)
+                foreach (var (actorType, value) in ActorCompDic)
                 {
-                    var actorType = kv.Key;
-                    foreach (var compType in kv.Value)
+                    foreach (var compType in value)
                     {
                         var agentType = HotfixMgr.GetAgentType(compType);
                         if (agentType == null)
@@ -152,7 +151,9 @@ namespace Server.Core.Comps
 
         internal static async Task ActiveComps(Actor actor, Func<Type, bool> predict = null)
         {
-            foreach (var compType in GetComps(actor.Type))
+            var compTypes = GetComps(actor.Type);
+
+            foreach (var compType in compTypes)
             {
                 if (predict == null || predict(compType))
                 {
@@ -172,14 +173,24 @@ namespace Server.Core.Comps
 
         internal static BaseComp NewComp(Actor actor, Type compType)
         {
-            if (!ActorCompDic.TryGetValue(actor.Type, out var compTypes) || !compTypes.Contains(compType))
+            if (!ActorCompDic.TryGetValue(actor.Type, out var compTypes))
+            {
+                throw new Exception($"获取不属于此actor：{actor.Type}的comp:{compType.FullName}");
+            }
+
+            if (!compTypes.Contains(compType))
             {
                 throw new Exception($"获取不属于此actor：{actor.Type}的comp:{compType.FullName}");
             }
 
             var comp = (BaseComp) Activator.CreateInstance(compType);
-            comp.Actor = actor;
-            return comp;
+            if (comp != null)
+            {
+                comp.Actor = actor;
+                return comp;
+            }
+
+            return default;
         }
     }
 }

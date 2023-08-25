@@ -7,7 +7,7 @@ namespace Server.Core.Timer.Handler
     {
         public Task InnerHandleTimer(ICompAgent agent, Param param)
         {
-            return HandleTimer((TAgent)agent, param);
+            return HandleTimer((TAgent) agent, param);
         }
 
         protected abstract Task HandleTimer(TAgent agent, Param param);

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using NLog;
 using Server.Core.Hotfix;
 using Server.Core.Utility;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.Core.Net.Http
@@ -85,7 +86,7 @@ namespace Server.Core.Net.Http
                     return;
                 }
 
-                if (!Settings.AppRunning)
+                if (!GlobalSettings.IsAppRunning)
                 {
                     await context.Response.WriteAsync(new HttpResult(HttpResult.Stauts.ActionFailed, "服务器状态错误[正在起/关服]"));
                     return;

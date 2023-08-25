@@ -27,6 +27,7 @@ namespace Server.Core.Events
                         // Log.Warn($"事件：{(EventID)evtId} 没有找到任何监听者");
                         return;
                     }
+
                     foreach (var listener in listeners)
                     {
                         var comp = await actor.GetCompAgent(listener.AgentType);

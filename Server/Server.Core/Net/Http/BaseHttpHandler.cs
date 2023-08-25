@@ -2,6 +2,7 @@
 using System.Text;
 using NLog;
 using Server.Core.Utility;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.Core.Net.Http
@@ -9,6 +10,7 @@ namespace Server.Core.Net.Http
     public abstract class BaseHttpHandler
     {
         static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
+
         /// <summary> 是否使用内部验证方式 </summary>
         public virtual bool IsCheckSign => true;
 
@@ -19,15 +21,16 @@ namespace Server.Core.Net.Http
             byte[] md5Bytes = MD5.Create().ComputeHash(data);
             string md5 = BitConverter.ToString(md5Bytes).Replace("-", "").ToLower();
 
-            int checkCode1 = 0;//校验码
+            int checkCode1 = 0; //校验码
             int checkCode2 = 0;
-            for (int i = 0; i < md5.Length; ++i)
+            foreach (var t in md5)
             {
-                if (md5[i] >= 'a')
-                    checkCode1 += md5[i];
+                if (t >= 'a')
+                    checkCode1 += t;
                 else
-                    checkCode2 += md5[i];
+                    checkCode2 += t;
             }
+
             md5 = checkCode1 + md5 + checkCode2;
 
             return md5;
@@ -35,7 +38,7 @@ namespace Server.Core.Net.Http
 
         public string CheckSign(Dictionary<string, string> paramMap)
         {
-            if (!IsCheckSign || Settings.IsDebug)
+            if (!IsCheckSign || GlobalSettings.IsDebug)
                 return "";
 
             //内部验证
@@ -44,21 +47,26 @@ namespace Server.Core.Net.Http
                 LOGGER.Error("http命令未包含验证参数");
                 return new HttpResult(HttpResult.Stauts.Illegal, "http命令未包含验证参数");
             }
+
             var sign = paramMap["token"];
             var time = paramMap["timestamp"];
             long.TryParse(time, out long timeTick);
             var span = new TimeSpan(Math.Abs(DateTime.Now.Ticks - timeTick));
-            if (span.TotalMinutes > 5)//5分钟内有效
+            if (span.TotalMinutes > 5) //5分钟内有效
             {
                 LOGGER.Error("http命令已过期");
                 return new HttpResult(HttpResult.Stauts.Illegal, "http命令已过期");
             }
 
-            var str = Settings.HttpCode + time;
+            var str = GlobalSettings.HttpCode + time;
             if (sign == GetStringSign(str))
+            {
                 return "";
+            }
             else
+            {
                 return new HttpResult(HttpResult.Stauts.Illegal, "命令验证失败");
+            }
         }
 
         public abstract Task<string> Action(string ip, string url, Dictionary<string, string> paramMap);

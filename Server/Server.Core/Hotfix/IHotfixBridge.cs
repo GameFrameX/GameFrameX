@@ -1,5 +1,5 @@
-﻿
-using Server.Core.Utility;
+﻿using Server.Core.Utility;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.Core.Hotfix

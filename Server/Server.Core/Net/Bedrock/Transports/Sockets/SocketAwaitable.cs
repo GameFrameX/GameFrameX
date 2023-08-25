@@ -31,7 +31,7 @@ namespace Server.Core.Net.Bedrock.Transports.Sockets
 
             if (_error != SocketError.Success)
             {
-                throw new SocketException((int)_error);
+                throw new SocketException((int) _error);
             }
 
             return _bytesTransferred;
@@ -59,7 +59,7 @@ namespace Server.Core.Net.Bedrock.Transports.Sockets
 
             if (continuation != null)
             {
-                _ioScheduler.Schedule(state => ((Action)state)(), continuation);
+                _ioScheduler.Schedule(state => ((Action) state)(), continuation);
             }
         }
     }

@@ -6,7 +6,7 @@ namespace Server.Core.Net.Bedrock.Client
 {
     public static class ClientFactory
     {
-        public static async ValueTask<ConnectionContext> ConnectAsync(EndPoint endpoint, int timeoutMS=5000)
+        public static async ValueTask<ConnectionContext> ConnectAsync(EndPoint endpoint, int timeoutMS = 5000)
         {
             try
             {

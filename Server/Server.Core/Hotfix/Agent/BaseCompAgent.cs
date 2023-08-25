@@ -9,7 +9,7 @@ namespace Server.Core.Hotfix.Agent
     public abstract class BaseCompAgent<TComp> : ICompAgent where TComp : BaseComp
     {
         public BaseComp Owner { get; set; }
-        public TComp Comp => (TComp)Owner;
+        public TComp Comp => (TComp) Owner;
         public Actor Actor => Owner.Actor;
         public long ActorId => Actor.Id;
         public ActorType OwnerType => Actor.Type;
@@ -18,7 +18,6 @@ namespace Server.Core.Hotfix.Agent
 
         public virtual void Active()
         {
-
         }
 
         protected void SetAutoRecycle(bool autoRecycle)
@@ -26,7 +25,7 @@ namespace Server.Core.Hotfix.Agent
             Actor.SetAutoRecycle(autoRecycle);
         }
 
-        public virtual Task Deactive()
+        public virtual Task Inactive()
         {
             return Task.CompletedTask;
         }
@@ -76,7 +75,7 @@ namespace Server.Core.Hotfix.Agent
             return Actor.SendAsync(work, timeOut);
         }
 
-        public void Unschedule(long id)
+        public void Unscheduled(long id)
         {
             QuartzTimer.Unschedule(id);
             ScheduleIdSet.Remove(id);
@@ -84,7 +83,7 @@ namespace Server.Core.Hotfix.Agent
 
         public long Delay<T>(DateTime time, Param param = null, long unscheduleId = 0) where T : ITimerHandler
         {
-            Unschedule(unscheduleId);
+            Unscheduled(unscheduleId);
             long scheduleId = QuartzTimer.Delay<T>(ActorId, time - DateTime.Now, param);
             ScheduleIdSet.Add(scheduleId);
             return scheduleId;
@@ -92,7 +91,7 @@ namespace Server.Core.Hotfix.Agent
 
         public long Delay<T>(long time, Param param = null, long unscheduleId = 0) where T : ITimerHandler
         {
-            Unschedule(unscheduleId);
+            Unscheduled(unscheduleId);
             long scheduleId = QuartzTimer.Delay<T>(ActorId, new DateTime(time) - DateTime.Now, param);
             ScheduleIdSet.Add(scheduleId);
             return scheduleId;
@@ -100,7 +99,7 @@ namespace Server.Core.Hotfix.Agent
 
         public long Delay<T>(TimeSpan delay, Param param = null, long unscheduleId = 0) where T : ITimerHandler
         {
-            Unschedule(unscheduleId);
+            Unscheduled(unscheduleId);
             long scheduleId = QuartzTimer.Delay<T>(ActorId, delay, param);
             ScheduleIdSet.Add(scheduleId);
             return scheduleId;
@@ -108,7 +107,7 @@ namespace Server.Core.Hotfix.Agent
 
         public long Schedule<T>(TimeSpan delay, TimeSpan interval, Param param = null, int repeatCount = -1, long unscheduleId = 0) where T : ITimerHandler
         {
-            Unschedule(unscheduleId);
+            Unscheduled(unscheduleId);
             long scheduleId = QuartzTimer.Schedule<T>(ActorId, delay, interval, param, repeatCount);
             ScheduleIdSet.Add(scheduleId);
             return scheduleId;
@@ -116,7 +115,7 @@ namespace Server.Core.Hotfix.Agent
 
         public long Daily<T>(int hour = 0, int minute = 0, Param param = null, long unscheduleId = 0) where T : ITimerHandler
         {
-            Unschedule(unscheduleId);
+            Unscheduled(unscheduleId);
             long scheduleId = QuartzTimer.Daily<T>(ActorId, hour, minute, param);
             ScheduleIdSet.Add(scheduleId);
             return scheduleId;
@@ -124,7 +123,7 @@ namespace Server.Core.Hotfix.Agent
 
         public long Weekly<T>(DayOfWeek dayOfWeek, int hour = 0, int minute = 0, Param param = null, long unscheduleId = 0) where T : ITimerHandler
         {
-            Unschedule(unscheduleId);
+            Unscheduled(unscheduleId);
             long scheduleId = QuartzTimer.Weekly<T>(ActorId, dayOfWeek, hour, minute, param);
             ScheduleIdSet.Add(scheduleId);
             return scheduleId;
@@ -139,7 +138,7 @@ namespace Server.Core.Hotfix.Agent
 
         public long Monthly<T>(int dayOfMonth, int hour = 0, int minute = 0, Param param = null, long unscheduleId = 0) where T : ITimerHandler
         {
-            Unschedule(unscheduleId);
+            Unscheduled(unscheduleId);
             long scheduleId = QuartzTimer.Monthly<T>(ActorId, dayOfMonth, hour, minute, param);
             ScheduleIdSet.Add(scheduleId);
             return scheduleId;
@@ -147,7 +146,7 @@ namespace Server.Core.Hotfix.Agent
 
         public long WithCronExpression<T>(string cronExpression, Param param = null, long unscheduleId = 0) where T : ITimerHandler
         {
-            Unschedule(unscheduleId);
+            Unscheduled(unscheduleId);
             long scheduleId = QuartzTimer.WithCronExpression<T>(ActorId, cronExpression, param);
             ScheduleIdSet.Add(scheduleId);
             return scheduleId;

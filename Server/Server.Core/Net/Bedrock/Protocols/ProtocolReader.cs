@@ -17,7 +17,6 @@ namespace Server.Core.Net.Bedrock.Protocols
         public ProtocolReader(Stream stream) :
             this(PipeReader.Create(stream))
         {
-
         }
 
         public ProtocolReader(PipeReader reader)
@@ -32,7 +31,7 @@ namespace Server.Core.Net.Bedrock.Protocols
 
         public ValueTask<ProtocolReadResult<TReadMessage>> ReadAsync<TReadMessage>(IMessageReader<TReadMessage> reader, int maximumMessageSize, CancellationToken cancellationToken = default)
         {
-            return ReadAsync(reader, (int?)maximumMessageSize, cancellationToken);
+            return ReadAsync(reader, (int?) maximumMessageSize, cancellationToken);
         }
 
         public ValueTask<ProtocolReadResult<TReadMessage>> ReadAsync<TReadMessage>(IMessageReader<TReadMessage> reader, int? maximumMessageSize, CancellationToken cancellationToken = default)

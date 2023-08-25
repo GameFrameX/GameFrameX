@@ -41,11 +41,11 @@ namespace Server.Core.Comps
             return Task.CompletedTask;
         }
 
-        public virtual async Task DeActive()
+        public virtual async Task Inactive()
         {
             var agent = GetAgent();
             if (agent != null)
-                await agent.Deactive();
+                await agent.Inactive();
         }
 
         internal virtual Task SaveState()
@@ -53,6 +53,6 @@ namespace Server.Core.Comps
             return Task.CompletedTask;
         }
 
-        internal virtual bool ReadyToDeactive => true;
+        internal virtual bool ReadyToInactive => true;
     }
 }

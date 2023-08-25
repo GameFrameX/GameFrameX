@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks.Dataflow;
 using NLog;
 using Server.Core.Utility;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.Core.Actors.Impl
@@ -18,7 +19,7 @@ namespace Server.Core.Actors.Impl
             if (id == 0)
                 id = IdGenerator.GetUniqueId(IDModule.WorkerActor);
             Id = id;
-            ActionBlock = new ActionBlock<WorkWrapper>(InnerRun, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1 });
+            ActionBlock = new ActionBlock<WorkWrapper>(InnerRun, new ExecutionDataflowBlockOptions() {MaxDegreeOfParallelism = 1});
         }
 
         private static async Task InnerRun(WorkWrapper wrapper)
@@ -52,9 +53,10 @@ namespace Server.Core.Actors.Impl
         }
 
         #region 勿调用(仅供代码生成器调用)
-        public Task Enqueue(Action work, long callChainId, bool discard=false, int timeOut = TIME_OUT)
+
+        public Task Enqueue(Action work, long callChainId, bool discard = false, int timeOut = TIME_OUT)
         {
-            if (!discard && Settings.IsDebug && !ActorLimit.AllowCall(Id))
+            if (!discard && GlobalSettings.IsDebug && !ActorLimit.AllowCall(Id))
                 return default;
             var at = new ActionWrapper(work)
             {
@@ -65,9 +67,10 @@ namespace Server.Core.Actors.Impl
             ActionBlock.SendAsync(at);
             return at.Tcs.Task;
         }
+
         public Task<T> Enqueue<T>(Func<T> work, long callChainId, bool discard = false, int timeOut = TIME_OUT)
         {
-            if (!discard && Settings.IsDebug && !ActorLimit.AllowCall(Id))
+            if (!discard && GlobalSettings.IsDebug && !ActorLimit.AllowCall(Id))
                 return default;
             var at = new FuncWrapper<T>(work)
             {
@@ -81,7 +84,7 @@ namespace Server.Core.Actors.Impl
 
         public Task Enqueue(Func<Task> work, long callChainId, bool discard = false, int timeOut = TIME_OUT)
         {
-            if (!discard && Settings.IsDebug && !ActorLimit.AllowCall(Id))
+            if (!discard && GlobalSettings.IsDebug && !ActorLimit.AllowCall(Id))
                 return default;
             var at = new ActionAsyncWrapper(work)
             {
@@ -95,7 +98,7 @@ namespace Server.Core.Actors.Impl
 
         public Task<T> Enqueue<T>(Func<Task<T>> work, long callChainId, bool discard = false, int timeOut = TIME_OUT)
         {
-            if (!discard && Settings.IsDebug && !ActorLimit.AllowCall(Id))
+            if (!discard && GlobalSettings.IsDebug && !ActorLimit.AllowCall(Id))
                 return default;
             var at = new FuncAsyncWrapper<T>(work)
             {
@@ -106,9 +109,11 @@ namespace Server.Core.Actors.Impl
             ActionBlock.SendAsync(at);
             return at.Tcs.Task;
         }
+
         #endregion
 
         #region 供框架底层调用(逻辑开发人员应尽量避免调用)
+
         public void Tell(Action work, int timeout = Actor.TIME_OUT)
         {
             var at = new ActionWrapper(work)
@@ -139,7 +144,7 @@ namespace Server.Core.Actors.Impl
             (bool needEnqueue, long chainId) = IsNeedEnqueue();
             if (needEnqueue)
             {
-                if (Settings.IsDebug && !ActorLimit.AllowCall(Id))
+                if (GlobalSettings.IsDebug && !ActorLimit.AllowCall(Id))
                     return default;
 
                 var at = new ActionWrapper(work)
@@ -163,7 +168,7 @@ namespace Server.Core.Actors.Impl
             (bool needEnqueue, long chainId) = IsNeedEnqueue();
             if (needEnqueue)
             {
-                if (Settings.IsDebug && !ActorLimit.AllowCall(Id))
+                if (GlobalSettings.IsDebug && !ActorLimit.AllowCall(Id))
                     return default;
 
                 var at = new FuncWrapper<T>(work)
@@ -186,7 +191,7 @@ namespace Server.Core.Actors.Impl
             (bool needEnqueue, long chainId) = IsNeedEnqueue();
             if (needEnqueue)
             {
-                if (checkLock && Settings.IsDebug && !ActorLimit.AllowCall(Id))
+                if (checkLock && GlobalSettings.IsDebug && !ActorLimit.AllowCall(Id))
                     return default;
 
                 var wrapper = new ActionAsyncWrapper(work)
@@ -209,7 +214,7 @@ namespace Server.Core.Actors.Impl
             (bool needEnqueue, long chainId) = IsNeedEnqueue();
             if (needEnqueue)
             {
-                if (Settings.IsDebug && !ActorLimit.AllowCall(Id))
+                if (GlobalSettings.IsDebug && !ActorLimit.AllowCall(Id))
                     return default;
 
                 var wrapper = new FuncAsyncWrapper<T>(work)
@@ -226,6 +231,7 @@ namespace Server.Core.Actors.Impl
                 return work();
             }
         }
+
         #endregion
 
         private static long chainId = DateTime.Now.Ticks;
@@ -240,6 +246,7 @@ namespace Server.Core.Actors.Impl
             {
                 id = Interlocked.Increment(ref chainId);
             }
+
             return id;
         }
     }

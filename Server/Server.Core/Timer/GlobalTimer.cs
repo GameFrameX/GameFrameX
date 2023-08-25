@@ -2,6 +2,7 @@
 using Server.Core.Utility;
 using Server.DBServer;
 using Server.Extension;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.Core.Timer
@@ -11,6 +12,7 @@ namespace Server.Core.Timer
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static Task LoopTask;
         public static volatile bool working = false;
+
         public static void Start()
         {
             working = true;
@@ -21,7 +23,7 @@ namespace Server.Core.Timer
         private static async Task Loop()
         {
             var nextSaveTime = NextSaveTime();
-            var saveInterval = TimeSpan.FromMilliseconds(SAVE_INTERVAL_IN_MilliSECONDS);
+            var saveInterval = TimeSpan.FromMilliseconds(GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
             var ONCE_DELAY = TimeSpan.FromMilliseconds(200);
             while (working)
             {
@@ -30,6 +32,7 @@ namespace Server.Core.Timer
                 {
                     await Task.Delay(ONCE_DELAY);
                 }
+
                 if (!working)
                     break;
                 var startTime = DateTime.Now;
@@ -52,23 +55,24 @@ namespace Server.Core.Timer
             var t = now.Date.AddHours(now.Hour);
             while (t < now)
             {
-                t = t.AddMilliseconds(SAVE_INTERVAL_IN_MilliSECONDS);
+                t = t.AddMilliseconds(GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
             }
 
-            int serverId = Settings.ServerId;
+            int serverId = GlobalSettings.ServerId;
             int a = serverId % 1000;
-            int b = a % MAGIC;
-            int c = SAVE_INTERVAL_IN_MilliSECONDS / MAGIC;
+            int b = a % GlobalConst.MAGIC;
+            int c = GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS / GlobalConst.MAGIC;
             int r = ThreadLocalRandom.Current.Next(0, c);
             int delay = b * c + r;
             t = t.AddMilliseconds(delay);
-            if ((t - now).TotalMilliseconds > SAVE_INTERVAL_IN_MilliSECONDS)
-                t = t.AddMilliseconds(-SAVE_INTERVAL_IN_MilliSECONDS);
+            if ((t - now).TotalMilliseconds > GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS)
+            {
+                t = t.AddMilliseconds(-GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
+            }
+
             return t;
         }
 
-        const int SAVE_INTERVAL_IN_MilliSECONDS = 300_000;//300_000;
-        const int MAGIC = 60;
 
         public static async Task Stop()
         {

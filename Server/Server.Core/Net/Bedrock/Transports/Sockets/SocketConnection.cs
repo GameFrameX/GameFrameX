@@ -164,6 +164,7 @@ namespace Server.Core.Net.Bedrock.Transports.Sockets
         }
 
         private bool _connectionClosed;
+
         private void FireConnectionClosed()
         {
             //Console.WriteLine($"{ConnectionId} closed");
@@ -175,12 +176,12 @@ namespace Server.Core.Net.Bedrock.Transports.Sockets
 
             _connectionClosed = true;
             ThreadPool.UnsafeQueueUserWorkItem(state =>
-            {
-                state.CancelConnectionClosedToken();
-                state._waitForConnectionClosedTcs.TrySetResult();
-            },
-            this,
-            preferLocal: false);
+                {
+                    state.CancelConnectionClosedToken();
+                    state._waitForConnectionClosedTcs.TrySetResult();
+                },
+                this,
+                preferLocal: false);
         }
 
         public override CancellationToken ConnectionClosed { get; set; }

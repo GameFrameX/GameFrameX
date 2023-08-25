@@ -35,18 +35,25 @@ namespace Server.Core.Actors
         public async Task<ICompAgent> GetCompAgent(Type agentType)
         {
             var compType = agentType.BaseType.GetGenericArguments()[0];
-            var comp = compDic.GetOrAdd(compType, k => ComponentRegister.NewComp(this, k));
-            var agent = comp.GetAgent();
+            var comp = compDic.GetOrAdd(compType, GetOrAddFactory);
+            var agent = comp.GetAgent(agentType);
             if (!comp.IsActive)
             {
-                await SendAsyncWithoutCheck(async () =>
+                async Task Worker()
                 {
                     await comp.Active();
                     agent.Active();
-                });
+                }
+
+                await SendAsyncWithoutCheck(Worker);
             }
 
             return agent;
+        }
+
+        private BaseComp GetOrAddFactory(Type k)
+        {
+            return ComponentRegister.NewComp(this, k);
         }
 
         public const int TIME_OUT = int.MaxValue;
@@ -57,7 +64,7 @@ namespace Server.Core.Actors
             Type = type;
             WorkerActor = new WorkerActor(id);
 
-            if (type == ActorType.Role)
+            if (type == ActorType.Player)
             {
                 Tell(() => SetAutoRecycle(true));
             }
@@ -88,7 +95,7 @@ namespace Server.Core.Actors
             }
         }
 
-        internal bool ReadyToDeactive => compDic.Values.All(item => item.ReadyToDeactive);
+        internal bool ReadyToDeactive => compDic.Values.All(item => item.ReadyToInactive);
 
         internal async Task SaveAllState()
         {
@@ -102,7 +109,7 @@ namespace Server.Core.Actors
         {
             foreach (var item in compDic.Values)
             {
-                await item.DeActive();
+                await item.Inactive();
             }
         }
 

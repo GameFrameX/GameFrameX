@@ -21,7 +21,7 @@ namespace Server.Core.Net.Tcp.Handler
             if (CacheComp == null)
             {
                 CacheComp = await ActorMgr.GetCompAgent(ActorId, CompAgentType);
-                Console.WriteLine(CacheComp);
+                // Console.WriteLine(CacheComp);
             }
         }
 

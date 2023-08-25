@@ -1,4 +1,5 @@
 ﻿using System.IO.Pipelines;
+using System.Text;
 
 namespace Server.Core.Net.Bedrock.Protocols
 {
@@ -8,10 +9,9 @@ namespace Server.Core.Net.Bedrock.Protocols
         private readonly SemaphoreSlim _semaphore;
         private bool _disposed;
 
-        public ProtocolWriter(Stream stream) : 
+        public ProtocolWriter(Stream stream) :
             this(PipeWriter.Create(stream))
         {
-
         }
 
         public ProtocolWriter(PipeWriter writer)
@@ -37,7 +37,6 @@ namespace Server.Core.Net.Bedrock.Protocols
                 }
 
                 writer.WriteMessage(protocolMessage, _writer);
-
                 var result = await _writer.FlushAsync(cancellationToken).ConfigureAwait(false);
 
                 if (result.IsCanceled)
@@ -67,7 +66,7 @@ namespace Server.Core.Net.Bedrock.Protocols
                     return;
                 }
 
-                foreach(var protocolMessage in protocolMessages)
+                foreach (var protocolMessage in protocolMessages)
                 {
                     writer.WriteMessage(protocolMessage, _writer);
                 }

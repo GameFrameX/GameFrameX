@@ -41,13 +41,14 @@ namespace Server.Core.Actors
         {
             var compType = HotfixMgr.GetCompType(typeof(T));
             var actorType = ComponentRegister.GetActorType(compType);
-            return GetCompAgent<T>(IdGenerator.GetActorID(actorType));
+            var actorId = IdGenerator.GetActorID(actorType);
+            return GetCompAgent<T>(actorId);
         }
 
         internal static async Task<Actor> GetOrNew(long actorId)
         {
             var actorType = IdGenerator.GetActorType(actorId);
-            if (actorType == ActorType.Role)
+            if (actorType == ActorType.Player)
             {
                 var now = DateTime.Now;
                 if (activeTimeDic.TryGetValue(actorId, out var activeTime)
@@ -210,7 +211,7 @@ namespace Server.Core.Actors
         {
             foreach (var actor in actorDic.Values)
             {
-                if (actor.Type == ActorType.Role)
+                if (actor.Type == ActorType.Player)
                 {
                     actor.Tell(() => actor.CrossDay(openServerDay));
                 }
@@ -263,7 +264,7 @@ namespace Server.Core.Actors
             b = 0;
             foreach (var actor in actorDic.Values)
             {
-                if (actor.Type < ActorType.Separator && actor.Type != ActorType.Role)
+                if (actor.Type < ActorType.Separator && actor.Type != ActorType.Player)
                 {
                     b++;
                     actor.Tell(async () =>

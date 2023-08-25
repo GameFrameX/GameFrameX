@@ -6,7 +6,7 @@ namespace Server.Core.Net.Bedrock.Transports.Sockets
     {
         public static ArraySegment<byte> GetArray(this Memory<byte> memory)
         {
-            return ((ReadOnlyMemory<byte>)memory).GetArray();
+            return ((ReadOnlyMemory<byte>) memory).GetArray();
         }
 
         public static ArraySegment<byte> GetArray(this ReadOnlyMemory<byte> memory)
@@ -15,6 +15,7 @@ namespace Server.Core.Net.Bedrock.Transports.Sockets
             {
                 throw new InvalidOperationException("Buffer backed by array was expected");
             }
+
             return result;
         }
     }

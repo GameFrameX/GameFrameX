@@ -11,7 +11,7 @@ namespace Server.Core.Hotfix.Agent
 
         void Active();
 
-        Task Deactive();
+        Task Inactive();
 
         ActorType OwnerType { get; }
 
@@ -30,6 +30,5 @@ namespace Server.Core.Hotfix.Agent
         Task SendAsync(Func<Task> work, int timeOut = Actor.TIME_OUT);
 
         Task<T> SendAsync<T>(Func<Task<T>> work, int timeOut = Actor.TIME_OUT);
-
     }
 }

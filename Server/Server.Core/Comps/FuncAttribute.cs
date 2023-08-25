@@ -1,6 +1,5 @@
 ﻿namespace Server.Core.Comps
 {
-
     [AttributeUsage(AttributeTargets.Class)]
     public class FuncAttribute : Attribute
     {

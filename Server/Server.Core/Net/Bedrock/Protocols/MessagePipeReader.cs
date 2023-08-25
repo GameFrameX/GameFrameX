@@ -17,6 +17,7 @@ namespace Server.Core.Net.Bedrock.Protocols
         private readonly ConsumableArrayBufferWriter _backlog = new ConsumableArrayBufferWriter();
         private bool _allExamined;
         private bool _advanced = true;
+
         public MessagePipeReader(PipeReader reader, IMessageReader<ReadOnlySequence<byte>> messageReader)
         {
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
@@ -37,7 +38,7 @@ namespace Server.Core.Net.Bedrock.Protocols
 
             _allExamined = _message.Slice(examined).IsEmpty;
 
-            var consumedLength = (int)_message.Slice(_message.Start, consumed).Length;
+            var consumedLength = (int) _message.Slice(_message.Start, consumed).Length;
 
             if (_backlog.UnconsumedWrittenCount > 0)
             {
@@ -75,6 +76,7 @@ namespace Server.Core.Net.Bedrock.Protocols
             {
                 _reader.AdvanceTo(_consumed, _examined);
             }
+
             _isThisCompleted = true;
             _backlog.Dispose();
         }
@@ -169,10 +171,10 @@ namespace Server.Core.Net.Bedrock.Protocols
 
                 if (_backlog.UnconsumedWrittenCount > 0)
                 {
-                   foreach (var m in _message)
-                   {
-                       _backlog.Write(m.Span);
-                   }
+                    foreach (var m in _message)
+                    {
+                        _backlog.Write(m.Span);
+                    }
 
                     _message = new ReadOnlySequence<byte>(_backlog.WrittenMemory);
                 }

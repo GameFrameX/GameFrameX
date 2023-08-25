@@ -222,6 +222,7 @@ namespace Server.Core.Net.Bedrock.Protocols
                     ReturnBuffer();
                     _buffer = destinationArray;
                 }
+
                 _index = countUnconsumed;
                 _consumedCount = 0;
             }

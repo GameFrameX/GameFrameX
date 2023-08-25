@@ -78,7 +78,7 @@ namespace Server.Core.Net.Tcp.Handler
             if (msg == null)
                 return;
 
-            LOGGER.Debug($"-------------收到消息{msg.MsgId} {msg.GetType()} ==> {JsonConvert.SerializeObject(msg)}");
+            LOGGER.Debug($"-------------收到消息 ID:{msg.MsgId} 类型: {msg.GetType()} 内容:==> {JsonConvert.SerializeObject(msg)}");
             var handler = HotfixMgr.GetTcpHandler(msg.MsgId);
             if (handler == null)
             {
@@ -88,7 +88,9 @@ namespace Server.Core.Net.Tcp.Handler
 
             handler.Msg = msg;
             handler.Channel = channel;
+            // 处理器初始化
             await handler.Init();
+            // 执行处理器
             await handler.InnerAction();
         }
     }

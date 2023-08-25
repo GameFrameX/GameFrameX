@@ -1,5 +1,4 @@
-﻿
-using Server.Core.Comps;
+﻿using Server.Core.Comps;
 
 namespace Server.Core.Hotfix.Agent
 {

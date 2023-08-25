@@ -20,6 +20,5 @@ namespace Server.Core.Net.Tcp.Handler
         {
             return ActionAsync();
         }
-
     }
 }

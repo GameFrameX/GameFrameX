@@ -8,11 +8,13 @@
         public abstract string GetTrace();
         public abstract void ForceSetResult();
         public long CallChainId { get; set; }
+
         protected void SetContext()
         {
             RuntimeContext.SetContext(CallChainId, Owner.Id);
             Owner.CurChainId = CallChainId;
         }
+
         public void ResetContext()
         {
             Owner.CurChainId = 0;
@@ -48,6 +50,7 @@
                 ResetContext();
                 Tcs.TrySetResult(true);
             }
+
             return Task.CompletedTask;
         }
 
@@ -93,6 +96,7 @@
                 ResetContext();
                 Tcs.TrySetResult(ret);
             }
+
             return Task.CompletedTask;
         }
 

@@ -14,7 +14,7 @@ namespace Server.Core.Net.Tcp
     public static class TcpServer
     {
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-        static WebApplication app { get; set; }
+        private static WebApplication App { get; set; }
 
         /// <summary>
         /// 启动
@@ -23,18 +23,9 @@ namespace Server.Core.Net.Tcp
         public static Task Start(int port)
         {
             var builder = WebApplication.CreateBuilder();
-            builder.WebHost.UseKestrel(options =>
-            {
-                options.ListenAnyIP(port, builder =>
-                {
-                    builder.UseConnectionHandler<TcpConnectionHandler>();
-                });
-            })
-            .ConfigureLogging(logging =>
-            {
-                logging.SetMinimumLevel(LogLevel.Error);
-            })
-            .UseNLog();
+            builder.WebHost.UseKestrel(options => { options.ListenAnyIP(port, builder => { builder.UseConnectionHandler<TcpConnectionHandler>(); }); })
+                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
+                .UseNLog();
 
             var app = builder.Build();
             return app.StartAsync();
@@ -43,18 +34,12 @@ namespace Server.Core.Net.Tcp
         public static Task Start(int port, Action<ListenOptions> configure)
         {
             var builder = WebApplication.CreateBuilder();
-            builder.WebHost.UseKestrel(options =>
-            {
-                options.ListenAnyIP(port, configure);
-            })
-            .ConfigureLogging(logging =>
-            {
-                logging.SetMinimumLevel(LogLevel.Error);
-            })
-            .UseNLog();
+            builder.WebHost.UseKestrel(options => { options.ListenAnyIP(port, configure); })
+                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
+                .UseNLog();
 
-            app = builder.Build();
-            return app.StartAsync();
+            App = builder.Build();
+            return App.StartAsync();
         }
 
         /// <summary>
@@ -62,13 +47,14 @@ namespace Server.Core.Net.Tcp
         /// </summary>
         public static Task Stop()
         {
-            if (app != null)
+            if (App != null)
             {
                 Log.Info("停止Tcp服务...");
-                var task = app.StopAsync();
-                app = null;
+                var task = App.StopAsync();
+                App = null;
                 return task;
             }
+
             return Task.CompletedTask;
         }
     }
