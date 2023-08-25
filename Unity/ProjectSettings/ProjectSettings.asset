@@ -273,7 +273,7 @@ PlayerSettings:
     height: 180
     banner: {fileID: 0}
   androidGamepadSupportLevel: 0
-  chromeosInputEmulation: 1
+  chromeosInputEmulation: 0
   AndroidValidateAppBundleSize: 1
   AndroidAppBundleSizeToValidate: 150
   m_BuildTargetIcons: []
@@ -717,7 +717,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     1: ENABLE_LOG
     4: ENABLE_LOG
-    7: ENABLE_LOG
+    7: ENABLE_LOG;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1
     13: ENABLE_LOG
     14: ENABLE_LOG
   platformArchitecture: {}
