@@ -1,8 +1,9 @@
-﻿using ProtoBuf;
+﻿using System;
+using MessagePack;
 using System.Collections.Generic;
 using Server.Core.Net.Messages;
 
-namespace Server.Proto
+namespace Server.Proto.Proto
 {
 	/// <summary>
 	/// 返回码
@@ -25,37 +26,32 @@ namespace Server.Proto
 	/// 玩家基础信息
 	/// </summary>
 	
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class UserInfo : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		///  角色名
 		/// </summary>
-		[ProtoMember(1)]
 		public string RoleName { get; set; }
 
 		/// <summary>
 		///  角色ID
 		/// </summary>
-		[ProtoMember(2)]
 		public long RoleId { get; set; }
 
 		/// <summary>
 		///  角色等级
 		/// </summary>
-		[ProtoMember(3)]
 		public int Level { get; set; }
 
 		/// <summary>
 		///  创建时间
 		/// </summary>
-		[ProtoMember(4)]
-		public long CreateTime { get; set; }
+		public DateTime CreateTime { get; set; }
 
 		/// <summary>
 		///  vip等级
 		/// </summary>
-		[ProtoMember(5)]
 		public int VipLevel { get; set; }
 
 	}
@@ -80,49 +76,43 @@ namespace Server.Proto
 	}
 
 	
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class PhoneNumber : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		[ProtoMember(1)]
 		public string number { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		[ProtoMember(2)]
 		public PhoneType type { get; set; }
 
 	}
 
 	
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class Person : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		[ProtoMember(1)]
 		public string name { get; set; }
 
 		/// <summary>
 		///  Unique ID number for this person.
 		/// </summary>
-		[ProtoMember(2)]
 		public int id { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		[ProtoMember(3)]
 		public string email { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		[ProtoMember(4)]
 		public List<PhoneNumber> phones = new List<PhoneNumber>();
 
 	}
@@ -131,13 +121,12 @@ namespace Server.Proto
 	/// Ouraddressbookfileisjustoneofthese.
 	/// </summary>
 	
-	[ProtoContract]
+	[MessagePackObject(true)]
 	public partial class AddressBook : Server.Core.Net.Messages.Message
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		[ProtoMember(1)]
 		public List<Person> people = new List<Person>();
 
 	}
