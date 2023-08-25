@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.blueprint
@@ -55,9 +55,9 @@ public sealed partial class EnumClazz :  blueprint.Clazz
         return "{ "
         + "Name:" + Name + ","
         + "Desc:" + Desc + ","
-        + "Parents:" + Bright.Common.StringUtil.CollectionToString(Parents) + ","
-        + "Methods:" + Bright.Common.StringUtil.CollectionToString(Methods) + ","
-        + "Enums:" + Bright.Common.StringUtil.CollectionToString(Enums) + ","
+        + "Parents:" + StringUtil.CollectionToString(Parents) + ","
+        + "Methods:" + StringUtil.CollectionToString(Methods) + ","
+        + "Enums:" + StringUtil.CollectionToString(Enums) + ","
         + "}";
     }
 

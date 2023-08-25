@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class H2 :  Bright.Config.BeanBase 
+public sealed partial class H2 :  BeanBase 
 {
     public H2(JsonElement _json) 
     {

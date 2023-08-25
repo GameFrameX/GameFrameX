@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.mail
 {
-public sealed partial class SystemMail :  Bright.Config.BeanBase 
+public sealed partial class SystemMail :  BeanBase 
 {
     public SystemMail(JsonElement _json) 
     {
@@ -67,7 +67,7 @@ public sealed partial class SystemMail :  Bright.Config.BeanBase
         + "Title:" + Title + ","
         + "Sender:" + Sender + ","
         + "Content:" + Content + ","
-        + "Award:" + Bright.Common.StringUtil.CollectionToString(Award) + ","
+        + "Award:" + StringUtil.CollectionToString(Award) + ","
         + "}";
     }
 

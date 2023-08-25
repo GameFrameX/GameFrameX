@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using System.Text;
 
-namespace Bright.Common
+namespace Server.Config.Core
 {
     public static class StringUtil
     {
@@ -14,7 +13,6 @@ namespace Bright.Common
         {
             foreach (var p in o.GetType().GetFields())
             {
-
                 sb.Append($"{p.Name} = {p.GetValue(o)},");
             }
 
@@ -22,6 +20,7 @@ namespace Bright.Common
             {
                 sb.Append($"{p.Name} = {p.GetValue(o)},");
             }
+
             return sb.ToString();
         }
 
@@ -45,6 +44,7 @@ namespace Bright.Common
                 sb.Append(e.Key).Append(':');
                 sb.Append(e.Value).Append(',');
             }
+
             sb.Append('}');
             return sb.ToString();
         }

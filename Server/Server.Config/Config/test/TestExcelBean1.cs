@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
@@ -16,7 +16,7 @@ namespace cfg.test
 /// <summary>
 /// 这是个测试excel结构
 /// </summary>
-public sealed partial class TestExcelBean1 :  Bright.Config.BeanBase 
+public sealed partial class TestExcelBean1 :  BeanBase 
 {
     public TestExcelBean1(JsonElement _json) 
     {

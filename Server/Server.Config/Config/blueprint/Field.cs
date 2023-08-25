@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.blueprint
 {
-public sealed partial class Field :  Bright.Config.BeanBase 
+public sealed partial class Field :  BeanBase 
 {
     public Field(JsonElement _json) 
     {

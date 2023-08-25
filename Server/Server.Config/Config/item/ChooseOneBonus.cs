@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.item
 {
-public sealed partial class ChooseOneBonus :  Bright.Config.BeanBase 
+public sealed partial class ChooseOneBonus :  BeanBase 
 {
     public ChooseOneBonus(JsonElement _json) 
     {

@@ -1,4 +1,4 @@
-﻿namespace Bright.Serialization
+﻿namespace Server.Config.Core
 {
     public interface ITypeId
     {

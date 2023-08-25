@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.ai
@@ -55,9 +55,9 @@ public sealed partial class Sequence :  ai.ComposeNode
         return "{ "
         + "Id:" + Id + ","
         + "NodeName:" + NodeName + ","
-        + "Decorators:" + Bright.Common.StringUtil.CollectionToString(Decorators) + ","
-        + "Services:" + Bright.Common.StringUtil.CollectionToString(Services) + ","
-        + "Children:" + Bright.Common.StringUtil.CollectionToString(Children) + ","
+        + "Decorators:" + StringUtil.CollectionToString(Decorators) + ","
+        + "Services:" + StringUtil.CollectionToString(Services) + ","
+        + "Children:" + StringUtil.CollectionToString(Children) + ","
         + "}";
     }
 

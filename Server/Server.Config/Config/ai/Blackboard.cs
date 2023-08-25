@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.ai
 {
-public sealed partial class Blackboard :  Bright.Config.BeanBase 
+public sealed partial class Blackboard :  BeanBase 
 {
     public Blackboard(JsonElement _json) 
     {
@@ -65,7 +65,7 @@ public sealed partial class Blackboard :  Bright.Config.BeanBase
         + "Name:" + Name + ","
         + "Desc:" + Desc + ","
         + "ParentName:" + ParentName + ","
-        + "Keys:" + Bright.Common.StringUtil.CollectionToString(Keys) + ","
+        + "Keys:" + StringUtil.CollectionToString(Keys) + ","
         + "}";
     }
 

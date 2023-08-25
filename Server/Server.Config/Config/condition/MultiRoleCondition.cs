@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.condition
@@ -53,7 +53,7 @@ public sealed partial class MultiRoleCondition :  condition.RoleCondition
     public override string ToString()
     {
         return "{ "
-        + "Conditions:" + Bright.Common.StringUtil.CollectionToString(Conditions) + ","
+        + "Conditions:" + StringUtil.CollectionToString(Conditions) + ","
         + "}";
     }
 

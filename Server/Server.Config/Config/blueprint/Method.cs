@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.blueprint
 {
-public abstract partial class Method :  Bright.Config.BeanBase 
+public abstract partial class Method :  BeanBase 
 {
     public Method(JsonElement _json) 
     {
@@ -71,7 +71,7 @@ public abstract partial class Method :  Bright.Config.BeanBase
         + "Desc:" + Desc + ","
         + "IsStatic:" + IsStatic + ","
         + "ReturnType:" + ReturnType + ","
-        + "Parameters:" + Bright.Common.StringUtil.CollectionToString(Parameters) + ","
+        + "Parameters:" + StringUtil.CollectionToString(Parameters) + ","
         + "}";
     }
 

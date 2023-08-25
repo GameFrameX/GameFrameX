@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.blueprint
@@ -50,8 +50,8 @@ public sealed partial class Interface :  blueprint.Clazz
         return "{ "
         + "Name:" + Name + ","
         + "Desc:" + Desc + ","
-        + "Parents:" + Bright.Common.StringUtil.CollectionToString(Parents) + ","
-        + "Methods:" + Bright.Common.StringUtil.CollectionToString(Methods) + ","
+        + "Parents:" + StringUtil.CollectionToString(Parents) + ","
+        + "Methods:" + StringUtil.CollectionToString(Methods) + ","
         + "}";
     }
 

@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.item
@@ -52,7 +52,7 @@ public sealed partial class DesignDrawing :  item.ItemExtra
     {
         return "{ "
         + "Id:" + Id + ","
-        + "LearnComponentId:" + Bright.Common.StringUtil.CollectionToString(LearnComponentId) + ","
+        + "LearnComponentId:" + StringUtil.CollectionToString(LearnComponentId) + ","
         + "}";
     }
 

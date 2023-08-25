@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.ai
@@ -56,8 +56,8 @@ public sealed partial class MoveToTarget :  ai.Task
         return "{ "
         + "Id:" + Id + ","
         + "NodeName:" + NodeName + ","
-        + "Decorators:" + Bright.Common.StringUtil.CollectionToString(Decorators) + ","
-        + "Services:" + Bright.Common.StringUtil.CollectionToString(Services) + ","
+        + "Decorators:" + StringUtil.CollectionToString(Decorators) + ","
+        + "Services:" + StringUtil.CollectionToString(Services) + ","
         + "IgnoreRestartSelf:" + IgnoreRestartSelf + ","
         + "TargetActorKey:" + TargetActorKey + ","
         + "AcceptableRadius:" + AcceptableRadius + ","

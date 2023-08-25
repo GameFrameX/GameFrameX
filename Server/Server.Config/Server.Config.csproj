@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj" />
+        <ProjectReference Include="..\Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Json\*.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="Json\*.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

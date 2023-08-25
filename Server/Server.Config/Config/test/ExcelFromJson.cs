@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class ExcelFromJson :  Bright.Config.BeanBase 
+public sealed partial class ExcelFromJson :  BeanBase 
 {
     public ExcelFromJson(JsonElement _json) 
     {
@@ -121,10 +121,10 @@ public sealed partial class ExcelFromJson :  Bright.Config.BeanBase
         + "X12:" + X12 + ","
         + "X13:" + X13 + ","
         + "X14:" + X14 + ","
-        + "K1:" + Bright.Common.StringUtil.CollectionToString(K1) + ","
-        + "K8:" + Bright.Common.StringUtil.CollectionToString(K8) + ","
-        + "K9:" + Bright.Common.StringUtil.CollectionToString(K9) + ","
-        + "K15:" + Bright.Common.StringUtil.CollectionToString(K15) + ","
+        + "K1:" + StringUtil.CollectionToString(K1) + ","
+        + "K8:" + StringUtil.CollectionToString(K8) + ","
+        + "K9:" + StringUtil.CollectionToString(K9) + ","
+        + "K15:" + StringUtil.CollectionToString(K15) + ","
         + "}";
     }
 

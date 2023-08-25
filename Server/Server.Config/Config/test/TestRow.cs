@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class TestRow :  Bright.Config.BeanBase 
+public sealed partial class TestRow :  BeanBase 
 {
     public TestRow(JsonElement _json) 
     {
@@ -67,7 +67,7 @@ public sealed partial class TestRow :  Bright.Config.BeanBase
         + "Y:" + Y + ","
         + "Z:" + Z + ","
         + "A:" + A + ","
-        + "B:" + Bright.Common.StringUtil.CollectionToString(B) + ","
+        + "B:" + StringUtil.CollectionToString(B) + ","
         + "}";
     }
 

@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.common
 {
-public sealed partial class GlobalConfig :  Bright.Config.BeanBase 
+public sealed partial class GlobalConfig :  BeanBase 
 {
     public GlobalConfig(JsonElement _json) 
     {

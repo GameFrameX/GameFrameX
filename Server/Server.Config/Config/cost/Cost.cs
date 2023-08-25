@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.cost
 {
-public abstract partial class Cost :  Bright.Config.BeanBase 
+public abstract partial class Cost :  BeanBase 
 {
     public Cost(JsonElement _json) 
     {

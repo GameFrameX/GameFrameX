@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class TestExternalType :  Bright.Config.BeanBase 
+public sealed partial class TestExternalType :  BeanBase 
 {
     public TestExternalType(JsonElement _json) 
     {
@@ -68,8 +68,8 @@ public sealed partial class TestExternalType :  Bright.Config.BeanBase
         + "Id:" + Id + ","
         + "AudioType:" + AudioType + ","
         + "Color:" + Color + ","
-        + "AudioTypes:" + Bright.Common.StringUtil.CollectionToString(AudioTypes) + ","
-        + "Colors:" + Bright.Common.StringUtil.CollectionToString(Colors) + ","
+        + "AudioTypes:" + StringUtil.CollectionToString(AudioTypes) + ","
+        + "Colors:" + StringUtil.CollectionToString(Colors) + ","
         + "}";
     }
 

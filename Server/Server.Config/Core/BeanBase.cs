@@ -1,6 +1,4 @@
-using Bright.Serialization;
-
-namespace Bright.Config
+namespace Server.Config.Core
 {
     public abstract class BeanBase : ITypeId
     {

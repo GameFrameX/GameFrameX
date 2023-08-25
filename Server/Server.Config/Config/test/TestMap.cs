@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class TestMap :  Bright.Config.BeanBase 
+public sealed partial class TestMap :  BeanBase 
 {
     public TestMap(JsonElement _json) 
     {
@@ -64,10 +64,10 @@ public sealed partial class TestMap :  Bright.Config.BeanBase
     {
         return "{ "
         + "Id:" + Id + ","
-        + "X1:" + Bright.Common.StringUtil.CollectionToString(X1) + ","
-        + "X2:" + Bright.Common.StringUtil.CollectionToString(X2) + ","
-        + "X3:" + Bright.Common.StringUtil.CollectionToString(X3) + ","
-        + "X4:" + Bright.Common.StringUtil.CollectionToString(X4) + ","
+        + "X1:" + StringUtil.CollectionToString(X1) + ","
+        + "X2:" + StringUtil.CollectionToString(X2) + ","
+        + "X3:" + StringUtil.CollectionToString(X3) + ","
+        + "X4:" + StringUtil.CollectionToString(X4) + ","
         + "}";
     }
 

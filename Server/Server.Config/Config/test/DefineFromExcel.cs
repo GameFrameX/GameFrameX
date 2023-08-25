@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class DefineFromExcel :  Bright.Config.BeanBase 
+public sealed partial class DefineFromExcel :  BeanBase 
 {
     public DefineFromExcel(JsonElement _json) 
     {
@@ -125,12 +125,12 @@ public sealed partial class DefineFromExcel :  Bright.Config.BeanBase
         + "X15:" + X15 + ","
         + "V2:" + V2 + ","
         + "T1:" + T1 + ","
-        + "K1:" + Bright.Common.StringUtil.CollectionToString(K1) + ","
-        + "K2:" + Bright.Common.StringUtil.CollectionToString(K2) + ","
-        + "K8:" + Bright.Common.StringUtil.CollectionToString(K8) + ","
-        + "K9:" + Bright.Common.StringUtil.CollectionToString(K9) + ","
-        + "K10:" + Bright.Common.StringUtil.CollectionToString(K10) + ","
-        + "K11:" + Bright.Common.StringUtil.CollectionToString(K11) + ","
+        + "K1:" + StringUtil.CollectionToString(K1) + ","
+        + "K2:" + StringUtil.CollectionToString(K2) + ","
+        + "K8:" + StringUtil.CollectionToString(K8) + ","
+        + "K9:" + StringUtil.CollectionToString(K9) + ","
+        + "K10:" + StringUtil.CollectionToString(K10) + ","
+        + "K11:" + StringUtil.CollectionToString(K11) + ","
         + "}";
     }
 

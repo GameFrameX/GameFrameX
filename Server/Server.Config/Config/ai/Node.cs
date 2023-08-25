@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.ai
 {
-public abstract partial class Node :  Bright.Config.BeanBase 
+public abstract partial class Node :  BeanBase 
 {
     public Node(JsonElement _json) 
     {

@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class MultiRowRecord :  Bright.Config.BeanBase 
+public sealed partial class MultiRowRecord :  BeanBase 
 {
     public MultiRowRecord(JsonElement _json) 
     {
@@ -87,13 +87,13 @@ public sealed partial class MultiRowRecord :  Bright.Config.BeanBase
         return "{ "
         + "Id:" + Id + ","
         + "Name:" + Name + ","
-        + "OneRows:" + Bright.Common.StringUtil.CollectionToString(OneRows) + ","
-        + "MultiRows1:" + Bright.Common.StringUtil.CollectionToString(MultiRows1) + ","
-        + "MultiRows2:" + Bright.Common.StringUtil.CollectionToString(MultiRows2) + ","
-        + "MultiRows4:" + Bright.Common.StringUtil.CollectionToString(MultiRows4) + ","
-        + "MultiRows5:" + Bright.Common.StringUtil.CollectionToString(MultiRows5) + ","
-        + "MultiRows6:" + Bright.Common.StringUtil.CollectionToString(MultiRows6) + ","
-        + "MultiRows7:" + Bright.Common.StringUtil.CollectionToString(MultiRows7) + ","
+        + "OneRows:" + StringUtil.CollectionToString(OneRows) + ","
+        + "MultiRows1:" + StringUtil.CollectionToString(MultiRows1) + ","
+        + "MultiRows2:" + StringUtil.CollectionToString(MultiRows2) + ","
+        + "MultiRows4:" + StringUtil.CollectionToString(MultiRows4) + ","
+        + "MultiRows5:" + StringUtil.CollectionToString(MultiRows5) + ","
+        + "MultiRows6:" + StringUtil.CollectionToString(MultiRows6) + ","
+        + "MultiRows7:" + StringUtil.CollectionToString(MultiRows7) + ","
         + "}";
     }
 

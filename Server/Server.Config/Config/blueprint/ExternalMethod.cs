@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.blueprint
@@ -52,7 +52,7 @@ public sealed partial class ExternalMethod :  blueprint.Method
         + "Desc:" + Desc + ","
         + "IsStatic:" + IsStatic + ","
         + "ReturnType:" + ReturnType + ","
-        + "Parameters:" + Bright.Common.StringUtil.CollectionToString(Parameters) + ","
+        + "Parameters:" + StringUtil.CollectionToString(Parameters) + ","
         + "}";
     }
 

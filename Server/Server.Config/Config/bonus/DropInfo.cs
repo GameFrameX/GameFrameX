@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.bonus
 {
-public sealed partial class DropInfo :  Bright.Config.BeanBase 
+public sealed partial class DropInfo :  BeanBase 
 {
     public DropInfo(JsonElement _json) 
     {
@@ -64,7 +64,7 @@ public sealed partial class DropInfo :  Bright.Config.BeanBase
         return "{ "
         + "Id:" + Id + ","
         + "Desc:" + Desc + ","
-        + "ClientShowItems:" + Bright.Common.StringUtil.CollectionToString(ClientShowItems) + ","
+        + "ClientShowItems:" + StringUtil.CollectionToString(ClientShowItems) + ","
         + "Bonus:" + Bonus + ","
         + "}";
     }

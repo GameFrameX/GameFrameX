@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.cost
@@ -53,7 +53,7 @@ public sealed partial class CostItems :  cost.Cost
     public override string ToString()
     {
         return "{ "
-        + "ItemList:" + Bright.Common.StringUtil.CollectionToString(ItemList) + ","
+        + "ItemList:" + StringUtil.CollectionToString(ItemList) + ","
         + "}";
     }
 

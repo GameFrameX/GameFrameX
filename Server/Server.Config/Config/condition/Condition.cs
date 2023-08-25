@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.condition
 {
-public abstract partial class Condition :  Bright.Config.BeanBase 
+public abstract partial class Condition :  BeanBase 
 {
     public Condition(JsonElement _json) 
     {

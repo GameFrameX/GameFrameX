@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class TestIndex :  Bright.Config.BeanBase 
+public sealed partial class TestIndex :  BeanBase 
 {
     public TestIndex(JsonElement _json) 
     {
@@ -55,7 +55,7 @@ public sealed partial class TestIndex :  Bright.Config.BeanBase
     {
         return "{ "
         + "Id:" + Id + ","
-        + "Eles:" + Bright.Common.StringUtil.CollectionToString(Eles) + ","
+        + "Eles:" + StringUtil.CollectionToString(Eles) + ","
         + "}";
     }
 

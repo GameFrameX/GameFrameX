@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.item
@@ -73,8 +73,8 @@ public sealed partial class TreasureBox :  item.ItemExtra
         + "KeyItemId:" + KeyItemId + ","
         + "OpenLevel:" + OpenLevel + ","
         + "UseOnObtain:" + UseOnObtain + ","
-        + "DropIds:" + Bright.Common.StringUtil.CollectionToString(DropIds) + ","
-        + "ChooseList:" + Bright.Common.StringUtil.CollectionToString(ChooseList) + ","
+        + "DropIds:" + StringUtil.CollectionToString(DropIds) + ","
+        + "ChooseList:" + StringUtil.CollectionToString(ChooseList) + ","
         + "}";
     }
 

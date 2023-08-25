@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.bonus
@@ -53,7 +53,7 @@ public sealed partial class OneItems :  bonus.Bonus
     public override string ToString()
     {
         return "{ "
-        + "Items:" + Bright.Common.StringUtil.CollectionToString(Items) + ","
+        + "Items:" + StringUtil.CollectionToString(Items) + ","
         + "}";
     }
 

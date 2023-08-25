@@ -1,6 +1,4 @@
-﻿#define CPU_SUPPORT_MEMORY_NOT_ALIGN  //CPU 是否支持读取非对齐内存
-
-using System;
+﻿#define CPU_SUPPORT_MEMORY_NOT_ALIGN //CPU 是否支持读取非对齐内存
 
 
 /// <summary>
@@ -10,12 +8,17 @@ using System;
 /// </summary>
 
 
-namespace Bright.Serialization
+namespace Server.Config.Core
 {
     public class SerializationException : Exception
     {
-        public SerializationException() { }
-        public SerializationException(string msg) : base(msg) { }
+        public SerializationException()
+        {
+        }
+
+        public SerializationException(string msg) : base(msg)
+        {
+        }
 
         public SerializationException(string message, Exception innerException) : base(message, innerException)
         {

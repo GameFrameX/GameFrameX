@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.mail
 {
-public sealed partial class GlobalMail :  Bright.Config.BeanBase 
+public sealed partial class GlobalMail :  BeanBase 
 {
     public GlobalMail(JsonElement _json) 
     {
@@ -94,9 +94,9 @@ public sealed partial class GlobalMail :  Bright.Config.BeanBase
         + "Title:" + Title + ","
         + "Sender:" + Sender + ","
         + "Content:" + Content + ","
-        + "Award:" + Bright.Common.StringUtil.CollectionToString(Award) + ","
+        + "Award:" + StringUtil.CollectionToString(Award) + ","
         + "AllServer:" + AllServer + ","
-        + "ServerList:" + Bright.Common.StringUtil.CollectionToString(ServerList) + ","
+        + "ServerList:" + StringUtil.CollectionToString(ServerList) + ","
         + "Platform:" + Platform + ","
         + "Channel:" + Channel + ","
         + "MinMaxLevel:" + MinMaxLevel + ","

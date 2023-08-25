@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.role
 {
-public sealed partial class DistinctBonusInfos :  Bright.Config.BeanBase 
+public sealed partial class DistinctBonusInfos :  BeanBase 
 {
     public DistinctBonusInfos(JsonElement _json) 
     {
@@ -55,7 +55,7 @@ public sealed partial class DistinctBonusInfos :  Bright.Config.BeanBase
     {
         return "{ "
         + "EffectiveLevel:" + EffectiveLevel + ","
-        + "BonusInfo:" + Bright.Common.StringUtil.CollectionToString(BonusInfo) + ","
+        + "BonusInfo:" + StringUtil.CollectionToString(BonusInfo) + ","
         + "}";
     }
 

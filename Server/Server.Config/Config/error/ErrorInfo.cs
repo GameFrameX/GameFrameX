@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.error
 {
-public sealed partial class ErrorInfo :  Bright.Config.BeanBase 
+public sealed partial class ErrorInfo :  BeanBase 
 {
     public ErrorInfo(JsonElement _json) 
     {

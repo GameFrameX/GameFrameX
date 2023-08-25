@@ -5,10 +5,10 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
@@ -54,7 +54,7 @@ public sealed partial class RefBean :  test.RefDynamicBase
     {
         return "{ "
         + "X:" + X + ","
-        + "Arr:" + Bright.Common.StringUtil.CollectionToString(Arr) + ","
+        + "Arr:" + StringUtil.CollectionToString(Arr) + ","
         + "}";
     }
 

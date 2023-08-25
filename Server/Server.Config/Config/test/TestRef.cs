@@ -5,15 +5,15 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Bright.Serialization;
+
 using System.Collections.Generic;
 using System.Text.Json;
-
+using Server.Config.Core;
 
 
 namespace cfg.test
 {
-public sealed partial class TestRef :  Bright.Config.BeanBase 
+public sealed partial class TestRef :  BeanBase 
 {
     public TestRef(JsonElement _json) 
     {
@@ -137,14 +137,14 @@ public sealed partial class TestRef :  Bright.Config.BeanBase
         + "X2:" + X2 + ","
         + "X3:" + X3 + ","
         + "X4:" + X4 + ","
-        + "A1:" + Bright.Common.StringUtil.CollectionToString(A1) + ","
-        + "A2:" + Bright.Common.StringUtil.CollectionToString(A2) + ","
-        + "B1:" + Bright.Common.StringUtil.CollectionToString(B1) + ","
-        + "B2:" + Bright.Common.StringUtil.CollectionToString(B2) + ","
-        + "C1:" + Bright.Common.StringUtil.CollectionToString(C1) + ","
-        + "C2:" + Bright.Common.StringUtil.CollectionToString(C2) + ","
-        + "D1:" + Bright.Common.StringUtil.CollectionToString(D1) + ","
-        + "D2:" + Bright.Common.StringUtil.CollectionToString(D2) + ","
+        + "A1:" + StringUtil.CollectionToString(A1) + ","
+        + "A2:" + StringUtil.CollectionToString(A2) + ","
+        + "B1:" + StringUtil.CollectionToString(B1) + ","
+        + "B2:" + StringUtil.CollectionToString(B2) + ","
+        + "C1:" + StringUtil.CollectionToString(C1) + ","
+        + "C2:" + StringUtil.CollectionToString(C2) + ","
+        + "D1:" + StringUtil.CollectionToString(D1) + ","
+        + "D2:" + StringUtil.CollectionToString(D2) + ","
         + "E1:" + E1 + ","
         + "E2:" + E2 + ","
         + "E3:" + E3 + ","
