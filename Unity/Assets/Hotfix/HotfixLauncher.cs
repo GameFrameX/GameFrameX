@@ -3,7 +3,11 @@ using Base.Net;
 using Cysharp.Threading.Tasks;
 using Framework.Asset;
 using Hotfix.Proto.Proto;
+using MessagePack;
+using MessagePack.Formatters.Hotfix.Proto.Proto;
 using Net;
+using PolymorphicMessagePack;
+using Resolvers;
 using SimpleJSON;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -18,32 +22,29 @@ namespace Hotfix
         public static void Main()
         {
             Log.Info("Hello World HybridCLR");
-            GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<AnimancerComponent>();
+
             GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World Lua')");
 
-            ProtoMessageIdHandler.Init(typeof(HotfixLauncher).Assembly);
+            RegisterMessagePack();
+
+            GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<AnimancerComponent>();
+
+            ProtoMessageIdHandler.Init(typeof(HotfixProtoHandler).Assembly);
             LoadConfig();
 
             NetManager.Singleton.Init();
             NetManager.Singleton.Connect(serverIp, serverPort);
 
             NetTest();
+        }
 
-            // var gameNetworkComponent = GameEntry.GetComponent<GameNetworkComponent>();
-            // gameNetworkComponent.ConnectedToServer(serverIp, serverPort);
-
-
-            // MemoryStream memoryStream = new MemoryStream();
-            // var userInfo = new CSHeartBeat();
-            // userInfo.Timestamp = 11111111;
-            // RuntimeTypeModel.Default.Serialize(memoryStream, userInfo);
-            // var buffer = memoryStream.ToArray();
-            //
-            // using (MemoryStream desMemoryStream = new MemoryStream(buffer))
-            // {
-            //     var deserializedData = RuntimeTypeModel.Default.Deserialize(desMemoryStream, null, typeof(CSHeartBeat));
-            //     Log.Warning(Utility.Json.ToJson(deserializedData));
-            // }
+        static void RegisterMessagePack()
+        {
+            PolymorphicResolver.AddInnerResolver(MessagePack.Resolvers.StaticCompositeResolver.Instance);
+            PolymorphicResolver.AddInnerResolver(MessagePack.Resolvers.GeneratedResolver.Instance);
+            PolymorphicResolver.AddInnerResolver(MessageResolver.Instance);
+            Server.Proto.Formatter.PolymorphicRegister.Register();
+            PolymorphicRegister.Load();
         }
 
         private static async void NetTest()
