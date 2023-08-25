@@ -36,9 +36,6 @@ namespace Server.Hotfix.Common
             Log.Info("tcp 服务启动完成...");
             await HttpServer.Start(GlobalSettings.HttpPort);
             Log.Info("load config data");
-            (bool success, string msg) = GameDataManager.ReloadAll();
-            if (!success)
-                throw new Exception($"载入配置表失败... {msg}");
 
             GlobalTimer.Start();
             await ComponentRegister.ActiveGlobalComps();
