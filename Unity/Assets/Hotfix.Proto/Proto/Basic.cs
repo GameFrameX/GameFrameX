@@ -10,7 +10,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(1)]
 	[MessagePackObject(true)]
-	public partial class ReqHeartBeat : Protocol.Message, IRequestMessage
+	public partial class ReqHeartBeat : Message, IRequestMessage
 	{
 		/// <summary>
 		///  时间戳
@@ -24,7 +24,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(1)]
 	[MessagePackObject(true)]
-	public partial class RespHeartBeat : Protocol.Message, IResponseMessage
+	public partial class RespHeartBeat : Message, IResponseMessage
 	{
 		/// <summary>
 		///  时间戳

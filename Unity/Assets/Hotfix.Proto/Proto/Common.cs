@@ -27,7 +27,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	
 	[MessagePackObject(true)]
-	public partial class UserInfo : Protocol.Message
+	public partial class UserInfo : Message
 	{
 		/// <summary>
 		///  角色名
@@ -77,7 +77,7 @@ namespace Hotfix.Proto.Proto
 
 	
 	[MessagePackObject(true)]
-	public partial class PhoneNumber : Protocol.Message
+	public partial class PhoneNumber : Message
 	{
 		/// <summary>
 		/// 
@@ -93,7 +93,7 @@ namespace Hotfix.Proto.Proto
 
 	
 	[MessagePackObject(true)]
-	public partial class Person : Protocol.Message
+	public partial class Person : Message
 	{
 		/// <summary>
 		/// 
@@ -122,7 +122,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	
 	[MessagePackObject(true)]
-	public partial class AddressBook : Protocol.Message
+	public partial class AddressBook : Message
 	{
 		/// <summary>
 		/// 

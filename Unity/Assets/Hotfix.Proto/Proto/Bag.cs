@@ -10,7 +10,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(100)]
 	[MessagePackObject(true)]
-	public partial class ReqBagInfo : Protocol.Message, IRequestMessage
+	public partial class ReqBagInfo : Message, IRequestMessage
 	{
 	}
 
@@ -19,7 +19,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(100)]
 	[MessagePackObject(true)]
-	public partial class ResBagInfo : Protocol.Message, IResponseMessage
+	public partial class ResBagInfo : Message, IResponseMessage
 	{
 		/// <summary>
 		/// 
@@ -33,7 +33,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(101)]
 	[MessagePackObject(true)]
-	public partial class ReqComposePet : Protocol.Message, IRequestMessage
+	public partial class ReqComposePet : Message, IRequestMessage
 	{
 		/// <summary>
 		///  碎片id
@@ -47,7 +47,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(101)]
 	[MessagePackObject(true)]
-	public partial class ResComposePet : Protocol.Message, IResponseMessage
+	public partial class ResComposePet : Message, IResponseMessage
 	{
 		/// <summary>
 		///  合成宠物的Id
@@ -61,7 +61,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(102)]
 	[MessagePackObject(true)]
-	public partial class ReqUseItem : Protocol.Message, IRequestMessage
+	public partial class ReqUseItem : Message, IRequestMessage
 	{
 		/// <summary>
 		///  道具id
@@ -75,7 +75,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(103)]
 	[MessagePackObject(true)]
-	public partial class ReqSellItem : Protocol.Message, IRequestMessage
+	public partial class ReqSellItem : Message, IRequestMessage
 	{
 		/// <summary>
 		///  道具id
@@ -89,7 +89,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(103)]
 	[MessagePackObject(true)]
-	public partial class ResItemChange : Protocol.Message, IResponseMessage
+	public partial class ResItemChange : Message, IResponseMessage
 	{
 		/// <summary>
 		///  变化的道具
