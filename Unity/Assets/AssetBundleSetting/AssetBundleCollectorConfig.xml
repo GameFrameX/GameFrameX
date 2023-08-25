@@ -3,7 +3,11 @@
   <Common UniqueBundleName="False" ShowPackageView="True" ShowEditorAlias="False" />
   <Package PackageName="DefaultPackage" PackageDesc="">
     <Group GroupName="Config" GroupDesc="" AssetTags="">
-      <Collector CollectPath="Assets/Bundles/Config" CollectGUID="c9f4f21a25a31d840af71a381db88c51" CollectType="StaticAssetCollector" AddressRule="AddressByFileName" PackRule="PackDirectory" FilterRule="CollectAll" AssetTags="" />
+      <Collector CollectPath="Assets/Bundles/Config" CollectGUID="c9f4f21a25a31d840af71a381db88c51" CollectType="MainAssetCollector" AddressRule="AddressByFileName" PackRule="PackRawFile" FilterRule="CollectAll" AssetTags="" />
     </Group>
+    <Group GroupName="Code" GroupDesc="热更新逻辑代码" AssetTags="code">
+      <Collector CollectPath="Assets/Bundles/Code" CollectGUID="fb2b5b6715f0e28419ebca2b4df07bcd" CollectType="MainAssetCollector" AddressRule="AddressByFileName" PackRule="PackDirectory" FilterRule="CollectAll" AssetTags="" />
+    </Group>
+    <Group GroupName="Shader" GroupDesc="" AssetTags="" />
   </Package>
 </root>
