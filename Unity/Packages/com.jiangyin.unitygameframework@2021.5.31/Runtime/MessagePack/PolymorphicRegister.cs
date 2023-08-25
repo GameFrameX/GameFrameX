@@ -16,12 +16,12 @@ namespace MessagePack
                 // StaticCompositeResolver.Instance.Register(MessagePack.Resolvers.GeneratedResolver.Instance
                 // );
 
-                var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
+                // var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
 
-                // PolymorphicResolver.AddInnerResolver(GeneratedResolver.Instance);
+                
                 PolymorphicTypeMapper.Register<Message>();
                 PolymorphicResolver.Instance.Init();
-                MessagePackSerializer.DefaultOptions = option;
+                // MessagePackSerializer.DefaultOptions = option;
                 serializerRegistered = true;
             }
         }

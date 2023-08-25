@@ -43,7 +43,7 @@ namespace GameFramework.Network
 
             public void Init(Func<int, Type> getMsgTypeFunc)
             {
-                Protocol = new ClientProtocol(getMsgTypeFunc);
+                // Protocol = new ClientProtocol(getMsgTypeFunc);
             }
 
             /// <summary>

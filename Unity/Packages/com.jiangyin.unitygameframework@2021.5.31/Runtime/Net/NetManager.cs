@@ -15,21 +15,16 @@ namespace Base.Net
         private const float DISPATCH_MAX_TIME = 0.06f; //每一帧最大的派发事件时间，超过这个时间则停止派发，等到下一帧再派发
         public const int ConnectEvt = 101; //连接成功
         public const int DisconnectEvt = 102; //连接断开
-        public static NetManager Singleton = new NetManager();
+        public static readonly NetManager Singleton = new NetManager();
         private NetChannel channel { get; set; }
         ConcurrentQueue<NetMessage> msgQueue = new ConcurrentQueue<NetMessage>();
         public int Port { private set; get; }
         public string Host { private set; get; }
-        IProtoCal<Message> protocol;
+        IProtoCal<Message> _protocol;
 
-        public void Init(Func<int, Type> getMsgTypeFunc)
+        public void Init()
         {
-            protocol = new ClientProtocol(getMsgTypeFunc);
-        }
-
-        public void Init(IProtoCal<Message> protocol)
-        {
-            this.protocol = protocol;
+            _protocol = new ClientProtocol();
         }
 
         public void Send(Message msg)
@@ -53,7 +48,7 @@ namespace Base.Net
                 {
                     Debug.Log($"Connected to {context.LocalEndPoint}");
                     OnConnected(NetCode.Success);
-                    channel = new NetChannel(context, protocol, OnRevice, OnDisConnected);
+                    channel = new NetChannel(context, _protocol, OnRevice, OnDisConnected);
                     _ = channel.StartReadMsgAsync();
                 }
                 else

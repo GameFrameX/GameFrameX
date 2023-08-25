@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 namespace Proto2CS.Editor
 {
@@ -104,21 +105,30 @@ namespace Proto2CS.Editor
                         parentClass = ss[1].Trim();
                     }
 
+                    // Debug.Log(parentClass);
+
                     sb.Append($"\t######\n");
 
                     sb.Append($"\t[MessagePackObject(true)]\n");
 
-                    if (isServer)
+                    // if (parentClass.Contains("IMessage"))
+                    // {
+                    //     sb.Append($"\tpublic partial class {msgName}");
+                    // }
+                    // else
                     {
-                        sb.Append($"\tpublic partial class {msgName} : Server.Core.Net.Messages.Message");
-                    }
-                    else
-                    {
-                        sb.Append($"\tpublic partial class {msgName} : Protocol.Message");
+                        if (isServer)
+                        {
+                            sb.Append($"\tpublic partial class {msgName} : Server.Core.Net.Messages.Message");
+                        }
+                        else
+                        {
+                            sb.Append($"\tpublic partial class {msgName} : Message");
+                        }
                     }
 
 
-                    if (parentClass == "IActorMessage" || parentClass.Contains("IRequestMessage") || parentClass.Contains("IResponseMessage"))
+                    if (parentClass == "IMessage" || parentClass.Contains("IRequestMessage") || parentClass.Contains("IResponseMessage"))
                     {
                         var parentCsList = parentClass.Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries);
                         if (parentCsList.Length > 1)

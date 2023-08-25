@@ -8,6 +8,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Protocol;
 
 namespace FormatterExtension
 {
@@ -18,11 +19,16 @@ namespace FormatterExtension
         {
         }
 
+        // public Func<T, IMessagePackFormatter<T>> FindFormatter<T>;
         public IMessagePackFormatter<T> GetFormatter<T>()
         {
             if (typeof(T) == typeof(DateTime))
+            {
                 return LocalDateTimeFormatter.Instance as IMessagePackFormatter<T>;
+            }
+
             return null;
+            // return FindFormatter?.Invoke(T);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
+using MessagePack;
 
 namespace Protocol
 {
-    public abstract class Message
+    [MessagePackObject(true)]
+    public class Message
     {
     }
 

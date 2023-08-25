@@ -63,7 +63,7 @@ namespace PolymorphicMessagePack
 
         public static void Register(Type type)
         {
-            var id = (int) Utility.Hash.MurmurHash3.Hash(type.FullName);
+            var id = (int) Utility.Hash.MurmurHash3.Hash(type.Name);
             if (IdToType.TryGetValue(id, out var t))
             {
                 if (t.FullName != type.FullName)
