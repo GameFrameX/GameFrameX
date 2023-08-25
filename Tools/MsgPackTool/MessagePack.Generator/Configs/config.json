@@ -1,0 +1,14 @@
+{
+  "ServerProtoPath": "../../../Server/Server.Proto",
+  "ServerNameSpace": "",
+  "ServerOutPath": "../../../Server/Server.Proto/Formatter",
+  "ServerIsGenerated": false,
+  "ClientProtoPath": "../../../Unity/Assets/Hotfix.Proto",
+  "ClientFormatNameSpace": "",
+  "ClientOutPath": "../../../Unity/Assets/Hotfix.Proto/Generated",
+  "BaseMessageName": "Message",
+  "NoExportList": [
+    "ProtoMessageIdHandler",
+    "HotfixProtoHandler"
+  ]
+}
