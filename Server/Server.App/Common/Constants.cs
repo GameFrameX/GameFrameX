@@ -1,6 +1,5 @@
 namespace Server.App.Common
 {
-
     /// <summary>
     /// 服务器错误码
     /// </summary>

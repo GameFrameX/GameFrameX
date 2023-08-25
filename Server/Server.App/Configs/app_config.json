@@ -1,16 +1,18 @@
 ﻿{
   "IsDebug": true,
-  "ServerId": 1001, //[1000,9999]
+  "ServerId": 1001,
+  //[1000,9999]
   "ServerName": "gfx_server",
   "LocalIp": "127.0.0.1",
-  "TcpPort": 8899,
+  "TcpPort": 8898,
   "HttpCode": "inner_httpcode",
-  "HttpPort": 20000,
-  "GrpcPort": 30000,
+  "HttpPort": 20001,
+  "GrpcPort": 30001,
   "LocalDBPrefix": "gamedb_",
-  "LocalDBPath": "../../database/game/",
+  "LocalDBPath": "../database/game/",
   "SDKType": 0,
-  "DBModel": 0, //0:内嵌 1:mongodb
+  "DBModel": 1,
+  //0:内嵌 1:mongodb
   "MongoUrl": "mongodb://admin:admin@172.18.0.73:27017/database?authSource=admin",
   "MongoDBName": "gfx_server"
 }

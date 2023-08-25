@@ -3,13 +3,14 @@ using System.Text;
 using NLog;
 using Server.App.Common;
 using Server.Core.Utility;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.App
 {
     internal static class Program
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
         private static volatile bool ExitCalled = false;
         private static volatile Task GameLoopTask = null;
@@ -30,7 +31,7 @@ namespace Server.App
             catch (Exception e)
             {
                 string error;
-                if (Settings.AppRunning)
+                if (GlobalSettings.IsAppRunning)
                 {
                     error = $"服务器运行时异常 e:{e}";
                     Console.WriteLine(error);
@@ -56,7 +57,7 @@ namespace Server.App
             Log.Info($"监听到退出程序消息");
             ShutDownTask = Task.Run(() =>
             {
-                Settings.AppRunning = false;
+                GlobalSettings.IsAppRunning = false;
                 GameLoopTask?.Wait();
                 LogManager.Shutdown();
                 Console.WriteLine($"退出程序");

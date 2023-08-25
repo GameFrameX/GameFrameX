@@ -1,25 +1,34 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Http.Logging;
+using NLog;
 using NLog.Config;
 using NLog.LayoutRenderers;
+using PolymorphicMessagePack;
 using Server.Config;
 using Server.Core.Actors.Impl;
 using Server.Core.Comps;
 using Server.Core.Hotfix;
+using Server.Core.Net.Messages;
 using Server.Core.Utility;
 using Server.DBServer;
+using Server.DBServer.DbService.MongoDB;
+using Server.Log;
+using Server.Proto.Formatter;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.App.Common
 {
     internal static class AppStartUp
     {
-        static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
         public static async Task Enter()
         {
             try
             {
-                var flag = Start();
+                GlobalSettings.Load<AppSetting>("Configs/app_config.json", ServerType.Game);
+                RegisterMessagePack();
+                var flag = LoggerHandler.Start();
                 if (!flag)
                 {
                     return; //启动服务器失败
@@ -33,8 +42,8 @@ namespace Server.App.Common
 
                 Log.Info($"launch db service start...");
                 ActorLimit.Init(ActorLimit.RuleType.None);
-                GameDb.Init();
-                GameDb.Open(Settings.MongoUrl, Settings.MongoDBName);
+                GameDb.Init(new MongoDbServiceConnection());
+                GameDb.Open(GlobalSettings.DataBaseUrl, GlobalSettings.DataBaseName);
                 Log.Info($"launch db service end...");
 
                 Log.Info($"regist comps start...");
@@ -47,10 +56,10 @@ namespace Server.App.Common
 
                 Log.Info("进入游戏主循环...");
                 Console.WriteLine("***进入游戏主循环***");
-                Settings.LauchTime = DateTime.Now;
-                Settings.AppRunning = true;
+                GlobalSettings.LaunchTime = DateTime.Now;
+                GlobalSettings.IsAppRunning = true;
                 TimeSpan delay = TimeSpan.FromSeconds(1);
-                while (Settings.AppRunning)
+                while (GlobalSettings.IsAppRunning)
                 {
                     await Task.Delay(delay);
                 }
@@ -66,22 +75,12 @@ namespace Server.App.Common
             Console.WriteLine($"退出服务器成功");
         }
 
-        private static bool Start()
+        private static void RegisterMessagePack()
         {
-            try
-            {
-                Settings.Load<AppSetting>("Configs/app_config.json", ServerType.Game);
-                Console.WriteLine("init NLog config...");
-                LayoutRenderer.Register<NLogConfigurationLayoutRender>("logConfiguration");
-                LogManager.Configuration = new XmlLoggingConfiguration("Configs/app_log.config");
-                LogManager.AutoShutdown = false;
-                return true;
-            }
-            catch (Exception e)
-            {
-                Log.Error($"启动服务器失败,异常:{e}");
-                return false;
-            }
+            // PolymorphicTypeMapper.Register(typeof(AppStartUp).Assembly); //app
+            PolymorphicTypeMapper.Register<Message>();
+            PolymorphicRegister.Load();
+            PolymorphicResolver.Instance.Init();
         }
     }
 }

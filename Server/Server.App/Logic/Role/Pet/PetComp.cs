@@ -1,5 +1,6 @@
 ﻿using Server.Core.Actors;
 using Server.Core.Comps;
+using Server.DBServer.State;
 using Server.DBServer.Storage;
 
 namespace Server.App.Logic.Role.Pet
@@ -8,7 +9,7 @@ namespace Server.App.Logic.Role.Pet
     {
     }
 
-    [ComponentType(ActorType.Role)]
+    [ComponentType(ActorType.Player)]
     public class PetComp : StateComp<PetState>
     {
     }

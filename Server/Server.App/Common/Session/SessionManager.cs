@@ -4,6 +4,7 @@ using Server.Core.Actors;
 using Server.Core.Events;
 using Server.Core.Net.Tcp.Codecs;
 using Server.Proto;
+using Server.Proto.Proto;
 
 namespace Server.App.Common.Session
 {
