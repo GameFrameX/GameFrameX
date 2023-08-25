@@ -1,39 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<LangVersion>10</LangVersion>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>10</LangVersion>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<ApplicationIcon />
-		<StartupObject />
-	</PropertyGroup>
+    <PropertyGroup>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <ApplicationIcon />
+        <StartupObject />
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<OutputPath>..\bin\app_debug\hotfix</OutputPath>
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <OutputPath>..\bin\app_debug\hotfix</OutputPath>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<OutputPath>..\bin\app\hotfix</OutputPath>
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <OutputPath>..\bin\app\hotfix</OutputPath>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Server.App\Server.App.csproj" />
-		<ProjectReference Include="..\Server.Core\Server.Core.csproj" />
-		<ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Server.App\Server.App.csproj" />
+        <ProjectReference Include="..\Server.CodeGenerator\Server.CodeGenerator.csproj" />
+        <ProjectReference Include="..\Server.Core\Server.Core.csproj" />
+        <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
+    </ItemGroup>
 
-	<!--如需磁盘上生成文件打开以下注释-->
-	<!--<PropertyGroup>
-		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-		<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
-	</PropertyGroup>-->
+    <!--如需磁盘上生成文件打开以下注释-->
+    <!--<PropertyGroup>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>-->
 
-	<Target Name="CleanSourceGeneratedFiles" AfterTargets="Clean">
-		<RemoveDir Directories="$(BaseIntermediateOutputPath)\GeneratedFiles" />
-	</Target>
+    <Target Name="CleanSourceGeneratedFiles" AfterTargets="Clean">
+        <RemoveDir Directories="$(BaseIntermediateOutputPath)\GeneratedFiles" />
+    </Target>
 
 </Project>

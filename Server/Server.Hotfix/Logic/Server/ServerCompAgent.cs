@@ -1,7 +1,9 @@
-﻿using Server.App.Logic.Server;
+﻿using Server.App.Logic.Login.Entity;
+using Server.App.Logic.Server;
 using Server.Core.Actors;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Timer.Handler;
+using Server.DBServer;
 using Server.Hotfix.Logic.Role.Base;
 using Server.Utility;
 
@@ -30,7 +32,7 @@ namespace Server.Hotfix.Logic.Server
         public override void Active()
         {
             Delay<DelayTimer>(TimeSpan.FromSeconds(3));
-            Schedule<ScheduleTimer>(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(30));
+            Schedule<ScheduleTimer>(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5));
         }
 
 
@@ -71,7 +73,26 @@ namespace Server.Hotfix.Logic.Server
 
         private Task TestScheduleTimer()
         {
-            LOGGER.Debug("ServerCompAgent.TestSchedueTimer.延时1秒执行.每隔30秒执行");
+            LOGGER.Debug("ServerCompAgent.TestSchedueTimer.延时1秒执行.每隔10秒执行");
+            //
+            // var states = await GameDb.FindListAsync<LoginState>(m => m.Id != 0);
+            // LOGGER.Debug(states);
+            //
+            // var s1 = await GameDb.CountAsync<LoginState>(m => m.Id == 563517512475926528);
+            // LOGGER.Debug(s1);
+            // var s = await GameDb.FindAsync<LoginState>(m => m.UserName != null);
+            // LOGGER.Debug(s);
+            // LoginState loginState = new LoginState()
+            // {
+            //     Id = TimeHelper.UnixTimeSeconds(), CreateId = TimeHelper.UnixTimeSeconds(),
+            //     UserName = "Save"
+            // };
+            // loginState.AfterLoadFromDB(true);
+            // var savedState = await GameDb.UpdateAsync<LoginState>(loginState);
+            // LOGGER.Debug(savedState);
+            // await Task.Delay(TimeSpan.FromSeconds(1));
+            // var count = await GameDb.DeleteAsync(savedState);
+            // LOGGER.Debug(count);
             return Task.CompletedTask;
         }
 

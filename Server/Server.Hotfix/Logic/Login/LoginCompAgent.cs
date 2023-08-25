@@ -1,47 +1,45 @@
-﻿using NLog;
-using Server.App.Common;
-using Server.App.Common.Session;
-using Server.App.Logic.Login;
-using Server.Core.Actors;
-using Server.Core.Hotfix.Agent;
-using Server.Core.Net.Tcp.Codecs;
-using Server.Core.Utility;
-using Server.Hotfix.Common.Handler;
-using Server.Hotfix.Logic.Role.Base;
-using Server.Hotfix.Logic.Server;
-using Server.Proto;
-using Server.Utility;
+﻿using Server.App.Common;
+using Server.App.Logic.Login.Component;
+using Server.App.Logic.Login.Entity;
+
 
 namespace Server.Hotfix.Logic.Login
 {
-    public class LoginCompAgent : StateCompAgent<LoginComp, LoginState>
+    public class LoginCompAgent : StateCompAgent<LoginComponent, LoginState>
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
         public async Task OnLogin(NetChannel channel, ReqLogin reqLogin)
         {
-            Console.WriteLine(reqLogin);
             if (string.IsNullOrEmpty(reqLogin.UserName))
             {
                 channel.WriteAsync(null, reqLogin.UniId, StateCode.AccountCannotBeNull);
                 return;
             }
 
-            if (reqLogin.Platform != "android" && reqLogin.Platform != "ios" && reqLogin.Platform != "unity")
+            var loginCompAgent = await ActorMgr.GetCompAgent<LoginCompAgent>();
+            var loginState = await loginCompAgent.Comp.OnLogin(reqLogin);
+            if (loginState == null)
             {
-                //验证平台合法性
-                channel.WriteAsync(null, reqLogin.UniId, StateCode.UnknownPlatform);
-                return;
+                var accountId = IdGenerator.GetActorID(ActorType.Account);
+                loginState = await loginCompAgent.Comp.Register(accountId, reqLogin);
             }
 
+            RespLogin respLogin = new RespLogin();
+            respLogin.Code = loginState.State;
+            respLogin.UserInfo = new UserInfo
+            {
+                CreateTime = loginState.CreateTime
+            };
+            channel.WriteAsync(respLogin, reqLogin.UniId);
             //查询角色账号，这里设定每个服务器只能有一个角色
-            var roleId = GetRoleIdOfPlayer(reqLogin.UserName, reqLogin.SdkType);
+            /*var roleId = GetRoleIdOfPlayer(reqLogin.UserName, reqLogin.Password, reqLogin.SdkType);
             var isNewRole = roleId <= 0;
             if (isNewRole)
             {
                 //没有老角色，创建新号
-                roleId = IdGenerator.GetActorID(ActorType.Role);
-                CreateRoleToPlayer(reqLogin.UserName, reqLogin.SdkType, roleId);
+                roleId = IdGenerator.GetActorID(ActorType.Account);
+                CreateRoleToPlayer(reqLogin.UserName, reqLogin.Password, reqLogin.SdkType, roleId);
                 Log.Info("创建新号:" + roleId);
             }
 
@@ -54,44 +52,17 @@ namespace Server.Hotfix.Logic.Login
             SessionManager.Add(session);
 
             //登陆流程
-            var roleComp = await ActorMgr.GetCompAgent<RoleCompAgent>(roleId);
-            //从登录线程-->调用Role线程 所以需要入队
-            var resLogin = await roleComp.OnLogin(reqLogin, isNewRole);
-            channel.WriteAsync(resLogin, reqLogin.UniId, StateCode.Success);
+            var loginCompAgent = await ActorMgr.GetCompAgent<LoginCompAgent>(roleId);
 
-            //加入在线玩家
-            var serverComp = await ActorMgr.GetCompAgent<ServerCompAgent>();
-            await serverComp.AddOnlineRole(ActorId);
-        }
-
-        private long GetRoleIdOfPlayer(string userName, int sdkType)
-        {
-            var playerId = $"{sdkType}_{userName}";
-            if (State.PlayerMap.TryGetValue(playerId, out var state))
-            {
-                if (state.RoleMap.TryGetValue(Settings.ServerId, out var roleId))
-                    return roleId;
-                return 0;
-            }
-
-            return 0;
-        }
-
-        private void CreateRoleToPlayer(string userName, int sdkType, long roleId)
-        {
-            var playerId = $"{sdkType}_{userName}";
-            State.PlayerMap.TryGetValue(playerId, out var info);
-            if (info == null)
-            {
-                info = new PlayerInfo();
-                info.playerId = playerId;
-                info.SdkType = sdkType;
-                info.UserName = userName;
-                State.PlayerMap[playerId] = info;
-            }
-
-            info.IsChanged = true;
-            info.RoleMap[Settings.ServerId] = roleId;
+            var actorId = loginCompAgent.ActorId;*/
+            // var roleComp = await ActorMgr.GetCompAgent<RoleCompAgent>(roleId);
+            // //从登录线程-->调用Role线程 所以需要入队
+            // var resLogin = await roleComp.OnLogin(reqLogin, isNewRole);
+            // channel.WriteAsync(resLogin, reqLogin.UniId, StateCode.Success);
+            //
+            // //加入在线玩家
+            // var serverComp = await ActorMgr.GetCompAgent<ServerCompAgent>();
+            // await serverComp.AddOnlineRole(ActorId);
         }
     }
 }

@@ -2,6 +2,7 @@ using Server.App.Common;
 using Server.Core.Net.Messages;
 using Server.Core.Net.Tcp.Codecs;
 using Server.Proto;
+using Server.Proto.Proto;
 
 namespace Server.Hotfix.Common.Handler;
 

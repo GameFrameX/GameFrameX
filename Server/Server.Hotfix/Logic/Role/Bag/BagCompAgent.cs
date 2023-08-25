@@ -1,10 +1,5 @@
-﻿using Server.App.Common.Event;
-using Server.App.Logic.Role.Bag;
-using Server.Core.Hotfix.Agent;
+﻿using Server.App.Logic.Role.Bag;
 using Server.Hotfix.Common.Events;
-using Server.Hotfix.Logic.Role.Base;
-using Server.Proto;
-using Server.Utility;
 
 namespace Server.Hotfix.Logic.Role.Bag
 {

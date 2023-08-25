@@ -12,7 +12,6 @@ namespace Server.Hotfix.Common.Events
 {
     public static class EventDispatcherExtensions
     {
-
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public static void Dispatch(this ICompAgent agent, int evtId, Param args = null)
@@ -26,12 +25,12 @@ namespace Server.Hotfix.Common.Events
             // 自己处理
             SelfHandle(agent, evtId, evt);
 
-            if ((EventId)evtId > EventId.RoleSeparator && agent.OwnerType > ActorType.Separator)
+            if ((EventId) evtId > EventId.RoleSeparator && agent.OwnerType > ActorType.Separator)
             {
                 // 全局非玩家事件，抛给所有玩家
                 agent.Tell(()
                     => ServerCompAgent.OnlineRoleForeach(role
-                    => role.Dispatch(evtId, args)));
+                        => role.Dispatch(evtId, args)));
             }
 
             static void SelfHandle(ICompAgent agent, int evtId, Event evt)
@@ -45,6 +44,7 @@ namespace Server.Hotfix.Common.Events
                         // Log.Warn($"事件：{(EventID)evtId} 没有找到任何监听者");
                         return;
                     }
+
                     foreach (var listener in listeners)
                     {
                         var comp = await agent.GetCompAgent(listener.AgentType);
@@ -56,7 +56,7 @@ namespace Server.Hotfix.Common.Events
 
         public static void Dispatch(this ICompAgent agent, EventId evtId, Param args = null)
         {
-            Dispatch(agent, (int)evtId, args);
+            Dispatch(agent, (int) evtId, args);
         }
     }
 }

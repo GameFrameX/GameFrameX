@@ -1,23 +1,13 @@
-﻿using NLog;
-using Server.App.Common;
-using Server.App.Common.Event;
+﻿using Server.App.Common;
 using Server.App.Common.Session;
-using Server.App.Logic.Role.Base;
-using Server.Core.Actors;
-using Server.Core.Events;
-using Server.Core.Hotfix.Agent;
-using Server.Core.Net.Messages;
-using Server.Core.Timer;
-using Server.Hotfix.Common.Handler;
+using Server.App.Logic.Role.Base.Component;
 using Server.Hotfix.Logic.Role.Bag;
-using Server.Hotfix.Logic.Server;
-using Server.Proto;
 
 namespace Server.Hotfix.Logic.Role.Base
 {
     public static class RoleCompAgentExt
     {
-        private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger LOGGER = LogManager.GetCurrentClassLogger();
 
         public static async Task NotifyClient(this ICompAgent agent, Message msg, int uniId = 0, StateCode code = StateCode.Success)
         {
@@ -29,9 +19,9 @@ namespace Server.Hotfix.Logic.Role.Base
         }
     }
 
-    public class RoleCompAgent : StateCompAgent<RoleComp, RoleState>, ICrossDay
+    public class RoleCompAgent : StateCompAgent<PlayerComponent, PlayerState>, ICrossDay
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
 
         [Event(EventId.SessionRemove)]
@@ -77,7 +67,7 @@ namespace Server.Hotfix.Logic.Role.Base
                 Code = 0,
                 UserInfo = new UserInfo()
                 {
-                    CreateTime = State.CreateTime.Ticks,
+                    CreateTime = State.CreateTime,
                     Level = State.Level,
                     RoleId = State.RoleId,
                     RoleName = State.RoleName,
