@@ -1,5 +1,5 @@
 namespace Server.Core.Net.Messages;
 
-public interface IResponseMessage
+public interface IResponseMessage:IMessage
 {
 }

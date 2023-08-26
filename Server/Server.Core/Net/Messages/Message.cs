@@ -2,7 +2,7 @@
 
 namespace Server.Core.Net.Messages
 {
-    public abstract class Message
+    public abstract class Message : IMessage
     {
         /// <summary>
         /// 消息唯一id
@@ -10,7 +10,10 @@ namespace Server.Core.Net.Messages
         [IgnoreMember]
         public int UniId { get; set; }
 
-        [IgnoreMember] 
+        /// <summary>
+        /// 消息ID
+        /// </summary>
+        [IgnoreMember]
         public int MsgId { get; set; }
     }
 }
