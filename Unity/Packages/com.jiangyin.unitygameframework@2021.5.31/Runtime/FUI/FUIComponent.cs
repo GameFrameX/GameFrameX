@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FairyGUI;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace UnityGameFramework.Runtime
 {
@@ -29,8 +27,8 @@ namespace UnityGameFramework.Runtime
         FUI SystemRoot;
         // public FUI UIRoot;
 
-        private Dictionary<UILayer, Dictionary<string, FUI>> _dictionary = new Dictionary<UILayer, Dictionary<string, FUI>>(16);
-        private Dictionary<string, FUI> _fuis = new Dictionary<string, FUI>(64);
+        private readonly Dictionary<UILayer, Dictionary<string, FUI>> _dictionary = new Dictionary<UILayer, Dictionary<string, FUI>>(16);
+        private readonly Dictionary<string, FUI> _uiDictionary = new Dictionary<string, FUI>(64);
 
         public void OnDestroy()
         {
@@ -47,12 +45,12 @@ namespace UnityGameFramework.Runtime
 
         public void RemoveAll()
         {
-            foreach (var keyValuePair in _fuis)
+            foreach (var keyValuePair in _uiDictionary)
             {
                 keyValuePair.Value.Dispose();
             }
 
-            _fuis.Clear();
+            _uiDictionary.Clear();
             foreach (var kv in _dictionary)
             {
                 foreach (var fui in kv.Value)
@@ -66,9 +64,9 @@ namespace UnityGameFramework.Runtime
 
         public void Add(FUI ui, UILayer layer)
         {
-            if (!_fuis.ContainsKey(ui.Name))
+            if (!_uiDictionary.ContainsKey(ui.Name))
             {
-                _fuis[ui.Name] = ui;
+                _uiDictionary[ui.Name] = ui;
             }
 
             _dictionary[layer][ui.Name] = ui;
@@ -113,64 +111,64 @@ namespace UnityGameFramework.Runtime
             }
         }
 
-        public bool Remove(string name)
+        public bool Remove(string uiName)
         {
-            if (SystemRoot.Remove(name))
+            if (SystemRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (NotifyRoot.Remove(name))
+            if (NotifyRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (HiddenRoot.Remove(name))
+            if (HiddenRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (FloorRoot.Remove(name))
+            if (FloorRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (NormalRoot.Remove(name))
+            if (NormalRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (FixedRoot.Remove(name))
+            if (FixedRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (WindowRoot.Remove(name))
+            if (WindowRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (TipRoot.Remove(name))
+            if (TipRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (BlackBoardRoot.Remove(name))
+            if (BlackBoardRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (DialogueRoot.Remove(name))
+            if (DialogueRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (GuideRoot.Remove(name))
+            if (GuideRoot.Remove(uiName))
             {
                 return true;
             }
 
-            if (LoadingRoot.Remove(name))
+            if (LoadingRoot.Remove(uiName))
             {
                 return true;
             }
@@ -178,71 +176,71 @@ namespace UnityGameFramework.Runtime
             return false;
         }
 
-        public void Remove(string name, UILayer layer)
+        public void Remove(string uiName, UILayer layer)
         {
             switch (layer)
             {
                 case UILayer.Hidden:
-                    HiddenRoot.Remove(name);
+                    HiddenRoot.Remove(uiName);
                     break;
                 case UILayer.Floor:
-                    FloorRoot.Remove(name);
+                    FloorRoot.Remove(uiName);
                     break;
                 case UILayer.Normal:
-                    NormalRoot.Remove(name);
+                    NormalRoot.Remove(uiName);
                     break;
                 case UILayer.Fixed:
-                    FixedRoot.Remove(name);
+                    FixedRoot.Remove(uiName);
                     break;
                 case UILayer.Window:
-                    WindowRoot.Remove(name);
+                    WindowRoot.Remove(uiName);
                     break;
                 case UILayer.Tip:
-                    TipRoot.Remove(name);
+                    TipRoot.Remove(uiName);
                     break;
                 case UILayer.BlackBoard:
-                    BlackBoardRoot.Remove(name);
+                    BlackBoardRoot.Remove(uiName);
                     break;
                 case UILayer.Dialogue:
-                    DialogueRoot.Remove(name);
+                    DialogueRoot.Remove(uiName);
                     break;
                 case UILayer.Guide:
-                    GuideRoot.Remove(name);
+                    GuideRoot.Remove(uiName);
                     break;
                 case UILayer.Loading:
-                    LoadingRoot.Remove(name);
+                    LoadingRoot.Remove(uiName);
                     break;
                 case UILayer.Notify:
-                    NotifyRoot.Remove(name);
+                    NotifyRoot.Remove(uiName);
                     break;
                 case UILayer.System:
-                    SystemRoot.Remove(name);
+                    SystemRoot.Remove(uiName);
                     break;
             }
         }
 
-        public bool Has(string name)
+        public bool Has(string uiName)
         {
-            return Get(name) != null;
+            return Get(uiName) != null;
         }
 
         /// <summary>
         /// 判断UI是否已创建。如果创建则。返回UI对象
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="uiName"></param>
         /// <param name="fui"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public bool Has<T>(string name, out T fui) where T : FUI
+        public bool Has<T>(string uiName, out T fui) where T : FUI
         {
-            var ui = Get(name);
+            var ui = Get(uiName);
             fui = ui as T;
             return fui != null;
         }
 
-        public T Get<T>(string name) where T : FUI
+        public T Get<T>(string uiName) where T : FUI
         {
-            if (_fuis.TryGetValue(name, out var ui))
+            if (_uiDictionary.TryGetValue(uiName, out var ui))
             {
                 return ui as T;
             }
@@ -250,9 +248,9 @@ namespace UnityGameFramework.Runtime
             return null;
         }
 
-        public FUI Get(string name)
+        public FUI Get(string uiName)
         {
-            if (_fuis.TryGetValue(name, out var ui))
+            if (_uiDictionary.TryGetValue(uiName, out var ui))
             {
                 return ui;
             }
@@ -265,13 +263,7 @@ namespace UnityGameFramework.Runtime
             base.Awake();
             _root = new FUI(GRoot.inst);
 
-            // _screenOrientation = Screen.orientation;
-
-
-            // UIRoot = new FUI(uiRoot);
-            // uiRoot.name = nameof(UIRoot);
-            // _root.Add(UIRoot);
-            // uiRoot.MakeFullScreen();
+            _screenOrientation = Screen.orientation;
 
             HiddenRoot = CreateNode(GRoot.inst, UILayer.Hidden);
             FloorRoot = CreateNode(GRoot.inst, UILayer.Floor);
@@ -305,17 +297,22 @@ namespace UnityGameFramework.Runtime
         {
             GComponent component = new GComponent();
             root.AddChild(component);
-            component.z = (int) layer * 100;
-            component.gameObjectName = layer.ToString();
-            component.name = layer.ToString();
+            component.z = (int)layer * 100;
+
+            var comName = layer.ToString();
+
+            component.displayObject.name = comName;
+            component.gameObjectName = comName;
+            component.name = comName;
             component.MakeFullScreen();
             component.AddRelation(root, RelationType.Width);
             component.AddRelation(root, RelationType.Height);
-
-            return new FUI(component);
+            var ui = new FUI(component);
+            ui.Name = comName;
+            return ui;
         }
 
-        // private ScreenOrientation _screenOrientation;
+        private ScreenOrientation _screenOrientation;
 
         void IsChanged(bool isLeft)
         {
@@ -324,15 +321,15 @@ namespace UnityGameFramework.Runtime
 
         public void Update()
         {
-            // var orientation = Screen.orientation;
-            // if (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight)
-            // {
-            //     if (_screenOrientation != orientation)
-            //     {
-            //         IsChanged(orientation == ScreenOrientation.LandscapeLeft);
-            //         _screenOrientation = orientation;
-            //     }
-            // }
+            var orientation = Screen.orientation;
+            if (orientation == ScreenOrientation.LandscapeLeft || orientation == ScreenOrientation.LandscapeRight)
+            {
+                if (_screenOrientation != orientation)
+                {
+                    IsChanged(orientation == ScreenOrientation.LandscapeLeft);
+                    _screenOrientation = orientation;
+                }
+            }
         }
     }
 }
