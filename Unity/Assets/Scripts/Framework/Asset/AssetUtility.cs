@@ -26,5 +26,16 @@
         {
             return $"Assets/Bundles/Code/{fileName}{extension}";
         }
+
+        /// <summary>
+        /// 获取UI文件路径
+        /// </summary>
+        /// <param name="uiPackageName"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        public static string GetUIPackagePath(string uiPackageName, string extension = ".bytes")
+        {
+            return $"Assets/Bundles/UI/{uiPackageName}/{uiPackageName}";
+        }
     }
 }
