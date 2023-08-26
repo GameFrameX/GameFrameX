@@ -47,8 +47,7 @@ namespace Server.Core.Net.Tcp.Codecs
             XBuffer.WriteBytesWithoutLength(bytes, span, ref offset);
             output.Advance(len);
 
-            Log.Debug(
-                $"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(netMessage.Msg)}");
+            Log.Debug($"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(netMessage.Msg)}");
         }
     }
 }
