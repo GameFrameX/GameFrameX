@@ -11,7 +11,14 @@ namespace UnityGameFramework.Runtime
         public FUI(GObject gObject)
         {
             GObject = gObject;
-            Name = GetType().Name;
+            if (gObject.name.IsNullOrWhiteSpace())
+            {
+                Name = GetType().Name;
+            }
+            else
+            {
+                Name = gObject.name;
+            }
         }
 
         public virtual void Show()
@@ -172,9 +179,7 @@ namespace UnityGameFramework.Runtime
 
         public bool Remove(string name)
         {
-            FUI ui;
-
-            if (_children.TryGetValue(name, out ui))
+            if (_children.TryGetValue(name, out var ui))
             {
                 _children.Remove(name);
 
