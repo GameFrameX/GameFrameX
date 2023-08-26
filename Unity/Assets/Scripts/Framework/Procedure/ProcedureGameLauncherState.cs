@@ -21,7 +21,7 @@ namespace UnityGameFramework.Procedure
             await UniTask.DelayFrame();
 
             // Game.EventSystem.Run(EventIdType.UILoadingMainSetText, "Loading...");
-
+            LauncherUIHandler.Hide();
             HotfixHelper.StartHotfix();
         }
     }
