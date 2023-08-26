@@ -17,7 +17,7 @@ namespace Server.Core.Net.Tcp.Handler
         public override async Task OnConnectedAsync(ConnectionContext connection)
         {
             OnConnection(connection);
-            var channel = new NetChannel(connection, new LengthPrefixedProtocol());
+            var channel = new NetChannel(connection, new NetMessageProtocalHandler());
             var remoteInfo = channel.Context.RemoteEndPoint;
             while (!channel.IsClose())
             {

@@ -9,9 +9,9 @@ using Server.Utility;
 
 namespace Server.Core.Net.Tcp.Codecs
 {
-    public class LengthPrefixedProtocol : IProtocal<NetMessage>
+    public class NetMessageProtocalHandler : IProtocal<NetMessage>
     {
-        NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         public bool TryParseMessage(in ReadOnlySequence<byte> input, ref SequencePosition consumed,
             ref SequencePosition examined, out NetMessage message)
@@ -47,7 +47,8 @@ namespace Server.Core.Net.Tcp.Codecs
             XBuffer.WriteBytesWithoutLength(bytes, span, ref offset);
             output.Advance(len);
 
-            logger.Debug($"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(netMessage.Msg)}");
+            Log.Debug(
+                $"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(netMessage.Msg)}");
         }
     }
 }
