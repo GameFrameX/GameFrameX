@@ -76,13 +76,17 @@ namespace Server.Core.Net.Tcp.Handler
         private async Task Dispatcher(NetChannel channel, Message msg)
         {
             if (msg == null)
+            {
                 return;
+            }
 
-            LOGGER.Debug($"-------------收到消息 ID:{msg.MsgId} 类型: {msg.GetType()} 内容:==> {JsonConvert.SerializeObject(msg)}");
+            var messageType = msg.GetType();
+            LOGGER.Debug(
+                $"---收到消息ID:[{msg.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(msg)}");
             var handler = HotfixMgr.GetTcpHandler(msg.MsgId);
             if (handler == null)
             {
-                LOGGER.Error($"找不到[{msg.MsgId}][{msg.GetType()}]对应的handler");
+                LOGGER.Error($"找不到[{msg.MsgId}][{messageType}]对应的handler");
                 return;
             }
 

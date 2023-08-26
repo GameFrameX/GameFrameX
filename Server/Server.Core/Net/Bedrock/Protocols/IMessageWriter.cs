@@ -4,6 +4,6 @@ namespace Server.Core.Net.Bedrock.Protocols
 {
     public interface IMessageWriter<in TMessage>
     {
-        void WriteMessage(TMessage message, IBufferWriter<byte> output);
+        void WriteMessage(TMessage netMessage, IBufferWriter<byte> output);
     }
 }
