@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlankOperationClipboard.Run
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarryGU.Extension.Spine", "FarryGU.Extension.Spine.csproj", "{d4d9d0d9-5b47-f751-2a9c-551403178ff6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleJSON.Runtime", "SimpleJSON.Runtime.csproj", "{f10625d1-fa8e-77f1-980e-970bafa2baea}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEditor.TestRunner", "UnityEditor.TestRunner.csproj", "{84d77f67-4616-0a38-4f03-16ab5e7769f7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YooAsset.Editor", "YooAsset.Editor.csproj", "{e17e49b1-467b-9f35-a59e-d9aea156de57}"
@@ -253,6 +255,10 @@ Global
 		{d4d9d0d9-5b47-f751-2a9c-551403178ff6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{d4d9d0d9-5b47-f751-2a9c-551403178ff6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{d4d9d0d9-5b47-f751-2a9c-551403178ff6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{f10625d1-fa8e-77f1-980e-970bafa2baea}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{f10625d1-fa8e-77f1-980e-970bafa2baea}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{f10625d1-fa8e-77f1-980e-970bafa2baea}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{f10625d1-fa8e-77f1-980e-970bafa2baea}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84d77f67-4616-0a38-4f03-16ab5e7769f7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{84d77f67-4616-0a38-4f03-16ab5e7769f7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84d77f67-4616-0a38-4f03-16ab5e7769f7}.Release|Any CPU.ActiveCfg = Release|Any CPU
