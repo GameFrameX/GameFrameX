@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Server.Serialize\Server.Serialize.csproj" />
         <ProjectReference Include="..\Server.Setting\Server.Setting.csproj" />
         <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
     </ItemGroup>
