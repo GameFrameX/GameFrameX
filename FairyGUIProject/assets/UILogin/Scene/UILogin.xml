@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="2160,1080">
+<component size="1080,1920">
   <displayList>
-    <graph id="n26_xsvi" name="MaskLayer" xy="-1420,-1960" pivot="0.5,0.5" size="5000,5000" alpha="0.4" type="rect" lineSize="0" fillColor="#02000000">
-      <relation target="" sidePair="width-width,height-height,center-center%,middle-middle%"/>
-    </graph>
-    <image id="n24_nmd0" name="n24" src="ghno31" fileName="Background/UI_bg_Pop-ups.png" pkg="f59y7iy8" xy="1080,540" pivot="0.5,0.5" anchor="true" size="972,767"/>
-    <component id="n14_nmd0" name="BackBtn" src="p5slk" fileName="Scene/UISetting_BtnLanauage.xml" pkg="e9ew8fm5" xy="692,769" size="240,125">
-      <Button title="返回" titleFontSize="45"/>
-    </component>
-    <component id="n15_nmd0" name="LoginBtn" src="p5sl3n" fileName="Buttons/UIButtonBase6.xml" pkg="s1h25l7x" xy="1011,767">
-      <Button title="登录"/>
-    </component>
-    <graph id="n16_nmd0" name="n16" xy="699,359" size="766,97" type="rect" lineSize="0" fillColor="#ff1e1d1b" corner="3"/>
-    <text id="n17_nmd0" name="Inputname" xy="714,378" size="668,59" font="ui://f59y7iy8ghno32" fontSize="44" color="#dedede" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" text="" input="true" prompt="点击输入"/>
-    <graph id="n18_nmd0" name="n18" xy="699,539" size="766,97" type="rect" lineSize="0" fillColor="#ff1e1d1b" corner="3"/>
-    <text id="n19_nmd0" name="InputPassword" xy="714,559" size="668,59" font="ui://f59y7iy8ghno32" fontSize="44" color="#dedede" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" text="" input="true" prompt="点击输入"/>
-    <text id="n20_nmd0" name="n20" xy="699,295" size="129,56" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="账户名"/>
-    <text id="n21_nmd0" name="n21" xy="699,479" size="87,56" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="密码"/>
-    <text id="n23_nmd0" name="n23" xy="1028,173" pivot="0.5,0.5" size="103,66" font="ui://f59y7iy8ghno32" fontSize="50" color="#e1c399" align="center" vAlign="middle" text="登录"/>
-    <text id="n27_xsvi" name="ErrorAccountText" xy="766,467" pivot="1,0" size="700,46" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="right" leading="0" letterSpacing="-1" autoSize="none" text="账号至少6位,且由 _@!$% 、大小写字母、数字组成"/>
-    <text id="n28_xsvi" name="ErrorPassText" xy="701,643" pivot="1,0" size="765,73" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="right" leading="0" letterSpacing="-1" autoSize="none" text="账号至少6位,且由 _@!$% 、大小写字母、数字组成账号至少6位,且由 _@!$% 、大小写字母、数字组成"/>
-    <text id="n30_xsvi" name="ErrorText" xy="933,310" pivot="1,0" size="529,46" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="right" vAlign="middle" letterSpacing="-1" autoSize="shrink" text="GameCenter用户已存在,无法绑定"/>
+    <graph id="n34_jfft" name="n34" xy="0,0" size="1080,1920" type="rect" fillColor="#543399ff"/>
+    <graph id="n16_nmd0" name="n16" xy="159,778" size="766,97" type="rect" lineSize="0" fillColor="#ff1e1d1b" corner="3"/>
+    <text id="n17_nmd0" name="UserName" xy="174,797" size="668,59" font="ui://f59y7iy8ghno32" fontSize="44" color="#dedede" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" text="" input="true" prompt="点击输入"/>
+    <graph id="n18_nmd0" name="n18" xy="159,958" size="766,97" type="rect" lineSize="0" fillColor="#ff1e1d1b" corner="3"/>
+    <text id="n19_nmd0" name="Password" xy="174,978" size="668,59" fontSize="44" color="#dedede" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" autoClearText="true" text="" input="true" prompt="点击输入"/>
+    <text id="n20_nmd0" name="n20" xy="159,714" size="130,56" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="账户名"/>
+    <text id="n21_nmd0" name="n21" xy="159,898" size="88,56" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="密码"/>
+    <text id="n23_nmd0" name="n23" xy="487,592" pivot="0.5,0.5" size="104,66" font="ui://f59y7iy8ghno32" fontSize="50" color="#e1c399" align="center" vAlign="middle" text="登录"/>
+    <text id="n30_xsvi" name="ErrorText" xy="275,1089" pivot="1,0" size="529,46" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="center" vAlign="middle" letterSpacing="-1" autoSize="shrink" singleLine="true" autoClearText="true" text=""/>
+    <component id="n32_jfft" name="enter" src="xsvis9l" fileName="Widget/UILogin_Btn1.xml" xy="288,1286"/>
   </displayList>
 </component>
