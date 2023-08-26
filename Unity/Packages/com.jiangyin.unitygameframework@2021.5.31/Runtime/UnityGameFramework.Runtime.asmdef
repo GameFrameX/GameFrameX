@@ -11,7 +11,7 @@
         "UniTask",
         "BetterStreamingAssets",
         "MessagePack.Runtime",
-        "ProtoBuffer.Runtime"
+        "SimpleJSON.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

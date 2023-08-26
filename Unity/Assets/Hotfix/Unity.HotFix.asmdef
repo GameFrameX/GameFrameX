@@ -18,7 +18,9 @@
         "MessagePack.Annotations",
         "LuBan.Runtime",
         "Unity.Startup",
-        "Unity.HotFix.Proto"
+        "Unity.HotFix.Proto",
+        "LitJSON.Runtime",
+        "SimpleJSON.Runtime"
     ],
     "includePlatforms": [
         "Editor"
