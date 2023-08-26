@@ -2,9 +2,9 @@
 
 namespace Server.Core.Events
 {
-    public abstract class EventListener<T> : IEventListener where T : ICompAgent
+    public abstract class EventListener<T> : IEventListener where T : IComponentAgent
     {
-        public Task HandleEvent(ICompAgent agent, Event evt)
+        public Task HandleEvent(IComponentAgent agent, Event evt)
         {
             return HandleEvent((T) agent, evt);
         }

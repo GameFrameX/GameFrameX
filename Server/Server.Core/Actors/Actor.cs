@@ -27,12 +27,12 @@ namespace Server.Core.Actors
             Tell(() => { AutoRecycle = autoRecycle; });
         }
 
-        public async Task<T> GetCompAgent<T>() where T : ICompAgent
+        public async Task<T> GetCompAgent<T>() where T : IComponentAgent
         {
             return (T) await GetCompAgent(typeof(T));
         }
 
-        public async Task<ICompAgent> GetCompAgent(Type agentType)
+        public async Task<IComponentAgent> GetCompAgent(Type agentType)
         {
             var compType = agentType.BaseType.GetGenericArguments()[0];
             var comp = compDic.GetOrAdd(compType, GetOrAddFactory);

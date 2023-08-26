@@ -125,9 +125,9 @@ namespace Server.Core.Comps
             }
         }
 
-        public static Task ActiveRoleComps(ICompAgent compAgent, HashSet<short> openFuncSet)
+        public static Task ActiveRoleComps(IComponentAgent componentAgent, HashSet<short> openFuncSet)
         {
-            return ActiveComps(compAgent.Owner.Actor,
+            return ActiveComps(componentAgent.Owner.Actor,
                 t => !CompFuncDic.TryGetValue(t, out var func)
                      || openFuncSet.Contains(func));
             //foreach (var compType in GetComps(ActorType.Role))

@@ -1,7 +1,7 @@
 ﻿namespace Server.Hotfix.Logic.Login
 {
     [MsgMapping(typeof(ReqLogin))]
-    internal class ReqLoginHandler : GlobalCompHandler<LoginCompAgent>
+    internal class ReqLoginHandler : GlobalComponentHandler<LoginComponentAgent>
     {
         public override async Task ActionAsync()
         {

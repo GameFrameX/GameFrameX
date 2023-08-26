@@ -3,7 +3,7 @@ using Server.Hotfix.Common.Events;
 
 namespace Server.Hotfix.Logic.Role.Bag
 {
-    public class BagCompAgent : StateCompAgent<BagComp, BagState>
+    public class BagComponentAgent : StateComponentAgent<BagComp, BagState>
     {
         readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 

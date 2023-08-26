@@ -3,7 +3,7 @@
 namespace Server.Hotfix.Logic.Server;
 
 [MsgMapping(typeof(ReqHeartBeat))]
-internal class ReqHeartBeatHandler : GlobalCompHandler<HeartBeatCompAgent>
+internal class ReqHeartBeatHandler : GlobalComponentHandler<HeartBeatComponentAgent>
 {
     public override async Task ActionAsync()
     {

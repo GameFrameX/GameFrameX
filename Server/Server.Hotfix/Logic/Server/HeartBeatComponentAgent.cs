@@ -16,6 +16,6 @@ public class HeartBeatComp : StateComp<HeartBeatState>
 {
 }
 
-public class HeartBeatCompAgent : StateCompAgent<HeartBeatComp, HeartBeatState>
+public class HeartBeatComponentAgent : StateComponentAgent<HeartBeatComp, HeartBeatState>
 {
 }

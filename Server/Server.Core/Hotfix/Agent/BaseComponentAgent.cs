@@ -6,7 +6,7 @@ using Server.Utility;
 
 namespace Server.Core.Hotfix.Agent
 {
-    public abstract class BaseCompAgent<TComp> : ICompAgent where TComp : BaseComp
+    public abstract class BaseComponentAgent<TComp> : IComponentAgent where TComp : BaseComp
     {
         public BaseComp Owner { get; set; }
         public TComp Comp => (TComp) Owner;
@@ -35,12 +35,12 @@ namespace Server.Core.Hotfix.Agent
             return Actor.CrossDay(serverDay);
         }
 
-        public Task<ICompAgent> GetCompAgent(Type agentType)
+        public Task<IComponentAgent> GetComponentAgent(Type agentType)
         {
             return Actor.GetCompAgent(agentType);
         }
 
-        public Task<T> GetCompAgent<T>() where T : ICompAgent
+        public Task<T> GetComponentAgent<T>() where T : IComponentAgent
         {
             return Actor.GetCompAgent<T>();
         }

@@ -3,9 +3,9 @@ using Server.Utility;
 
 namespace Server.Core.Timer.Handler
 {
-    public abstract class TimerHandler<TAgent> : ITimerHandler where TAgent : ICompAgent
+    public abstract class TimerHandler<TAgent> : ITimerHandler where TAgent : IComponentAgent
     {
-        public Task InnerHandleTimer(ICompAgent agent, Param param)
+        public Task InnerHandleTimer(IComponentAgent agent, Param param)
         {
             return HandleTimer((TAgent) agent, param);
         }

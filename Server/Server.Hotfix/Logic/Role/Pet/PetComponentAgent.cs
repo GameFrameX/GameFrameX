@@ -8,14 +8,14 @@ using Server.Hotfix.Logic.Server;
 
 namespace Server.Hotfix.Logic.Role.Pet
 {
-    public class PetCompAgent : StateCompAgent<PetComp, PetState>
+    public class PetComponentAgent : StateComponentAgent<PetComp, PetState>
     {
         readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 
         [Event(EventId.GotNewPet)]
-        class EL : EventListener<PetCompAgent>
+        class EL : EventListener<PetComponentAgent>
         {
-            protected override async Task HandleEvent(PetCompAgent agent, Event evt)
+            protected override async Task HandleEvent(PetComponentAgent agent, Event evt)
             {
                 switch ((EventId) evt.EventId)
                 {
@@ -30,7 +30,7 @@ namespace Server.Hotfix.Logic.Role.Pet
 
         private async Task OnGotNewPet(OneParam<int> param)
         {
-            var serverComp = await ActorMgr.GetCompAgent<ServerCompAgent>();
+            var serverComp = await ActorMgr.GetCompAgent<ServerComponentAgent>();
             //var level = await serverComp.SendAsync(() => serverComp.GetWorldLevel()); //手动入队的写法
             var level = await serverComp.GetWorldLevel();
             LOGGER.Debug($"PetCompAgent.OnGotNewPet监听到了获得宠物的事件,宠物ID:{param.Value}当前世界等级:{level}");

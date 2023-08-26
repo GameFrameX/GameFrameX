@@ -5,6 +5,6 @@ namespace Server.Core.Timer.Handler
 {
     public interface ITimerHandler
     {
-        Task InnerHandleTimer(ICompAgent actor, Param param);
+        Task InnerHandleTimer(IComponentAgent actor, Param param);
     }
 }

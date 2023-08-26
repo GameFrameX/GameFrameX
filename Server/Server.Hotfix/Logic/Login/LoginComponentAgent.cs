@@ -5,7 +5,7 @@ using Server.App.Logic.Login.Entity;
 
 namespace Server.Hotfix.Logic.Login
 {
-    public class LoginCompAgent : StateCompAgent<LoginComponent, LoginState>
+    public class LoginComponentAgent : StateComponentAgent<LoginComponent, LoginState>
     {
         private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -17,7 +17,7 @@ namespace Server.Hotfix.Logic.Login
                 return;
             }
 
-            var loginCompAgent = await ActorMgr.GetCompAgent<LoginCompAgent>();
+            var loginCompAgent = await ActorMgr.GetCompAgent<LoginComponentAgent>();
             var loginState = await loginCompAgent.Comp.OnLogin(reqLogin);
             if (loginState == null)
             {

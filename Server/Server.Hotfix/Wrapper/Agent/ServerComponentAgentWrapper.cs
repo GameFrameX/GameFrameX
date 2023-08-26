@@ -2,7 +2,7 @@ using Server.Core.Actors.Impl;
 
 namespace Server.Hotfix.Wrapper.Agent;
 
-public class ServerCompAgentWrapper : ServerCompAgent
+public class ServerComponentAgentWrapper : ServerComponentAgent
 {
     // Token: 0x06000007 RID: 7 RVA: 0x00002090 File Offset: 0x00000290
     public override ValueTask AddOnlineRole(long actorId)

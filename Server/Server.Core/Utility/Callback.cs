@@ -5,19 +5,19 @@ namespace Server.Core.Utility
 {
     public interface IAgentCallback
     {
-        Task<bool> Invoke(ICompAgent agent, Param param = null);
+        Task<bool> Invoke(IComponentAgent agent, Param param = null);
 
         Type CompAgentType();
     }
 
-    public abstract class AgentCallback<TAgent> : IAgentCallback where TAgent : ICompAgent
+    public abstract class AgentCallback<TAgent> : IAgentCallback where TAgent : IComponentAgent
     {
         public Type CompAgentType()
         {
             return typeof(TAgent);
         }
 
-        public Task<bool> Invoke(ICompAgent agent, Param param = null)
+        public Task<bool> Invoke(IComponentAgent agent, Param param = null)
         {
             return OnCall((TAgent) agent, param);
         }

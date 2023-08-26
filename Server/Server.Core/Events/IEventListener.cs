@@ -8,7 +8,7 @@ namespace Server.Core.Events
     /// </summary>
     public interface IEventListener
     {
-        Task HandleEvent(ICompAgent agent, Event evt);
+        Task HandleEvent(IComponentAgent agent, Event evt);
 
         Type AgentType { get; }
     }

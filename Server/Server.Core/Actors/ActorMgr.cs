@@ -14,7 +14,7 @@ namespace Server.Core.Actors
 
         private static readonly ConcurrentDictionary<long, Actor> actorDic = new();
 
-        public static async Task<T> GetCompAgent<T>(long actorId) where T : ICompAgent
+        public static async Task<T> GetCompAgent<T>(long actorId) where T : IComponentAgent
         {
             var actor = await GetOrNew(actorId);
             return await actor.GetCompAgent<T>();
@@ -31,13 +31,13 @@ namespace Server.Core.Actors
             return actor;
         }
 
-        internal static async Task<ICompAgent> GetCompAgent(long actorId, Type agentType)
+        internal static async Task<IComponentAgent> GetCompAgent(long actorId, Type agentType)
         {
             var actor = await GetOrNew(actorId);
             return await actor.GetCompAgent(agentType);
         }
 
-        public static Task<T> GetCompAgent<T>() where T : ICompAgent
+        public static Task<T> GetCompAgent<T>() where T : IComponentAgent
         {
             var compType = HotfixMgr.GetCompType(typeof(T));
             var actorType = ComponentRegister.GetActorType(compType);
@@ -311,7 +311,7 @@ namespace Server.Core.Actors
             return Task.CompletedTask;
         }
 
-        public static void ActorForEach<T>(Func<T, Task> func) where T : ICompAgent
+        public static void ActorForEach<T>(Func<T, Task> func) where T : IComponentAgent
         {
             var agentType = typeof(T);
             var compType = HotfixMgr.GetCompType(agentType);
@@ -329,7 +329,7 @@ namespace Server.Core.Actors
             }
         }
 
-        public static void ActorForEach<T>(Action<T> action) where T : ICompAgent
+        public static void ActorForEach<T>(Action<T> action) where T : IComponentAgent
         {
             var agentType = typeof(T);
             var compType = HotfixMgr.GetCompType(agentType);

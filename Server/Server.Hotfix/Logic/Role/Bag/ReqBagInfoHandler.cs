@@ -1,7 +1,7 @@
 ﻿namespace Server.Hotfix.Logic.Role.Bag
 {
     [MsgMapping(typeof(ReqBagInfo))]
-    public class ReqBagInfoHandler : RoleCompHandler<BagCompAgent>
+    public class ReqBagInfoHandler : RoleComponentHandler<BagComponentAgent>
     {
         public override async Task ActionAsync()
         {

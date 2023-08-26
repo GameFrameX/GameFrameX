@@ -6,10 +6,10 @@ namespace Server.Core.Comps
 {
     public abstract class BaseComp
     {
-        private ICompAgent _cacheAgent = null;
+        private IComponentAgent _cacheAgent = null;
         private readonly object _cacheAgentLock = new();
 
-        public ICompAgent GetAgent(Type refAssemblyType = null)
+        public IComponentAgent GetAgent(Type refAssemblyType = null)
         {
             lock (_cacheAgentLock)
             {
@@ -18,7 +18,7 @@ namespace Server.Core.Comps
                     return _cacheAgent;
                 }
 
-                var agent = HotfixMgr.GetAgent<ICompAgent>(this, refAssemblyType);
+                var agent = HotfixMgr.GetAgent<IComponentAgent>(this, refAssemblyType);
                 _cacheAgent = agent;
                 return agent;
             }

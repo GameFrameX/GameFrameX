@@ -80,7 +80,7 @@ namespace Server.Core.Hotfix
             return module.GetCompType(agentType);
         }
 
-        public static T GetAgent<T>(BaseComp comp, Type refAssemblyType) where T : ICompAgent
+        public static T GetAgent<T>(BaseComp comp, Type refAssemblyType) where T : IComponentAgent
         {
             if (!oldModuleMap.IsEmpty)
             {

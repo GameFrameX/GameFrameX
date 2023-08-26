@@ -9,9 +9,9 @@ namespace Server.Hotfix.Logic.Role.Base
     {
         private static readonly NLog.Logger LOGGER = LogManager.GetCurrentClassLogger();
 
-        public static async Task NotifyClient(this ICompAgent agent, Message msg, int uniId = 0, StateCode code = StateCode.Success)
+        public static async Task NotifyClient(this IComponentAgent agent, Message msg, int uniId = 0, StateCode code = StateCode.Success)
         {
-            var roleComp = await agent.GetCompAgent<RoleCompAgent>();
+            var roleComp = await agent.GetComponentAgent<RoleComponentAgent>();
             if (roleComp != null)
                 roleComp.NotifyClient(msg, uniId, code);
             else
@@ -19,15 +19,15 @@ namespace Server.Hotfix.Logic.Role.Base
         }
     }
 
-    public class RoleCompAgent : StateCompAgent<PlayerComponent, PlayerState>, ICrossDay
+    public class RoleComponentAgent : StateComponentAgent<PlayerComponent, PlayerState>, ICrossDay
     {
         private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
 
         [Event(EventId.SessionRemove)]
-        private class EL : EventListener<RoleCompAgent>
+        private class EL : EventListener<RoleComponentAgent>
         {
-            protected override Task HandleEvent(RoleCompAgent agent, Event evt)
+            protected override Task HandleEvent(RoleComponentAgent agent, Event evt)
             {
                 return agent.OnLogout();
             }
@@ -43,7 +43,7 @@ namespace Server.Hotfix.Logic.Role.Base
                 State.VipLevel = 1;
                 State.RoleName = new System.Random().Next(1000, 10000).ToString(); //随机给一个
                 //激活背包组件
-                await GetCompAgent<BagCompAgent>();
+                await GetComponentAgent<BagComponentAgent>();
             }
 
             State.LoginTime = DateTime.Now;
@@ -53,7 +53,7 @@ namespace Server.Hotfix.Logic.Role.Base
         public async Task OnLogout()
         {
             //移除在线玩家
-            var serverComp = await ActorMgr.GetCompAgent<ServerCompAgent>();
+            var serverComp = await ActorMgr.GetCompAgent<ServerComponentAgent>();
             await serverComp.RemoveOnlineRole(ActorId);
             //下线后会被自动回收
             SetAutoRecycle(true);

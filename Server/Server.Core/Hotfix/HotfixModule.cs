@@ -189,7 +189,7 @@ namespace Server.Core.Hotfix
                 return false;
             }
 
-            var msgIdField = (Server.Core.Net.Messages.MessageTypeHandler) attribute.Msg.GetCustomAttribute(typeof(Server.Core.Net.Messages.MessageTypeHandler), true);
+            var msgIdField = (Server.Core.Net.Messages.MessageTypeHandler) attribute.MsgType.GetCustomAttribute(typeof(Server.Core.Net.Messages.MessageTypeHandler), true);
             if (msgIdField == null)
             {
                 return false;
@@ -243,7 +243,7 @@ namespace Server.Core.Hotfix
 
         private bool AddAgent(Type type)
         {
-            if (!type.IsImplWithInterface(typeof(ICompAgent)))
+            if (!type.IsImplWithInterface(typeof(IComponentAgent)))
             {
                 return false;
             }
@@ -301,7 +301,7 @@ namespace Server.Core.Hotfix
             // throw new HttpHandlerNotFoundException($"未注册的http命令:{cmd}");
         }
 
-        internal T GetAgent<T>(BaseComp comp) where T : ICompAgent
+        internal T GetAgent<T>(BaseComp comp) where T : IComponentAgent
         {
             var type = comp.GetType();
             if (compAgentMap.TryGetValue(type, out var agentType))

@@ -3,7 +3,7 @@ using Server.Hotfix.Logic.Login;
 
 namespace Server.Hotfix.Wrapper.Agent;
 
-public class LoginCompAgentWrapper : LoginCompAgent
+public class LoginComponentAgentWrapper : LoginComponentAgent
 {
     // protected override Task DoSomething3()
     // {

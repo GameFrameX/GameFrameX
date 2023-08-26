@@ -1,29 +1,23 @@
-﻿using Server.App.Logic.Login.Entity;
-using Server.App.Logic.Server;
-using Server.Core.Actors;
-using Server.Core.Hotfix.Agent;
+﻿using Server.App.Logic.Server;
 using Server.Core.Timer.Handler;
-using Server.DBServer;
-using Server.Hotfix.Logic.Role.Base;
-using Server.Utility;
 
 namespace Server.Hotfix.Logic.Server
 {
-    public class ServerCompAgent : StateCompAgent<ServerComp, ServerState>
+    public class ServerComponentAgent : StateComponentAgent<ServerComp, ServerState>
     {
         readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 
-        class DelayTimer : TimerHandler<ServerCompAgent>
+        class DelayTimer : TimerHandler<ServerComponentAgent>
         {
-            protected override Task HandleTimer(ServerCompAgent agent, Param param)
+            protected override Task HandleTimer(ServerComponentAgent agent, Param param)
             {
                 return agent.TestDelayTimer();
             }
         }
 
-        class ScheduleTimer : TimerHandler<ServerCompAgent>
+        class ScheduleTimer : TimerHandler<ServerComponentAgent>
         {
-            protected override Task HandleTimer(ServerCompAgent agent, Param param)
+            protected override Task HandleTimer(ServerComponentAgent agent, Param param)
             {
                 return agent.TestScheduleTimer();
             }
@@ -52,14 +46,14 @@ namespace Server.Hotfix.Logic.Server
             return ValueTask.CompletedTask;
         }
 
-        public static async Task OnlineRoleForeach(Action<RoleCompAgent> func)
+        public static async Task OnlineRoleForeach(Action<RoleComponentAgent> func)
         {
-            var serverComp = await ActorMgr.GetCompAgent<ServerCompAgent>();
+            var serverComp = await ActorMgr.GetCompAgent<ServerComponentAgent>();
             serverComp.Tell(async () =>
             {
                 foreach (var roleId in serverComp.Comp.OnlineSet)
                 {
-                    var roleComp = await ActorMgr.GetCompAgent<RoleCompAgent>(roleId);
+                    var roleComp = await ActorMgr.GetCompAgent<RoleComponentAgent>(roleId);
                     roleComp.Tell(() => func(roleComp));
                 }
             });

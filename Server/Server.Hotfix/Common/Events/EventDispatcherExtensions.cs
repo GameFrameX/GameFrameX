@@ -14,7 +14,7 @@ namespace Server.Hotfix.Common.Events
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public static void Dispatch(this ICompAgent agent, int evtId, Param args = null)
+        public static void Dispatch(this IComponentAgent agent, int evtId, Param args = null)
         {
             var evt = new Event
             {
@@ -29,11 +29,11 @@ namespace Server.Hotfix.Common.Events
             {
                 // 全局非玩家事件，抛给所有玩家
                 agent.Tell(()
-                    => ServerCompAgent.OnlineRoleForeach(role
+                    => ServerComponentAgent.OnlineRoleForeach(role
                         => role.Dispatch(evtId, args)));
             }
 
-            static void SelfHandle(ICompAgent agent, int evtId, Event evt)
+            static void SelfHandle(IComponentAgent agent, int evtId, Event evt)
             {
                 agent.Tell(async () =>
                 {
@@ -47,14 +47,14 @@ namespace Server.Hotfix.Common.Events
 
                     foreach (var listener in listeners)
                     {
-                        var comp = await agent.GetCompAgent(listener.AgentType);
+                        var comp = await agent.GetComponentAgent(listener.AgentType);
                         await listener.HandleEvent(comp, evt);
                     }
                 });
             }
         }
 
-        public static void Dispatch(this ICompAgent agent, EventId evtId, Param args = null)
+        public static void Dispatch(this IComponentAgent agent, EventId evtId, Param args = null)
         {
             Dispatch(agent, (int) evtId, args);
         }

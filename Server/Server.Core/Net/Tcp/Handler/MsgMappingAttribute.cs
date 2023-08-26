@@ -3,11 +3,11 @@
     [AttributeUsage(AttributeTargets.Class)]
     public class MsgMapping : Attribute
     {
-        public Type Msg { get; }
+        public Type MsgType { get; }
 
-        public MsgMapping(Type msg)
+        public MsgMapping(Type msgType)
         {
-            Msg = msg;
+            MsgType = msgType;
         }
     }
 }
