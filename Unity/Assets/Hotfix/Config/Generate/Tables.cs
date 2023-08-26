@@ -14,68 +14,899 @@ namespace cfg
    
     public sealed partial class Tables
     {
-        public ai.TbBlackboard TbBlackboard {get; }
-        public ai.TbBehaviorTree TbBehaviorTree {get; }
-        public blueprint.TbClazz TbClazz {get; }
-        public bonus.TbDrop TbDrop {get; }
-        public common.TbGlobalConfig TbGlobalConfig {get; }
-        public error.TbErrorInfo TbErrorInfo {get; }
-        public error.TbCodeInfo TbCodeInfo {get; }
+        private ai.TbBlackboard m_TbBlackboard; 
+        public ai.TbBlackboard TbBlackboard 
+        {
+            get
+            { 
+                if (m_TbBlackboard==null)
+                {
+                    m_TbBlackboard = new ai.TbBlackboard(_loader("ai_tbblackboard")); 
+                    tables.Add("ai.TbBlackboard", m_TbBlackboard);
+                    m_TbBlackboard.Resolve(tables); 
+                    m_TbBlackboard.TranslateText(_translator); 
+                }
+                return m_TbBlackboard;
+            } 
+        }
+        
+        private ai.TbBehaviorTree m_TbBehaviorTree; 
+        public ai.TbBehaviorTree TbBehaviorTree 
+        {
+            get
+            { 
+                if (m_TbBehaviorTree==null)
+                {
+                    m_TbBehaviorTree = new ai.TbBehaviorTree(_loader("ai_tbbehaviortree")); 
+                    tables.Add("ai.TbBehaviorTree", m_TbBehaviorTree);
+                    m_TbBehaviorTree.Resolve(tables); 
+                    m_TbBehaviorTree.TranslateText(_translator); 
+                }
+                return m_TbBehaviorTree;
+            } 
+        }
+        
+        private blueprint.TbClazz m_TbClazz; 
+        public blueprint.TbClazz TbClazz 
+        {
+            get
+            { 
+                if (m_TbClazz==null)
+                {
+                    m_TbClazz = new blueprint.TbClazz(_loader("blueprint_tbclazz")); 
+                    tables.Add("blueprint.TbClazz", m_TbClazz);
+                    m_TbClazz.Resolve(tables); 
+                    m_TbClazz.TranslateText(_translator); 
+                }
+                return m_TbClazz;
+            } 
+        }
+        
+        private bonus.TbDrop m_TbDrop; 
+        public bonus.TbDrop TbDrop 
+        {
+            get
+            { 
+                if (m_TbDrop==null)
+                {
+                    m_TbDrop = new bonus.TbDrop(_loader("bonus_tbdrop")); 
+                    tables.Add("bonus.TbDrop", m_TbDrop);
+                    m_TbDrop.Resolve(tables); 
+                    m_TbDrop.TranslateText(_translator); 
+                }
+                return m_TbDrop;
+            } 
+        }
+        
+        private common.TbGlobalConfig m_TbGlobalConfig; 
+        public common.TbGlobalConfig TbGlobalConfig 
+        {
+            get
+            { 
+                if (m_TbGlobalConfig==null)
+                {
+                    m_TbGlobalConfig = new common.TbGlobalConfig(_loader("common_tbglobalconfig")); 
+                    tables.Add("common.TbGlobalConfig", m_TbGlobalConfig);
+                    m_TbGlobalConfig.Resolve(tables); 
+                    m_TbGlobalConfig.TranslateText(_translator); 
+                }
+                return m_TbGlobalConfig;
+            } 
+        }
+        
+        private error.TbErrorInfo m_TbErrorInfo; 
+        public error.TbErrorInfo TbErrorInfo 
+        {
+            get
+            { 
+                if (m_TbErrorInfo==null)
+                {
+                    m_TbErrorInfo = new error.TbErrorInfo(_loader("error_tberrorinfo")); 
+                    tables.Add("error.TbErrorInfo", m_TbErrorInfo);
+                    m_TbErrorInfo.Resolve(tables); 
+                    m_TbErrorInfo.TranslateText(_translator); 
+                }
+                return m_TbErrorInfo;
+            } 
+        }
+        
+        private error.TbCodeInfo m_TbCodeInfo; 
+        public error.TbCodeInfo TbCodeInfo 
+        {
+            get
+            { 
+                if (m_TbCodeInfo==null)
+                {
+                    m_TbCodeInfo = new error.TbCodeInfo(_loader("error_tbcodeinfo")); 
+                    tables.Add("error.TbCodeInfo", m_TbCodeInfo);
+                    m_TbCodeInfo.Resolve(tables); 
+                    m_TbCodeInfo.TranslateText(_translator); 
+                }
+                return m_TbCodeInfo;
+            } 
+        }
+        
+        private item.TbItem m_TbItem; 
         /// <summary>
         /// 道具表
         /// </summary>
-        public item.TbItem TbItem {get; }
-        public item.TbItemFunc TbItemFunc {get; }
-        public item.TbItemExtra TbItemExtra {get; }
-        public l10n.TbL10NDemo TbL10NDemo {get; }
-        public l10n.TbPatchDemo TbPatchDemo {get; }
-        public mail.TbSystemMail TbSystemMail {get; }
-        public mail.TbGlobalMail TbGlobalMail {get; }
-        public role.TbRoleLevelExpAttr TbRoleLevelExpAttr {get; }
-        public role.TbRoleLevelBonusCoefficient TbRoleLevelBonusCoefficient {get; }
-        public tag.TbTestTag TbTestTag {get; }
-        public test.TbFullTypes TbFullTypes {get; }
-        public test.TbSingleton TbSingleton {get; }
-        public test.TbNotIndexList TbNotIndexList {get; }
-        public test.TbMultiUnionIndexList TbMultiUnionIndexList {get; }
-        public test.TbMultiIndexList TbMultiIndexList {get; }
-        public test.TbDataFromMisc TbDataFromMisc {get; }
-        public test.TbMultiRowRecord TbMultiRowRecord {get; }
-        public test.TbTestMultiColumn TbTestMultiColumn {get; }
-        public test.TbMultiRowTitle TbMultiRowTitle {get; }
-        public test.TbTestNull TbTestNull {get; }
-        public test.TbDemoPrimitive TbDemoPrimitive {get; }
-        public test.TbTestString TbTestString {get; }
-        public test.TbDemoGroup TbDemoGroup {get; }
-        public test.TbDemoGroup_C TbDemoGroup_C {get; }
-        public test.TbTestGlobal TbTestGlobal {get; }
-        public test.TbTestBeRef TbTestBeRef {get; }
-        public test.TbTestBeRef2 TbTestBeRef2 {get; }
-        public test.TbTestRef TbTestRef {get; }
-        public test.TbTestSize TbTestSize {get; }
-        public test.TbTestSet TbTestSet {get; }
-        public test.TbDetectCsvEncoding TbDetectCsvEncoding {get; }
-        public test.TbItem2 TbItem2 {get; }
-        public test.TbDefineFromExcel TbDefineFromExcel {get; }
-        public test.TbDefineFromExcelOne TbDefineFromExcelOne {get; }
-        public test.TbTestIndex TbTestIndex {get; }
-        public test.TbTestMap TbTestMap {get; }
-        public test.TbExcelFromJson TbExcelFromJson {get; }
-        public test.TbCompositeJsonTable1 TbCompositeJsonTable1 {get; }
-        public test.TbCompositeJsonTable2 TbCompositeJsonTable2 {get; }
-        public test.TbCompositeJsonTable3 TbCompositeJsonTable3 {get; }
-        public test.TbExcelFromJsonMultiRow TbExcelFromJsonMultiRow {get; }
-        public test.TbTestSep TbTestSep {get; }
-        public test.TbTestScriptableObject TbTestScriptableObject {get; }
-        public test.TbTestExternalType TbTestExternalType {get; }
-        public test.TbDemoGroupDefineFromExcel TbDemoGroupDefineFromExcel {get; }
-        public test.TbDefineFromExcel2 TbDefineFromExcel2 {get; }
-        public test.TbTestExcelBean TbTestExcelBean {get; }
-        public test.TbTestDesc TbTestDesc {get; }
-    
-        public Tables(System.Func<string, JSONNode> loader)
+        public item.TbItem TbItem 
         {
-            var tables = new System.Collections.Generic.Dictionary<string, object>();
+            get
+            { 
+                if (m_TbItem==null)
+                {
+                    m_TbItem = new item.TbItem(_loader("item_tbitem")); 
+                    tables.Add("item.TbItem", m_TbItem);
+                    m_TbItem.Resolve(tables); 
+                    m_TbItem.TranslateText(_translator); 
+                }
+                return m_TbItem;
+            } 
+        }
+        
+        private item.TbItemFunc m_TbItemFunc; 
+        public item.TbItemFunc TbItemFunc 
+        {
+            get
+            { 
+                if (m_TbItemFunc==null)
+                {
+                    m_TbItemFunc = new item.TbItemFunc(_loader("item_tbitemfunc")); 
+                    tables.Add("item.TbItemFunc", m_TbItemFunc);
+                    m_TbItemFunc.Resolve(tables); 
+                    m_TbItemFunc.TranslateText(_translator); 
+                }
+                return m_TbItemFunc;
+            } 
+        }
+        
+        private item.TbItemExtra m_TbItemExtra; 
+        public item.TbItemExtra TbItemExtra 
+        {
+            get
+            { 
+                if (m_TbItemExtra==null)
+                {
+                    m_TbItemExtra = new item.TbItemExtra(_loader("item_tbitemextra")); 
+                    tables.Add("item.TbItemExtra", m_TbItemExtra);
+                    m_TbItemExtra.Resolve(tables); 
+                    m_TbItemExtra.TranslateText(_translator); 
+                }
+                return m_TbItemExtra;
+            } 
+        }
+        
+        private l10n.TbL10NDemo m_TbL10NDemo; 
+        public l10n.TbL10NDemo TbL10NDemo 
+        {
+            get
+            { 
+                if (m_TbL10NDemo==null)
+                {
+                    m_TbL10NDemo = new l10n.TbL10NDemo(_loader("l10n_tbl10ndemo")); 
+                    tables.Add("l10n.TbL10NDemo", m_TbL10NDemo);
+                    m_TbL10NDemo.Resolve(tables); 
+                    m_TbL10NDemo.TranslateText(_translator); 
+                }
+                return m_TbL10NDemo;
+            } 
+        }
+        
+        private l10n.TbPatchDemo m_TbPatchDemo; 
+        public l10n.TbPatchDemo TbPatchDemo 
+        {
+            get
+            { 
+                if (m_TbPatchDemo==null)
+                {
+                    m_TbPatchDemo = new l10n.TbPatchDemo(_loader("l10n_tbpatchdemo")); 
+                    tables.Add("l10n.TbPatchDemo", m_TbPatchDemo);
+                    m_TbPatchDemo.Resolve(tables); 
+                    m_TbPatchDemo.TranslateText(_translator); 
+                }
+                return m_TbPatchDemo;
+            } 
+        }
+        
+        private mail.TbSystemMail m_TbSystemMail; 
+        public mail.TbSystemMail TbSystemMail 
+        {
+            get
+            { 
+                if (m_TbSystemMail==null)
+                {
+                    m_TbSystemMail = new mail.TbSystemMail(_loader("mail_tbsystemmail")); 
+                    tables.Add("mail.TbSystemMail", m_TbSystemMail);
+                    m_TbSystemMail.Resolve(tables); 
+                    m_TbSystemMail.TranslateText(_translator); 
+                }
+                return m_TbSystemMail;
+            } 
+        }
+        
+        private mail.TbGlobalMail m_TbGlobalMail; 
+        public mail.TbGlobalMail TbGlobalMail 
+        {
+            get
+            { 
+                if (m_TbGlobalMail==null)
+                {
+                    m_TbGlobalMail = new mail.TbGlobalMail(_loader("mail_tbglobalmail")); 
+                    tables.Add("mail.TbGlobalMail", m_TbGlobalMail);
+                    m_TbGlobalMail.Resolve(tables); 
+                    m_TbGlobalMail.TranslateText(_translator); 
+                }
+                return m_TbGlobalMail;
+            } 
+        }
+        
+        private role.TbRoleLevelExpAttr m_TbRoleLevelExpAttr; 
+        public role.TbRoleLevelExpAttr TbRoleLevelExpAttr 
+        {
+            get
+            { 
+                if (m_TbRoleLevelExpAttr==null)
+                {
+                    m_TbRoleLevelExpAttr = new role.TbRoleLevelExpAttr(_loader("role_tbrolelevelexpattr")); 
+                    tables.Add("role.TbRoleLevelExpAttr", m_TbRoleLevelExpAttr);
+                    m_TbRoleLevelExpAttr.Resolve(tables); 
+                    m_TbRoleLevelExpAttr.TranslateText(_translator); 
+                }
+                return m_TbRoleLevelExpAttr;
+            } 
+        }
+        
+        private role.TbRoleLevelBonusCoefficient m_TbRoleLevelBonusCoefficient; 
+        public role.TbRoleLevelBonusCoefficient TbRoleLevelBonusCoefficient 
+        {
+            get
+            { 
+                if (m_TbRoleLevelBonusCoefficient==null)
+                {
+                    m_TbRoleLevelBonusCoefficient = new role.TbRoleLevelBonusCoefficient(_loader("role_tbrolelevelbonuscoefficient")); 
+                    tables.Add("role.TbRoleLevelBonusCoefficient", m_TbRoleLevelBonusCoefficient);
+                    m_TbRoleLevelBonusCoefficient.Resolve(tables); 
+                    m_TbRoleLevelBonusCoefficient.TranslateText(_translator); 
+                }
+                return m_TbRoleLevelBonusCoefficient;
+            } 
+        }
+        
+        private tag.TbTestTag m_TbTestTag; 
+        public tag.TbTestTag TbTestTag 
+        {
+            get
+            { 
+                if (m_TbTestTag==null)
+                {
+                    m_TbTestTag = new tag.TbTestTag(_loader("tag_tbtesttag")); 
+                    tables.Add("tag.TbTestTag", m_TbTestTag);
+                    m_TbTestTag.Resolve(tables); 
+                    m_TbTestTag.TranslateText(_translator); 
+                }
+                return m_TbTestTag;
+            } 
+        }
+        
+        private test.TbFullTypes m_TbFullTypes; 
+        public test.TbFullTypes TbFullTypes 
+        {
+            get
+            { 
+                if (m_TbFullTypes==null)
+                {
+                    m_TbFullTypes = new test.TbFullTypes(_loader("test_tbfulltypes")); 
+                    tables.Add("test.TbFullTypes", m_TbFullTypes);
+                    m_TbFullTypes.Resolve(tables); 
+                    m_TbFullTypes.TranslateText(_translator); 
+                }
+                return m_TbFullTypes;
+            } 
+        }
+        
+        private test.TbSingleton m_TbSingleton; 
+        public test.TbSingleton TbSingleton 
+        {
+            get
+            { 
+                if (m_TbSingleton==null)
+                {
+                    m_TbSingleton = new test.TbSingleton(_loader("test_tbsingleton")); 
+                    tables.Add("test.TbSingleton", m_TbSingleton);
+                    m_TbSingleton.Resolve(tables); 
+                    m_TbSingleton.TranslateText(_translator); 
+                }
+                return m_TbSingleton;
+            } 
+        }
+        
+        private test.TbNotIndexList m_TbNotIndexList; 
+        public test.TbNotIndexList TbNotIndexList 
+        {
+            get
+            { 
+                if (m_TbNotIndexList==null)
+                {
+                    m_TbNotIndexList = new test.TbNotIndexList(_loader("test_tbnotindexlist")); 
+                    tables.Add("test.TbNotIndexList", m_TbNotIndexList);
+                    m_TbNotIndexList.Resolve(tables); 
+                    m_TbNotIndexList.TranslateText(_translator); 
+                }
+                return m_TbNotIndexList;
+            } 
+        }
+        
+        private test.TbMultiUnionIndexList m_TbMultiUnionIndexList; 
+        public test.TbMultiUnionIndexList TbMultiUnionIndexList 
+        {
+            get
+            { 
+                if (m_TbMultiUnionIndexList==null)
+                {
+                    m_TbMultiUnionIndexList = new test.TbMultiUnionIndexList(_loader("test_tbmultiunionindexlist")); 
+                    tables.Add("test.TbMultiUnionIndexList", m_TbMultiUnionIndexList);
+                    m_TbMultiUnionIndexList.Resolve(tables); 
+                    m_TbMultiUnionIndexList.TranslateText(_translator); 
+                }
+                return m_TbMultiUnionIndexList;
+            } 
+        }
+        
+        private test.TbMultiIndexList m_TbMultiIndexList; 
+        public test.TbMultiIndexList TbMultiIndexList 
+        {
+            get
+            { 
+                if (m_TbMultiIndexList==null)
+                {
+                    m_TbMultiIndexList = new test.TbMultiIndexList(_loader("test_tbmultiindexlist")); 
+                    tables.Add("test.TbMultiIndexList", m_TbMultiIndexList);
+                    m_TbMultiIndexList.Resolve(tables); 
+                    m_TbMultiIndexList.TranslateText(_translator); 
+                }
+                return m_TbMultiIndexList;
+            } 
+        }
+        
+        private test.TbDataFromMisc m_TbDataFromMisc; 
+        public test.TbDataFromMisc TbDataFromMisc 
+        {
+            get
+            { 
+                if (m_TbDataFromMisc==null)
+                {
+                    m_TbDataFromMisc = new test.TbDataFromMisc(_loader("test_tbdatafrommisc")); 
+                    tables.Add("test.TbDataFromMisc", m_TbDataFromMisc);
+                    m_TbDataFromMisc.Resolve(tables); 
+                    m_TbDataFromMisc.TranslateText(_translator); 
+                }
+                return m_TbDataFromMisc;
+            } 
+        }
+        
+        private test.TbMultiRowRecord m_TbMultiRowRecord; 
+        public test.TbMultiRowRecord TbMultiRowRecord 
+        {
+            get
+            { 
+                if (m_TbMultiRowRecord==null)
+                {
+                    m_TbMultiRowRecord = new test.TbMultiRowRecord(_loader("test_tbmultirowrecord")); 
+                    tables.Add("test.TbMultiRowRecord", m_TbMultiRowRecord);
+                    m_TbMultiRowRecord.Resolve(tables); 
+                    m_TbMultiRowRecord.TranslateText(_translator); 
+                }
+                return m_TbMultiRowRecord;
+            } 
+        }
+        
+        private test.TbTestMultiColumn m_TbTestMultiColumn; 
+        public test.TbTestMultiColumn TbTestMultiColumn 
+        {
+            get
+            { 
+                if (m_TbTestMultiColumn==null)
+                {
+                    m_TbTestMultiColumn = new test.TbTestMultiColumn(_loader("test_tbtestmulticolumn")); 
+                    tables.Add("test.TbTestMultiColumn", m_TbTestMultiColumn);
+                    m_TbTestMultiColumn.Resolve(tables); 
+                    m_TbTestMultiColumn.TranslateText(_translator); 
+                }
+                return m_TbTestMultiColumn;
+            } 
+        }
+        
+        private test.TbMultiRowTitle m_TbMultiRowTitle; 
+        public test.TbMultiRowTitle TbMultiRowTitle 
+        {
+            get
+            { 
+                if (m_TbMultiRowTitle==null)
+                {
+                    m_TbMultiRowTitle = new test.TbMultiRowTitle(_loader("test_tbmultirowtitle")); 
+                    tables.Add("test.TbMultiRowTitle", m_TbMultiRowTitle);
+                    m_TbMultiRowTitle.Resolve(tables); 
+                    m_TbMultiRowTitle.TranslateText(_translator); 
+                }
+                return m_TbMultiRowTitle;
+            } 
+        }
+        
+        private test.TbTestNull m_TbTestNull; 
+        public test.TbTestNull TbTestNull 
+        {
+            get
+            { 
+                if (m_TbTestNull==null)
+                {
+                    m_TbTestNull = new test.TbTestNull(_loader("test_tbtestnull")); 
+                    tables.Add("test.TbTestNull", m_TbTestNull);
+                    m_TbTestNull.Resolve(tables); 
+                    m_TbTestNull.TranslateText(_translator); 
+                }
+                return m_TbTestNull;
+            } 
+        }
+        
+        private test.TbDemoPrimitive m_TbDemoPrimitive; 
+        public test.TbDemoPrimitive TbDemoPrimitive 
+        {
+            get
+            { 
+                if (m_TbDemoPrimitive==null)
+                {
+                    m_TbDemoPrimitive = new test.TbDemoPrimitive(_loader("test_tbdemoprimitive")); 
+                    tables.Add("test.TbDemoPrimitive", m_TbDemoPrimitive);
+                    m_TbDemoPrimitive.Resolve(tables); 
+                    m_TbDemoPrimitive.TranslateText(_translator); 
+                }
+                return m_TbDemoPrimitive;
+            } 
+        }
+        
+        private test.TbTestString m_TbTestString; 
+        public test.TbTestString TbTestString 
+        {
+            get
+            { 
+                if (m_TbTestString==null)
+                {
+                    m_TbTestString = new test.TbTestString(_loader("test_tbteststring")); 
+                    tables.Add("test.TbTestString", m_TbTestString);
+                    m_TbTestString.Resolve(tables); 
+                    m_TbTestString.TranslateText(_translator); 
+                }
+                return m_TbTestString;
+            } 
+        }
+        
+        private test.TbDemoGroup m_TbDemoGroup; 
+        public test.TbDemoGroup TbDemoGroup 
+        {
+            get
+            { 
+                if (m_TbDemoGroup==null)
+                {
+                    m_TbDemoGroup = new test.TbDemoGroup(_loader("test_tbdemogroup")); 
+                    tables.Add("test.TbDemoGroup", m_TbDemoGroup);
+                    m_TbDemoGroup.Resolve(tables); 
+                    m_TbDemoGroup.TranslateText(_translator); 
+                }
+                return m_TbDemoGroup;
+            } 
+        }
+        
+        private test.TbDemoGroup_C m_TbDemoGroup_C; 
+        public test.TbDemoGroup_C TbDemoGroup_C 
+        {
+            get
+            { 
+                if (m_TbDemoGroup_C==null)
+                {
+                    m_TbDemoGroup_C = new test.TbDemoGroup_C(_loader("test_tbdemogroup_c")); 
+                    tables.Add("test.TbDemoGroup_C", m_TbDemoGroup_C);
+                    m_TbDemoGroup_C.Resolve(tables); 
+                    m_TbDemoGroup_C.TranslateText(_translator); 
+                }
+                return m_TbDemoGroup_C;
+            } 
+        }
+        
+        private test.TbTestGlobal m_TbTestGlobal; 
+        public test.TbTestGlobal TbTestGlobal 
+        {
+            get
+            { 
+                if (m_TbTestGlobal==null)
+                {
+                    m_TbTestGlobal = new test.TbTestGlobal(_loader("test_tbtestglobal")); 
+                    tables.Add("test.TbTestGlobal", m_TbTestGlobal);
+                    m_TbTestGlobal.Resolve(tables); 
+                    m_TbTestGlobal.TranslateText(_translator); 
+                }
+                return m_TbTestGlobal;
+            } 
+        }
+        
+        private test.TbTestBeRef m_TbTestBeRef; 
+        public test.TbTestBeRef TbTestBeRef 
+        {
+            get
+            { 
+                if (m_TbTestBeRef==null)
+                {
+                    m_TbTestBeRef = new test.TbTestBeRef(_loader("test_tbtestberef")); 
+                    tables.Add("test.TbTestBeRef", m_TbTestBeRef);
+                    m_TbTestBeRef.Resolve(tables); 
+                    m_TbTestBeRef.TranslateText(_translator); 
+                }
+                return m_TbTestBeRef;
+            } 
+        }
+        
+        private test.TbTestBeRef2 m_TbTestBeRef2; 
+        public test.TbTestBeRef2 TbTestBeRef2 
+        {
+            get
+            { 
+                if (m_TbTestBeRef2==null)
+                {
+                    m_TbTestBeRef2 = new test.TbTestBeRef2(_loader("test_tbtestberef2")); 
+                    tables.Add("test.TbTestBeRef2", m_TbTestBeRef2);
+                    m_TbTestBeRef2.Resolve(tables); 
+                    m_TbTestBeRef2.TranslateText(_translator); 
+                }
+                return m_TbTestBeRef2;
+            } 
+        }
+        
+        private test.TbTestRef m_TbTestRef; 
+        public test.TbTestRef TbTestRef 
+        {
+            get
+            { 
+                if (m_TbTestRef==null)
+                {
+                    m_TbTestRef = new test.TbTestRef(_loader("test_tbtestref")); 
+                    tables.Add("test.TbTestRef", m_TbTestRef);
+                    m_TbTestRef.Resolve(tables); 
+                    m_TbTestRef.TranslateText(_translator); 
+                }
+                return m_TbTestRef;
+            } 
+        }
+        
+        private test.TbTestSize m_TbTestSize; 
+        public test.TbTestSize TbTestSize 
+        {
+            get
+            { 
+                if (m_TbTestSize==null)
+                {
+                    m_TbTestSize = new test.TbTestSize(_loader("test_tbtestsize")); 
+                    tables.Add("test.TbTestSize", m_TbTestSize);
+                    m_TbTestSize.Resolve(tables); 
+                    m_TbTestSize.TranslateText(_translator); 
+                }
+                return m_TbTestSize;
+            } 
+        }
+        
+        private test.TbTestSet m_TbTestSet; 
+        public test.TbTestSet TbTestSet 
+        {
+            get
+            { 
+                if (m_TbTestSet==null)
+                {
+                    m_TbTestSet = new test.TbTestSet(_loader("test_tbtestset")); 
+                    tables.Add("test.TbTestSet", m_TbTestSet);
+                    m_TbTestSet.Resolve(tables); 
+                    m_TbTestSet.TranslateText(_translator); 
+                }
+                return m_TbTestSet;
+            } 
+        }
+        
+        private test.TbDetectCsvEncoding m_TbDetectCsvEncoding; 
+        public test.TbDetectCsvEncoding TbDetectCsvEncoding 
+        {
+            get
+            { 
+                if (m_TbDetectCsvEncoding==null)
+                {
+                    m_TbDetectCsvEncoding = new test.TbDetectCsvEncoding(_loader("test_tbdetectcsvencoding")); 
+                    tables.Add("test.TbDetectCsvEncoding", m_TbDetectCsvEncoding);
+                    m_TbDetectCsvEncoding.Resolve(tables); 
+                    m_TbDetectCsvEncoding.TranslateText(_translator); 
+                }
+                return m_TbDetectCsvEncoding;
+            } 
+        }
+        
+        private test.TbItem2 m_TbItem2; 
+        public test.TbItem2 TbItem2 
+        {
+            get
+            { 
+                if (m_TbItem2==null)
+                {
+                    m_TbItem2 = new test.TbItem2(_loader("test_tbitem2")); 
+                    tables.Add("test.TbItem2", m_TbItem2);
+                    m_TbItem2.Resolve(tables); 
+                    m_TbItem2.TranslateText(_translator); 
+                }
+                return m_TbItem2;
+            } 
+        }
+        
+        private test.TbDefineFromExcel m_TbDefineFromExcel; 
+        public test.TbDefineFromExcel TbDefineFromExcel 
+        {
+            get
+            { 
+                if (m_TbDefineFromExcel==null)
+                {
+                    m_TbDefineFromExcel = new test.TbDefineFromExcel(_loader("test_tbdefinefromexcel")); 
+                    tables.Add("test.TbDefineFromExcel", m_TbDefineFromExcel);
+                    m_TbDefineFromExcel.Resolve(tables); 
+                    m_TbDefineFromExcel.TranslateText(_translator); 
+                }
+                return m_TbDefineFromExcel;
+            } 
+        }
+        
+        private test.TbDefineFromExcelOne m_TbDefineFromExcelOne; 
+        public test.TbDefineFromExcelOne TbDefineFromExcelOne 
+        {
+            get
+            { 
+                if (m_TbDefineFromExcelOne==null)
+                {
+                    m_TbDefineFromExcelOne = new test.TbDefineFromExcelOne(_loader("test_tbdefinefromexcelone")); 
+                    tables.Add("test.TbDefineFromExcelOne", m_TbDefineFromExcelOne);
+                    m_TbDefineFromExcelOne.Resolve(tables); 
+                    m_TbDefineFromExcelOne.TranslateText(_translator); 
+                }
+                return m_TbDefineFromExcelOne;
+            } 
+        }
+        
+        private test.TbTestIndex m_TbTestIndex; 
+        public test.TbTestIndex TbTestIndex 
+        {
+            get
+            { 
+                if (m_TbTestIndex==null)
+                {
+                    m_TbTestIndex = new test.TbTestIndex(_loader("test_tbtestindex")); 
+                    tables.Add("test.TbTestIndex", m_TbTestIndex);
+                    m_TbTestIndex.Resolve(tables); 
+                    m_TbTestIndex.TranslateText(_translator); 
+                }
+                return m_TbTestIndex;
+            } 
+        }
+        
+        private test.TbTestMap m_TbTestMap; 
+        public test.TbTestMap TbTestMap 
+        {
+            get
+            { 
+                if (m_TbTestMap==null)
+                {
+                    m_TbTestMap = new test.TbTestMap(_loader("test_tbtestmap")); 
+                    tables.Add("test.TbTestMap", m_TbTestMap);
+                    m_TbTestMap.Resolve(tables); 
+                    m_TbTestMap.TranslateText(_translator); 
+                }
+                return m_TbTestMap;
+            } 
+        }
+        
+        private test.TbExcelFromJson m_TbExcelFromJson; 
+        public test.TbExcelFromJson TbExcelFromJson 
+        {
+            get
+            { 
+                if (m_TbExcelFromJson==null)
+                {
+                    m_TbExcelFromJson = new test.TbExcelFromJson(_loader("test_tbexcelfromjson")); 
+                    tables.Add("test.TbExcelFromJson", m_TbExcelFromJson);
+                    m_TbExcelFromJson.Resolve(tables); 
+                    m_TbExcelFromJson.TranslateText(_translator); 
+                }
+                return m_TbExcelFromJson;
+            } 
+        }
+        
+        private test.TbCompositeJsonTable1 m_TbCompositeJsonTable1; 
+        public test.TbCompositeJsonTable1 TbCompositeJsonTable1 
+        {
+            get
+            { 
+                if (m_TbCompositeJsonTable1==null)
+                {
+                    m_TbCompositeJsonTable1 = new test.TbCompositeJsonTable1(_loader("test_tbcompositejsontable1")); 
+                    tables.Add("test.TbCompositeJsonTable1", m_TbCompositeJsonTable1);
+                    m_TbCompositeJsonTable1.Resolve(tables); 
+                    m_TbCompositeJsonTable1.TranslateText(_translator); 
+                }
+                return m_TbCompositeJsonTable1;
+            } 
+        }
+        
+        private test.TbCompositeJsonTable2 m_TbCompositeJsonTable2; 
+        public test.TbCompositeJsonTable2 TbCompositeJsonTable2 
+        {
+            get
+            { 
+                if (m_TbCompositeJsonTable2==null)
+                {
+                    m_TbCompositeJsonTable2 = new test.TbCompositeJsonTable2(_loader("test_tbcompositejsontable2")); 
+                    tables.Add("test.TbCompositeJsonTable2", m_TbCompositeJsonTable2);
+                    m_TbCompositeJsonTable2.Resolve(tables); 
+                    m_TbCompositeJsonTable2.TranslateText(_translator); 
+                }
+                return m_TbCompositeJsonTable2;
+            } 
+        }
+        
+        private test.TbCompositeJsonTable3 m_TbCompositeJsonTable3; 
+        public test.TbCompositeJsonTable3 TbCompositeJsonTable3 
+        {
+            get
+            { 
+                if (m_TbCompositeJsonTable3==null)
+                {
+                    m_TbCompositeJsonTable3 = new test.TbCompositeJsonTable3(_loader("test_tbcompositejsontable3")); 
+                    tables.Add("test.TbCompositeJsonTable3", m_TbCompositeJsonTable3);
+                    m_TbCompositeJsonTable3.Resolve(tables); 
+                    m_TbCompositeJsonTable3.TranslateText(_translator); 
+                }
+                return m_TbCompositeJsonTable3;
+            } 
+        }
+        
+        private test.TbExcelFromJsonMultiRow m_TbExcelFromJsonMultiRow; 
+        public test.TbExcelFromJsonMultiRow TbExcelFromJsonMultiRow 
+        {
+            get
+            { 
+                if (m_TbExcelFromJsonMultiRow==null)
+                {
+                    m_TbExcelFromJsonMultiRow = new test.TbExcelFromJsonMultiRow(_loader("test_tbexcelfromjsonmultirow")); 
+                    tables.Add("test.TbExcelFromJsonMultiRow", m_TbExcelFromJsonMultiRow);
+                    m_TbExcelFromJsonMultiRow.Resolve(tables); 
+                    m_TbExcelFromJsonMultiRow.TranslateText(_translator); 
+                }
+                return m_TbExcelFromJsonMultiRow;
+            } 
+        }
+        
+        private test.TbTestSep m_TbTestSep; 
+        public test.TbTestSep TbTestSep 
+        {
+            get
+            { 
+                if (m_TbTestSep==null)
+                {
+                    m_TbTestSep = new test.TbTestSep(_loader("test_tbtestsep")); 
+                    tables.Add("test.TbTestSep", m_TbTestSep);
+                    m_TbTestSep.Resolve(tables); 
+                    m_TbTestSep.TranslateText(_translator); 
+                }
+                return m_TbTestSep;
+            } 
+        }
+        
+        private test.TbTestScriptableObject m_TbTestScriptableObject; 
+        public test.TbTestScriptableObject TbTestScriptableObject 
+        {
+            get
+            { 
+                if (m_TbTestScriptableObject==null)
+                {
+                    m_TbTestScriptableObject = new test.TbTestScriptableObject(_loader("test_tbtestscriptableobject")); 
+                    tables.Add("test.TbTestScriptableObject", m_TbTestScriptableObject);
+                    m_TbTestScriptableObject.Resolve(tables); 
+                    m_TbTestScriptableObject.TranslateText(_translator); 
+                }
+                return m_TbTestScriptableObject;
+            } 
+        }
+        
+        private test.TbTestExternalType m_TbTestExternalType; 
+        public test.TbTestExternalType TbTestExternalType 
+        {
+            get
+            { 
+                if (m_TbTestExternalType==null)
+                {
+                    m_TbTestExternalType = new test.TbTestExternalType(_loader("test_tbtestexternaltype")); 
+                    tables.Add("test.TbTestExternalType", m_TbTestExternalType);
+                    m_TbTestExternalType.Resolve(tables); 
+                    m_TbTestExternalType.TranslateText(_translator); 
+                }
+                return m_TbTestExternalType;
+            } 
+        }
+        
+        private test.TbDemoGroupDefineFromExcel m_TbDemoGroupDefineFromExcel; 
+        public test.TbDemoGroupDefineFromExcel TbDemoGroupDefineFromExcel 
+        {
+            get
+            { 
+                if (m_TbDemoGroupDefineFromExcel==null)
+                {
+                    m_TbDemoGroupDefineFromExcel = new test.TbDemoGroupDefineFromExcel(_loader("test_tbdemogroupdefinefromexcel")); 
+                    tables.Add("test.TbDemoGroupDefineFromExcel", m_TbDemoGroupDefineFromExcel);
+                    m_TbDemoGroupDefineFromExcel.Resolve(tables); 
+                    m_TbDemoGroupDefineFromExcel.TranslateText(_translator); 
+                }
+                return m_TbDemoGroupDefineFromExcel;
+            } 
+        }
+        
+        private test.TbDefineFromExcel2 m_TbDefineFromExcel2; 
+        public test.TbDefineFromExcel2 TbDefineFromExcel2 
+        {
+            get
+            { 
+                if (m_TbDefineFromExcel2==null)
+                {
+                    m_TbDefineFromExcel2 = new test.TbDefineFromExcel2(_loader("test_tbdefinefromexcel2")); 
+                    tables.Add("test.TbDefineFromExcel2", m_TbDefineFromExcel2);
+                    m_TbDefineFromExcel2.Resolve(tables); 
+                    m_TbDefineFromExcel2.TranslateText(_translator); 
+                }
+                return m_TbDefineFromExcel2;
+            } 
+        }
+        
+        private test.TbTestExcelBean m_TbTestExcelBean; 
+        public test.TbTestExcelBean TbTestExcelBean 
+        {
+            get
+            { 
+                if (m_TbTestExcelBean==null)
+                {
+                    m_TbTestExcelBean = new test.TbTestExcelBean(_loader("test_tbtestexcelbean")); 
+                    tables.Add("test.TbTestExcelBean", m_TbTestExcelBean);
+                    m_TbTestExcelBean.Resolve(tables); 
+                    m_TbTestExcelBean.TranslateText(_translator); 
+                }
+                return m_TbTestExcelBean;
+            } 
+        }
+        
+        private test.TbTestDesc m_TbTestDesc; 
+        public test.TbTestDesc TbTestDesc 
+        {
+            get
+            { 
+                if (m_TbTestDesc==null)
+                {
+                    m_TbTestDesc = new test.TbTestDesc(_loader("test_tbtestdesc")); 
+                    tables.Add("test.TbTestDesc", m_TbTestDesc);
+                    m_TbTestDesc.Resolve(tables); 
+                    m_TbTestDesc.TranslateText(_translator); 
+                }
+                return m_TbTestDesc;
+            } 
+        }
+        
+    
+        private System.Collections.Generic.Dictionary<string,object> tables = new System.Collections.Generic.Dictionary<string, object>();
+        private System.Func<string,JSONNode> _loader;
+        private System.Func<string, string, string> _translator;
+        public Tables(System.Func<string, JSONNode> loader, System.Func<string, string, string> translator = null)
+        {
+            _loader = loader;
+            _translator = translator;
+            tables.Clear();
+            /*
             TbBlackboard = new ai.TbBlackboard(loader("ai_tbblackboard")); 
             tables.Add("ai.TbBlackboard", TbBlackboard);
             TbBehaviorTree = new ai.TbBehaviorTree(loader("ai_tbbehaviortree")); 
@@ -243,9 +1074,11 @@ namespace cfg
             TbDefineFromExcel2.Resolve(tables); 
             TbTestExcelBean.Resolve(tables); 
             TbTestDesc.Resolve(tables); 
+            
             PostResolve();
+            */
         }
-    
+        /*
         public void TranslateText(System.Func<string, string, string> translator)
         {
             TbBlackboard.TranslateText(translator); 
@@ -307,5 +1140,6 @@ namespace cfg
         
         partial void PostInit();
         partial void PostResolve();
+        */
     }
 }

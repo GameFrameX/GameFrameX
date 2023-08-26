@@ -1,6 +1,8 @@
 {
     "name": "LuBan.Runtime",
-    "references": [],
+    "references": [
+        "SimpleJSON.Runtime"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
