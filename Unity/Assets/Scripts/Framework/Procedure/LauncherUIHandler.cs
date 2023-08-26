@@ -18,6 +18,11 @@ namespace UnityGameFramework.Procedure
             _ui.MakeFullScreen();
         }
 
+        public static void Hide()
+        {
+            GameApp.UI.Remove(UILauncher.UIResName, UILayer.Loading);
+        }
+
         public static void SetTipText(string text)
         {
             _ui.m_TipText.text = text;
