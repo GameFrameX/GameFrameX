@@ -47,7 +47,7 @@ namespace Base.Net
 
             var reader = new SequenceReader<byte>(input);
             // Total Length
-            int msgLen = (int) reader.Length; //4
+            int msgLen = (int)reader.Length; //4
             if (!CheckMsgLen(msgLen))
             {
                 consumed = input.End;
@@ -60,7 +60,7 @@ namespace Base.Net
             reader.TryReadBigEndian(out long timestamp); //8
             // MsgId
             reader.TryReadBigEndian(out int msgId); //4
-            Log.Debug($"{length} {timestamp} {msgId}");
+            // Log.Debug($"{length} {timestamp} {msgId}");
             var payload = input.Slice(reader.Position);
             if (payload.Length < 4)
             {
