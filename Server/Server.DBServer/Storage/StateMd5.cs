@@ -1,4 +1,3 @@
-using MessagePack;
 using NLog;
 using Server.DBServer.State;
 using Server.Utility;
@@ -45,7 +44,7 @@ class StateMd5
 
     private static (string md5, byte[] data) GetMd5AndData(CacheState state)
     {
-        var data = MessagePackSerializer.Serialize(state);
+        var data = Server.Serialize.Serialize.SerializerHelper.Serialize(state);
         var md5Str = Md5Helper.Md5(data);
         return (md5Str, data);
     }

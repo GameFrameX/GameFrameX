@@ -1,4 +1,3 @@
-using MessagePack;
 using NLog;
 using Server.DBServer.State;
 
@@ -42,7 +41,7 @@ class StateHash
 
     private static (Standart.Hash.xxHash.uint128 md5, byte[] data) GetHashAndData(CacheState state)
     {
-        var data = MessagePackSerializer.Serialize(state);
+        var data = Server.Serialize.Serialize.SerializerHelper.Serialize(state);
         var md5Str = Standart.Hash.xxHash.xxHash128.ComputeHash(data, data.Length);
         return (md5Str, data);
     }

@@ -52,7 +52,7 @@ namespace Server.Core.Net.Tcp.Codecs
                 return null;
             }
 
-            Message protoMsg = MessagePackSerializer.Deserialize<Message>(reader.UnreadSequence);
+            Message protoMsg = Serialize.Serialize.SerializerHelper.Deserialize<Message>(reader.UnreadSequence);
             protoMsg.MsgId = msgId;
             if (protoMsg.MsgId != msgId)
             {
