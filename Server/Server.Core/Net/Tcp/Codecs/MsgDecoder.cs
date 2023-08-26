@@ -4,6 +4,7 @@ using MessagePack;
 using Microsoft.AspNetCore.Connections;
 using Server.Core.Hotfix;
 using Server.Core.Net.Messages;
+using Server.Google.ProtoBuf;
 
 namespace Server.Core.Net.Tcp.Codecs
 {
@@ -18,11 +19,11 @@ namespace Server.Core.Net.Tcp.Codecs
         /// 从客户端接收的包大小最大值（单位：字节 1M）
         const int MAX_RECV_SIZE = 1024 * 1024;
 
-        public static Message Decode(ConnectionContext context, NMessage msg)
+        public static Message Decode(ConnectionContext context, NetMessage msg)
         {
             var reader = new SequenceReader<byte>(msg.Payload);
 
-            int msgLen = (int) msg.Payload.Length; //4
+            int msgLen = (int)msg.Payload.Length; //4
             if (!CheckMsgLen(msgLen))
             {
                 context.Abort();
@@ -71,7 +72,7 @@ namespace Server.Core.Net.Tcp.Codecs
             context.Items.TryGetValue(LAST_RECV_ORDER, out object objOrder);
             if (objOrder != null)
             {
-                int lastOrder = (int) objOrder;
+                int lastOrder = (int)objOrder;
                 if (order != lastOrder + 1)
                 {
                     LOGGER.Error("包序列出错, order=" + order + ", lastOrder=" + lastOrder);
@@ -117,7 +118,7 @@ namespace Server.Core.Net.Tcp.Codecs
             context.Items.TryGetValue(LAST_RECV_TIME, out object objTime);
             if (objTime != null)
             {
-                long lastTime = (long) objTime;
+                long lastTime = (long)objTime;
                 if (lastTime > time)
                 {
                     LOGGER.Error("时间戳出错，time=" + time + ", lastTime=" + lastTime + " " + context);

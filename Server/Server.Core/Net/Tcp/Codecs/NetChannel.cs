@@ -13,9 +13,9 @@ namespace Server.Core.Net.Tcp.Codecs
         public ProtocolReader Reader { get; protected set; }
         protected ProtocolWriter Writer { get; set; }
 
-        public IProtocal<NMessage> Protocol { get; protected set; }
+        public IProtocal<NetMessage> Protocol { get; protected set; }
 
-        public NetChannel(ConnectionContext context, IProtocal<NMessage> protocal)
+        public NetChannel(ConnectionContext context, IProtocal<NetMessage> protocal)
         {
             Context = context;
             Reader = context.CreateReader();
@@ -59,7 +59,7 @@ namespace Server.Core.Net.Tcp.Codecs
             Writer = null;
         }
 
-        public async ValueTask WriteAsync(NMessage msg)
+        public async ValueTask WriteAsync(NetMessage msg)
         {
             if (Writer != null)
             {
@@ -69,7 +69,7 @@ namespace Server.Core.Net.Tcp.Codecs
 
         public void WriteAsync(Message msg)
         {
-            _ = WriteAsync(new NMessage(msg));
+            _ = WriteAsync(new NetMessage(msg));
         }
     }
 }

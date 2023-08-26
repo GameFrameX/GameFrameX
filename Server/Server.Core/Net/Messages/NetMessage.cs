@@ -1,16 +1,15 @@
 ﻿using System.Buffers;
-using MessagePack;
 
 namespace Server.Core.Net.Messages
 {
     /// <summary>
     /// net message
     /// </summary>
-    public struct NMessage
+    public readonly struct NetMessage
     {
         public ReadOnlySequence<byte> Payload { get; }
 
-        public NMessage(ReadOnlySequence<byte> payload)
+        public NetMessage(ReadOnlySequence<byte> payload)
         {
             Msg = null;
             Payload = payload;
@@ -18,7 +17,7 @@ namespace Server.Core.Net.Messages
 
         public Message Msg { get; }
 
-        public NMessage(Message msg)
+        public NetMessage(Message msg)
         {
             Msg = msg;
             Payload = default;
@@ -26,14 +25,14 @@ namespace Server.Core.Net.Messages
 
         public void Serialize(IBufferWriter<byte> writer)
         {
-            MessagePackSerializer.Serialize(writer, Msg);
+            Server.Serialize.Serialize.SerializerHelper.Serialize(writer, Msg);
         }
 
         public byte[] Serialize()
         {
             try
             {
-                return MessagePackSerializer.Serialize(Msg);
+                return Server.Serialize.Serialize.SerializerHelper.Serialize(Msg);
             }
             catch (System.Exception)
             {

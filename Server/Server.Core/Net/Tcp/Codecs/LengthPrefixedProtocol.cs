@@ -9,11 +9,11 @@ using Server.Utility;
 
 namespace Server.Core.Net.Tcp.Codecs
 {
-    public class LengthPrefixedProtocol : IProtocal<NMessage>
+    public class LengthPrefixedProtocol : IProtocal<NetMessage>
     {
         NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public bool TryParseMessage(in ReadOnlySequence<byte> input, ref SequencePosition consumed, ref SequencePosition examined, out NMessage message)
+        public bool TryParseMessage(in ReadOnlySequence<byte> input, ref SequencePosition consumed, ref SequencePosition examined, out NetMessage message)
         {
             var reader = new SequenceReader<byte>(input);
             //客户端传过来的length包含了长度自身（data: [length:byte[1,2,3,4]] ==> 则length=int 4 个字节+byte数组长度4=8）
@@ -24,7 +24,7 @@ namespace Server.Core.Net.Tcp.Codecs
             }
 
             var payload = input.Slice(reader.Position, length - 4); //length已经被TryReadBigEndian读取
-            message = new NMessage(payload);
+            message = new NetMessage(payload);
 
             consumed = payload.End;
             examined = consumed;
@@ -33,7 +33,7 @@ namespace Server.Core.Net.Tcp.Codecs
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        public void WriteMessage(NMessage nmsg, IBufferWriter<byte> output)
+        public void WriteMessage(NetMessage nmsg, IBufferWriter<byte> output)
         {
             var bytes = nmsg.Serialize();
 
