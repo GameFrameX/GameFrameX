@@ -34,7 +34,11 @@ public static class GlobalConst
 
     #region GlobalTimer 全局计时器
 
+    /// <summary>
+    /// 数据存储间隔 单位 毫秒
+    /// </summary>
     public const int SAVE_INTERVAL_IN_MilliSECONDS = 300_000; //300_000;
+
     public const int MAGIC = 60;
 
     #endregion
