@@ -1,0 +1,18 @@
+{
+  "name": "com.google.protobuf",
+  "displayName": "Google Protocol Buffers",
+  "version": "22.2.0",
+  "unity": "2017.1",
+  "description": "Google Protocol Buffers",
+  "author": {
+    "name": "protobuf",
+    "url": "https://github.com/protocolbuffers/protobuf"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/protocolbuffers/protobuf.git"
+  },
+  "relatedPackages": {},
+  "dependencies": {
+  }
+}
