@@ -1,7 +1,6 @@
 using System.Text;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using GlobalConfig;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityGameFramework.Runtime;
@@ -13,7 +12,7 @@ namespace UnityGameFramework.Procedure
     /// <summary>
     /// 获取全局信息
     /// </summary>
-    public class ProcedureGetGlobalInfoState : ProcedureBase
+    public sealed class ProcedureGetGlobalInfoState : ProcedureBase
     {
         private UnityWebRequest www;
 
@@ -54,7 +53,7 @@ namespace UnityGameFramework.Procedure
                 else
                 {
                     HttpJsonResult httpJsonResult = Utility.Json.ToObject<HttpJsonResult>(json);
-                    if (httpJsonResult.code > 0)
+                    if (httpJsonResult.Code > 0)
                     {
                         // GameApp.EventSystem.Run(EventIdType.UILoadingMainSetText, "Server error, retrying...");
                         LauncherUIHandler.SetTipText("Server error, retrying...");
@@ -64,7 +63,7 @@ namespace UnityGameFramework.Procedure
                     }
                     else
                     {
-                        ResponseGlobalInfo responseGlobalInfo = Utility.Json.ToObject<ResponseGlobalInfo>(httpJsonResult.data);
+                        ResponseGlobalInfo responseGlobalInfo = Utility.Json.ToObject<ResponseGlobalInfo>(httpJsonResult.Data);
                         GlobalConfigComponent globalConfigComponent = GameEntry.GetComponent<GlobalConfigComponent>();
                         globalConfigComponent.CheckAppVersionUrl = responseGlobalInfo.CheckAppVersionUrl;
                         globalConfigComponent.CheckResourceVersionUrl = responseGlobalInfo.CheckResourceVersionUrl;

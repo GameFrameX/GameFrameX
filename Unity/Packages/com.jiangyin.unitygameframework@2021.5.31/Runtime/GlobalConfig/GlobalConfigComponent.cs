@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace GlobalConfig
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 全局配置组件。

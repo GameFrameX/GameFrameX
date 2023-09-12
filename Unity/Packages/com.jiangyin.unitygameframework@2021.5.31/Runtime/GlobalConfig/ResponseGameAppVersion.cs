@@ -1,4 +1,4 @@
-namespace UnityGameFramework.Procedure
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 游戏版本信息

@@ -3,7 +3,6 @@ using Game.Model;
 using GameFramework.Fsm;
 using GameFramework.Localization;
 using GameFramework.Procedure;
-using GlobalConfig;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityGameFramework.Runtime;
@@ -53,7 +52,7 @@ namespace UnityGameFramework.Procedure
                 else
                 {
                     HttpJsonResult httpJsonResult = Utility.Json.ToObject<HttpJsonResult>(json);
-                    if (httpJsonResult.code > 0)
+                    if (httpJsonResult.Code > 0)
                     {
                         LauncherUIHandler.SetTipText("Server error, retrying...");
                         Debug.LogError($"获取全局信息返回异常=> Req:{jsonParams} Resp:{json}");
@@ -62,7 +61,7 @@ namespace UnityGameFramework.Procedure
                     }
                     else
                     {
-                        ResponseGameAppVersion responseGameAppVersion = Utility.Json.ToObject<ResponseGameAppVersion>(httpJsonResult.data);
+                        ResponseGameAppVersion responseGameAppVersion = Utility.Json.ToObject<ResponseGameAppVersion>(httpJsonResult.Data);
 
                         if (responseGameAppVersion.IsUpgrade)
                         {

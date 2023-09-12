@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using GlobalConfig;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 

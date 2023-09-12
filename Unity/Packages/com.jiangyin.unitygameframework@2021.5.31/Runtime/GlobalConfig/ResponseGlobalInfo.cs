@@ -1,7 +1,7 @@
-namespace UnityGameFramework.Procedure
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
-    /// 
+    /// 全局信息响应对象
     /// </summary>
     public sealed class ResponseGlobalInfo
     {
