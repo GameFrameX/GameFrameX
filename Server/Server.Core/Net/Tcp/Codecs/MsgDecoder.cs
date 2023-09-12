@@ -4,7 +4,6 @@ using MessagePack;
 using Microsoft.AspNetCore.Connections;
 using Server.Core.Hotfix;
 using Server.Core.Net.Messages;
-using Server.Google.ProtoBuf;
 
 namespace Server.Core.Net.Tcp.Codecs
 {
