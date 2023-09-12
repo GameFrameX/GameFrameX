@@ -3,14 +3,14 @@
 集成了客户端和服务器的内容
 
 > 正在开发中...
-
+> 有意见或建议发Issue或发消息
 
 
 # 服务器[Server]功能：
 
 ### 服务器  从`geekserver` 修改而来.
 
-### 导表  从`ET` 修改而来
+### 导表  从`LuBan` 修改而来
 
 ### 数据库使用`MongoDB`
 
@@ -20,13 +20,15 @@
 
 > GameFramework 客户端框架
 
-> YooAsset 打包
+> YooAsset 打包(修改后,不支持Addressable)
 
 > UniTask 异步Await/Async
 
 > FairyGUI UI编辑器
 
-> ProtoBuf 通讯协议
+> ProtoBuf 通讯协议(暂时移除)
+
+> MessagePack 通讯协议
 
 > HybridCLR  热更新
 
