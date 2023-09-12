@@ -23,3 +23,5 @@ Server/**/bin
 Unity/.cache.meta
 docker/mongo/database
 Unity/Packages/packages-lock.json
+Unity/Unity.sln.DotSettings.user
+Unity/Unity.sln
