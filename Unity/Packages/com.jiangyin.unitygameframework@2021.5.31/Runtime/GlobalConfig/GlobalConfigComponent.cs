@@ -10,9 +10,9 @@ namespace UnityGameFramework.Runtime
     [AddComponentMenu("Game Framework/Global Config")]
     public sealed class GlobalConfigComponent : GameFrameworkComponent
     {
-        public string CheckAppVersionUrl { get; set; }
-        public string CheckResourceVersionUrl { get; set; }
-        public string Content { get; set; }
-        public string HostServerUrl { get; set; }
+        public string CheckAppVersionUrl { get; set; } = string.Empty;
+        public string CheckResourceVersionUrl { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public string HostServerUrl { get; set; } = string.Empty;
     }
 }
