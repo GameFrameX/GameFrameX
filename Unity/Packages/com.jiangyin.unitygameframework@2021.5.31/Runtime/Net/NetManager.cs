@@ -18,14 +18,14 @@ namespace Base.Net
         ConcurrentQueue<NetMessage> msgQueue = new ConcurrentQueue<NetMessage>();
         public int Port { private set; get; }
         public string Host { private set; get; }
-        IProtoCal<Message> _protocol;
+        IProtoCal<MessageObject> _protocol;
 
         public void Init()
         {
             _protocol = new ClientProtocol();
         }
 
-        public void Send(Message msg)
+        public void Send(MessageObject msg)
         {
             channel?.Write(msg);
         }
@@ -78,7 +78,7 @@ namespace Base.Net
             msgQueue.Enqueue(rMsg);
         }
 
-        public void OnRevice(Message msg)
+        public void OnRevice(MessageObject msg)
         {
             msgQueue.Enqueue(new NetMessage(msg));
         }

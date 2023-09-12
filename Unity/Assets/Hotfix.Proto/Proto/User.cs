@@ -1,7 +1,7 @@
 ﻿using System;
 using MessagePack;
 using System.Collections.Generic;
-using Protocol;
+using GameFramework.Network;
 
 namespace Hotfix.Proto.Proto
 {
@@ -10,7 +10,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(10)]
 	[MessagePackObject(true)]
-	public partial class ReqLogin : Message, IRequestMessage
+	public partial class ReqLogin : MessageObject, IRequestMessage
 	{
 		/// <summary>
 		/// 
@@ -49,7 +49,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(10)]
 	[MessagePackObject(true)]
-	public partial class RespLogin : Message, IResponseMessage
+	public partial class RespLogin : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		/// 
@@ -68,7 +68,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	
 	[MessagePackObject(true)]
-	public partial class RespErrorCode : Message
+	public partial class RespErrorCode : MessageObject
 	{
 		/// <summary>
 		///  0:表示无错误
@@ -84,7 +84,7 @@ namespace Hotfix.Proto.Proto
 
 	[MessageTypeHandler(200)]
 	[MessagePackObject(true)]
-	public partial class RespPrompt : Message, IResponseMessage
+	public partial class RespPrompt : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）

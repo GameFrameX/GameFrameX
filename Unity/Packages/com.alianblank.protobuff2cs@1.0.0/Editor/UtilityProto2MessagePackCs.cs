@@ -59,7 +59,7 @@ namespace Proto2CS.Editor
             }
             else
             {
-                sb.AppendLine("using Protocol;");
+                sb.AppendLine("using GameFramework.Network;");
             }
 
             sb.AppendLine();
@@ -119,11 +119,11 @@ namespace Proto2CS.Editor
                     {
                         if (isServer)
                         {
-                            sb.Append($"\tpublic partial class {msgName} : Server.Core.Net.Messages.Message");
+                            sb.Append($"\tpublic partial class {msgName} : Server.Core.Net.Messages.MessageObject");
                         }
                         else
                         {
-                            sb.Append($"\tpublic partial class {msgName} : Message");
+                            sb.Append($"\tpublic partial class {msgName} : MessageObject");
                         }
                     }
 

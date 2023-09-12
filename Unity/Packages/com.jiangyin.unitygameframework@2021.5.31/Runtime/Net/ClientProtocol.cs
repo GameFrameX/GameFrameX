@@ -10,7 +10,7 @@ using UnityGameFramework.Runtime;
 
 namespace Base.Net
 {
-    public class ClientProtocol : IProtoCal<Message>
+    public class ClientProtocol : IProtoCal<MessageObject>
     {
         const int MAX_RECV_SIZE = 1024 * 1024;
 
@@ -38,9 +38,9 @@ namespace Base.Net
         }
 
 
-        public bool TryParseMessage(in ReadOnlySequence<byte> input, ref SequencePosition consumed, ref SequencePosition examined, out Message message)
+        public bool TryParseMessage(in ReadOnlySequence<byte> input, ref SequencePosition consumed, ref SequencePosition examined, out MessageObject messageObject)
         {
-            message = default;
+            messageObject = default;
 
             var reader = new SequenceReader<byte>(input);
             // Total Length
@@ -76,9 +76,9 @@ namespace Base.Net
             }
             else
             {
-                message = MessagePackSerializer.Deserialize<Message>(payload);
+                messageObject = MessagePackSerializer.Deserialize<MessageObject>(payload);
 #if UNITY_EDITOR
-                Log.Debug($"收到消息 ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{Utility.Json.ToJson(message)}");
+                Log.Debug($"收到消息 ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{Utility.Json.ToJson(messageObject)}");
 #endif
             }
 
@@ -90,7 +90,7 @@ namespace Base.Net
         int count = 0;
         // private readonly MemoryStream _writeMemoryStream = new MemoryStream();
 
-        public void WriteMessage(Message msg, IBufferWriter<byte> output)
+        public void WriteMessage(MessageObject msg, IBufferWriter<byte> output)
         {
             // _writeMemoryStream.Seek(0, SeekOrigin.Begin);
             //length + timestamp + magic + msgid

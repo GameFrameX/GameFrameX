@@ -3,8 +3,7 @@
 // </auto-generated>
 
 using Hotfix.Proto.Proto;
-using Protocol;
-using Message = Protocol.Message;
+using GameFramework.Network;
 
 #pragma warning disable 618
 #pragma warning disable 612
@@ -20,9 +19,9 @@ using Message = Protocol.Message;
 
 namespace MessagePack.Formatters.Hotfix.Proto.Proto
 {
-    public sealed class MessageFormatter : global::MessagePack.Formatters.IMessagePackFormatter<Message>
+    public sealed class MessageFormatter : global::MessagePack.Formatters.IMessagePackFormatter<MessageObject>
     {
-        public void Serialize(ref global::MessagePack.MessagePackWriter writer, Message value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref global::MessagePack.MessagePackWriter writer, MessageObject value, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (value is null)
             {
@@ -33,7 +32,7 @@ namespace MessagePack.Formatters.Hotfix.Proto.Proto
             writer.WriteMapHeader(0);
         }
 
-        public Message Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public MessageObject Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (reader.TryReadNil())
             {
@@ -41,7 +40,7 @@ namespace MessagePack.Formatters.Hotfix.Proto.Proto
             }
 
             reader.Skip();
-            var ____result = new Message();
+            var ____result = new MessageObject();
             return ____result;
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using MessagePack;
 using System.Collections.Generic;
-using Protocol;
+using GameFramework.Network;
 
 namespace Hotfix.Proto.Proto
 {
@@ -10,7 +10,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(1)]
 	[MessagePackObject(true)]
-	public partial class ReqHeartBeat : Message, IRequestMessage
+	public partial class ReqHeartBeat : MessageObject, IRequestMessage
 	{
 		/// <summary>
 		///  时间戳
@@ -24,7 +24,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(1)]
 	[MessagePackObject(true)]
-	public partial class RespHeartBeat : Message, IResponseMessage
+	public partial class RespHeartBeat : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  时间戳

@@ -21,7 +21,7 @@ namespace Base.Net
         {
         }
 
-        public NetMessage(Message msg)
+        public NetMessage(MessageObject msg)
         {
             this.Msg = msg;
         }

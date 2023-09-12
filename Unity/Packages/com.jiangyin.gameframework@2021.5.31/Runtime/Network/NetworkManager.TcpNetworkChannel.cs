@@ -85,7 +85,7 @@ namespace GameFramework.Network
                 ConnectAsync();
             }
 
-            public IProtoCal<Message> Protocol { get; protected set; }
+            public IProtoCal<MessageObject> Protocol { get; protected set; }
 
             protected override bool ProcessSend()
             {
@@ -264,7 +264,7 @@ namespace GameFramework.Network
                 }
             }
 
-            public void Write(Message msg)
+            public void Write(MessageObject msg)
             {
                 // _ = Writer?.WriteAsync(Protocol, msg);
                 m_SentPacketCount++;

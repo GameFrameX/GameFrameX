@@ -6,7 +6,7 @@ namespace GameFramework.Network
     /// 消息基类
     /// </summary>
     [MessagePackObject(true)]
-    public class Message
+    public class MessageObject
     {
     }
 }

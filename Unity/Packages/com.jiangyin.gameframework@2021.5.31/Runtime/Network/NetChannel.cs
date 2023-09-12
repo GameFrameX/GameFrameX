@@ -13,12 +13,12 @@ namespace Base.Net
         public ConnectionContext Context { get; protected set; }
         public ProtocolReader Reader { get; protected set; }
         protected ProtocolWriter Writer { get; set; }
-        public IProtoCal<Message> Protocol { get; protected set; }
-        Action<Message> onMessageAct;
+        public IProtoCal<MessageObject> Protocol { get; protected set; }
+        Action<MessageObject> onMessageAct;
         Action onConnectCloseAct;
         bool triggerCloseEvt = true;
 
-        public NetChannel(ConnectionContext context, IProtoCal<Message> protoCal, Action<Message> onMessage = null, Action onConnectClose = null)
+        public NetChannel(ConnectionContext context, IProtoCal<MessageObject> protoCal, Action<MessageObject> onMessage = null, Action onConnectClose = null)
         {
             Context = context;
             Reader = context.CreateReader();
@@ -52,7 +52,7 @@ namespace Base.Net
             }
         }
 
-        public void Write(Message msg)
+        public void Write(MessageObject msg)
         {
             _ = Writer?.WriteAsync(Protocol, msg);
         }

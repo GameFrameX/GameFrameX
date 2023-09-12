@@ -3,7 +3,7 @@
 // </auto-generated>
 
 using MessagePack.Formatters.Hotfix.Proto.Proto;
-using Protocol;
+using GameFramework.Network;
 
 #pragma warning disable 618
 #pragma warning disable 612
@@ -24,7 +24,7 @@ namespace Resolvers
         {
             lookup = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(1)
             {
-                { typeof(Message), 0 },
+                { typeof(MessageObject), 0 },
 
             };
         }

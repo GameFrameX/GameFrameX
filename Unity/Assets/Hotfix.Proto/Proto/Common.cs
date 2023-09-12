@@ -1,7 +1,7 @@
 ﻿using System;
 using MessagePack;
 using System.Collections.Generic;
-using Protocol;
+using GameFramework.Network;
 
 namespace Hotfix.Proto.Proto
 {
@@ -27,7 +27,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	
 	[MessagePackObject(true)]
-	public partial class UserInfo : Message
+	public partial class UserInfo : MessageObject
 	{
 		/// <summary>
 		///  角色名
@@ -77,7 +77,7 @@ namespace Hotfix.Proto.Proto
 
 	
 	[MessagePackObject(true)]
-	public partial class PhoneNumber : Message
+	public partial class PhoneNumber : MessageObject
 	{
 		/// <summary>
 		/// 
@@ -93,7 +93,7 @@ namespace Hotfix.Proto.Proto
 
 	
 	[MessagePackObject(true)]
-	public partial class Person : Message
+	public partial class Person : MessageObject
 	{
 		/// <summary>
 		/// 
@@ -122,7 +122,7 @@ namespace Hotfix.Proto.Proto
 	/// </summary>
 	
 	[MessagePackObject(true)]
-	public partial class AddressBook : Message
+	public partial class AddressBook : MessageObject
 	{
 		/// <summary>
 		/// 

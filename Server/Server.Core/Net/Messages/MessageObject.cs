@@ -2,7 +2,7 @@
 
 namespace Server.Core.Net.Messages
 {
-    public abstract class Message : IMessage
+    public abstract class MessageObject : IMessage
     {
         /// <summary>
         /// 消息唯一id

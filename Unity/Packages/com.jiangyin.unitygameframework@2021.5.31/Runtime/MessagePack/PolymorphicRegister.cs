@@ -19,7 +19,7 @@ namespace MessagePack
                 // var option = MessagePackSerializerOptions.Standard.WithResolver(StaticCompositeResolver.Instance);
 
                 
-                PolymorphicTypeMapper.Register<Message>();
+                PolymorphicTypeMapper.Register<MessageObject>();
                 PolymorphicResolver.Instance.Init();
                 // MessagePackSerializer.DefaultOptions = option;
                 serializerRegistered = true;
