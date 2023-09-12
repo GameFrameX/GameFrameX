@@ -67,7 +67,7 @@ namespace Server.Core.Net.Tcp.Codecs
             }
         }
 
-        public void WriteAsync(Message msg)
+        public void WriteAsync(MessageObject msg)
         {
             _ = WriteAsync(new NetMessage(msg));
         }

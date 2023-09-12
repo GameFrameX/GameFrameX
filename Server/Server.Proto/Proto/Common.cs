@@ -27,7 +27,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	
 	[MessagePackObject(true)]
-	public partial class UserInfo : Server.Core.Net.Messages.Message
+	public partial class UserInfo : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
 		///  角色名
@@ -77,7 +77,7 @@ namespace Server.Proto.Proto
 
 	
 	[MessagePackObject(true)]
-	public partial class PhoneNumber : Server.Core.Net.Messages.Message
+	public partial class PhoneNumber : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
 		/// 
@@ -93,7 +93,7 @@ namespace Server.Proto.Proto
 
 	
 	[MessagePackObject(true)]
-	public partial class Person : Server.Core.Net.Messages.Message
+	public partial class Person : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
 		/// 
@@ -122,7 +122,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	
 	[MessagePackObject(true)]
-	public partial class AddressBook : Server.Core.Net.Messages.Message
+	public partial class AddressBook : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
 		/// 

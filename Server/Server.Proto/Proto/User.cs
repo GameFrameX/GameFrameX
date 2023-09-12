@@ -10,7 +10,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(10)]
 	[MessagePackObject(true)]
-	public partial class ReqLogin : Server.Core.Net.Messages.Message, IRequestMessage
+	public partial class ReqLogin : Server.Core.Net.Messages.MessageObject, IRequestMessage
 	{
 		/// <summary>
 		/// 
@@ -49,7 +49,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(10)]
 	[MessagePackObject(true)]
-	public partial class RespLogin : Server.Core.Net.Messages.Message, IResponseMessage
+	public partial class RespLogin : Server.Core.Net.Messages.MessageObject, IResponseMessage
 	{
 		/// <summary>
 		/// 
@@ -68,7 +68,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	
 	[MessagePackObject(true)]
-	public partial class RespErrorCode : Server.Core.Net.Messages.Message
+	public partial class RespErrorCode : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
 		///  0:表示无错误
@@ -84,7 +84,7 @@ namespace Server.Proto.Proto
 
 	[MessageTypeHandler(200)]
 	[MessagePackObject(true)]
-	public partial class RespPrompt : Server.Core.Net.Messages.Message, IResponseMessage
+	public partial class RespPrompt : Server.Core.Net.Messages.MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）

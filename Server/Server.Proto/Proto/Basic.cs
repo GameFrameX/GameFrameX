@@ -10,7 +10,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(1)]
 	[MessagePackObject(true)]
-	public partial class ReqHeartBeat : Server.Core.Net.Messages.Message, IRequestMessage
+	public partial class ReqHeartBeat : Server.Core.Net.Messages.MessageObject, IRequestMessage
 	{
 		/// <summary>
 		///  时间戳
@@ -24,7 +24,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(1)]
 	[MessagePackObject(true)]
-	public partial class RespHeartBeat : Server.Core.Net.Messages.Message, IResponseMessage
+	public partial class RespHeartBeat : Server.Core.Net.Messages.MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  时间戳

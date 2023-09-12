@@ -9,7 +9,7 @@ namespace Server.Hotfix.Logic.Role.Base
     {
         private static readonly NLog.Logger LOGGER = LogManager.GetCurrentClassLogger();
 
-        public static async Task NotifyClient(this IComponentAgent agent, Message msg, int uniId = 0, StateCode code = StateCode.Success)
+        public static async Task NotifyClient(this IComponentAgent agent, MessageObject msg, int uniId = 0, StateCode code = StateCode.Success)
         {
             var roleComp = await agent.GetComponentAgent<RoleComponentAgent>();
             if (roleComp != null)
@@ -82,7 +82,7 @@ namespace Server.Hotfix.Logic.Role.Base
             return Task.CompletedTask;
         }
 
-        public void NotifyClient(Message msg, int uniId = 0, StateCode code = StateCode.Success)
+        public void NotifyClient(MessageObject msg, int uniId = 0, StateCode code = StateCode.Success)
         {
             var channel = SessionManager.GetChannel(ActorId);
             if (channel != null && !channel.IsClose())

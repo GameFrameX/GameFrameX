@@ -7,7 +7,7 @@ namespace Server.Core.Net.Tcp.Handler
     {
         public NetChannel Channel { get; set; }
 
-        public Message Msg { get; set; }
+        public MessageObject Msg { get; set; }
 
         public virtual Task Init()
         {

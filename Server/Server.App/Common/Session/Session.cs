@@ -31,7 +31,7 @@ namespace Server.App.Common.Session
         /// </summary>
         public string Sign { get; set; }
 
-        public void WriteAsync(Message msg)
+        public void WriteAsync(MessageObject msg)
         {
             Channel?.WriteAsync(msg);
         }

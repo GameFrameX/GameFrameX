@@ -8,7 +8,7 @@ namespace Server.Hotfix.Common.Handler;
 
 public static class NetChannelExtensions
 {
-    public static void WriteAsync(this NetChannel channel, Message msg, int uniId, StateCode code = StateCode.Success, string desc = "")
+    public static void WriteAsync(this NetChannel channel, MessageObject msg, int uniId, StateCode code = StateCode.Success, string desc = "")
     {
         if (msg != null)
         {

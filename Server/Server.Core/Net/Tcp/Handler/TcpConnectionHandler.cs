@@ -73,7 +73,7 @@ namespace Server.Core.Net.Tcp.Handler
             LOGGER.Debug($"{channel.Context.RemoteEndPoint?.ToString()} 断开链接");
         }
 
-        private async Task Dispatcher(NetChannel channel, Message msg)
+        private async Task Dispatcher(NetChannel channel, MessageObject msg)
         {
             if (msg == null)
             {

@@ -15,9 +15,9 @@ namespace Server.Core.Net.Messages
             Payload = payload;
         }
 
-        public Message Msg { get; }
+        public MessageObject Msg { get; }
 
-        public NetMessage(Message msg)
+        public NetMessage(MessageObject msg)
         {
             Msg = msg;
             Payload = default;

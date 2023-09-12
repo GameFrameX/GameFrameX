@@ -18,7 +18,7 @@ namespace Server.Core.Net.Tcp.Codecs
         /// 从客户端接收的包大小最大值（单位：字节 1M）
         const int MAX_RECV_SIZE = 1024 * 1024;
 
-        public static Message Decode(ConnectionContext context, NetMessage msg)
+        public static MessageObject Decode(ConnectionContext context, NetMessage msg)
         {
             var reader = new SequenceReader<byte>(msg.Payload);
 
@@ -52,7 +52,7 @@ namespace Server.Core.Net.Tcp.Codecs
                 return null;
             }
 
-            Message protoMsg = Serialize.Serialize.SerializerHelper.Deserialize<Message>(reader.UnreadSequence);
+            MessageObject protoMsg = Serialize.Serialize.SerializerHelper.Deserialize<MessageObject>(reader.UnreadSequence);
             protoMsg.MsgId = msgId;
             if (protoMsg.MsgId != msgId)
             {
