@@ -5,6 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using System;
 using GameFramework;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,25 +18,9 @@ namespace UnityGameFramework.Editor
     /// </summary>
     internal static class Type
     {
-        private static readonly string[] RuntimeAssemblyNames =
-        {
-            "Unity.Startup",
-            "UnityGameFramework.Runtime",
-            "UnityGameFramework.Runtime.Extension",
-            "Assembly-CSharp",
-        };
+        private static readonly string[] RuntimeAssemblyNames = Utility.Assembly.GetAssemblies().Where(m => !m.FullName.Contains("Editor")).Select(m => m.FullName).ToArray();
 
-        private static readonly string[] RuntimeOrEditorAssemblyNames =
-        {
-#if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Runtime",
-#endif
-            "Assembly-CSharp",
-#if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Editor",
-#endif
-            "Assembly-CSharp-Editor",
-        };
+        private static readonly string[] RuntimeOrEditorAssemblyNames = Utility.Assembly.GetAssemblies().Select(m => m.FullName).ToArray();
 
         /// <summary>
         /// 获取配置路径。
@@ -44,26 +29,26 @@ namespace UnityGameFramework.Editor
         /// <returns>配置路径。</returns>
         internal static string GetConfigurationPath<T>() where T : ConfigPathAttribute
         {
-            foreach (System.Type type in Utility.Assembly.GetTypes())
+            foreach (var type in Utility.Assembly.GetTypes())
             {
                 if (!type.IsAbstract || !type.IsSealed)
                 {
                     continue;
                 }
 
-                foreach (FieldInfo fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+                foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
                 {
                     if (fieldInfo.FieldType == typeof(string) && fieldInfo.IsDefined(typeof(T), false))
                     {
-                        return (string) fieldInfo.GetValue(null);
+                        return (string)fieldInfo.GetValue(null);
                     }
                 }
 
-                foreach (PropertyInfo propertyInfo in type.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+                foreach (var propertyInfo in type.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
                 {
                     if (propertyInfo.PropertyType == typeof(string) && propertyInfo.IsDefined(typeof(T), false))
                     {
-                        return (string) propertyInfo.GetValue(null, null);
+                        return (string)propertyInfo.GetValue(null, null);
                     }
                 }
             }
@@ -93,8 +78,8 @@ namespace UnityGameFramework.Editor
 
         private static string[] GetTypeNames(System.Type typeBase, string[] assemblyNames)
         {
-            List<string> typeNames = new List<string>();
-            foreach (string assemblyName in assemblyNames)
+            var typeNames = new List<string>();
+            foreach (var assemblyName in assemblyNames)
             {
                 Assembly assembly = null;
                 try
@@ -111,8 +96,8 @@ namespace UnityGameFramework.Editor
                     continue;
                 }
 
-                System.Type[] types = assembly.GetTypes();
-                foreach (System.Type type in types)
+                var types = assembly.GetTypes();
+                foreach (var type in types)
                 {
                     if (type.IsClass && !type.IsAbstract && typeBase.IsAssignableFrom(type))
                     {
