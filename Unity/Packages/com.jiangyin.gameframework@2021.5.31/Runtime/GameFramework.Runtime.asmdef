@@ -1,6 +1,9 @@
 {
     "name": "GameFramework.Runtime",
-    "references": ["MessagePack.Runtime","MessagePack.Annotations"],
+    "references": [
+        "MessagePack.Runtime",
+        "MessagePack.Annotations"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
