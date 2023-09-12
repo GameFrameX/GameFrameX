@@ -22,3 +22,4 @@ Tools/Geek.MsgPackTool-src/.idea
 Server/**/bin
 Unity/.cache.meta
 docker/mongo/database
+Unity/Packages/packages-lock.json
