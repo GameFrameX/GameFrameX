@@ -1,29 +1,12 @@
-﻿using System;
-using MessagePack;
+﻿using MessagePack;
 
-namespace Protocol
+namespace GameFramework.Network
 {
+    /// <summary>
+    /// 消息基类
+    /// </summary>
     [MessagePackObject(true)]
     public class Message
     {
-    }
-
-    public interface IRequestMessage
-    {
-    }
-
-    public interface IResponseMessage
-    {
-    }
-
-    [AttributeUsage(AttributeTargets.Class)]
-    public class MessageTypeHandler : Attribute
-    {
-        public int MessageId { get; }
-
-        public MessageTypeHandler(int messageId)
-        {
-            MessageId = messageId;
-        }
     }
 }

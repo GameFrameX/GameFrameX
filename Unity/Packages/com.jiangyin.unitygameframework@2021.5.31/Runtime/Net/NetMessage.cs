@@ -1,4 +1,4 @@
-﻿using Protocol;
+﻿using GameFramework.Network;
 
 namespace Base.Net
 {

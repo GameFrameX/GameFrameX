@@ -1,6 +1,6 @@
-﻿using MessagePack.Resolvers;
+﻿using GameFramework.Network;
+using MessagePack.Resolvers;
 using PolymorphicMessagePack;
-using Protocol;
 using UnityEngine;
 
 namespace MessagePack

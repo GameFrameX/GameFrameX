@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Protocol;
+using GameFramework.Network;
 using UnityGameFramework.Runtime;
 
 namespace Net
@@ -68,7 +68,7 @@ namespace Net
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
-                var attribute = type.GetCustomAttribute(typeof(MessageTypeHandler));
+                var attribute = type.GetCustomAttribute(typeof(MessageTypeHandlerAttribute));
                 if (attribute == null)
                 {
                     continue;
@@ -76,7 +76,7 @@ namespace Net
 
                 Log.Debug(" 注册消息ID类型: " + type);
 
-                if (attribute is MessageTypeHandler messageIdHandler)
+                if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
                     if (type.IsImplWithInterface(typeof(IRequestMessage)))
                     {
