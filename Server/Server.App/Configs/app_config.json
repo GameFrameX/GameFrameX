@@ -13,6 +13,6 @@
   "SDKType": 0,
   "DBModel": 1,
   //0:内嵌 1:mongodb
-  "MongoUrl": "mongodb://admin:admin@172.18.0.73:27017/database?authSource=admin",
+  "MongoUrl": "mongodb://admin:admin@127.0.0.1:27017/database?authSource=admin",
   "MongoDBName": "gfx_server"
 }
