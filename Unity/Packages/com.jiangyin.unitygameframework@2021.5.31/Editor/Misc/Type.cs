@@ -7,6 +7,7 @@
 
 using GameFramework;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace UnityGameFramework.Editor
@@ -18,6 +19,7 @@ namespace UnityGameFramework.Editor
     {
         private static readonly string[] RuntimeAssemblyNames =
         {
+            "Unity.Startup",
             "UnityGameFramework.Runtime",
             "UnityGameFramework.Runtime.Extension",
             "Assembly-CSharp",
