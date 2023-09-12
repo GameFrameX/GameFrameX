@@ -19,26 +19,27 @@
 ### 集成功能
 
 | 组件名称 | 介绍 | 来源 |
-| :----:  | :----: |
-| GameFramework | 客户端框架 | github |
-| YooAsset | 打包(修改后,不支持`Addressable`) |github |
-| UniTask | 异步Await/Async | github |
-| FairyGUI UI | 编辑器 | github |
-| ProtoBuf | 通讯协议 | github |
-| MessagePack | 通讯协议 | github |
-| HybridCLR | 热更新 | github |
-| XLua | 热更新 | github |
-| GameAnalytics | 数据统计和分析 | github |
-| Sentry | 错误上报和处理 | github |
-| LitJson | Json序列化工具`马三修改版本` | github |
-| logViewer  | 日志查看器 | github |
-| DoTween | 动画插件 | github |
-| Animancer | 动画状态机插件`再也不用连线了` | github |
-| BestHTTP | 最强的HTTP协议实现.没有之一 | github |
-| OperationClipBoard | 代码设置和获取粘贴板的值 | github |
-| GetChannel | 渠道获取.集成了基础的渠道获取方式 | github |
-| ReadAssets | 使用File的方式直接读取Android只读目录下的文件.再也不用WWW了 | github |
-| FindReference2 | 最强查找Unity资源引用的插件没有之一 | github |
+| :----:  | :----: | :----: |
+| GameFramework | 客户端框架 | GitHub |
+| YooAsset | 打包(修改后，不支持`Addressable`) | GitHub |
+| UniTask | 异步Await/Async | GitHub |
+| FairyGUI UI | 编辑器 | GitHub |
+| ProtoBuf | 通讯协议 | GitHub |
+| MessagePack | 通讯协议 | GitHub |
+| HybridCLR | 热更新 | GitHub |
+| XLua | 热更新 | GitHub |
+| GameAnalytics | 数据统计和分析 | GitHub |
+| Sentry | 错误上报和处理 | GitHub |
+| LitJson | JSON序列化工具（马三修改版本） | GitHub |
+| logViewer | 日志查看器 | GitHub |
+| DoTween | 动画插件 | GitHub |
+| Animancer | 动画状态机插件（再也不用连线了） | GitHub |
+| BestHTTP | 最强的HTTP协议实现.没有之一 | GitHub |
+| OperationClipBoard | 代码设置和获取粘贴板的值 | GitHub |
+| GetChannel | 渠道获取.集成了基础的渠道获取方式 | GitHub |
+| ReadAssets | 使用File的方式直接读取Android只读目录下的文件.再也不用WWW了 | GitHub |
+| FindReference2 | 最强查找Unity资源引用的插件没有之一 | GitHub |
+
 
 
 # 免责声明
