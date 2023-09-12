@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using GameFramework.Network;
-using UnityGameFramework.Runtime;
 
-namespace Net
+namespace GameFramework.Network
 {
     /// <summary>
     /// 协议消息处理器
@@ -74,7 +72,7 @@ namespace Net
                     continue;
                 }
 
-                Log.Debug(" 注册消息ID类型: " + type);
+                GameFrameworkLog.Debug(" 注册消息ID类型: " + type);
 
                 if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
@@ -84,7 +82,7 @@ namespace Net
                         if (!ReqDictionary.TryAdd(messageIdHandler.MessageId, type))
                         {
                             ReqDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
-                            Log.Error($"请求Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            throw new GameFrameworkException($"请求Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
                         }
                     }
                     else if (type.IsImplWithInterface(typeof(IResponseMessage)))
@@ -93,13 +91,13 @@ namespace Net
                         if (!RespDictionary.TryAdd(messageIdHandler.MessageId, type))
                         {
                             RespDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
-                            Log.Error($"返回Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            throw new GameFrameworkException($"返回Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
                         }
                     }
                 }
             }
 
-            Log.Info(" 注册消息ID类型: 结束");
+            GameFrameworkLog.Info(" 注册消息ID类型: 结束");
         }
     }
 }

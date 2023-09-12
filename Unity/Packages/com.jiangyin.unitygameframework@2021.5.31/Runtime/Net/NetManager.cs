@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Bedrock.Framework.Protocols;
+using GameFramework;
 using GameFramework.Network;
 using UnityEngine;
 using AddressFamily = System.Net.Sockets.AddressFamily;
@@ -38,7 +39,7 @@ namespace Base.Net
             {
                 ClearAllMsg();
                 var ipType = AddressFamily.InterNetwork;
-                (ipType, host) = NetUtils.GetIPv6Address(host, port);
+                (ipType, host) = Utility.Net.GetIPv6Address(host, port);
 
                 var context = await new SocketConnection(ipType, host, port).StartAsync(timeOut);
 
@@ -112,7 +113,7 @@ namespace Base.Net
                     return;
 
 #if UNITY_EDITOR
-                var innerMsg = ((NetMessage) msg).Msg;
+                var innerMsg = ((NetMessage)msg).Msg;
                 var msgName = innerMsg != null ? innerMsg.GetType().FullName : "";
                 Debug.Log($"开始处理网络事件 {msg.MsgId}  {msgName}");
 #endif
