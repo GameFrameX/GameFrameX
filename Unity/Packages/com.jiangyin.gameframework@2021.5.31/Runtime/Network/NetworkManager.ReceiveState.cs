@@ -10,7 +10,7 @@ using System.IO;
 
 namespace GameFramework.Network
 {
-    public sealed partial class NetworkManager : GameFrameworkModule, INetworkManager
+    internal sealed partial class NetworkManager : GameFrameworkModule, INetworkManager
     {
         private sealed class ReceiveState : IDisposable
         {

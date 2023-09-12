@@ -9,15 +9,21 @@ using GameFramework;
 using GameFramework.Network;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityGameFramework.Runtime;
+using NetworkClosedEventArgs = UnityGameFramework.Runtime.NetworkClosedEventArgs;
+using NetworkConnectedEventArgs = UnityGameFramework.Runtime.NetworkConnectedEventArgs;
+using NetworkCustomErrorEventArgs = UnityGameFramework.Runtime.NetworkCustomErrorEventArgs;
+using NetworkErrorEventArgs = UnityGameFramework.Runtime.NetworkErrorEventArgs;
+using NetworkMissHeartBeatEventArgs = UnityGameFramework.Runtime.NetworkMissHeartBeatEventArgs;
 
-namespace UnityGameFramework.Runtime
+namespace UnityGameFramework.Network.Pipelines
 {
     /// <summary>
     /// 网络组件。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Network")]
-    public sealed class NetworkComponent : GameFrameworkComponent
+    [AddComponentMenu("Game Framework/Net")]
+    public sealed class NetComponent : GameFrameworkComponent
     {
         private INetworkManager m_NetworkManager = null;
         private EventComponent m_EventComponent = null;
@@ -25,7 +31,10 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 获取网络频道数量。
         /// </summary>
-        public int NetworkChannelCount => m_NetworkManager.NetworkChannelCount;
+        public int NetworkChannelCount
+        {
+            get { return m_NetworkManager.NetworkChannelCount; }
+        }
 
         /// <summary>
         /// 游戏框架组件初始化。
@@ -33,7 +42,7 @@ namespace UnityGameFramework.Runtime
         protected override void Awake()
         {
             base.Awake();
-            // new NetworkManager();
+            new NetManager();
             m_NetworkManager = GameFrameworkEntry.GetModule<INetworkManager>();
             if (m_NetworkManager == null)
             {
@@ -61,21 +70,21 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 检查是否存在网络频道。
         /// </summary>
-        /// <param name="channelName">网络频道名称。</param>
+        /// <param name="name">网络频道名称。</param>
         /// <returns>是否存在网络频道。</returns>
-        public bool HasNetworkChannel(string channelName)
+        public bool HasNetworkChannel(string name)
         {
-            return m_NetworkManager.HasNetworkChannel(channelName);
+            return m_NetworkManager.HasNetworkChannel(name);
         }
 
         /// <summary>
         /// 获取网络频道。
         /// </summary>
-        /// <param name="channelName">网络频道名称。</param>
+        /// <param name="name">网络频道名称。</param>
         /// <returns>要获取的网络频道。</returns>
-        public INetworkChannel GetNetworkChannel(string channelName)
+        public INetworkChannel GetNetworkChannel(string name)
         {
-            return m_NetworkManager.GetNetworkChannel(channelName);
+            return m_NetworkManager.GetNetworkChannel(name);
         }
 
         /// <summary>
@@ -99,22 +108,22 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建网络频道。
         /// </summary>
-        /// <param name="channelName">网络频道名称。</param>
+        /// <param name="name">网络频道名称。</param>
         /// <param name="networkChannelHelper">网络频道辅助器。</param>
         /// <returns>要创建的网络频道。</returns>
-        public INetworkChannel CreateNetworkChannel(string channelName, INetworkChannelHelper networkChannelHelper)
+        public INetworkChannel CreateNetworkChannel(string name, INetworkChannelHelper networkChannelHelper)
         {
-            return m_NetworkManager.CreateNetworkChannel(channelName, networkChannelHelper);
+            return m_NetworkManager.CreateNetworkChannel(name, networkChannelHelper);
         }
 
         /// <summary>
         /// 销毁网络频道。
         /// </summary>
-        /// <param name="channelName">网络频道名称。</param>
+        /// <param name="name">网络频道名称。</param>
         /// <returns>是否销毁网络频道成功。</returns>
-        public bool DestroyNetworkChannel(string channelName)
+        public bool DestroyNetworkChannel(string name)
         {
-            return m_NetworkManager.DestroyNetworkChannel(channelName);
+            return m_NetworkManager.DestroyNetworkChannel(name);
         }
 
         private void OnNetworkConnected(object sender, GameFramework.Network.NetworkConnectedEventArgs e)

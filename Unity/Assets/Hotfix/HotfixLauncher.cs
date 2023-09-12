@@ -1,5 +1,4 @@
 ﻿using Animancer;
-using Base.Net;
 using Cysharp.Threading.Tasks;
 using Framework.Asset;
 using GameFramework.Network;
@@ -9,6 +8,7 @@ using PolymorphicMessagePack;
 using Resolvers;
 using SimpleJSON;
 using UnityEngine;
+using UnityGameFramework.Network.Pipelines;
 using UnityGameFramework.Runtime;
 
 namespace Hotfix

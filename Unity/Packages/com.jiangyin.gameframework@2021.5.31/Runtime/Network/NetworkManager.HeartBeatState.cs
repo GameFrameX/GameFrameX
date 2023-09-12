@@ -7,7 +7,7 @@
 
 namespace GameFramework.Network
 {
-    public sealed partial class NetworkManager
+    internal sealed partial class NetworkManager
     {
         /// <summary>
         /// 心跳状态
