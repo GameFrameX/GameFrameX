@@ -2,6 +2,8 @@
 using Cysharp.Threading.Tasks;
 using FairyGUI;
 using Framework.Asset;
+using Game.Hotfix;
+using GameFramework;
 using GameFramework.Network;
 using Hotfix.Proto.Proto;
 using MessagePack;
@@ -89,7 +91,7 @@ namespace Hotfix
 
         private static JSONNode Loader(string file)
         {
-            string assetPath = AssetUtility.GetConfigPath(file, ".json");
+            string assetPath = AssetUtility.GetConfigPath(file, Utility.Const.FileNameSuffix.Json);
             Log.Info(assetPath);
             var rawFileOperationHandle = GameApp.Asset.LoadRawFileSync(assetPath);
 
