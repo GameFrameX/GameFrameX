@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using GameFramework;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace Unity.Editor
         private static readonly string ScriptAssembliesDir = $"HybridCLRData/HotUpdateDlls/{EditorUserBuildSettings.activeBuildTarget}";
 
 
-        private static readonly string[] HotfixDlls = new string[] {"Unity.Hotfix.dll", "Unity.Hotfix.pdb", "Unity.Hotfix.Proto.dll", "Unity.Hotfix.Proto.pdb"};
+        private static readonly string[] HotfixDlls = new string[] { "Unity.Hotfix.dll", "Unity.Hotfix.pdb", "Unity.Hotfix.Proto.dll", "Unity.Hotfix.Proto.pdb" };
 
 
         //热更代码存放位置
@@ -50,7 +51,7 @@ namespace Unity.Editor
                     srcPath = Path.Combine(HotFixAssembliesDir, hotfix);
                 }
 
-                File.Copy(srcPath, Path.Combine(CodeDir, hotfix + ".bytes"), true);
+                File.Copy(srcPath, Path.Combine(CodeDir, hotfix + Utility.Const.FileNameSuffix.Binary), true);
             }
 
             Debug.Log($"复制Hotfix DLL, Hotfix pdb到{CodeDir}完成");
