@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 namespace GameFramework.Network
 {
@@ -64,6 +65,7 @@ namespace GameFramework.Network
             ReqDictionary.Clear();
             RespDictionary.Clear();
             var types = assembly.GetTypes();
+            StringBuilder stringBuilder = new StringBuilder(1024);
             foreach (var type in types)
             {
                 var attribute = type.GetCustomAttribute(typeof(MessageTypeHandlerAttribute));
@@ -72,7 +74,7 @@ namespace GameFramework.Network
                     continue;
                 }
 
-                GameFrameworkLog.Debug(" 注册消息ID类型: " + type);
+                stringBuilder.AppendLine(type.FullName);
 
                 if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
@@ -97,6 +99,7 @@ namespace GameFramework.Network
                 }
             }
 
+            GameFrameworkLog.Debug(" 注册消息ID类型: " + stringBuilder);
             GameFrameworkLog.Info(" 注册消息ID类型: 结束");
         }
     }
