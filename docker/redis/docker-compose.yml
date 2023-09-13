@@ -1,0 +1,19 @@
+version: '3'
+services:
+  redis:
+    image: redis:6.0.1
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./apps/datadir:/data:rw
+      - ./apps/logs:/logs
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:rw
+    command:
+      /bin/bash -c "redis-server /usr/local/etc/redis/redis.conf "
+    privileged: true # 使用该参数，container内的root拥有真正的root权限。否则，container内的root只是外部的一个普通用户权限
+networks:
+  default:
+    name: redis_network
+    # external: true
