@@ -1,5 +1,6 @@
 ﻿using Animancer;
 using Cysharp.Threading.Tasks;
+using FairyGUI;
 using Framework.Asset;
 using GameFramework.Network;
 using Hotfix.Proto.Proto;
@@ -31,10 +32,19 @@ namespace Hotfix
             ProtoMessageIdHandler.Init(typeof(HotfixProtoHandler).Assembly);
             LoadConfig();
 
-            NetManager.Singleton.Init();
-            NetManager.Singleton.Connect(serverIp, serverPort);
 
-            NetTest();
+            UIPackage.AddPackage(AssetUtility.GetUIPackagePath(FUIPackage.UILogin));
+            var uiLogin = UILogin.CreateInstance();
+            // uiLogin.Name = FUIPackage.UILogin;
+            GameApp.UI.Add(uiLogin, UILayer.Floor);
+            uiLogin.m_enter.onClick.Add(() =>
+            {
+                Log.Info("dhjsakdjkasjdklsjalkdk");
+                NetManager.Singleton.Init();
+                NetManager.Singleton.Connect(serverIp, serverPort);
+
+                NetTest();
+            });
         }
 
         static void RegisterMessagePack()
@@ -72,14 +82,16 @@ namespace Hotfix
             //     ));
 
 
-            var tables = new cfg.Tables(Loader);
+            var tables = new cfg.Tables(Loader, null);
             var item = tables.TbItem.Get(1);
             Log.Info(item);
         }
 
         private static JSONNode Loader(string file)
         {
-            var rawFileOperationHandle = GameApp.Asset.LoadRawFileSync(AssetUtility.GetConfigPath(file, ".json"));
+            string assetPath = AssetUtility.GetConfigPath(file, ".json");
+            Log.Info(assetPath);
+            var rawFileOperationHandle = GameApp.Asset.LoadRawFileSync(assetPath);
 
             return JSON.Parse(rawFileOperationHandle.GetRawFileText());
         }
