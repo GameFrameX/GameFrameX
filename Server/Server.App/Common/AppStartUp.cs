@@ -36,8 +36,7 @@ namespace Server.App.Common
 
                 Log.Info($"Load Config Start...");
                 ConfigManager.Instance.LoadConfig();
-                // var it = ConfigManager.Instance.Tables.TbItem.Get(1);
-                // Console.WriteLine(it);
+               
                 Log.Info($"Load Config End...");
 
                 Log.Info($"launch db service start...");
