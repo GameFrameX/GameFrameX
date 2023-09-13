@@ -6,6 +6,7 @@ using Server.Core.Hotfix;
 using Server.Core.Hotfix.Agent;
 using Server.Extension;
 using Server.Hotfix.Logic.Server;
+using Server.Hotfix.Logic.Server.Agent;
 using Server.Utility;
 
 namespace Server.Hotfix.Common.Events

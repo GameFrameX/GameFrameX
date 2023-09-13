@@ -1,7 +1,7 @@
 ﻿using Server.App.Logic.Server;
 using Server.Core.Timer.Handler;
 
-namespace Server.Hotfix.Logic.Server
+namespace Server.Hotfix.Logic.Server.Agent
 {
     public class ServerComponentAgent : StateComponentAgent<ServerComp, ServerState>
     {

@@ -2,6 +2,7 @@
 using Server.App.Common.Session;
 using Server.App.Logic.Role.Base.Component;
 using Server.Hotfix.Logic.Role.Bag;
+using Server.Hotfix.Logic.Server.Agent;
 
 namespace Server.Hotfix.Logic.Role.Base
 {

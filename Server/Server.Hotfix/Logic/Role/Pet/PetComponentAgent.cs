@@ -4,6 +4,7 @@ using Server.Core.Actors;
 using Server.Core.Events;
 using Server.Core.Hotfix.Agent;
 using Server.Hotfix.Logic.Server;
+using Server.Hotfix.Logic.Server.Agent;
 
 
 namespace Server.Hotfix.Logic.Role.Pet
