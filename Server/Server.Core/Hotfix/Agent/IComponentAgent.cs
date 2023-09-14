@@ -8,6 +8,9 @@ namespace Server.Core.Hotfix.Agent
     /// </summary>
     public interface IComponentAgent
     {
+        /// <summary>
+        /// ActorId
+        /// </summary>
         long ActorId { get; }
 
         /// <summary>
