@@ -81,7 +81,7 @@ namespace Server.Core.Comps
         #endregion
     }
 
-    public abstract class StateComp<TState> : BaseComp, IState where TState : CacheState, new()
+    public abstract class StateComponent<TState> : BaseComp, IState where TState : CacheState, new()
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -89,7 +89,7 @@ namespace Server.Core.Comps
 
         public TState State { get; private set; }
 
-        static StateComp()
+        static StateComponent()
         {
             if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
             {
@@ -160,7 +160,7 @@ namespace Server.Core.Comps
                     {
                         Data = data,
                         Id = stateId.ToString(),
-                        Timestamp = TimeHelper.CurrentTimeMillisUTC()
+                        Timestamp = TimeHelper.CurrentTimeMillisWithUTC()
                     };
                     var filter = Builders<MongoState>.Filter.Eq(CacheState.UniqueId, mongoState.Id);
                     writeList.Add(new ReplaceOneModel<MongoState>(filter, mongoState) {IsUpsert = true});
@@ -169,6 +169,7 @@ namespace Server.Core.Comps
 
             var writeList = new List<ReplaceOneModel<MongoState>>();
             var tasks = new List<Task<(bool, long, byte[])>>();
+
             foreach (var state in stateDic.Values)
             {
                 var actor = ActorMgr.GetActor(state.Id);
@@ -176,9 +177,7 @@ namespace Server.Core.Comps
                 {
                     if (force)
                     {
-                        bool isChanged;
-                        byte[] data;
-                        (isChanged, data) = state.IsChanged();
+                        var (isChanged, data) = state.IsChanged();
                         AddReplaceModel(writeList, isChanged, state.Id, data);
                     }
                     else
