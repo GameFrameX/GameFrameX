@@ -3,6 +3,27 @@
 GeekServer是一个开源的[分区分服](https://mp.weixin.qq.com/s?__biz=MzI3MTQ1NzU2NA==&mid=2247483884&idx=1&sn=3547c769a300f1d82cc04e9b1852c6d5&chksm=eac0cd9fddb7448997e38a74e2d26bde259cd2127583e31bc488511bc1fdcd9f35caff27d4a3&scene=21#wechat_redirect)的游戏服务器框架，采用C# .Netcore开发，开发效率高，性能强，跨平台，并内置不停服热更新机制。可以满足绝大部分游戏类型的需求，特别是和Unity3D协同开发更佳。    
 __设计理念:大道至简，以简化繁__
 
+
+
+# 程序集说明
+
+| 程序集名称 | 介绍 | 用途 |
+| :----:  | :----: | :----: |
+| Server.Luncher | 程序启动入口 | 用于编写启动逻辑 |
+| Server.Hotfix | 热更新逻辑和处理程序对象放置区(该部分为热更新内容) | 用于编写逻辑的地方(`主要工作区`,目录和`Apps`目录结构一致) |
+| Server.Apps | 组件和实体对象放置区(该部分不能热更新) | 用于编写基础逻辑和数据存储(`功能的添加修改主要工作区`,目录结构按照`ServerType` 划分和`HotFix`对应) |
+| Server.Config | 配置文件对象和配置文件放置区 | 用于编写配置文件的类和文件的映射(目前由LuBan自动生成) |
+| Server.Core | 核心底层逻辑 | 用于编写核心库 |
+| Server.DBServer | 数据库操作相关服务 | 用于编写数据库操作相关的逻辑 |
+| Server.Extension | 对框架的扩展 | 用于编写函数或其他工具库的扩展 |
+| Server.Google.ProtoBuf | ProtoBuff协议支持库 | ProtoBuff协议库(一般不会更新和修改) |
+| Server.Log | 日志配置和操作放置区 | 用于编写日志配置相关 |
+| Server.Proto | 数据通讯协议对象放置区 | 用于编写通讯协议对象 |
+| Server.Serialize | 序列化器 对象放置区 | 用于编写通讯协议的序列化和反序列化的帮助类 |
+| Server.Setting | 设置相关的内容 放置区域 | 用于编写游戏逻辑配置或常量配置 |
+| Server.Utility | 工具函数 对象放置区 | 用于编写一些工具相关的函数 |
+
+
 # GeekServer功能：
 
 ### 1.跨平台  
