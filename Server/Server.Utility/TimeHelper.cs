@@ -178,7 +178,7 @@
         /// <returns></returns>
         public static string CurrentTimeWithFullString()
         {
-            return DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss:ttt-Z");
+            return DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss.fff K");
         }
 
         /// <summary>
@@ -187,7 +187,7 @@
         /// <returns></returns>
         public static string CurrentTimeWithUtcFullString()
         {
-            return DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss:ttt-Z");
+            return DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss.fff K");
         }
     }
 }
