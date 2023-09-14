@@ -9,7 +9,21 @@ namespace Server.Core.Hotfix.Agent
 {
     public abstract class BaseComponentAgent<TComponent> : IComponentAgent where TComponent : BaseComp
     {
-        protected readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private Logger _logger;
+
+        protected Logger Log
+        {
+            get
+            {
+                if (_logger == null)
+                {
+                    _logger = LogManager.GetLogger(GetType().FullName, GetType());
+                }
+
+                return _logger;
+            }
+        }
+
         public BaseComp Owner { get; set; }
         public TComponent Comp => (TComponent)Owner;
         public Actor Actor => Owner.Actor;
