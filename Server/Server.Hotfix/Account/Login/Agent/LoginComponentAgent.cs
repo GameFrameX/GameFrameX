@@ -6,8 +6,6 @@ namespace Server.Hotfix.Account.Login.Agent
 {
     public class LoginComponentAgent : StateComponentAgent<LoginComponent, LoginState>
     {
-        private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
-
         public async Task OnLogin(NetChannel channel, ReqLogin reqLogin)
         {
             if (string.IsNullOrEmpty(reqLogin.UserName))

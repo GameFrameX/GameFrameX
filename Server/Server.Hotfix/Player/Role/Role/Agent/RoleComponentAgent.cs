@@ -22,9 +22,6 @@ namespace Server.Hotfix.Player.Role.Role.Agent
 
     public class RoleComponentAgent : StateComponentAgent<PlayerComponent, PlayerState>, ICrossDay
     {
-        private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
-
-
         [Event(EventId.SessionRemove)]
         private class EL : EventListener<RoleComponentAgent>
         {
