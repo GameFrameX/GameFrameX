@@ -1,0 +1,95 @@
+﻿using Server.Luncher.Common;
+using Server.Luncher.Common.Session;
+using Server.Apps.Player.Component;
+using Server.Hotfix.Player.Role.Bag.Agent;
+using Server.Hotfix.Server.Server.Agent;
+
+namespace Server.Hotfix.Player.Role.Role.Agent
+{
+    public static class RoleCompAgentExtension
+    {
+        private static readonly NLog.Logger LOGGER = LogManager.GetCurrentClassLogger();
+
+        public static async Task NotifyClient(this IComponentAgent agent, MessageObject msg, int uniId = 0, StateCode code = StateCode.Success)
+        {
+            var roleComp = await agent.GetComponentAgent<RoleComponentAgent>();
+            if (roleComp != null)
+                roleComp.NotifyClient(msg, uniId, code);
+            else
+                LOGGER.Warn($"{agent.OwnerType}未注册RoleComp组件");
+        }
+    }
+
+    public class RoleComponentAgent : StateComponentAgent<PlayerComponent, PlayerState>, ICrossDay
+    {
+        private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
+
+
+        [Event(EventId.SessionRemove)]
+        private class EL : EventListener<RoleComponentAgent>
+        {
+            protected override Task HandleEvent(RoleComponentAgent agent, Event evt)
+            {
+                return agent.OnLogout();
+            }
+        }
+
+        public async Task<RespLogin> OnLogin(ReqLogin reqLogin, bool isNewRole)
+        {
+            SetAutoRecycle(false);
+            if (isNewRole)
+            {
+                State.CreateTime = DateTime.Now;
+                State.Level = 1;
+                State.VipLevel = 1;
+                State.RoleName = new System.Random().Next(1000, 10000).ToString(); //随机给一个
+                //激活背包组件
+                await GetComponentAgent<BagComponentAgent>();
+            }
+
+            State.LoginTime = DateTime.Now;
+            return BuildLoginMsg();
+        }
+
+        public async Task OnLogout()
+        {
+            //移除在线玩家
+            var serverComp = await ActorMgr.GetCompAgent<ServerComponentAgent>();
+            await serverComp.RemoveOnlineRole(ActorId);
+            //下线后会被自动回收
+            SetAutoRecycle(true);
+            QuartzTimer.UnSchedule(ScheduleIdSet);
+        }
+
+        private RespLogin BuildLoginMsg()
+        {
+            var res = new RespLogin()
+            {
+                Code = 0,
+                UserInfo = new UserInfo()
+                {
+                    CreateTime = State.CreateTime,
+                    Level = State.Level,
+                    RoleId = State.RoleId,
+                    RoleName = State.RoleName,
+                    VipLevel = State.VipLevel
+                }
+            };
+            return res;
+        }
+
+        Task ICrossDay.OnCrossDay(int openServerDay)
+        {
+            return Task.CompletedTask;
+        }
+
+        public void NotifyClient(MessageObject msg, int uniId = 0, StateCode code = StateCode.Success)
+        {
+            var channel = SessionManager.GetChannel(ActorId);
+            if (channel != null && !channel.IsClose())
+            {
+                channel.WriteAsync(msg, uniId, code);
+            }
+        }
+    }
+}

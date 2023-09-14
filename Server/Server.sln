@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.App", "Server.App\Server.App.csproj", "{835335CB-D99B-4CB9-99D3-A7883306E723}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Luncher", "Server.Luncher\Server.Luncher.csproj", "{835335CB-D99B-4CB9-99D3-A7883306E723}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Core", "Server.Core\Server.Core.csproj", "{E3C7010E-B262-473C-9EC1-69396C5D85A7}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Serialize", "Server.Serialize\Server.Serialize.csproj", "{551705D2-C054-4B86-807D-5F0EF6EF6579}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Google.ProtoBuf", "Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj", "{8B3C26ED-D193-4345-8C9A-82174579FBA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Apps", "Server.Apps\Server.Apps.csproj", "{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{8B3C26ED-D193-4345-8C9A-82174579FBA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B3C26ED-D193-4345-8C9A-82174579FBA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B3C26ED-D193-4345-8C9A-82174579FBA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

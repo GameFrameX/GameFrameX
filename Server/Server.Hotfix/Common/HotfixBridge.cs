@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Connections;
-using Server.App.Common.Net;
-using Server.App.Common.Session;
+using Server.Luncher.Common.Net;
+using Server.Luncher.Common.Session;
 using Server.Core.Net.Tcp;
 
 namespace Server.Hotfix.Common

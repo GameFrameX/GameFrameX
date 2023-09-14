@@ -148,7 +148,7 @@ namespace Server.Core.Hotfix
                 {
                     if ((HotfixBridge == null && type.GetInterface(fullName) != null))
                     {
-                        var bridge = (IHotfixBridge) Activator.CreateInstance(type);
+                        var bridge = (IHotfixBridge)Activator.CreateInstance(type);
                         if (bridge.BridgeType == GlobalSettings.ServerType)
                         {
                             HotfixBridge = bridge;
@@ -165,14 +165,14 @@ namespace Server.Core.Hotfix
                 return false;
             }
 
-            var attr = (HttpMsgMapping) type.GetCustomAttribute(typeof(HttpMsgMapping));
+            var attr = (HttpMsgMapping)type.GetCustomAttribute(typeof(HttpMsgMapping));
             if (attr == null)
             {
                 // 不是最终实现类
                 return true;
             }
 
-            var handler = (BaseHttpHandler) Activator.CreateInstance(type);
+            var handler = (BaseHttpHandler)Activator.CreateInstance(type);
             if (!httpHandlerMap.TryAdd(attr.Cmd, handler))
             {
                 throw new Exception($"http handler cmd重复注册，cmd:{attr.Cmd}");
@@ -183,13 +183,13 @@ namespace Server.Core.Hotfix
 
         private bool AddTcpHandler(Type type)
         {
-            var attribute = (MsgMapping) type.GetCustomAttribute(typeof(MsgMapping), true);
+            var attribute = (MsgMapping)type.GetCustomAttribute(typeof(MsgMapping), true);
             if (attribute == null)
             {
                 return false;
             }
 
-            var msgIdField = (Server.Core.Net.Messages.MessageTypeHandler) attribute.MsgType.GetCustomAttribute(typeof(Server.Core.Net.Messages.MessageTypeHandler), true);
+            var msgIdField = (Server.Core.Net.Messages.MessageTypeHandler)attribute.MsgType.GetCustomAttribute(typeof(Server.Core.Net.Messages.MessageTypeHandler), true);
             if (msgIdField == null)
             {
                 return false;
@@ -229,7 +229,7 @@ namespace Server.Core.Hotfix
 
                     var evtId = evt.EventId;
                     var listeners = evtListenersDic.GetOrAdd(evtId);
-                    listeners.Add((IEventListener) Activator.CreateInstance(type));
+                    listeners.Add((IEventListener)Activator.CreateInstance(type));
                 }
             }
 
@@ -249,12 +249,12 @@ namespace Server.Core.Hotfix
             }
 
             var fullName = type.FullName;
-            if (fullName == "Server.App.Logic.Server.ServerComp")
+            if (fullName == "Server.Luncher.Logic.Server.ServerComp")
             {
                 return false;
             }
 
-            if (fullName.StartsWith("Server.Hotfix.") && fullName.EndsWith("Wrapper"))
+            if (fullName.StartsWith("Server.Hotfix.") && fullName.EndsWith("ComponentAgentWrapper"))
             {
                 agentAgentWrapperMap[type.BaseType] = type;
                 return true;
@@ -306,7 +306,7 @@ namespace Server.Core.Hotfix
             var type = comp.GetType();
             if (compAgentMap.TryGetValue(type, out var agentType))
             {
-                var agent = (T) Activator.CreateInstance(useAgentWrapper ? agentAgentWrapperMap[agentType] : agentType);
+                var agent = (T)Activator.CreateInstance(useAgentWrapper ? agentAgentWrapperMap[agentType] : agentType);
                 agent.Owner = comp;
                 return agent;
             }
@@ -335,7 +335,7 @@ namespace Server.Core.Hotfix
         /// <returns></returns>
         internal T GetInstance<T>(string typeName)
         {
-            return (T) typeCacheMap.GetOrAdd(typeName, k => HotfixAssembly.CreateInstance(k));
+            return (T)typeCacheMap.GetOrAdd(typeName, k => HotfixAssembly.CreateInstance(k));
         }
 
         internal Type GetAgentType(Type compType)

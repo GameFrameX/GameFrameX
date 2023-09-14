@@ -1,4 +1,4 @@
-using Server.App.Common;
+using Server.Luncher.Common;
 using Server.Core.Net.Messages;
 using Server.Core.Net.Tcp.Codecs;
 using Server.Proto;
