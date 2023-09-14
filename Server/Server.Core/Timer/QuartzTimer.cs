@@ -13,21 +13,29 @@ namespace Server.Core.Timer
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        public static readonly StatisticsTool statisticsTool = new();
+        private static readonly StatisticsTool StatisticsTool = new();
 
-        public static void Unschedule(long id)
+        /// <summary>
+        /// 取消订阅
+        /// </summary>
+        /// <param name="id"></param>
+        public static void UnSchedule(long id)
         {
             if (id <= 0)
                 return;
-            scheduler.DeleteJob(JobKey.Create(id + ""));
+            _scheduler.DeleteJob(JobKey.Create(id + ""));
         }
 
-        public static void Unschedule(IEnumerable<long> set)
+        /// <summary>
+        /// 取消订阅
+        /// </summary>
+        /// <param name="set"></param>
+        public static void UnSchedule(IEnumerable<long> set)
         {
             foreach (var id in set)
             {
                 if (id > 0)
-                    scheduler.DeleteJob(JobKey.Create(id + ""));
+                    _scheduler.DeleteJob(JobKey.Create(id + ""));
             }
         }
 
@@ -38,14 +46,14 @@ namespace Server.Core.Timer
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="actorId"></param>
-        /// <param name="firstTime"></param>
-        /// <param name="interval"></param>
+        /// <param name="delay">延迟</param>
+        /// <param name="interval">间隔</param>
         /// <param name="param"></param>
-        /// <param name="repeatCount"> -1 表示永远 </param>
+        /// <param name="repeatCount"> 循环次数, -1 表示永远 </param>
         /// <returns></returns>
         public static long Schedule<T>(long actorId, TimeSpan delay, TimeSpan interval, Param param = null, int repeatCount = -1) where T : ITimerHandler
         {
-            var id = NextId();
+            var nextId = NextId();
             var firstTimeOffset = DateTimeOffset.Now.Add(delay);
             TriggerBuilder builder;
             if (repeatCount < 0)
@@ -57,8 +65,8 @@ namespace Server.Core.Timer
                 builder = TriggerBuilder.Create().StartAt(firstTimeOffset).WithSimpleSchedule(x => x.WithInterval(interval).WithRepeatCount(repeatCount));
             }
 
-            scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), builder.Build());
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, actorId, param), builder.Build());
+            return nextId;
         }
 
         /// <summary>
@@ -66,16 +74,16 @@ namespace Server.Core.Timer
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="actorId"></param>
-        /// <param name="executeTime"></param>
+        /// <param name="delay">延迟</param>
         /// <param name="param"></param>
         /// <returns></returns>
         public static long Delay<T>(long actorId, TimeSpan delay, Param param = null) where T : ITimerHandler
         {
-            var id = NextId();
+            var nextId = NextId();
             var firstTimeOffset = DateTimeOffset.Now.Add(delay);
             var trigger = TriggerBuilder.Create().StartAt(firstTimeOffset).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, actorId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
@@ -83,10 +91,10 @@ namespace Server.Core.Timer
         /// </summary>
         public static long WithCronExpression<T>(long actorId, string cronExpression, Param param = null) where T : ITimerHandler
         {
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithCronSchedule(cronExpression).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, actorId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
@@ -99,10 +107,10 @@ namespace Server.Core.Timer
                 throw new ArgumentOutOfRangeException($"定时器参数错误 TimerHandler:{typeof(T).FullName} {nameof(hour)}:{hour} {nameof(minute)}:{minute}");
             }
 
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hour, minute)).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, actorId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
@@ -115,10 +123,10 @@ namespace Server.Core.Timer
                 throw new ArgumentNullException($"定时每周执行 参数为空：{nameof(dayOfWeeks)} TimerHandler:{typeof(T).FullName} actorId:{actorId} actorType:{IdGenerator.GetActorType(actorId)}");
             }
 
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.AtHourAndMinuteOnGivenDaysOfWeek(hour, minute, dayOfWeeks)).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, actorId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
@@ -126,10 +134,10 @@ namespace Server.Core.Timer
         /// </summary>
         public static long Weekly<T>(long actorId, DayOfWeek dayOfWeek, int hour, int minute, Param param = null) where T : ITimerHandler
         {
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(dayOfWeek, hour, minute)).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, actorId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
@@ -137,15 +145,15 @@ namespace Server.Core.Timer
         /// </summary>
         public static long Monthly<T>(long actorId, int dayOfMonth, int hour, int minute, Param param = null) where T : ITimerHandler
         {
-            if (dayOfMonth < 0 || dayOfMonth > 31)
+            if (dayOfMonth is < 0 or > 31)
             {
                 throw new ArgumentException($"定时器参数错误 TimerHandler:{typeof(T).FullName} {nameof(dayOfMonth)}:{dayOfMonth} actorId:{actorId} actorType:{IdGenerator.GetActorType(actorId)}");
             }
 
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(dayOfMonth, hour, minute)).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, actorId, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, actorId, param), trigger);
+            return nextId;
         }
 
         #endregion
@@ -156,15 +164,14 @@ namespace Server.Core.Timer
         /// 每隔一段时间执行一次
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="actorId"></param>
-        /// <param name="firstTime"></param>
+        /// <param name="delay"></param>
         /// <param name="interval"></param>
         /// <param name="param"></param>
         /// <param name="repeatCount"> -1 表示永远 </param>
         /// <returns></returns>
         public static long Schedule<T>(TimeSpan delay, TimeSpan interval, Param param = null, int repeatCount = -1) where T : NotHotfixTimerHandler
         {
-            var id = NextId();
+            var nextId = NextId();
             var firstTimeOffset = DateTimeOffset.Now.Add(delay);
             TriggerBuilder builder;
             if (repeatCount < 0)
@@ -176,41 +183,50 @@ namespace Server.Core.Timer
                 builder = TriggerBuilder.Create().StartAt(firstTimeOffset).WithSimpleSchedule(x => x.WithInterval(interval).WithRepeatCount(repeatCount));
             }
 
-            scheduler.ScheduleJob(GetJobDetail<T>(id, param), builder.Build());
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, param), builder.Build());
+            return nextId;
         }
 
         /// <summary>
         /// 基于时间delay
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="actorId"></param>
-        /// <param name="executeTime"></param>
+        /// <param name="delay"></param>
         /// <param name="param"></param>
         /// <returns></returns>
         public static long Delay<T>(TimeSpan delay, Param param = null) where T : NotHotfixTimerHandler
         {
-            var id = NextId();
+            var nextId = NextId();
             var firstTimeOffset = DateTimeOffset.Now.Add(delay);
             var trigger = TriggerBuilder.Create().StartAt(firstTimeOffset).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
         /// 基于cron表达式
         /// </summary>
+        /// <param name="cronExpression"></param>
+        /// <param name="param"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static long WithCronExpression<T>(string cronExpression, Param param = null) where T : NotHotfixTimerHandler
         {
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithCronSchedule(cronExpression).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
         /// 每日
         /// </summary>
+        /// <param name="hour"></param>
+        /// <param name="minute"></param>
+        /// <param name="param"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static long Daily<T>(int hour, int minute, Param param = null) where T : NotHotfixTimerHandler
         {
             if (hour < 0 || hour >= 24 || minute < 0 || minute >= 60)
@@ -218,15 +234,22 @@ namespace Server.Core.Timer
                 throw new ArgumentOutOfRangeException($"定时器参数错误 TimerHandler:{typeof(T).FullName} {nameof(hour)}:{hour} {nameof(minute)}:{minute}");
             }
 
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hour, minute)).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
         /// 每周某些天
         /// </summary>
+        /// <param name="hour"></param>
+        /// <param name="minute"></param>
+        /// <param name="param"></param>
+        /// <param name="dayOfWeeks"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static long WithDayOfWeeks<T>(int hour, int minute, Param param, params DayOfWeek[] dayOfWeeks) where T : NotHotfixTimerHandler
         {
             if (dayOfWeeks == null || dayOfWeeks.Length <= 0)
@@ -234,44 +257,57 @@ namespace Server.Core.Timer
                 throw new ArgumentNullException($"定时每周执行 参数为空：{nameof(dayOfWeeks)} TimerHandler:{typeof(T).FullName}");
             }
 
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.AtHourAndMinuteOnGivenDaysOfWeek(hour, minute, dayOfWeeks)).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
         /// 每周某天
         /// </summary>
+        /// <param name="dayOfWeek"></param>
+        /// <param name="hour"></param>
+        /// <param name="minute"></param>
+        /// <param name="param"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static long Weekly<T>(DayOfWeek dayOfWeek, int hour, int minute, Param param = null) where T : NotHotfixTimerHandler
         {
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(dayOfWeek, hour, minute)).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, param), trigger);
+            return nextId;
         }
 
         /// <summary>
         /// 每月某天
         /// </summary>
+        /// <param name="dayOfMonth"></param>
+        /// <param name="hour"></param>
+        /// <param name="minute"></param>
+        /// <param name="param"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static long Monthly<T>(int dayOfMonth, int hour, int minute, Param param = null) where T : NotHotfixTimerHandler
         {
-            if (dayOfMonth < 0 || dayOfMonth > 31)
+            if (dayOfMonth is < 0 or > 31)
             {
                 throw new ArgumentException($"定时器参数错误 TimerHandler:{typeof(T).FullName} {nameof(dayOfMonth)}:{dayOfMonth}");
             }
 
-            var id = NextId();
+            var nextId = NextId();
             var trigger = TriggerBuilder.Create().StartNow().WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(dayOfMonth, hour, minute)).Build();
-            scheduler.ScheduleJob(GetJobDetail<T>(id, param), trigger);
-            return id;
+            _scheduler.ScheduleJob(GetJobDetail<T>(nextId, param), trigger);
+            return nextId;
         }
 
         #endregion
 
         #region 调度
 
-        static IScheduler scheduler = null;
+        private static IScheduler _scheduler = null;
 
         /// <summary>
         /// 可防止反复初始化
@@ -279,29 +315,45 @@ namespace Server.Core.Timer
         static QuartzTimer()
         {
             Init().Wait();
+            Start().Wait();
         }
 
+        /// <summary>
+        /// 初始化
+        /// </summary>
         static async Task Init()
         {
             LogProvider.SetCurrentLogProvider(new ConsoleLogProvider());
             var factory = new StdSchedulerFactory();
-            scheduler = await factory.GetScheduler();
-            await scheduler.Start();
+            _scheduler = await factory.GetScheduler();
         }
 
+        /// <summary>
+        /// 停止
+        /// </summary>
+        /// <returns></returns>
+        public static async Task Start()
+        {
+            await _scheduler.Start();
+        }
+
+        /// <summary>
+        /// 停止
+        /// </summary>
+        /// <returns></returns>
         public static Task Stop()
         {
-            return scheduler.Shutdown();
+            return _scheduler.Shutdown();
         }
 
-        private static long id = DateTime.Now.Ticks;
+        private static long _id = DateTime.Now.Ticks;
 
         private static long NextId()
         {
-            return Interlocked.Increment(ref id);
+            return Interlocked.Increment(ref _id);
         }
 
-        class TimerJob : IJob
+        private sealed class TimerJobHelper : IJob
         {
             public async Task Execute(IJobExecutionContext context)
             {
@@ -336,13 +388,13 @@ namespace Server.Core.Timer
         private static IJobDetail GetJobDetail<T>(long id, long actorId, Param param) where T : ITimerHandler
         {
             var handlerType = typeof(T);
-            statisticsTool.Count(handlerType.FullName);
+            StatisticsTool.Count(handlerType.FullName);
             if (handlerType.Assembly != HotfixMgr.HotfixAssembly)
             {
                 throw new Exception("定时器代码需要在热更项目里");
             }
 
-            var job = JobBuilder.Create<TimerJob>().WithIdentity(id + "").Build();
+            var job = JobBuilder.Create<TimerJobHelper>().WithIdentity(id + string.Empty).Build();
             job.JobDataMap.Add(PARAM_KEY, param);
             job.JobDataMap.Add(ACTOR_ID_KEY, actorId);
             job.JobDataMap.Add(TIMER_KEY, handlerType.FullName);
@@ -351,13 +403,13 @@ namespace Server.Core.Timer
 
         private static IJobDetail GetJobDetail<T>(long id, Param param) where T : NotHotfixTimerHandler
         {
-            statisticsTool.Count(typeof(T).FullName);
-            var job = JobBuilder.Create<T>().WithIdentity(id + "").Build();
+            StatisticsTool.Count(typeof(T).FullName);
+            var job = JobBuilder.Create<T>().WithIdentity(id + string.Empty).Build();
             job.JobDataMap.Add(PARAM_KEY, param);
             return job;
         }
 
-        class ConsoleLogProvider : ILogProvider
+        private class ConsoleLogProvider : ILogProvider
         {
             public Logger GetLogger(string name)
             {
@@ -372,7 +424,7 @@ namespace Server.Core.Timer
                         {
                             Log.Warn(func(), parameters);
                         }
-                        else if (level > LogLevel.Warn)
+                        else
                         {
                             Log.Error(func(), parameters);
                         }

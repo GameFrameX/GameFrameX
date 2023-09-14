@@ -58,7 +58,7 @@ namespace Server.Hotfix.Logic.Role.Base
             await serverComp.RemoveOnlineRole(ActorId);
             //下线后会被自动回收
             SetAutoRecycle(true);
-            QuartzTimer.Unschedule(ScheduleIdSet);
+            QuartzTimer.UnSchedule(ScheduleIdSet);
         }
 
         private RespLogin BuildLoginMsg()
