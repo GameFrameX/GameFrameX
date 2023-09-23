@@ -88,6 +88,22 @@ namespace Unity.Editor
             Debug.Log("AAB存储路径=>" + aabFilePath);
         }
 
+        /// <summary>
+        /// 复制build.Gradle 到目标目录
+        /// </summary>
+        /// <param name="targetPath"></param>
+        private static void CopyFileByBuildGradle(string targetPath)
+        {
+#if UNITY_ANDROID
+            var resourcesPath = Application.dataPath + "buildConfig/build.gradle";
+            if (File.Exists(resourcesPath))
+            {
+                var path = targetPath + "/build.gradle";
+                File.Copy(resourcesPath, path, true);
+            }
+#endif
+        }
+
         static string GeneratorGradleByWrapper(string path, string extensionSuffix = ".bat")
         {
             File.WriteAllText(path + "/build_init" + extensionSuffix, "gradle wrapper");
@@ -156,6 +172,28 @@ namespace Unity.Editor
         }
 
         /// <summary>
+        /// 发布 AS Debug 版本
+        /// </summary>
+        [MenuItem("Tools/Build/AS Project Debug", false, 20)]
+        private static void ExportToAndroidStudioToDevelop()
+        {
+            PlayerSettings.SplashScreen.show = false;
+            string apkPath = GetBuildPath();
+
+            EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
+            EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
+            EditorUserBuildSettings.development = true;
+
+            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, apkPath, BuildTarget.Android,
+                BuildOptions.None);
+            Debug.Log(apkPath);
+
+            GeneratorGradle(apkPath);
+            CopyFileByBuildGradle(apkPath);
+            Process.Start(apkPath);
+        }
+        
+        /// <summary>
         /// 发布 AS Release 版本
         /// </summary>
         [MenuItem("Tools/Build/AS Project Release", false, 20)]
@@ -172,6 +210,7 @@ namespace Unity.Editor
                 BuildOptions.None);
             Debug.Log(apkPath);
             GeneratorGradle(apkPath);
+            CopyFileByBuildGradle(apkPath);
             Debug.LogError("发布目录:" + apkPath);
         }
 
@@ -197,8 +236,7 @@ namespace Unity.Editor
                     break;
             }
 
-            string apkPath =
-                $"{dataDir.Parent.Parent.FullName}/{workPathName}/{Application.version}/{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
+            string apkPath = $"{dataDir.Parent.Parent.FullName}/{workPathName}/{Application.version}/{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
             DirectoryInfo asWorkDir = new DirectoryInfo(apkPath);
             if (asWorkDir.Exists)
             {
@@ -265,26 +303,7 @@ namespace Unity.Editor
             }
         }
 
-        /// <summary>
-        /// 发布 AS Debug 版本
-        /// </summary>
-        [MenuItem("Tools/Build/AS Project Debug", false, 20)]
-        private static void ExportToAndroidStudioToDevelop()
-        {
-            PlayerSettings.SplashScreen.show = false;
-            string apkPath = GetBuildPath();
-
-            EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
-            EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
-            EditorUserBuildSettings.development = true;
-
-            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, apkPath, BuildTarget.Android,
-                BuildOptions.None);
-            Debug.Log(apkPath);
-
-            GeneratorGradle(apkPath);
-            Process.Start(apkPath);
-        }
+      
 
         /// <summary>
         /// 发布 Xcode Debug 版本
