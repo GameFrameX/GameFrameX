@@ -12,7 +12,7 @@
 #if UNITY_EDITOR
                 return true;
 #else
-              return false;
+                return false;
 #endif
             }
         }
@@ -24,7 +24,7 @@
 #if UNITY_ANDROID
                 return true;
 #else
-              return false;
+                return false;
 #endif
             }
         }
