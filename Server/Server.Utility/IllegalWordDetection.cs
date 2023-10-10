@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Server.Extension;
 
 namespace Server.Utility
 {
@@ -112,13 +113,13 @@ namespace Server.Utility
 
             var startTime = DateTime.Now;
             int offset = 0;
-            var fieldNum = XBuffer.ReadInt(data, ref offset);
+            var fieldNum = data.ReadInt(ref offset);
             var typeList = new List<byte>();
             for (int i = 0; i < fieldNum; ++i)
-                typeList.Add(XBuffer.ReadByte(data, ref offset));
+                typeList.Add(data.ReadByte(ref offset));
             var nameList = new List<string>();
             for (int i = 0; i < fieldNum; ++i)
-                nameList.Add(XBuffer.ReadString(data, ref offset));
+                nameList.Add(data.ReadString(ref offset));
 
             int sizeInt = sizeof(int);
             int sizeLong = sizeof(long);
@@ -173,7 +174,7 @@ namespace Server.Utility
                     {
                         ///准确记录8位以内的敏感词汇的某个词在词汇中的“位置”
                         if (i < 7)
-                            fastCheck[*(pWordStart + i)] |= (byte) (1 << i);
+                            fastCheck[*(pWordStart + i)] |= (byte)(1 << i);
                         else ///8位以外的敏感词汇的词直接限定在第8位
                             fastCheck[*(pWordStart + i)] |= 0x80; ///0x80在内存中即为1000 0000，因为一个byte顶多标示8位，故超出8位的都位或上0x80，截断成第8位
                     }
@@ -182,10 +183,10 @@ namespace Server.Utility
                     int cachedWordslength = Math.Min(8, wordLength);
                     char firstWord = *pWordStart;
                     ///记录敏感词汇的“大致长度（超出8个字的敏感词汇会被截取成8的长度）”，“key”值为敏感词汇的第一个词
-                    fastLength[firstWord] |= (byte) (1 << (cachedWordslength - 1));
+                    fastLength[firstWord] |= (byte)(1 << (cachedWordslength - 1));
                     ///缓存出当前以badWord第一个字开头的一系列的敏感词汇的最长的长度
                     if (startCache[firstWord] < cachedWordslength)
-                        startCache[firstWord] = (byte) (cachedWordslength);
+                        startCache[firstWord] = (byte)(cachedWordslength);
 
                     ///存好敏感词汇的最后一个词汇的“出现情况”
                     endCache[*(pWordStart + wordLength - 1)] = true;
@@ -236,7 +237,7 @@ namespace Server.Utility
                     {
                         ///准确记录8位以内的敏感词汇的某个词在词汇中的“位置”
                         if (i < 7)
-                            fastCheck[*(pWordStart + i)] |= (byte) (1 << i);
+                            fastCheck[*(pWordStart + i)] |= (byte)(1 << i);
                         else ///8位以外的敏感词汇的词直接限定在第8位
                             fastCheck[*(pWordStart + i)] |= 0x80; ///0x80在内存中即为1000 0000，因为一个byte顶多标示8位，故超出8位的都位或上0x80，截断成第8位
                     }
@@ -245,10 +246,10 @@ namespace Server.Utility
                     int cachedWordslength = Math.Min(8, wordLength);
                     char firstWord = *pWordStart;
                     ///记录敏感词汇的“大致长度（超出8个字的敏感词汇会被截取成8的长度）”，“key”值为敏感词汇的第一个词
-                    fastLength[firstWord] |= (byte) (1 << (cachedWordslength - 1));
+                    fastLength[firstWord] |= (byte)(1 << (cachedWordslength - 1));
                     ///缓存出当前以badWord第一个字开头的一系列的敏感词汇的最长的长度
                     if (startCache[firstWord] < cachedWordslength)
-                        startCache[firstWord] = (byte) (cachedWordslength);
+                        startCache[firstWord] = (byte)(cachedWordslength);
 
                     ///存好敏感词汇的最后一个词汇的“出现情况”
                     endCache[*(pWordStart + wordLength - 1)] = true;
@@ -288,7 +289,7 @@ namespace Server.Utility
 
                     if ('A' <= c && c <= 'Z')
                     {
-                        *itor = (char) (c | 0x20);
+                        *itor = (char)(c | 0x20);
                     }
 
                     ++itor;
@@ -459,14 +460,14 @@ namespace Server.Utility
                     if (startCache[*itor] != 0 && (fastLength[*itor] & 0x01) > 0)
                     {
                         ///返回敏感词在text中的位置，以及敏感词的长度，供过滤功能用
-                        findResult.Add((int) (itor - ptext), 1);
+                        findResult.Add((int)(itor - ptext), 1);
                         if (returnWhenFindFirst)
                             return true;
                     }
 
                     char* strItor = detectedStrStart;
                     *strItor++ = *itor;
-                    int remainLength = (int) (end - itor - 1);
+                    int remainLength = (int)(end - itor - 1);
                     int skipCount = 0;
                     ///此时已经检测到一个敏感词的“首词”了,记录下第一个检测到的敏感词的位置
                     ///从当前的位置检测到字符串末尾
@@ -492,9 +493,9 @@ namespace Server.Utility
                         {
                             ///如果此子字符串在敏感词字典中存在，则记录。做此判断是避免敏感词中夹杂了其他敏感词的单词，而上面的算法无法剔除，故先用hash数组来剔除
                             ///上述算法是用于减少大部分的比较消耗
-                            if (wordsSet.Contains(new string(dectectedBuffer, 0, (int) (strItor - detectedStrStart))))
+                            if (wordsSet.Contains(new string(dectectedBuffer, 0, (int)(strItor - detectedStrStart))))
                             {
-                                int curDectectedStartIndex = (int) (itor - ptext);
+                                int curDectectedStartIndex = (int)(itor - ptext);
                                 findResult[curDectectedStartIndex] = i + 1;
                                 itor = subItor;
 
