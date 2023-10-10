@@ -1,4 +1,4 @@
-using Server.Luncher.Common.Session;
+using Server.Launcher.Common.Session;
 
 namespace Server.Hotfix.Http
 {

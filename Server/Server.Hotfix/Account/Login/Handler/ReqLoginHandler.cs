@@ -1,13 +1,14 @@
-﻿using Server.Hotfix.Account.Login.Agent;
+﻿using Server.Core.Net.BaseHandler;
+using Server.Hotfix.Account.Login.Agent;
 
 namespace Server.Hotfix.Account.Login.Handler
 {
     [MsgMapping(typeof(ReqLogin))]
     internal class ReqLoginHandler : GlobalComponentHandler<LoginComponentAgent>
     {
-        public override async Task ActionAsync()
+        protected override async Task ActionAsync()
         {
-            await Comp.OnLogin(Channel, Msg as ReqLogin);
+            await Comp.OnLogin(Channel, Message as ReqLogin);
         }
     }
 }

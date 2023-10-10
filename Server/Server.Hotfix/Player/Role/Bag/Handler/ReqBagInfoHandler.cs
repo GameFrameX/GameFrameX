@@ -1,13 +1,14 @@
-﻿using Server.Hotfix.Player.Role.Bag.Agent;
+﻿using Server.Core.Net.BaseHandler;
+using Server.Hotfix.Player.Role.Bag.Agent;
 
 namespace Server.Hotfix.Player.Role.Bag.Handler
 {
     [MsgMapping(typeof(ReqBagInfo))]
     public class ReqBagInfoHandler : RoleComponentHandler<BagComponentAgent>
     {
-        public override async Task ActionAsync()
+        protected override async Task ActionAsync()
         {
-            await Comp.GetBagInfo(Msg as ReqBagInfo);
+            await Comp.GetBagInfo(Message as ReqBagInfo);
         }
     }
 }

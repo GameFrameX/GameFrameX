@@ -1,4 +1,5 @@
-using Server.Luncher.Common;
+using Server.Core.Net;
+using Server.Launcher.Common;
 using Server.Core.Net.Messages;
 using Server.Core.Net.Tcp.Codecs;
 using Server.Proto;
@@ -13,7 +14,7 @@ public static class NetChannelExtensions
         if (msg != null)
         {
             msg.UniId = uniId;
-            channel.WriteAsync(new NetMessage(msg));
+            channel.Write(msg);
         }
 
         if (uniId > 0)
@@ -21,10 +22,10 @@ public static class NetChannelExtensions
             RespErrorCode res = new RespErrorCode
             {
                 // UniId = uniId,
-                ErrCode = (int) code,
+                ErrCode = (int)code,
                 Desc = desc
             };
-            channel.WriteAsync(new NetMessage(res));
+            channel.Write(res);
         }
     }
 }
