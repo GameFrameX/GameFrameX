@@ -1,7 +1,8 @@
-﻿using Server.Core.Net.Messages;
+﻿using Server.Core.Net;
+using Server.Core.Net.Messages;
 using Server.Core.Net.Tcp.Codecs;
 
-namespace Server.Luncher.Common.Session
+namespace Server.Launcher.Common.Session
 {
     public class Session
     {
@@ -33,7 +34,7 @@ namespace Server.Luncher.Common.Session
 
         public void WriteAsync(MessageObject msg)
         {
-            Channel?.WriteAsync(msg);
+            Channel?.Write(msg);
         }
     }
 }

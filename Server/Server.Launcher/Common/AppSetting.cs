@@ -2,7 +2,7 @@
 using Server.Setting;
 using Server.Utility;
 
-namespace Server.Luncher.Common
+namespace Server.Launcher.Common
 {
     public class AppSetting : BaseSetting
     {

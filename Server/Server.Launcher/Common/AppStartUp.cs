@@ -17,7 +17,7 @@ using Server.Proto.Formatter;
 using Server.Setting;
 using Server.Utility;
 
-namespace Server.Luncher.Common
+namespace Server.Launcher.Common
 {
     internal static class AppStartUp
     {

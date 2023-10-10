@@ -1,4 +1,4 @@
-﻿namespace Server.Luncher.Common.Event
+﻿namespace Server.Launcher.Common.Event
 {
     public enum EventId
     {

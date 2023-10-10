@@ -1,12 +1,14 @@
 ﻿using System.Collections.Concurrent;
 using Server.Core.Actors;
 using Server.Core.Events;
+using Server.Core.Net;
 using Server.Core.Net.Tcp.Codecs;
-using Server.Luncher.Common.Event;
+using Server.Launcher.Common.Event;
 using Server.Proto;
 using Server.Proto.Proto;
+using Server.Setting;
 
-namespace Server.Luncher.Common.Session
+namespace Server.Launcher.Common.Session
 {
     /// <summary>
     /// 管理玩家session，一个玩家一个，下线之后移除，顶号之后释放之前的channel，替换channel
@@ -32,7 +34,7 @@ namespace Server.Luncher.Common.Session
         {
             if (sessionMap.TryRemove(sessionId, out var _) && ActorMgr.HasActor(sessionId))
             {
-                EventDispatcher.Dispatch(sessionId, (int) EventId.SessionRemove);
+                EventDispatcher.Dispatch(sessionId, (int)EventId.SessionRemove);
             }
         }
 
@@ -46,7 +48,7 @@ namespace Server.Luncher.Common.Session
             {
                 if (ActorMgr.HasActor(session.Id))
                 {
-                    EventDispatcher.Dispatch(session.Id, (int) EventId.SessionRemove);
+                    EventDispatcher.Dispatch(session.Id, (int)EventId.SessionRemove);
                 }
             }
 
@@ -84,11 +86,11 @@ namespace Server.Luncher.Common.Session
                 }
 
                 // 新连接 or 顶号
-                oldSession.Channel.RemoveSessionId();
-                oldSession.Channel.Abort();
+                oldSession.Channel.RemoveData(GlobalConst.SESSION_ID_KEY);
+                oldSession.Channel.Close();
             }
 
-            session.Channel.SetSessionId(session.Id);
+            session.Channel.SetData(GlobalConst.SESSION_ID_KEY, session.Id);
             sessionMap[session.Id] = session;
         }
     }

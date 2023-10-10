@@ -1,6 +1,6 @@
 ﻿using Server.Core.Events;
 
-namespace Server.Luncher.Common.Event
+namespace Server.Launcher.Common.Event
 {
     public class EventAttribute : EventInfoAttribute
     {

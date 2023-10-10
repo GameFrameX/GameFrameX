@@ -2,11 +2,11 @@
 using System.Text;
 using NLog;
 using Server.Core.Utility;
-using Server.Luncher.Common;
+using Server.Launcher.Common;
 using Server.Setting;
 using Server.Utility;
 
-namespace Server.Luncher
+namespace Server.Launcher
 {
     internal static class Program
     {

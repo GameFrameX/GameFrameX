@@ -1,4 +1,4 @@
-namespace Server.Luncher.Common
+namespace Server.Launcher.Common
 {
     /// <summary>
     /// 服务器错误码
