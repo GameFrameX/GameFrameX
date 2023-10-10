@@ -1,13 +1,17 @@
 using Server.Core.Hotfix.Agent;
+using Server.Setting;
 
-namespace Server.Core.Net.Tcp.Handler;
+namespace Server.Core.Net.BaseHandler;
 
 public abstract class RoleComponentHandler : BaseComponentHandler
 {
     protected override Task InitActor()
     {
         if (ActorId <= 0)
-            ActorId = Channel.GetSessionId();
+        {
+            ActorId = Channel.GetData<long>(GlobalConst.SESSION_ID_KEY);
+        }
+
         return Task.CompletedTask;
     }
 }

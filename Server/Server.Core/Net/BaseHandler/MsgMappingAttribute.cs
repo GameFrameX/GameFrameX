@@ -1,4 +1,4 @@
-﻿namespace Server.Core.Net.Tcp.Handler
+﻿namespace Server.Core.Net.BaseHandler
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class MsgMapping : Attribute

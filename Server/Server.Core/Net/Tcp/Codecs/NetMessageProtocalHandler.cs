@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+﻿/*using System.Buffers;
 using System.Text;
 using Newtonsoft.Json;
 using NLog.Fluent;
@@ -50,4 +50,4 @@ namespace Server.Core.Net.Tcp.Codecs
             Log.Debug($"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(netMessage.Msg)}");
         }
     }
-}
+}*/

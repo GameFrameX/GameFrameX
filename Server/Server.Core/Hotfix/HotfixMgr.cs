@@ -4,8 +4,8 @@ using Server.Core.Actors;
 using Server.Core.Comps;
 using Server.Core.Events;
 using Server.Core.Hotfix.Agent;
+using Server.Core.Net.BaseHandler;
 using Server.Core.Net.Http;
-using Server.Core.Net.Tcp.Handler;
 
 namespace Server.Core.Hotfix
 {
@@ -97,7 +97,7 @@ namespace Server.Core.Hotfix
             return module.GetAgent<T>(comp);
         }
 
-        public static BaseTcpHandler GetTcpHandler(int msgId)
+        public static BaseMessageHandler GetTcpHandler(int msgId)
         {
             return module.GetTcpHandler(msgId);
         }

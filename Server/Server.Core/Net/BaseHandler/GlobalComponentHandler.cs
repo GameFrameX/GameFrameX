@@ -3,7 +3,7 @@ using Server.Core.Comps;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Utility;
 
-namespace Server.Core.Net.Tcp.Handler;
+namespace Server.Core.Net.BaseHandler;
 
 public abstract class GlobalComponentHandler : BaseComponentHandler
 {

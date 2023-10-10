@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
-using Server.Core.Net.Tcp.Handler;
 
 namespace Server.Core.Net.Tcp
 {
@@ -23,8 +22,17 @@ namespace Server.Core.Net.Tcp
         public static Task Start(int port)
         {
             var builder = WebApplication.CreateBuilder();
-            builder.WebHost.UseKestrel(options => { options.ListenAnyIP(port, builder => { builder.UseConnectionHandler<TcpConnectionHandler>(); }); })
-                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
+            builder.WebHost.UseKestrel(options =>
+                {
+                    options.ListenAnyIP(port, listenOptions =>
+                    {
+                        listenOptions.UseConnectionHandler<TcpConnectionHandler>();
+                    });
+                })
+                .ConfigureLogging(logging =>
+                {
+                    logging.SetMinimumLevel(LogLevel.Error);
+                })
                 .UseNLog();
 
             var app = builder.Build();
@@ -39,6 +47,7 @@ namespace Server.Core.Net.Tcp
                 .UseNLog();
 
             App = builder.Build();
+            Log.Info("启动tcp服务...");
             return App.StartAsync();
         }
 

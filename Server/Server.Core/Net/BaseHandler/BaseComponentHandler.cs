@@ -1,12 +1,12 @@
 ﻿using Server.Core.Actors;
 using Server.Core.Hotfix.Agent;
 
-namespace Server.Core.Net.Tcp.Handler
+namespace Server.Core.Net.BaseHandler
 {
     /// <summary>
     /// 基础组件处理器基类
     /// </summary>
-    public abstract class BaseComponentHandler : BaseTcpHandler
+    public abstract class BaseComponentHandler : BaseMessageHandler
     {
         protected long ActorId { get; set; }
 
@@ -38,9 +38,9 @@ namespace Server.Core.Net.Tcp.Handler
             return Task.CompletedTask;
         }
 
-        protected Task<OtherAgent> GetComponentAgent<OtherAgent>() where OtherAgent : IComponentAgent
+        protected Task<TOtherAgent> GetComponentAgent<TOtherAgent>() where TOtherAgent : IComponentAgent
         {
-            return CacheComponent.GetComponentAgent<OtherAgent>();
+            return CacheComponent.GetComponentAgent<TOtherAgent>();
         }
     }
 }

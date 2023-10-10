@@ -5,9 +5,8 @@ using Server.Core.Actors;
 using Server.Core.Comps;
 using Server.Core.Events;
 using Server.Core.Hotfix.Agent;
+using Server.Core.Net.BaseHandler;
 using Server.Core.Net.Http;
-using Server.Core.Net.Tcp.Handler;
-using Server.Core.Utility;
 using Server.Extension;
 using Server.Setting;
 
@@ -249,7 +248,7 @@ namespace Server.Core.Hotfix
             }
 
             var fullName = type.FullName;
-            if (fullName == "Server.Luncher.Logic.Server.ServerComp")
+            if (fullName == "Server.Launcher.Logic.Server.ServerComp")
             {
                 return false;
             }
@@ -271,12 +270,12 @@ namespace Server.Core.Hotfix
             return true;
         }
 
-        internal BaseTcpHandler GetTcpHandler(int msgId)
+        internal BaseMessageHandler GetTcpHandler(int msgId)
         {
             if (tcpHandlerMap.TryGetValue(msgId, out var handlerType))
             {
                 var ins = Activator.CreateInstance(handlerType);
-                if (ins is BaseTcpHandler handler)
+                if (ins is BaseMessageHandler handler)
                 {
                     return handler;
                 }
