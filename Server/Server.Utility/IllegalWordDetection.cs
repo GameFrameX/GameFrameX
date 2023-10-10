@@ -145,11 +145,11 @@ namespace Server.Utility
                         case 2: //string
                             if (badIdx == i)
                             {
-                                word = XBuffer.ReadString(data, ref offset);
+                                word = data.ReadString(ref offset);
                             }
                             else
                             {
-                                var len = XBuffer.ReadShort(data, ref offset);
+                                var len = data.ReadShort(ref offset);
                                 offset += len;
                             }
 
