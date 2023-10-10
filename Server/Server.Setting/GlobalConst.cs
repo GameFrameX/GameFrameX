@@ -5,6 +5,11 @@
 /// </summary>
 public static class GlobalConst
 {
+    /// <summary>
+    /// SessionId Key
+    /// </summary>
+    public const string SESSION_ID_KEY = "SESSION_ID";
+
     public const int SECOND_MASK = 0x3FFFFFFF;
 
     /// <summary>
