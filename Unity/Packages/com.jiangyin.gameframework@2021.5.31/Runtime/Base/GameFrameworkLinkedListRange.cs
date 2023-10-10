@@ -16,7 +16,7 @@ namespace GameFramework
     /// </summary>
     /// <typeparam name="T">指定链表范围的元素类型。</typeparam>
     [StructLayout(LayoutKind.Auto)]
-    public struct GameFrameworkLinkedListRange<T> : IEnumerable<T>, IEnumerable
+    public readonly struct GameFrameworkLinkedListRange<T> : IEnumerable<T>, IEnumerable
     {
         private readonly LinkedListNode<T> m_First;
         private readonly LinkedListNode<T> m_Terminal;
