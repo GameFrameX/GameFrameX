@@ -7,7 +7,7 @@ namespace UnityGameFramework.Runtime
     /// </summary>
     public static class GameTimeHelper
     {
-        private static readonly long epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
+        private static readonly long Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
 
         /// <summary>
         /// 时间差
@@ -54,7 +54,7 @@ namespace UnityGameFramework.Runtime
         /// <returns></returns>
         public static long ClientNowMillisecond()
         {
-            return (DateTime.UtcNow.Ticks - epoch) / TicksPerMillisecond;
+            return (DateTime.UtcNow.Ticks - Epoch) / TicksPerMillisecond;
         }
 
         public static long ServerToday()
@@ -69,7 +69,7 @@ namespace UnityGameFramework.Runtime
 
         public static long ClientTodayMillisecond()
         {
-            return (DateTime.Now.Date.ToUniversalTime().Ticks - epoch) / 10000;
+            return (DateTime.Now.Date.ToUniversalTime().Ticks - Epoch) / 10000;
         }
 
         /// <summary>
@@ -86,35 +86,55 @@ namespace UnityGameFramework.Runtime
             return (_differenceTime + ClientNowMillisecond()) / 1000;
         }
 
+        /// <summary>
+        /// 今天的客户端时间
+        /// </summary>
+        /// <returns></returns>
         public static long ClientToday()
         {
-            return (DateTime.Now.Date.ToUniversalTime().Ticks - epoch) / TicksPerSecond;
+            return (DateTime.Now.Date.ToUniversalTime().Ticks - Epoch) / TicksPerSecond;
+        }
+
+        /// <summary>
+        /// 客户端时间，毫秒
+        /// </summary>
+        /// <returns></returns>
+        public static long ClientNow()
+        {
+            return (DateTime.UtcNow.Ticks - Epoch) / 10000;
+        }
+
+        /// <summary>
+        /// 客户端时间。秒
+        /// </summary>
+        /// <returns></returns>
+        public static long ClientNowSeconds()
+        {
+            return (DateTime.UtcNow.Ticks - Epoch) / 10000000;
         }
 
         /// <summary>
         /// 客户端时间
         /// </summary>
         /// <returns></returns>
-        public static long ClientNow()
-        {
-            return (DateTime.UtcNow.Ticks - epoch) / 10000;
-        }
-
-        public static long ClientNowSeconds()
-        {
-            return (DateTime.UtcNow.Ticks - epoch) / 10000000;
-        }
-
         public static long Now()
         {
             return ClientNow();
         }
 
+        /// <summary>
+        /// UTC时间 秒
+        /// </summary>
+        /// <returns></returns>
         public static long UnixTimeSeconds()
         {
             return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
         }
 
+        /// <summary>
+        /// UTC时间 毫秒
+        /// </summary>
+        /// <returns></returns>
         public static long UnixTimeMilliseconds()
         {
             return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
