@@ -30,12 +30,6 @@ namespace UnityGameFramework.Runtime
             main.targetTexture = null;
             RenderTexture.active = null;
             RenderTexture.ReleaseTemporary(renderTexture);
-
-            // icon.texture = new NTexture(screenShot);
-            // BlurFilter blurFilter = new BlurFilter();
-            // icon.filter = blurFilter;
-            // icon.alpha = 0;
-            // icon.TweenFade(1, 0.3f);
             return screenShot;
         }
     }
