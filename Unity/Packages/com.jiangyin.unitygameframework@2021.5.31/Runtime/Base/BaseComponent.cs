@@ -370,10 +370,10 @@ namespace UnityGameFramework.Runtime
                 objectPoolComponent.ReleaseAllUnused();
             }
 
-            ResourceComponent resourceCompoent = GameEntry.GetComponent<ResourceComponent>();
-            if (resourceCompoent != null)
+            ResourceComponent resourceComponent = GameEntry.GetComponent<ResourceComponent>();
+            if (resourceComponent != null)
             {
-                resourceCompoent.ForceUnloadUnusedAssets(true);
+                resourceComponent.ForceUnloadUnusedAssets(true);
             }
         }
     }
