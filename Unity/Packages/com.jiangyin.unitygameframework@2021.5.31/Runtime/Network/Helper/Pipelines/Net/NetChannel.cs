@@ -15,10 +15,10 @@ namespace UnityGameFramework.Network.Pipelines
         public IProtoCalWriteHelper<MessageObject> ProtocolWriteHelper { get; protected set; }
         public IProtoCalReadHelper<MessageObject> ProtocolReadHelper { get; protected set; }
         Action<MessageObject> onMessageAct;
-        Action onConnectCloseAct;
+        Action<NetChannel> onConnectCloseAct;
         bool triggerCloseEvt = true;
 
-        public NetChannel(ConnectionContext context, IProtoCalWriteHelper<MessageObject> protoCalWriteHelper,IProtoCalReadHelper<MessageObject> protoCalReadHelper, Action<MessageObject> onMessage = null, Action onConnectClose = null)
+        public NetChannel(ConnectionContext context, IProtoCalWriteHelper<MessageObject> protoCalWriteHelper,IProtoCalReadHelper<MessageObject> protoCalReadHelper, Action<MessageObject> onMessage = null, Action<NetChannel> onConnectClose = null)
         {
             Context = context;
             Reader = context.CreateReader();
@@ -68,7 +68,7 @@ namespace UnityGameFramework.Network.Pipelines
         {
             if (triggerCloseEvt)
             {
-                onConnectCloseAct();
+                onConnectCloseAct(this);
             }
 
             Reader = null;

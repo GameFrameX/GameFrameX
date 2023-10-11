@@ -50,7 +50,7 @@ namespace UnityGameFramework.Network.Pipelines
                     Debug.Log($"Connected to {context.LocalEndPoint}");
                     // OnConnected(NetCode.Success);
                     // channel = new NetChannel(context, _protocol, OnRevice, OnDisConnected);
-                    channel = new NetChannel(context, _protoCalWriteHelper, _protoCalReadHelper, OnRevice, () => { });
+                    channel = new NetChannel(context, _protoCalWriteHelper, _protoCalReadHelper, OnRevice, (x) => { });
                     _ = channel.StartReadMsgAsync();
                 }
                 else

@@ -9,11 +9,9 @@ using GameFramework;
 using GameFramework.Event;
 using GameFramework.Network;
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using UnityEngine;
 
 namespace UnityGameFramework.Runtime
 {
@@ -93,8 +91,8 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         public void PrepareForConnecting()
         {
-            // m_NetworkChannel.SocketConnection.Socket.ReceiveBufferSize = 1024 * 64;
-            // m_NetworkChannel.SocketConnection.Socket.SendBufferSize = 1024 * 64;
+            m_NetworkChannel.Socket.ReceiveBufferSize = 1024 * 64;
+            m_NetworkChannel.Socket.SendBufferSize = 1024 * 64;
         }
 
         /// <summary>

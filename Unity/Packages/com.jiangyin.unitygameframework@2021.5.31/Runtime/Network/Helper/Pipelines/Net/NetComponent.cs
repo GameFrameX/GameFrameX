@@ -5,150 +5,294 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Network;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityGameFramework.Runtime;
-using NetworkClosedEventArgs = UnityGameFramework.Runtime.NetworkClosedEventArgs;
-using NetworkConnectedEventArgs = UnityGameFramework.Runtime.NetworkConnectedEventArgs;
-using NetworkCustomErrorEventArgs = UnityGameFramework.Runtime.NetworkCustomErrorEventArgs;
-using NetworkErrorEventArgs = UnityGameFramework.Runtime.NetworkErrorEventArgs;
-using NetworkMissHeartBeatEventArgs = UnityGameFramework.Runtime.NetworkMissHeartBeatEventArgs;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using UnityGameFramework.Network.Pipelines;
+using UnityGameFramework.Network.Pipelines.Protocols;
 
-namespace UnityGameFramework.Network.Pipelines
+namespace GameFramework.Network
 {
     /// <summary>
-    /// 网络组件。
+    /// IO Pipeline 网络频道。
     /// </summary>
-    [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Net")]
-    public sealed class NetComponent : GameFrameworkComponent
+    sealed class IOPipelineNetworkChannel : NetworkManager.NetworkChannelBase
     {
-        private INetworkManager m_NetworkManager = null;
-        private EventComponent m_EventComponent = null;
+        private readonly AsyncCallback m_ConnectCallback;
+        private readonly AsyncCallback m_SendCallback;
+        private readonly AsyncCallback m_ReceiveCallback;
+
+        IProtoCalWriteHelper<MessageObject> _protoCalWriteHelper;
+        IProtoCalReadHelper<MessageObject> _protoCalReadHelper;
 
         /// <summary>
-        /// 获取网络频道数量。
-        /// </summary>
-        public int NetworkChannelCount
-        {
-            get { return m_NetworkManager.NetworkChannelCount; }
-        }
-
-        /// <summary>
-        /// 游戏框架组件初始化。
-        /// </summary>
-        protected override void Awake()
-        {
-            base.Awake();
-            new NetManager();
-            m_NetworkManager = GameFrameworkEntry.GetModule<INetworkManager>();
-            if (m_NetworkManager == null)
-            {
-                Log.Fatal("Network manager is invalid.");
-                return;
-            }
-
-            m_NetworkManager.NetworkConnected += OnNetworkConnected;
-            m_NetworkManager.NetworkClosed += OnNetworkClosed;
-            m_NetworkManager.NetworkMissHeartBeat += OnNetworkMissHeartBeat;
-            m_NetworkManager.NetworkError += OnNetworkError;
-            m_NetworkManager.NetworkCustomError += OnNetworkCustomError;
-        }
-
-        private void Start()
-        {
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
-            {
-                Log.Fatal("Event component is invalid.");
-                return;
-            }
-        }
-
-        /// <summary>
-        /// 检查是否存在网络频道。
-        /// </summary>
-        /// <param name="name">网络频道名称。</param>
-        /// <returns>是否存在网络频道。</returns>
-        public bool HasNetworkChannel(string name)
-        {
-            return m_NetworkManager.HasNetworkChannel(name);
-        }
-
-        /// <summary>
-        /// 获取网络频道。
-        /// </summary>
-        /// <param name="name">网络频道名称。</param>
-        /// <returns>要获取的网络频道。</returns>
-        public INetworkChannel GetNetworkChannel(string name)
-        {
-            return m_NetworkManager.GetNetworkChannel(name);
-        }
-
-        /// <summary>
-        /// 获取所有网络频道。
-        /// </summary>
-        /// <returns>所有网络频道。</returns>
-        public INetworkChannel[] GetAllNetworkChannels()
-        {
-            return m_NetworkManager.GetAllNetworkChannels();
-        }
-
-        /// <summary>
-        /// 获取所有网络频道。
-        /// </summary>
-        /// <param name="results">所有网络频道。</param>
-        public void GetAllNetworkChannels(List<INetworkChannel> results)
-        {
-            m_NetworkManager.GetAllNetworkChannels(results);
-        }
-
-        /// <summary>
-        /// 创建网络频道。
+        /// 初始化网络频道的新实例。
         /// </summary>
         /// <param name="name">网络频道名称。</param>
         /// <param name="networkChannelHelper">网络频道辅助器。</param>
-        /// <returns>要创建的网络频道。</returns>
-        public INetworkChannel CreateNetworkChannel(string name, INetworkChannelHelper networkChannelHelper)
+        public IOPipelineNetworkChannel(string name, INetworkChannelHelper networkChannelHelper)
+            : base(name, networkChannelHelper)
         {
-            return m_NetworkManager.CreateNetworkChannel(name, networkChannelHelper);
+            // m_ConnectCallback = ConnectCallback;
+            m_SendCallback = SendCallback;
+            m_ReceiveCallback = ReceiveCallback;
+            _protoCalWriteHelper = new ClientProtocolWriteHelper();
+            _protoCalReadHelper = new ClientProtocolReadHelper();
         }
+
+        private SocketConnection socketConnection;
+        private NetworkManager.ConnectState connectState;
 
         /// <summary>
-        /// 销毁网络频道。
+        /// 连接到远程主机。
         /// </summary>
-        /// <param name="name">网络频道名称。</param>
-        /// <returns>是否销毁网络频道成功。</returns>
-        public bool DestroyNetworkChannel(string name)
+        /// <param name="ipAddress">远程主机的 IP 地址。</param>
+        /// <param name="port">远程主机的端口号。</param>
+        /// <param name="userData">用户自定义数据。</param>
+        public override async void Connect(IPAddress ipAddress, int port, object userData)
         {
-            return m_NetworkManager.DestroyNetworkChannel(name);
+            base.Connect(ipAddress, port, userData);
+            var (ipType, host) = Utility.Net.GetIPv6Address(ipAddress.ToString(), port);
+            socketConnection = new SocketConnection(ipAddress.AddressFamily, host, port);
+            connectState = new NetworkManager.ConnectState(socketConnection.Socket, userData);
+
+            var context = await socketConnection.StartAsync(0);
+
+            if (context != null)
+            {
+                if (NetworkChannelConnected != null)
+                {
+                    NetworkChannelConnected(this, connectState.UserData);
+                }
+
+                var channel = new NetChannel(context, _protoCalWriteHelper, _protoCalReadHelper, ReceiveCallback, ConnectCallback);
+                // _ = channel.StartReadMsgAsync();
+            }
+            else
+            {
+                string errorMessage = "Initialize network channel failure.";
+                if (NetworkChannelError != null)
+                {
+                    NetworkChannelError(this, NetworkErrorCode.SocketError, SocketError.Success, errorMessage);
+                    return;
+                }
+
+                throw new GameFrameworkException(errorMessage);
+            }
+
+            m_NetworkChannelHelper.PrepareForConnecting();
+            ConnectAsync(ipAddress, port, userData);
         }
 
-        private void OnNetworkConnected(object sender, GameFramework.Network.NetworkConnectedEventArgs e)
+        private void ReceiveCallback(MessageObject obj)
         {
-            m_EventComponent.Fire(this, NetworkConnectedEventArgs.Create(e));
         }
 
-        private void OnNetworkClosed(object sender, GameFramework.Network.NetworkClosedEventArgs e)
+        public void OnDisConnected()
         {
-            m_EventComponent.Fire(this, NetworkClosedEventArgs.Create(e));
+            // var rMsg = new NetMessage();
+            // rMsg.MsgId = DisconnectEvt;
+            // rMsg.Msg = NetCode.Closed;
+            // msgQueue.Enqueue(rMsg);
         }
 
-        private void OnNetworkMissHeartBeat(object sender, GameFramework.Network.NetworkMissHeartBeatEventArgs e)
+        public void Close(bool triggerCloseEvt)
         {
-            m_EventComponent.Fire(this, NetworkMissHeartBeatEventArgs.Create(e));
+            // channel?.Abort(triggerCloseEvt);
+            // channel = null;
+            // ClearAllMsg();
         }
 
-        private void OnNetworkError(object sender, GameFramework.Network.NetworkErrorEventArgs e)
+        protected override bool ProcessSend()
         {
-            m_EventComponent.Fire(this, NetworkErrorEventArgs.Create(e));
+            if (base.ProcessSend())
+            {
+                SendAsync();
+                return true;
+            }
+
+            return false;
         }
 
-        private void OnNetworkCustomError(object sender, GameFramework.Network.NetworkCustomErrorEventArgs e)
+        private void ConnectAsync(IPAddress ipAddress, int port, object userData)
         {
-            m_EventComponent.Fire(this, NetworkCustomErrorEventArgs.Create(e));
+            try
+            {
+                m_Socket.BeginConnect(ipAddress, port, m_ConnectCallback, new NetworkManager.ConnectState(m_Socket, userData));
+            }
+            catch (Exception exception)
+            {
+                if (NetworkChannelError != null)
+                {
+                    SocketException socketException = exception as SocketException;
+                    NetworkChannelError(this, NetworkErrorCode.ConnectError, socketException != null ? socketException.SocketErrorCode : SocketError.Success, exception.ToString());
+                    return;
+                }
+
+                throw;
+            }
+        }
+
+        private void ConnectCallback(NetChannel netChannel)
+        {
+            m_SentPacketCount = 0;
+            m_ReceivedPacketCount = 0;
+
+            lock (m_SendPacketPool)
+            {
+                m_SendPacketPool.Clear();
+            }
+
+            m_ReceivePacketPool.Clear();
+
+            lock (m_HeartBeatState)
+            {
+                m_HeartBeatState.Reset(true);
+            }
+
+            if (NetworkChannelConnected != null)
+            {
+                NetworkChannelConnected(this, connectState.UserData);
+            }
+
+            m_Active = true;
+            _ = netChannel.StartReadMsgAsync();
+        }
+
+        private void SendAsync()
+        {
+            try
+            {
+                m_Socket.BeginSend(m_SendState.Stream.GetBuffer(), (int)m_SendState.Stream.Position, (int)(m_SendState.Stream.Length - m_SendState.Stream.Position), SocketFlags.None, m_SendCallback, m_Socket);
+            }
+            catch (Exception exception)
+            {
+                m_Active = false;
+                if (NetworkChannelError != null)
+                {
+                    SocketException socketException = exception as SocketException;
+                    NetworkChannelError(this, NetworkErrorCode.SendError, socketException?.SocketErrorCode ?? SocketError.Success, exception.ToString());
+                    return;
+                }
+
+                throw;
+            }
+        }
+
+        private void SendCallback(IAsyncResult ar)
+        {
+            Socket socket = (Socket)ar.AsyncState;
+            if (!socket.Connected)
+            {
+                return;
+            }
+
+            int bytesSent = 0;
+            try
+            {
+                bytesSent = socket.EndSend(ar);
+            }
+            catch (Exception exception)
+            {
+                m_Active = false;
+                if (NetworkChannelError != null)
+                {
+                    SocketException socketException = exception as SocketException;
+                    NetworkChannelError(this, NetworkErrorCode.SendError, socketException != null ? socketException.SocketErrorCode : SocketError.Success, exception.ToString());
+                    return;
+                }
+
+                throw;
+            }
+
+            m_SendState.Stream.Position += bytesSent;
+            if (m_SendState.Stream.Position < m_SendState.Stream.Length)
+            {
+                SendAsync();
+                return;
+            }
+
+            m_SentPacketCount++;
+            m_SendState.Reset();
+        }
+
+        private void ReceiveAsync()
+        {
+            try
+            {
+                m_Socket.BeginReceive(m_ReceiveState.Stream.GetBuffer(), (int)m_ReceiveState.Stream.Position, (int)(m_ReceiveState.Stream.Length - m_ReceiveState.Stream.Position), SocketFlags.None, m_ReceiveCallback, m_Socket);
+            }
+            catch (Exception exception)
+            {
+                m_Active = false;
+                if (NetworkChannelError != null)
+                {
+                    SocketException socketException = exception as SocketException;
+                    NetworkChannelError(this, NetworkErrorCode.ReceiveError, socketException != null ? socketException.SocketErrorCode : SocketError.Success, exception.ToString());
+                    return;
+                }
+
+                throw;
+            }
+        }
+
+        private void ReceiveCallback(IAsyncResult ar)
+        {
+            Socket socket = (Socket)ar.AsyncState;
+            if (!socket.Connected)
+            {
+                return;
+            }
+
+            int bytesReceived = 0;
+            try
+            {
+                bytesReceived = socket.EndReceive(ar);
+            }
+            catch (Exception exception)
+            {
+                m_Active = false;
+                if (NetworkChannelError != null)
+                {
+                    SocketException socketException = exception as SocketException;
+                    NetworkChannelError(this, NetworkErrorCode.ReceiveError, socketException != null ? socketException.SocketErrorCode : SocketError.Success, exception.ToString());
+                    return;
+                }
+
+                throw;
+            }
+
+            if (bytesReceived <= 0)
+            {
+                Close();
+                return;
+            }
+
+            m_ReceiveState.Stream.Position += bytesReceived;
+            if (m_ReceiveState.Stream.Position < m_ReceiveState.Stream.Length)
+            {
+                ReceiveAsync();
+                return;
+            }
+
+            m_ReceiveState.Stream.Position = 0L;
+
+            bool processSuccess = false;
+            if (m_ReceiveState.PacketHeader != null)
+            {
+                processSuccess = ProcessPacket();
+                m_ReceivedPacketCount++;
+            }
+            else
+            {
+                processSuccess = ProcessPacketHeader();
+            }
+
+            if (processSuccess)
+            {
+                ReceiveAsync();
+                return;
+            }
         }
     }
 }
