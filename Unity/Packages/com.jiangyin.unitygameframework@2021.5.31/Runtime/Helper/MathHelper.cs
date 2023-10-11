@@ -13,11 +13,11 @@ namespace UnityGameFramework.Runtime
         /// <returns></returns>
         public static bool CheckIntersect(RectInt src, RectInt target)
         {
-            int minx = Math.Max(src.x, target.x);
-            int miny = Math.Max(src.y, target.y);
-            int maxx = Math.Min(src.x + src.width, target.x + target.width);
-            int maxy = Math.Min(src.y + src.height, target.y + target.height);
-            if (minx >= maxx || miny >= maxy)
+            int minX = Math.Max(src.x, target.x);
+            int minY = Math.Max(src.y, target.y);
+            int maxX = Math.Min(src.x + src.width, target.x + target.width);
+            int maxY = Math.Min(src.y + src.height, target.y + target.height);
+            if (minX >= maxX || minY >= maxY)
             {
                 return false;
             }
@@ -39,11 +39,11 @@ namespace UnityGameFramework.Runtime
         /// <returns></returns>
         public static bool CheckIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2)
         {
-            int minx = Math.Max(x1, x2);
-            int miny = Math.Max(y1, y2);
-            int maxx = Math.Min(x1 + w1, x2 + w2);
-            int maxy = Math.Min(y1 + h1, y2 + h2);
-            if (minx >= maxx || miny >= maxy)
+            int minX = Math.Max(x1, x2);
+            int minY = Math.Max(y1, y2);
+            int maxX = Math.Min(x1 + w1, x2 + w2);
+            int maxY = Math.Min(y1 + h1, y2 + h2);
+            if (minX >= maxX || minY >= maxY)
             {
                 return false;
             }
@@ -67,19 +67,19 @@ namespace UnityGameFramework.Runtime
         private static bool CheckIntersect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, out RectInt rect)
         {
             rect = default;
-            int minx = Math.Max(x1, x2);
-            int miny = Math.Max(y1, y2);
-            int maxx = Math.Min(x1 + w1, x2 + w2);
-            int maxy = Math.Min(y1 + h1, y2 + h2);
-            if (minx >= maxx || miny >= maxy)
+            int minX = Math.Max(x1, x2);
+            int minY = Math.Max(y1, y2);
+            int maxX = Math.Min(x1 + w1, x2 + w2);
+            int maxY = Math.Min(y1 + h1, y2 + h2);
+            if (minX >= maxX || minY >= maxY)
             {
                 return false;
             }
 
-            rect.x = minx;
-            rect.y = miny;
-            rect.width = Math.Abs(maxx - minx);
-            rect.height = Math.Abs(maxy - miny);
+            rect.x = minX;
+            rect.y = minY;
+            rect.width = Math.Abs(maxX - minX);
+            rect.height = Math.Abs(maxY - minY);
             return true;
         }
 
@@ -100,7 +100,7 @@ namespace UnityGameFramework.Runtime
         {
             Vector2Int dPt = new Vector2Int();
 
-            if (false == CheckIntersect(x1, y1, w1, h1, x2, y2, w2, h2, out RectInt dRecr))
+            if (false == CheckIntersect(x1, y1, w1, h1, x2, y2, w2, h2, out var rectInt))
             {
                 return false;
             }
@@ -113,7 +113,7 @@ namespace UnityGameFramework.Runtime
                     {
                         dPt.x = x1 + i;
                         dPt.y = y1 + n;
-                        if (dRecr.Contains(dPt))
+                        if (rectInt.Contains(dPt))
                         {
                             intersectPoints[i * h1 + n] = 0;
                         }
