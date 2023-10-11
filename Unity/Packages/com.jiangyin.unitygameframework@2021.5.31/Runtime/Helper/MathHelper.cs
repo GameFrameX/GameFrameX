@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace UnityGameFramework.Runtime
 {
+    /// <summary>
+    /// 数学帮助类
+    /// </summary>
     public static class MathHelper
     {
         /// <summary>
