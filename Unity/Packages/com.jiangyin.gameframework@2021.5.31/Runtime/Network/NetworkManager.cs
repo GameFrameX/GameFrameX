@@ -14,7 +14,7 @@ namespace GameFramework.Network
     /// <summary>
     /// 网络管理器。
     /// </summary>
-    internal sealed partial class NetworkManager : GameFrameworkModule, INetworkManager
+    public sealed partial class NetworkManager : GameFrameworkModule, INetworkManager
     {
         private readonly Dictionary<string, NetworkChannelBase> m_NetworkChannels;
 

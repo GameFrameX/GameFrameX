@@ -12,12 +12,12 @@ using System.Net.Sockets;
 
 namespace GameFramework.Network
 {
-    internal sealed partial class NetworkManager : GameFrameworkModule, INetworkManager
+    public sealed partial class NetworkManager
     {
         /// <summary>
         /// 网络频道基类。
         /// </summary>
-        private abstract class NetworkChannelBase : INetworkChannel, IDisposable
+        public abstract class NetworkChannelBase : INetworkChannel, IDisposable
         {
             private const float DefaultHeartBeatInterval = 30f;
 

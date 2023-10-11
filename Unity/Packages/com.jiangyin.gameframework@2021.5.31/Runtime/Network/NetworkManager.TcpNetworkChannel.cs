@@ -11,7 +11,7 @@ using System.Net.Sockets;
 
 namespace GameFramework.Network
 {
-    internal sealed partial class NetworkManager : GameFrameworkModule, INetworkManager
+    public sealed partial class NetworkManager
     {
         /// <summary>
         /// TCP 网络频道。

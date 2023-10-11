@@ -7,12 +7,12 @@
 
 namespace GameFramework.Network
 {
-    internal sealed partial class NetworkManager
+    public sealed partial class NetworkManager
     {
         /// <summary>
         /// 心跳状态
         /// </summary>
-        private sealed class HeartBeatState
+        public sealed class HeartBeatState
         {
             private float m_HeartBeatElapseSeconds;
             private int m_MissHeartBeatCount;

@@ -9,9 +9,9 @@ using System.Net.Sockets;
 
 namespace GameFramework.Network
 {
-    internal sealed partial class NetworkManager : GameFrameworkModule, INetworkManager
+    public sealed partial class NetworkManager
     {
-        private sealed class ConnectState
+        public sealed class ConnectState
         {
             private readonly Socket m_Socket;
             private readonly object m_UserData;

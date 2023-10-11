@@ -10,9 +10,9 @@ using System.IO;
 
 namespace GameFramework.Network
 {
-    internal sealed partial class NetworkManager : GameFrameworkModule, INetworkManager
+    public sealed partial class NetworkManager
     {
-        private sealed class ReceiveState : IDisposable
+        public sealed class ReceiveState : IDisposable
         {
             private const int DefaultBufferLength = 1024 * 64;
             private MemoryStream m_Stream;
