@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace UnityGameFramework.Runtime
 {
+    /// <summary>
+    /// 字符串帮助类
+    /// </summary>
     public static class StringHelper
     {
         /// <summary>
@@ -87,34 +90,50 @@ namespace UnityGameFramework.Runtime
             return (bp == bLen);
         }
 
-        public static IEnumerable<byte> ToBytes(this string str)
+        /// <summary>
+        /// 字符串转字符数组
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static IEnumerable<byte> ToBytes(this string self)
         {
-            byte[] byteArray = Encoding.Default.GetBytes(str);
+            byte[] byteArray = Encoding.Default.GetBytes(self);
             return byteArray;
         }
 
-        public static byte[] ToByteArray(this string str)
+        /// <summary>
+        /// 字符串转字符数组
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static byte[] ToByteArray(this string self)
         {
-            byte[] byteArray = Encoding.Default.GetBytes(str);
+            byte[] byteArray = Encoding.Default.GetBytes(self);
             return byteArray;
         }
 
         /// <summary>
         /// 字符串转UTF8字符数组
         /// </summary>
-        /// <param name="str"></param>
+        /// <param name="self"></param>
         /// <returns></returns>
-        public static byte[] ToUtf8(this string str)
+        public static byte[] ToUtf8(this string self)
         {
-            byte[] byteArray = Encoding.UTF8.GetBytes(str);
+            byte[] byteArray = Encoding.UTF8.GetBytes(self);
             return byteArray;
         }
 
+        /// <summary>
+        /// 16进制字符串转字节数组
+        /// </summary>
+        /// <param name="hexString">字符串</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">字符串字符数不是偶数引发异常</exception>
         public static byte[] HexToBytes(this string hexString)
         {
             if (hexString.Length % 2 != 0)
             {
-                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "The binary key cannot have an odd number of digits: {0}",
+                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "The binary key cannot have an odd number of digits: {0}",
                     hexString));
             }
 
@@ -176,33 +195,49 @@ namespace UnityGameFramework.Runtime
             return string.Format(text, args);
         }
 
-        public static string ListToString<T>(this List<T> list)
+        /// <summary>
+        /// 将列表转换为以指定字符串分割的字符串
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="separator">默认为逗号</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string ListToString<T>(this List<T> list, string separator = ",")
         {
             StringBuilder sb = new StringBuilder();
             foreach (T t in list)
             {
                 sb.Append(t);
-                sb.Append(",");
+                sb.Append(separator);
             }
 
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 将[\n、\t、\r、空格]替换为空,并返回
+        /// </summary>
+        /// <param name="origStr">原始字符串</param>
+        /// <returns></returns>
         public static string TrimEmpty(string origStr)
         {
-            origStr = origStr.Replace("\n", "").Replace(" ", "").Replace("\t", "").Replace("\r", "");
+            origStr = origStr.Replace("\n", string.Empty).Replace(" ", string.Empty).Replace("\t", string.Empty).Replace("\r", string.Empty);
             return origStr;
         }
 
         /// <summary>
+        /// 匹配中文正则表达式
+        /// </summary>
+        private static readonly Regex CnReg = new Regex(@"[\u4e00-\u9fa5]");
+
+        /// <summary>
         /// 替换中文为空字符串
         /// </summary>
-        /// <param name="origStr"></param>
+        /// <param name="origStr">原始字符串</param>
         /// <returns></returns>
         public static string TrimZhCn(string origStr)
         {
-            Regex reg = new Regex(@"[\u4e00-\u9fa5]");
-            origStr = reg.Replace(origStr, string.Empty);
+            origStr = CnReg.Replace(origStr, string.Empty);
             return origStr;
         }
     }
