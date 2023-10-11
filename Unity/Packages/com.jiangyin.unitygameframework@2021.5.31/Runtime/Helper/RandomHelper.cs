@@ -2,6 +2,9 @@
 
 namespace UnityGameFramework.Runtime
 {
+    /// <summary>
+    /// 随机数帮助类
+    /// </summary>
     public static class RandomHelper
     {
         private static Random _random = new Random((int) DateTime.UtcNow.Ticks);
