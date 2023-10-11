@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace UnityGameFramework.Runtime
@@ -9,9 +10,25 @@ namespace UnityGameFramework.Runtime
     [AddComponentMenu("Game Framework/Coroutine")]
     public class CoroutineComponent : GameFrameworkComponent
     {
-        protected override void Awake()
+        private readonly WaitForEndOfFrame _waitForEndOfFrame = new WaitForEndOfFrame();
+
+        /// <summary>
+        /// 等待当前帧结束
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator _WaitForEndOfFrameFinish()
         {
-            base.Awake();
+            yield return _waitForEndOfFrame;
+        }
+
+        /// <summary>
+        /// 等待当前帧结束
+        /// </summary>
+        /// <param name="callback"></param>
+        public void WaitForEndOfFrameFinish(System.Action callback)
+        {
+            StartCoroutine(_WaitForEndOfFrameFinish());
+            callback?.Invoke();
         }
     }
 }
