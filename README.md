@@ -53,7 +53,9 @@
 | ReadAssets | 使用File的方式直接读取Android只读目录下的文件.再也不用WWW了 | GitHub |
 | FindReference2 | 最强查找Unity资源引用的插件没有之一 | GitHub |
 
+# Doc
 
+文档地址 : https://www.yuque.com/alianblank/gameframex
 
 # 免责声明
 
