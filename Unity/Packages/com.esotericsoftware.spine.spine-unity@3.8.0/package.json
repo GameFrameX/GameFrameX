@@ -1,0 +1,25 @@
+{
+	"name": "com.esotericsoftware.spine.spine-unity",
+	"displayName": "Spine-Unity",
+	"description": "This plugin provides the spine-unity runtime core.",
+	"version": "3.8.0",
+	"unity": "2018.3",
+	"author": {
+		"name": "Esoteric Software",
+		"email": "contact@esotericsoftware.com",
+		"url": "http://esotericsoftware.com/"
+	},
+	"dependencies": {
+	},
+	"samples": [
+		{
+			"displayName": "Samples",
+			"path": "Samples~"
+		}		
+	],
+	"keywords": [
+		"spine",
+		"spine-unity",
+		"core"
+	]
+}

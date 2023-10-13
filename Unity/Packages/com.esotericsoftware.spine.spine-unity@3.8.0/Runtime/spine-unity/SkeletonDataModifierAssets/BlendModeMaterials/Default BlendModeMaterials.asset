@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b0b98acbcda44468a7ae4e35000abe, type: 3}
+  m_Name: Default BlendModeMaterials
+  m_EditorClassIdentifier: 
+  multiplyMaterialTemplate: {fileID: 2100000, guid: 53bf0ab317d032d418cf1252d68f51df,
+    type: 2}
+  screenMaterialTemplate: {fileID: 2100000, guid: 73f0f46d3177c614baf0fa48d646a9be,
+    type: 2}
+  additiveMaterialTemplate: {fileID: 2100000, guid: 4deba332d47209e4780b3c5fcf0e3745,
+    type: 2}
+  applyAdditiveMaterial: 1
