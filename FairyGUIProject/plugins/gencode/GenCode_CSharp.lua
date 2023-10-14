@@ -47,9 +47,9 @@ namespace {namespaceName}
 __PROPERTY__
 
 __CREATETEMPLATE__
-        public static {className} Create(GObject go)
+        public static {className} Create(GObject go, FUI parent = null)
         {
-            return new {className}(go);
+            return new {className}(go, parent);
         }
         /*
         /// <summary>
@@ -98,7 +98,7 @@ __AWAKE__
 
 __DISPOSE__
         }
-        private {className}(GObject gObject) : base(gObject)
+        private {className}(GObject gObject, FUI parent = null) : base(gObject, parent)
         {
             Awake(gObject);
         }
@@ -228,8 +228,7 @@ local function genCode(handler)
 
                 --判断是不是自定义类型组件
                 if IsCustomComponent(classes, typeName) then
-                    AwakeStr = AwakeStr .. '\t\t\t\t' .. varName .. ' = ' .. typeName .. '.Create(com.GetChild("' .. memberInfoName .. '"));  \n'
-
+                    AwakeStr = AwakeStr .. '\t\t\t\t' .. varName .. ' = ' .. typeName .. '.Create(com.GetChild("' .. memberInfoName .. '"), this);  \n'
                 else
                     AwakeStr = AwakeStr .. '\t\t\t\t' .. varName .. ' = (' .. typeName .. ')com.GetChild("' .. memberInfoName .. '"); \n'
                 end
