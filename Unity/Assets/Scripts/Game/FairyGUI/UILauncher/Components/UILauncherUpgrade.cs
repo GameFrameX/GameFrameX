@@ -24,9 +24,9 @@ namespace Game.Model
 
 
 
-        public static UILauncherUpgrade Create(GObject go)
+        public static UILauncherUpgrade Create(GObject go, FUI parent = null)
         {
-            return new UILauncherUpgrade(go);
+            return new UILauncherUpgrade(go, parent);
         }
         /*
         /// <summary>
@@ -51,10 +51,8 @@ namespace Game.Model
                 return;
             }
 
-            //GObject = go;
-
             self = (GComponent)go;
-            Add(this);
+            
             var com = go.asCom;
             if(com != null)
             {
@@ -67,21 +65,20 @@ namespace Game.Model
 
         public override void Dispose()
         {
-            if(IsDisposed)
+            if (IsDisposed)
             {
                 return;
             }
-
-            base.Dispose();
-            
-            self = null;
 
 			m_bg = null; 
 			m_EnterButton = null; 
 			m_TextContent = null; 
 
+            
+            self = null;
+            base.Dispose();
         }
-        private UILauncherUpgrade(GObject gObject) : base(gObject)
+        private UILauncherUpgrade(GObject gObject, FUI parent = null) : base(gObject, parent)
         {
             Awake(gObject);
         }

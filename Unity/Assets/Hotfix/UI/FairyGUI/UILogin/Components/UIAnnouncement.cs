@@ -49,9 +49,9 @@ namespace Game.Hotfix
             return tcs.Task;
         }
 
-        public static UIAnnouncement Create(GObject go)
+        public static UIAnnouncement Create(GObject go, FUI parent = null)
         {
-            return new UIAnnouncement(go);
+            return new UIAnnouncement(go, parent);
         }
         /*
         /// <summary>
@@ -76,8 +76,6 @@ namespace Game.Hotfix
                 return;
             }
 
-            //GObject = go;
-
             self = (GComponent)go;
             
             var com = go.asCom;
@@ -85,7 +83,7 @@ namespace Game.Hotfix
             {
 				m_MaskLayer = (GGraph)com.GetChild("MaskLayer"); 
 				m_ConfirmBtn = (GComponent)com.GetChild("ConfirmBtn"); 
-				m_TextContent = UIAnnouncementContent.Create(com.GetChild("TextContent"));  
+				m_TextContent = UIAnnouncementContent.Create(com.GetChild("TextContent"), this);  
 				m_TextTitle = (GTextField)com.GetChild("TextTitle"); 
 
             }
@@ -93,22 +91,21 @@ namespace Game.Hotfix
 
         public override void Dispose()
         {
-            if(IsDisposed)
+            if (IsDisposed)
             {
                 return;
             }
-
-            base.Dispose();
-            
-            self = null;
 
 			m_MaskLayer = null; 
 			m_ConfirmBtn = null; 
 			m_TextContent = null; 
 			m_TextTitle = null; 
 
+            
+            self = null;
+            base.Dispose();
         }
-        private UIAnnouncement(GObject gObject) : base(gObject)
+        private UIAnnouncement(GObject gObject, FUI parent = null) : base(gObject, parent)
         {
             Awake(gObject);
         }

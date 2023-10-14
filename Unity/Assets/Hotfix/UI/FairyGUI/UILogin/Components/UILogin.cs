@@ -49,9 +49,9 @@ namespace Game.Hotfix
             return tcs.Task;
         }
 
-        public static UILogin Create(GObject go)
+        public static UILogin Create(GObject go, FUI parent = null)
         {
-            return new UILogin(go);
+            return new UILogin(go, parent);
         }
         /*
         /// <summary>
@@ -76,8 +76,6 @@ namespace Game.Hotfix
                 return;
             }
 
-            //GObject = go;
-
             self = (GComponent)go;
             
             var com = go.asCom;
@@ -93,22 +91,21 @@ namespace Game.Hotfix
 
         public override void Dispose()
         {
-            if(IsDisposed)
+            if (IsDisposed)
             {
                 return;
             }
-
-            base.Dispose();
-            
-            self = null;
 
 			m_UserName = null; 
 			m_Password = null; 
 			m_ErrorText = null; 
 			m_enter = null; 
 
+            
+            self = null;
+            base.Dispose();
         }
-        private UILogin(GObject gObject) : base(gObject)
+        private UILogin(GObject gObject, FUI parent = null) : base(gObject, parent)
         {
             Awake(gObject);
         }

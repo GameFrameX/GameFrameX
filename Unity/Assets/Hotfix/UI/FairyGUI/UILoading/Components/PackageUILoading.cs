@@ -1,0 +1,14 @@
+/** This is an automatically generated class by FairyGUI. Please do not modify it. **/
+
+using FairyGUI;
+using FairyGUI.Utils;
+using Cysharp.Threading.Tasks;
+
+namespace Game.Hotfix
+{
+    public static partial class FUIPackage {
+		public const string UILoading = "UILoading"; 
+
+
+    }
+}

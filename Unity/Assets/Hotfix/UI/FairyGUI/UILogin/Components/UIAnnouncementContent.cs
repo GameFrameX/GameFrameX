@@ -22,9 +22,9 @@ namespace Game.Hotfix
 
 
 
-        public static UIAnnouncementContent Create(GObject go)
+        public static UIAnnouncementContent Create(GObject go, FUI parent = null)
         {
-            return new UIAnnouncementContent(go);
+            return new UIAnnouncementContent(go, parent);
         }
         /*
         /// <summary>
@@ -49,8 +49,6 @@ namespace Game.Hotfix
                 return;
             }
 
-            //GObject = go;
-
             self = (GComponent)go;
             
             var com = go.asCom;
@@ -63,19 +61,18 @@ namespace Game.Hotfix
 
         public override void Dispose()
         {
-            if(IsDisposed)
+            if (IsDisposed)
             {
                 return;
             }
 
-            base.Dispose();
-            
-            self = null;
-
 			m_LabelContent = null; 
 
+            
+            self = null;
+            base.Dispose();
         }
-        private UIAnnouncementContent(GObject gObject) : base(gObject)
+        private UIAnnouncementContent(GObject gObject, FUI parent = null) : base(gObject, parent)
         {
             Awake(gObject);
         }

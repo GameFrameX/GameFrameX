@@ -7,50 +7,53 @@ using UnityGameFramework.Runtime;
 
 namespace Game.Model
 {
+
     public sealed partial class UILauncher : FUI
     {
         public const string UIPackageName = "UILauncher";
         public const string UIResName = "UILauncher";
         public const string URL = "ui://u7deosq0mw8e0";
-
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
         public GComponent self;
 
-        public Controller m_IsUpgrade;
-        public Controller m_IsDownload;
-        public GLoader m_bg;
-        public GTextField m_TipText;
-        public GProgressBar m_ProgressBar;
-        public UILauncherUpgrade m_upgrade;
+		public Controller m_IsUpgrade;  
+		public Controller m_IsDownload;  
+		public GLoader m_bg;  
+		public GTextField m_TipText;  
+		public GProgressBar m_ProgressBar;  
+		public UILauncherUpgrade m_upgrade;  
 
 
         private static GObject CreateGObject()
         {
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
-
+    
         private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
         {
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
-
+    
         public static UILauncher CreateInstance()
         {
             return new UILauncher(CreateGObject());
         }
-
+    
         public static UniTask<UILauncher> CreateInstanceAsync(Entity domain)
         {
             UniTaskCompletionSource<UILauncher> tcs = new UniTaskCompletionSource<UILauncher>();
-            CreateGObjectAsync((go) => { tcs.TrySetResult(new UILauncher(go)); });
+            CreateGObjectAsync((go) =>
+            {
+                tcs.TrySetResult(new UILauncher(go));
+            });
             return tcs.Task;
         }
 
-        public static UILauncher Create(GObject go)
+        public static UILauncher Create(GObject go, FUI parent = null)
         {
-            return new UILauncher(go);
+            return new UILauncher(go, parent);
         }
         /*
         /// <summary>
@@ -70,24 +73,23 @@ namespace Game.Model
 
         private void Awake(GObject go)
         {
-            if (go == null)
+            if(go == null)
             {
                 return;
             }
 
-            //GObject = go;
-
-            self = (GComponent) go;
-            // Add(this);
+            self = (GComponent)go;
+            
             var com = go.asCom;
-            if (com != null)
+            if(com != null)
             {
-                m_IsUpgrade = com.GetController("IsUpgrade");
-                m_IsDownload = com.GetController("IsDownload");
-                m_bg = (GLoader) com.GetChild("bg");
-                m_TipText = (GTextField) com.GetChild("TipText");
-                m_ProgressBar = (GProgressBar) com.GetChild("ProgressBar");
-                m_upgrade = UILauncherUpgrade.Create(com.GetChild("upgrade"));
+				m_IsUpgrade = com.GetController("IsUpgrade"); 
+				m_IsDownload = com.GetController("IsDownload"); 
+				m_bg = (GLoader)com.GetChild("bg"); 
+				m_TipText = (GTextField)com.GetChild("TipText"); 
+				m_ProgressBar = (GProgressBar)com.GetChild("ProgressBar"); 
+				m_upgrade = UILauncherUpgrade.Create(com.GetChild("upgrade"), this);  
+
             }
         }
 
@@ -98,18 +100,18 @@ namespace Game.Model
                 return;
             }
 
-            base.Dispose();
+			m_IsUpgrade = null; 
+			m_IsDownload = null; 
+			m_bg = null; 
+			m_TipText = null; 
+			m_ProgressBar = null; 
+			m_upgrade = null; 
 
+            
             self = null;
-
-            m_IsUpgrade = null;
-            m_bg = null;
-            m_TipText = null;
-            m_ProgressBar = null;
-            m_upgrade = null;
+            base.Dispose();
         }
-
-        private UILauncher(GObject gObject) : base(gObject)
+        private UILauncher(GObject gObject, FUI parent = null) : base(gObject, parent)
         {
             Awake(gObject);
         }
