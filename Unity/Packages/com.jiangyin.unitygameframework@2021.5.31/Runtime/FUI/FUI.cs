@@ -204,6 +204,8 @@ namespace UnityGameFramework.Runtime
                 GObject.Dispose();
             }
 
+            OnShow = null;
+            OnHide = null;
             Parent = null;
             isFromFGUIPool = false;
         }
