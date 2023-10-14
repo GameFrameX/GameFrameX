@@ -11,17 +11,21 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 界面显示之后触发
         /// </summary>
-        public Action<FUI> OnShow { get; set; }
+        public Action<FUI> OnShowAction { get; set; }
 
         /// <summary>
         /// 界面隐藏之前触发
         /// </summary>
-        public Action<FUI> OnHide { get; set; }
+        public Action<FUI> OnHideAction { get; set; }
 
         public FUI(GObject gObject, FUI parent = null)
         {
             GObject = gObject;
             Parent = parent;
+            // 在初始化的时候先隐藏UI。后续由声明周期控制
+            SetVisibleWithNoNotify(false);
+            parent?.Add(this);
+
             if (gObject.name.IsNullOrWhiteSpace())
             {
                 Name = GetType().Name;
@@ -30,6 +34,16 @@ namespace UnityGameFramework.Runtime
             {
                 Name = gObject.name;
             }
+        }
+
+        protected virtual void OnShow()
+        {
+            Log.Info("OnShow " + Name);
+        }
+
+        protected virtual void OnHide()
+        {
+            Log.Info("OnHide " + Name);
         }
 
         /// <summary>
@@ -42,8 +56,8 @@ namespace UnityGameFramework.Runtime
                 return;
             }
 
-            Visible = true;
             Log.Info("Show " + Name);
+            Visible = true;
         }
 
         /// <summary>
@@ -72,8 +86,8 @@ namespace UnityGameFramework.Runtime
                 return;
             }
 
-            Visible = false;
             Log.Info("Hide " + Name);
+            Visible = false;
         }
 
         public GObject GObject { get; }
@@ -110,6 +124,15 @@ namespace UnityGameFramework.Runtime
         {
         }
 
+        /// <summary>
+        /// 设置UI的显示状态，不发出事件
+        /// </summary>
+        /// <param name="value"></param>
+        private void SetVisibleWithNoNotify(bool value)
+        {
+            GObject.visible = value;
+        }
+
         public bool IsVisible => Visible;
 
         private bool Visible
@@ -137,14 +160,16 @@ namespace UnityGameFramework.Runtime
 
                 if (!value)
                 {
-                    OnHide?.Invoke(this);
+                    OnHide();
+                    OnHideAction?.Invoke(this);
                 }
 
                 GObject.visible = value;
                 if (value)
                 {
-                    Refresh();
-                    OnShow?.Invoke(this);
+                    OnShowAction?.Invoke(this);
+                    OnShow();
+                    // Refresh();
                 }
             }
         }
@@ -204,8 +229,8 @@ namespace UnityGameFramework.Runtime
                 GObject.Dispose();
             }
 
-            OnShow = null;
-            OnHide = null;
+            OnShowAction = null;
+            OnHideAction = null;
             Parent = null;
             isFromFGUIPool = false;
         }
@@ -249,7 +274,7 @@ namespace UnityGameFramework.Runtime
 
         public void RemoveFromParent()
         {
-            Parent.Remove(Name);
+            Remove(Name);
         }
 
         public bool Remove(string name)
@@ -300,9 +325,10 @@ namespace UnityGameFramework.Runtime
 
         public void RemoveChildren()
         {
-            foreach (var child in _children.Values.ToArray())
+            var children = _children.Values.ToArray();
+            foreach (var child in children)
             {
-                child.Dispose();
+                child.RemoveFromParent();
             }
 
             _children.Clear();

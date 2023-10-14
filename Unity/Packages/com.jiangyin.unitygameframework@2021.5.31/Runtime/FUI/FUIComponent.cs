@@ -154,6 +154,7 @@ namespace UnityGameFramework.Runtime
                     break;
             }
 
+            // 显示UI
             ui.Show();
             return ui;
         }
@@ -309,7 +310,7 @@ namespace UnityGameFramework.Runtime
         {
             base.Awake();
             _root = new FUI(GRoot.inst);
-
+            _root.Show();
             _screenOrientation = Screen.orientation;
 
             HiddenRoot = CreateNode(GRoot.inst, UILayer.Hidden);
@@ -356,6 +357,7 @@ namespace UnityGameFramework.Runtime
             component.AddRelation(root, RelationType.Height);
             var ui = new FUI(component);
             ui.Name = comName;
+            ui.Show();
             return ui;
         }
 
