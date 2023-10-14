@@ -356,7 +356,7 @@ namespace UnityGameFramework.Runtime
             component.AddRelation(root, RelationType.Width);
             component.AddRelation(root, RelationType.Height);
             var ui = new FUI(component);
-            ui.Name = comName;
+            ui.Init();
             ui.Show();
             return ui;
         }

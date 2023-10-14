@@ -35,12 +35,10 @@ namespace GameFramework.ObjectPool
         /// <summary>
         /// 获取对象名称。
         /// </summary>
-        public string Name
+        public virtual string Name
         {
-            get
-            {
-                return m_Name;
-            }
+            get { return m_Name; }
+            protected set { m_Name = value; }
         }
 
         /// <summary>
@@ -48,10 +46,7 @@ namespace GameFramework.ObjectPool
         /// </summary>
         public object Target
         {
-            get
-            {
-                return m_Target;
-            }
+            get { return m_Target; }
         }
 
         /// <summary>
@@ -59,14 +54,8 @@ namespace GameFramework.ObjectPool
         /// </summary>
         public bool Locked
         {
-            get
-            {
-                return m_Locked;
-            }
-            set
-            {
-                m_Locked = value;
-            }
+            get { return m_Locked; }
+            set { m_Locked = value; }
         }
 
         /// <summary>
@@ -74,14 +63,8 @@ namespace GameFramework.ObjectPool
         /// </summary>
         public int Priority
         {
-            get
-            {
-                return m_Priority;
-            }
-            set
-            {
-                m_Priority = value;
-            }
+            get { return m_Priority; }
+            set { m_Priority = value; }
         }
 
         /// <summary>
@@ -89,10 +72,7 @@ namespace GameFramework.ObjectPool
         /// </summary>
         public virtual bool CustomCanReleaseFlag
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         /// <summary>
@@ -100,14 +80,8 @@ namespace GameFramework.ObjectPool
         /// </summary>
         public DateTime LastUseTime
         {
-            get
-            {
-                return m_LastUseTime;
-            }
-            internal set
-            {
-                m_LastUseTime = value;
-            }
+            get { return m_LastUseTime; }
+            internal set { m_LastUseTime = value; }
         }
 
         /// <summary>
