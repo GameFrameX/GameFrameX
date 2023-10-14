@@ -39,7 +39,7 @@ namespace UnityGameFramework.Network.Pipelines
         {
             messageObject = default;
 
-            var reader = new SequenceReader<byte>(input);
+            var reader = new MessagePack.SequenceReader<byte>(input);
             // Total Length
             int msgLen = (int)reader.Length; //4
             if (!CheckMsgLen(msgLen))
