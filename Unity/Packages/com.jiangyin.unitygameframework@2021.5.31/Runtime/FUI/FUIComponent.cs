@@ -61,7 +61,7 @@ namespace UnityGameFramework.Runtime
         /// <typeparam name="T"></typeparam>
         /// <returns>返回创建后的UI对象</returns>
         /// <exception cref="ArgumentNullException">创建器不存在,引发参数异常</exception>
-        public T Add<T>(System.Func<T> creator, string descFilePath, UILayer layer, bool isFullScreen) where T : FUI
+        public T Add<T>(System.Func<T> creator, string descFilePath, UILayer layer, bool isFullScreen = false) where T : FUI
         {
             if (creator == null)
             {
