@@ -35,10 +35,7 @@ namespace Hotfix
             LoadConfig();
 
 
-            UIPackage.AddPackage(AssetUtility.GetUIPackagePath(FUIPackage.UILogin));
-            var uiLogin = UILogin.CreateInstance();
-            // uiLogin.Name = FUIPackage.UILogin;
-            GameApp.UI.Add(uiLogin, UILayer.Floor);
+            var uiLogin = GameApp.UI.Add<UILogin>(UILogin.CreateInstance, AssetUtility.GetUIPackagePath(FUIPackage.UILogin), UILayer.Floor);
             uiLogin.m_enter.onClick.Add(() =>
             {
                 Log.Info("dhjsakdjkasjdklsjalkdk");

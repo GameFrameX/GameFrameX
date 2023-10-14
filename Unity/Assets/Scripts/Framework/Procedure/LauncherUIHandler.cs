@@ -11,11 +11,7 @@ namespace UnityGameFramework.Procedure
 
         public static void Start()
         {
-            UIPackage.AddPackage("UI/UILauncher/UILauncher");
-            _ui = UILauncher.CreateInstance();
-            _ui.Name = UILauncher.UIResName;
-            GameApp.UI.Add(_ui, UILayer.Loading);
-            _ui.MakeFullScreen();
+            _ui = GameApp.UI.AddToFullScreen(UILauncher.CreateInstance, "UI/UILauncher/UILauncher", UILayer.Loading);
         }
 
         public static void Hide()
