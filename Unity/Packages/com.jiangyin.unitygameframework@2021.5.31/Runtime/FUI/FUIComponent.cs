@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FairyGUI;
 using UnityEngine;
 
@@ -37,10 +38,52 @@ namespace UnityGameFramework.Runtime
             _root = null;
         }
 
-        public void Add<T>(FUI ui, UILayer layer) where T : FUI
+        /// <summary>
+        /// 添加全屏UI对象
+        /// </summary>
+        /// <param name="creator">UI创建器</param>
+        /// <param name="descFilePath">UI目录</param>
+        /// <param name="layer">目标层级</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>返回创建后的UI对象</returns>
+        public T AddToFullScreen<T>(System.Func<T> creator, string descFilePath, UILayer layer) where T : FUI
+        {
+            return Add(creator, descFilePath, layer, true);
+        }
+
+        /// <summary>
+        /// 添加UI对象
+        /// </summary>
+        /// <param name="creator">UI创建器</param>
+        /// <param name="descFilePath">UI目录</param>
+        /// <param name="layer">目标层级</param>
+        /// <param name="isFullScreen">是否全屏</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>返回创建后的UI对象</returns>
+        /// <exception cref="ArgumentNullException">创建器不存在,引发参数异常</exception>
+        public T Add<T>(System.Func<T> creator, string descFilePath, UILayer layer, bool isFullScreen) where T : FUI
+        {
+            if (creator == null)
+            {
+                throw new ArgumentNullException(nameof(creator));
+            }
+
+            UIPackage.AddPackage(descFilePath);
+            T ui = creator();
+            Add(ui, layer);
+            if (isFullScreen)
+            {
+                ui.MakeFullScreen();
+            }
+
+            return ui;
+        }
+
+
+        public FUI Add<T>(FUI ui, UILayer layer) where T : FUI
         {
             ui.Name = nameof(T);
-            Add(ui, layer);
+            return Add(ui, layer);
         }
 
         public void RemoveAll()
@@ -62,7 +105,7 @@ namespace UnityGameFramework.Runtime
             }
         }
 
-        public void Add(FUI ui, UILayer layer)
+        public FUI Add(FUI ui, UILayer layer)
         {
             if (!_uiDictionary.ContainsKey(ui.Name))
             {
@@ -109,6 +152,8 @@ namespace UnityGameFramework.Runtime
                     SystemRoot.Add(ui);
                     break;
             }
+
+            return ui;
         }
 
         public bool Remove(string uiName)
