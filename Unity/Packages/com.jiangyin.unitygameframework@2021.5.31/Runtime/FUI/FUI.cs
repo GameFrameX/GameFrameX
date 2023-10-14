@@ -57,6 +57,11 @@ namespace UnityGameFramework.Runtime
                     return;
                 }
 
+                if (GObject.name != null && GObject.name == value)
+                {
+                    return;
+                }
+
                 GObject.name = value;
             }
         }
