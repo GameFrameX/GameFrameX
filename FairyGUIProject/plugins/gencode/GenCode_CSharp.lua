@@ -74,8 +74,6 @@ __CREATETEMPLATE__
                 return;
             }
 
-            //GObject = go;
-
             self = ({superClassName})go;
             {comAdd}
             var com = go.asCom;
@@ -87,16 +85,15 @@ __AWAKE__
 
         public override void Dispose()
         {
-            if(IsDisposed)
+            if (IsDisposed)
             {
                 return;
             }
 
-            base.Dispose();
+__DISPOSE__
             {comRemove}
             self = null;
-
-__DISPOSE__
+            base.Dispose();
         }
         private {className}(GObject gObject, FUI parent = null) : base(gObject, parent)
         {
