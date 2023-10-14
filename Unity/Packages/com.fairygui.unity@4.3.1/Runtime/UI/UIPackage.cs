@@ -1096,7 +1096,6 @@ namespace FairyGUI
                 Debug.LogError("FairyGUI: resource not found - " + resName + " in " + this.name);
                 return null;
             }
-
             return CreateObject(pi, userClass);
         }
 
@@ -1125,6 +1124,7 @@ namespace FairyGUI
 
             _constructing++;
             g.ConstructFromResource();
+            g.name = item.name;
             _constructing--;
 
             return g;
