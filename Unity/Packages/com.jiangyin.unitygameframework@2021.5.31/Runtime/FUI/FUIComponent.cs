@@ -70,6 +70,7 @@ namespace UnityGameFramework.Runtime
 
             UIPackage.AddPackage(descFilePath);
             T ui = creator();
+            ui.Init();
             Add(ui, layer);
             if (isFullScreen)
             {
@@ -153,6 +154,7 @@ namespace UnityGameFramework.Runtime
                     break;
             }
 
+            ui.Show();
             return ui;
         }
 

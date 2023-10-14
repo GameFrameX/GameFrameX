@@ -8,9 +8,20 @@ namespace UnityGameFramework.Runtime
 {
     public class FUI : ObjectBase, IDisposable
     {
-        public FUI(GObject gObject)
+        /// <summary>
+        /// 界面显示之后触发
+        /// </summary>
+        public Action<FUI> OnShow { get; set; }
+
+        /// <summary>
+        /// 界面隐藏之前触发
+        /// </summary>
+        public Action<FUI> OnHide { get; set; }
+
+        public FUI(GObject gObject, FUI parent = null)
         {
             GObject = gObject;
+            Parent = parent;
             if (gObject.name.IsNullOrWhiteSpace())
             {
                 Name = GetType().Name;
@@ -21,24 +32,53 @@ namespace UnityGameFramework.Runtime
             }
         }
 
-        public virtual void Show()
+        /// <summary>
+        /// 显示UI
+        /// </summary>
+        public void Show()
         {
+            if (Visible)
+            {
+                return;
+            }
+
             Visible = true;
-            Refresh();
+            Log.Info("Show " + Name);
         }
 
+        /// <summary>
+        /// 界面添加到UI系统之前执行
+        /// </summary>
+        public virtual void Init()
+        {
+            Log.Info("Init " + Name);
+        }
+
+        /// <summary>
+        /// 界面显示之后执行
+        /// </summary>
         public virtual void Refresh()
         {
+            Log.Info("Refresh " + Name);
         }
 
-        public virtual void Hide()
+        /// <summary>
+        /// 隐藏UI
+        /// </summary>
+        public void Hide()
         {
+            if (!Visible)
+            {
+                return;
+            }
+
             Visible = false;
+            Log.Info("Hide " + Name);
         }
 
         public GObject GObject { get; }
 
-        public string Name
+        public new string Name
         {
             get
             {
@@ -70,7 +110,9 @@ namespace UnityGameFramework.Runtime
         {
         }
 
-        public bool Visible
+        public bool IsVisible => Visible;
+
+        private bool Visible
         {
             get
             {
@@ -88,25 +130,52 @@ namespace UnityGameFramework.Runtime
                     return;
                 }
 
+                if (GObject.visible == value)
+                {
+                    return;
+                }
+
+                if (!value)
+                {
+                    OnHide?.Invoke(this);
+                }
+
                 GObject.visible = value;
+                if (value)
+                {
+                    Refresh();
+                    OnShow?.Invoke(this);
+                }
             }
         }
 
+        /// <summary>
+        /// 是否是窗口对象
+        /// </summary>
         public bool IsWindow
         {
             get { return GObject is GWindow; }
         }
 
+        /// <summary>
+        /// 是否是UI组件对象
+        /// </summary>
         public bool IsComponent
         {
             get { return GObject is GComponent; }
         }
 
+        /// <summary>
+        /// 是否是UI根
+        /// </summary>
         public bool IsRoot
         {
             get { return GObject is GRoot; }
         }
 
+        /// <summary>
+        /// 界面对象是否为空
+        /// </summary>
         public bool IsEmpty
         {
             get { return GObject == null; }
@@ -125,23 +194,17 @@ namespace UnityGameFramework.Runtime
             }
 
             IsDisposed = true;
-            // 从父亲中删除自己
-            // Pare?.RemoveNoDispose(Name);
-
             // 删除所有的孩子
-            foreach (FUI ui in _children.Values.ToArray())
-            {
-                ui.Dispose();
-            }
-
-            _children.Clear();
+            RemoveChildren();
 
             // 删除自己的UI
             if (!IsRoot)
             {
+                RemoveFromParent();
                 GObject.Dispose();
             }
 
+            Parent = null;
             isFromFGUIPool = false;
         }
 
@@ -182,8 +245,14 @@ namespace UnityGameFramework.Runtime
             GObject?.asCom?.MakeFullScreen();
         }
 
+        public void RemoveFromParent()
+        {
+            Parent.Remove(Name);
+        }
+
         public bool Remove(string name)
         {
+            Hide();
             if (_children.TryGetValue(name, out var ui))
             {
                 _children.Remove(name);
@@ -195,7 +264,6 @@ namespace UnityGameFramework.Runtime
                         GObject.asCom.RemoveChild(ui.GObject, false);
                     }
 
-                    ui.Parent = null;
                     ui.Dispose();
                     return true;
                 }
@@ -209,6 +277,7 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         public FUI RemoveNoDispose(string name)
         {
+            Hide();
             if (_children.TryGetValue(name, out var ui))
             {
                 _children.Remove(name);
