@@ -12,12 +12,13 @@ namespace UnityGameFramework.Procedure
         public static void Start()
         {
             _ui = GameApp.UI.AddToFullScreen(UILauncher.CreateInstance, "UI/UILauncher/UILauncher", UILayer.Loading);
-            _ui.OnShow = fui => {};
         }
 
-        public static void Hide()
+        public static void Dispose()
         {
-            _ui.RemoveFromParent();
+            GameApp.UI.Remove(UILauncher.UIResName, UILayer.Loading);
+            _ui.Dispose();
+            _ui = null;
         }
 
         public static void SetTipText(string text)
