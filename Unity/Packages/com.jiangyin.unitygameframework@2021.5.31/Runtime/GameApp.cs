@@ -327,6 +327,26 @@ public static class GameApp
 
     private static FUIComponent _ui;
 
+
+    /// <summary>
+    /// 获取UI包管理组件。
+    /// </summary>
+    public static FUIPackageComponent UIPackage
+    {
+        get
+        {
+            if (_fUIPackage == null)
+            {
+                _fUIPackage = GameEntry.GetComponent<FUIPackageComponent>();
+            }
+
+            return _fUIPackage;
+        }
+    }
+
+    private static FUIPackageComponent _fUIPackage;
+
+
     /// <summary>
     /// 获取Asset组件。
     /// </summary>

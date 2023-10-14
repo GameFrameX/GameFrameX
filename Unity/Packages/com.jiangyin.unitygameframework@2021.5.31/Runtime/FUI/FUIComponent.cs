@@ -33,7 +33,6 @@ namespace UnityGameFramework.Runtime
 
         public void OnDestroy()
         {
-            // UIRoot.Dispose();
             _root.Dispose();
             _root = null;
         }
@@ -81,12 +80,6 @@ namespace UnityGameFramework.Runtime
         }
 
 
-        public FUI Add<T>(FUI ui, UILayer layer) where T : FUI
-        {
-            ui.Name = nameof(T);
-            return Add(ui, layer);
-        }
-
         public void RemoveAll()
         {
             foreach (var keyValuePair in _uiDictionary)
@@ -106,7 +99,7 @@ namespace UnityGameFramework.Runtime
             }
         }
 
-        public FUI Add(FUI ui, UILayer layer)
+        private FUI Add(FUI ui, UILayer layer)
         {
             if (!_uiDictionary.ContainsKey(ui.Name))
             {
