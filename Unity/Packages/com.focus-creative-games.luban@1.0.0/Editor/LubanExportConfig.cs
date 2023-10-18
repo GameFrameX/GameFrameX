@@ -31,7 +31,7 @@ namespace Luban.Editor
         #region 必要参数
 
         [Required] [LabelText("Client&Server Dll")] [FilePath(Extensions = "dll", RequireExistingPath = true)] [BoxGroup("必要参数")]
-        public string which_dll;
+        public string which_dll = "../Tools/Luban.ClientServer/Luban.ClientServer.dll";
 
         [Command("-t", false)] [FolderPath(RequireExistingPath = true)] [LabelText("模板文件夹")] [BoxGroup("必要参数")]
         public string tpl_path;
@@ -204,11 +204,51 @@ namespace Luban.Editor
             GenUtils.Gen(_GetCommand(), before_gen, after_gen);
         }
 
-        // [MenuItem("Tools/LuBan Gen &B")]
-        // public static void AutoGen()
-        // {
-        //     CreateInstance<LubanExportConfig>()?.Gen();
-        // }
+        private void Generator(bool isServer)
+        {
+            if (isServer)
+            {
+                service = "server";
+                gen_types = GenTypes.code_cs_dotnet_json | GenTypes.data_json;
+                output_code_dir = "../Server/Server.Config/Config";
+                output_data_dir = "../Server/Server.Config/Json";
+            }
+            else
+            {
+                service = "client";
+                gen_types = GenTypes.code_cs_unity_json | GenTypes.data_json;
+                output_code_dir = "Assets/Hotfix/Config/Generate";
+                output_data_dir = "Assets/Bundles/Config";
+            }
+
+            define_xml = "../Config/Defines/__root__.xml";
+            input_data_dir = "../Config/Excels";
+            Preview();
+            GenUtils.Gen(_GetCommand(), before_gen, after_gen);
+        }
+
+        /// <summary>
+        /// 生成客户端
+        /// </summary>
+        [MenuItem("Tools/LuBan Config/Generator Client")]
+        public static void AutoGenClient()
+        {
+            // var fromScriptableObject = MonoScript.FromScriptableObject(CreateInstance<LubanExportConfig>());
+            // var assetPath = AssetDatabase.GetAssetPath(fromScriptableObject);
+            //
+            // Debug.Log(assetPath);
+
+            CreateInstance<LubanExportConfig>()?.Generator(false);
+        }
+
+        /// <summary>
+        /// 生成服务器
+        /// </summary>
+        [MenuItem("Tools/LuBan Config/Generator Server")]
+        public static void AutoGenServer()
+        {
+            CreateInstance<LubanExportConfig>()?.Generator(true);
+        }
 
         [Button("删除")]
         public void Delete()
@@ -230,6 +270,11 @@ namespace Luban.Editor
 
         private string _GetCommand()
         {
+            var fromScriptableObject = MonoScript.FromScriptableObject(this);
+            var assetPath = AssetDatabase.GetAssetPath(fromScriptableObject);
+            DirectoryInfo directoryInfo = new DirectoryInfo(assetPath);
+            tpl_path = directoryInfo.Parent.Parent + "/Templates";
+
             string line_end = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? " ^" : " \\";
 
             StringBuilder sb = new StringBuilder();

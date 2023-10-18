@@ -1,0 +1,8 @@
+{
+  "name": "com.focus-creative-games.luban",
+  "displayName": "LuBan Config Tools",
+  "description": "LuBan 可视化配置工具",
+  "version": "1.0.0",
+  "dependencies": {
+  }
+}

@@ -15,7 +15,7 @@ MonoBehaviour:
   before_gen: Luban.Editor.TestBeforeGen
   after_gen: Luban.Editor.TestAfterGen
   which_dll: ../Tools/Luban.ClientServer/Luban.ClientServer.dll
-  tpl_path: Packages/com.liuocean.luban_gui@1.0.0/Templates
+  tpl_path: Packages/com.focus-creative-games.luban@1.0.0/Templates
   job: cfg --
   define_xml: ../Config/Defines/__root__.xml
   input_data_dir: ../Config/Excels

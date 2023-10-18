@@ -1,8 +1,0 @@
-{
-  "name": "com.liuocean.luban_gui",
-  "displayName": "LubanGUI",
-  "description": "Luban 可视化配置工具",
-  "version": "1.0.0",
-  "dependencies": {
-  }
-}
