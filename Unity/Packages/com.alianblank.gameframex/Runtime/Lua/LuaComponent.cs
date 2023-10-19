@@ -20,24 +20,24 @@ namespace GameFrameX.Runtime
             _luaEnv = new LuaEnv();
         }
 
-        public void DoString(string lua, string chunkName = "chunk", LuaTable env = null)
+        public object[] DoString(string lua, string chunkName = "chunk", LuaTable env = null)
         {
-            _luaEnv.DoString(lua, chunkName, env);
+            return _luaEnv.DoString(lua, chunkName, env);
         }
 
-        public void DoString(byte[] luaBytes, string chunkName = "chunk", LuaTable env = null)
+        public object[] DoString(byte[] luaBytes, string chunkName = "chunk", LuaTable env = null)
         {
-            _luaEnv.DoString(luaBytes, chunkName, env);
+            return _luaEnv.DoString(luaBytes, chunkName, env);
         }
 
-        public void LoadString(string lua, string chunkName = "chunk", LuaTable env = null)
+        public LuaFunction LoadString(string lua, string chunkName = "chunk", LuaTable env = null)
         {
-            _luaEnv.LoadString(lua, chunkName, env);
+            return _luaEnv.LoadString(lua, chunkName, env);
         }
 
-        public void LoadString<T>(string lua, string chunkName = "chunk", LuaTable env = null)
+        public T LoadString<T>(string lua, string chunkName = "chunk", LuaTable env = null)
         {
-            _luaEnv.LoadString<T>(lua, chunkName, env);
+            return _luaEnv.LoadString<T>(lua, chunkName, env);
         }
 
         public void AddBuildIn(string buildInName, lua_CSFunction init)
