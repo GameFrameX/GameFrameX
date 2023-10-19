@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using UnityEngine;
 
 namespace GameFrameX.Runtime
