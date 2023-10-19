@@ -7,7 +7,7 @@ using GameFrameX;
 using UnityEngine;
 using GameFrameX.Runtime;
 
-namespace PolymorphicMessagePack
+namespace GameFrameX.Runtime
 {
     public class PolymorphicTypeMapper
     {

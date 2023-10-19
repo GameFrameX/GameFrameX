@@ -2,7 +2,7 @@
 using MessagePack.Formatters;
 using System;
 
-namespace FormatterExtension
+namespace GameFrameX.Runtime
 {
     public class FormatterExtensionResolver : IFormatterResolver
     {

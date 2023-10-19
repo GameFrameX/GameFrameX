@@ -1,11 +1,9 @@
 ﻿using GameFrameX.Network;
-using MessagePack.Resolvers;
-using PolymorphicMessagePack;
 using UnityEngine;
 
-namespace MessagePack
+namespace GameFrameX.Runtime
 {
-    public class PolymorphicRegister
+    public static class PolymorphicRegister
     {
         static bool serializerRegistered = false;
 

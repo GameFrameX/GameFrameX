@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PolymorphicMessagePack
+namespace GameFrameX.Runtime
 {
     public class PolymorphicFormatter<T> : IMessagePackFormatter<T>
     {

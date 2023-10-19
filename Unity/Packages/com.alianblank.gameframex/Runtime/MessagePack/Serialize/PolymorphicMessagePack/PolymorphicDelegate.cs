@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace PolymorphicMessagePack
+namespace GameFrameX.Runtime
 {
     internal abstract class PolymorphicDelegate
     {

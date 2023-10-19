@@ -1,12 +1,11 @@
-﻿using FormatterExtension;
-using MessagePack;
+﻿using MessagePack;
 using MessagePack.Formatters;
 using MessagePack.Resolvers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace PolymorphicMessagePack
+namespace GameFrameX.Runtime
 {
     public sealed class PolymorphicResolver : IFormatterResolver
     {

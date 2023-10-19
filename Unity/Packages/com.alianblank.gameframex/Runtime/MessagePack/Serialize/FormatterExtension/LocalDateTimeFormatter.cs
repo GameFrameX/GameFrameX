@@ -3,7 +3,7 @@ using MessagePack;
 using System.Diagnostics;
 using System;
 
-namespace FormatterExtension
+namespace GameFrameX.Runtime
 {
     public class LocalDateTimeFormatter : IMessagePackFormatter<DateTime>
     {
