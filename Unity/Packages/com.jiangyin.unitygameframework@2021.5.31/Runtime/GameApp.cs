@@ -275,20 +275,20 @@ public static class GameApp
     /// <summary>
     /// 获取网络组件。
     /// </summary>
-    public static WebRequestComponent WebRequest
-    {
-        get
-        {
-            if (_webRequest)
-            {
-                _webRequest = GameEntry.GetComponent<WebRequestComponent>();
-            }
-
-            return _webRequest;
-        }
-    }
-
-    private static WebRequestComponent _webRequest;
+    // public static WebRequestComponent WebRequest
+    // {
+    //     get
+    //     {
+    //         if (_webRequest)
+    //         {
+    //             _webRequest = GameEntry.GetComponent<WebRequestComponent>();
+    //         }
+    //
+    //         return _webRequest;
+    //     }
+    // }
+    //
+    // private static WebRequestComponent _webRequest;
 
     /// <summary>
     /// 获取网络组件。
