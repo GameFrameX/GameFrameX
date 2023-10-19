@@ -1,9 +1,9 @@
 ﻿using FairyGUI;
 using Game.Model;
-using GameFramework;
-using UnityGameFramework.Runtime;
+using GameFrameX;
+using GameFrameX.Runtime;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     public static class LauncherUIHandler
     {

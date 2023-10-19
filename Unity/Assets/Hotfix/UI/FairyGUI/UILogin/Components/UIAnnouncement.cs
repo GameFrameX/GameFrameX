@@ -3,7 +3,7 @@
 using FairyGUI;
 using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using UnityGameFramework.Runtime;
+using GameFrameX.Runtime;
 
 namespace Game.Hotfix
 {

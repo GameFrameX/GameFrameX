@@ -1,15 +1,15 @@
 using System.Text;
 using Game.Model;
-using GameFramework.Fsm;
-using GameFramework.Localization;
-using GameFramework.Procedure;
+using GameFrameX.Fsm;
+using GameFrameX.Localization;
+using GameFrameX.Procedure;
+using GameFrameX.Runtime;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityGameFramework.Runtime;
 using YooAsset;
-using Utility = GameFramework.Utility;
+using Utility = GameFrameX.Utility;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     /// <summary>
     /// 获取版本信息

@@ -3,16 +3,16 @@ using Cysharp.Threading.Tasks;
 using FairyGUI;
 using Framework.Asset;
 using Game.Hotfix;
-using GameFramework;
-using GameFramework.Network;
+using GameFrameX;
+using GameFrameX.Network;
 using Hotfix.Proto.Proto;
 using MessagePack;
 using PolymorphicMessagePack;
 using Resolvers;
 using SimpleJSON;
 using UnityEngine;
-using UnityGameFramework.Network.Pipelines;
-using UnityGameFramework.Runtime;
+using GameFrameX.Network.Pipelines;
+using GameFrameX.Runtime;
 
 namespace Hotfix
 {

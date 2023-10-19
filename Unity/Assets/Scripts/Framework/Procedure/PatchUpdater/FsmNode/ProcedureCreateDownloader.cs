@@ -1,9 +1,9 @@
-﻿using GameFramework.Fsm;
-using GameFramework.Procedure;
+﻿using GameFrameX.Fsm;
+using GameFrameX.Procedure;
 using UnityEngine;
 using YooAsset;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     internal sealed class ProcedureCreateDownloader : ProcedureBase
     {

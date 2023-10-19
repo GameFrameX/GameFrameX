@@ -1,4 +1,4 @@
-﻿namespace UnityGameFramework.Procedure
+﻿namespace GameFrameX.Procedure
 {
     /// <summary>
     /// 补丁系统更新状态

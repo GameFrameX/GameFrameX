@@ -1,0 +1,25 @@
+{
+    "name": "GameFrameX.Runtime",
+    "references": [
+        "BlankReadAssets.Runtime",
+        "LitJSON.Runtime",
+        "YooAsset.Runtime",
+        "FairyGUI.Runtime",
+        "XLua.Runtime",
+        "BestHTTP",
+        "UniTask",
+        "BetterStreamingAssets",
+        "MessagePack.Runtime",
+        "MessagePack.Annotations",
+        "SimpleJSON.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
