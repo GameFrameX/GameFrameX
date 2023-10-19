@@ -31,6 +31,11 @@ namespace GameFrameX.Runtime
             HTTPManager.RequestTimeout = new TimeSpan(0, 0, 10);
         }
 
+        /// <summary>
+        /// 发送Get 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <returns></returns>
         public UniTask<string> Get(string url)
         {
             UniTaskCompletionSource<string> uniTaskCompletionSource = new UniTaskCompletionSource<string>();
@@ -67,6 +72,12 @@ namespace GameFrameX.Runtime
             return uniTaskCompletionSource.Task;
         }
 
+        /// <summary>
+        /// 发送Post 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="from">请求参数</param>
+        /// <returns></returns>
         public UniTask<string> Post(string url, Dictionary<string, string> from)
         {
             UniTaskCompletionSource<string> uniTaskCompletionSource = new UniTaskCompletionSource<string>();
