@@ -14,7 +14,7 @@ namespace GameFrameX.Scene
     /// <summary>
     /// 场景管理器接口。
     /// </summary>
-    public interface ISceneManager
+    public interface IGameSceneManager
     {
         /// <summary>
         /// 加载场景成功事件。
