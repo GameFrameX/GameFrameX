@@ -50,7 +50,7 @@ namespace GameFrameX.Runtime
         protected override void Awake()
         {
             base.Awake();
-            new GameFrameX.Scene.GameGameSceneManager();
+            new GameFrameX.Scene.GameSceneManager();
             _gameSceneManager = GameFrameworkEntry.GetModule<IGameSceneManager>();
             if (_gameSceneManager == null)
             {
@@ -429,45 +429,45 @@ namespace GameFrameX.Runtime
             RefreshMainCamera();
         }
 
-        private void OnLoadGameSceneSuccess(object sender, GameFrameX.Scene.LoadSceneSuccessEventArgs e)
+        private void OnLoadGameSceneSuccess(object sender, GameFrameX.Scene.LoadSceneSuccessEventArgs eventArgs)
         {
-            if (!m_SceneOrder.ContainsKey(e.SceneAssetName))
+            if (!m_SceneOrder.ContainsKey(eventArgs.SceneAssetName))
             {
-                m_SceneOrder.Add(e.SceneAssetName, 0);
+                m_SceneOrder.Add(eventArgs.SceneAssetName, 0);
             }
 
-            m_EventComponent.Fire(this, LoadSceneSuccessEventArgs.Create(e));
+            m_EventComponent.Fire(this, LoadSceneSuccessEventArgs.Create(eventArgs));
             RefreshSceneOrder();
         }
 
-        private void OnLoadGameSceneFailure(object sender, GameFrameX.Scene.LoadSceneFailureEventArgs e)
+        private void OnLoadGameSceneFailure(object sender, GameFrameX.Scene.LoadSceneFailureEventArgs eventArgs)
         {
-            Log.Warning("Load scene failure, scene asset name '{0}', error message '{1}'.", e.SceneAssetName,
-                e.ErrorMessage);
-            m_EventComponent.Fire(this, LoadSceneFailureEventArgs.Create(e));
+            Log.Warning("Load scene failure, scene asset name '{0}', error message '{1}'.", eventArgs.SceneAssetName,
+                eventArgs.ErrorMessage);
+            m_EventComponent.Fire(this, LoadSceneFailureEventArgs.Create(eventArgs));
         }
 
-        private void OnLoadGameSceneUpdate(object sender, GameFrameX.Scene.LoadSceneUpdateEventArgs e)
+        private void OnLoadGameSceneUpdate(object sender, GameFrameX.Scene.LoadSceneUpdateEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, LoadSceneUpdateEventArgs.Create(e));
+            m_EventComponent.Fire(this, LoadSceneUpdateEventArgs.Create(eventArgs));
         }
 
-        private void OnLoadGameSceneDependencyAsset(object sender, GameFrameX.Scene.LoadSceneDependencyAssetEventArgs e)
+        private void OnLoadGameSceneDependencyAsset(object sender, GameFrameX.Scene.LoadSceneDependencyAssetEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, LoadSceneDependencyAssetEventArgs.Create(e));
+            m_EventComponent.Fire(this, LoadSceneDependencyAssetEventArgs.Create(eventArgs));
         }
 
-        private void OnUnloadGameSceneSuccess(object sender, GameFrameX.Scene.UnloadSceneSuccessEventArgs e)
+        private void OnUnloadGameSceneSuccess(object sender, GameFrameX.Scene.UnloadSceneSuccessEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, UnloadSceneSuccessEventArgs.Create(e));
-            m_SceneOrder.Remove(e.SceneAssetName);
+            m_EventComponent.Fire(this, UnloadSceneSuccessEventArgs.Create(eventArgs));
+            m_SceneOrder.Remove(eventArgs.SceneAssetName);
             RefreshSceneOrder();
         }
 
-        private void OnUnloadGameSceneFailure(object sender, GameFrameX.Scene.UnloadSceneFailureEventArgs e)
+        private void OnUnloadGameSceneFailure(object sender, GameFrameX.Scene.UnloadSceneFailureEventArgs eventArgs)
         {
-            Log.Warning("Unload scene failure, scene asset name '{0}'.", e.SceneAssetName);
-            m_EventComponent.Fire(this, UnloadSceneFailureEventArgs.Create(e));
+            Log.Warning("Unload scene failure, scene asset name '{0}'.", eventArgs.SceneAssetName);
+            m_EventComponent.Fire(this, UnloadSceneFailureEventArgs.Create(eventArgs));
         }
     }
 }

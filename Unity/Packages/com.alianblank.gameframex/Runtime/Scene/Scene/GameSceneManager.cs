@@ -14,7 +14,7 @@ namespace GameFrameX.Scene
     /// <summary>
     /// 场景管理器。
     /// </summary>
-    public sealed class GameGameSceneManager : GameFrameworkModule, IGameSceneManager
+    public sealed class GameSceneManager : GameFrameworkModule, IGameSceneManager
     {
         private readonly List<string> m_LoadedSceneAssetNames;
         private readonly List<string> m_LoadingSceneAssetNames;
@@ -32,7 +32,7 @@ namespace GameFrameX.Scene
         /// <summary>
         /// 初始化场景管理器的新实例。
         /// </summary>
-        public GameGameSceneManager()
+        public GameSceneManager()
         {
             m_LoadedSceneAssetNames = new List<string>();
             m_LoadingSceneAssetNames = new List<string>();
