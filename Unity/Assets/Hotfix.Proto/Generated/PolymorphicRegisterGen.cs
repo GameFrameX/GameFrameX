@@ -1,4 +1,4 @@
-using PolymorphicMessagePack;
+using GameFrameX.Runtime;
 
 namespace Server.Proto.Formatter
 {
