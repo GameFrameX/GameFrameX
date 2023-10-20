@@ -16,9 +16,10 @@ namespace GameFrameX.Runtime
         /// 等待当前帧结束
         /// </summary>
         /// <returns></returns>
-        private IEnumerator _WaitForEndOfFrameFinish()
+        private IEnumerator _WaitForEndOfFrameFinish(System.Action callback)
         {
             yield return _waitForEndOfFrame;
+            callback?.Invoke();
         }
 
         /// <summary>
@@ -27,8 +28,7 @@ namespace GameFrameX.Runtime
         /// <param name="callback"></param>
         public void WaitForEndOfFrameFinish(System.Action callback)
         {
-            StartCoroutine(_WaitForEndOfFrameFinish());
-            callback?.Invoke();
+            StartCoroutine(_WaitForEndOfFrameFinish(callback));
         }
     }
 }
