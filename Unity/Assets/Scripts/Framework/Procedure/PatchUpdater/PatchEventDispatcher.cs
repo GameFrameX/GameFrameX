@@ -1,6 +1,6 @@
-﻿using UnityGameFramework.Runtime;
+﻿using GameFrameX.Runtime;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     public static class PatchEventDispatcher
     {

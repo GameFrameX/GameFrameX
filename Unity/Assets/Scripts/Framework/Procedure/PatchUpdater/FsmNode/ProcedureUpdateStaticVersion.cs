@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using Cysharp.Threading.Tasks;
-using GameFramework.Fsm;
-using GameFramework.Procedure;
+using GameFrameX.Fsm;
+using GameFrameX.Procedure;
+using GameFrameX.Runtime;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 using YooAsset;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     internal sealed class ProcedureUpdateStaticVersion : ProcedureBase
     {

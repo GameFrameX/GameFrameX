@@ -1,4 +1,4 @@
-﻿namespace UnityGameFramework.Procedure
+﻿namespace GameFrameX.Procedure
 {
     public partial class EventIdType
     {

@@ -1,8 +1,8 @@
-﻿using GameFramework.Fsm;
-using GameFramework.Procedure;
+﻿using GameFrameX.Fsm;
+using GameFrameX.Procedure;
 using UnityEngine;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     internal sealed class ProcedurePatchDone : ProcedureBase
     {

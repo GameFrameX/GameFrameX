@@ -1,7 +1,7 @@
 ﻿using System;
 using MessagePack;
 using System.Collections.Generic;
-using GameFramework.Network;
+using GameFrameX.Network;
 
 namespace Hotfix.Proto.Proto
 {

@@ -1,13 +1,13 @@
 using System.Text;
-using GameFramework.Fsm;
-using GameFramework.Procedure;
+using GameFrameX.Fsm;
+using GameFrameX.Procedure;
+using GameFrameX.Runtime;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityGameFramework.Runtime;
 using YooAsset;
-using Utility = GameFramework.Utility;
+using Utility = GameFrameX.Utility;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     /// <summary>
     /// 获取全局信息

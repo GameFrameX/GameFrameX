@@ -1,10 +1,8 @@
 {
     "name": "Unity.Startup",
     "references": [
-        "GameFramework.Runtime",
-        "UnityGameFramework.Runtime",
+        "GameFrameX.Runtime",
         "YooAsset.Runtime",
-        "UnityGameFramework.Runtime.Extension",
         "UniTask",
         "FairyGUI.Runtime",
         "BlankGetChannel.Runtime"

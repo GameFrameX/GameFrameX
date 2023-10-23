@@ -3,7 +3,7 @@
 // </auto-generated>
 
 using MessagePack.Formatters.Hotfix.Proto.Proto;
-using GameFramework.Network;
+using GameFrameX.Network;
 
 #pragma warning disable 618
 #pragma warning disable 612

@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using Cysharp.Threading.Tasks;
-using GameFramework.Fsm;
-using GameFramework.Procedure;
+using GameFrameX.Fsm;
+using GameFrameX.Procedure;
 using YooAsset;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     internal sealed class ProcedureDownloadWebFiles : ProcedureBase
     {

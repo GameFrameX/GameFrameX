@@ -1,4 +1,4 @@
-﻿namespace UnityGameFramework.Procedure
+﻿namespace GameFrameX.Procedure
 {
     /// <summary>
     /// 用户层反馈的操作方式

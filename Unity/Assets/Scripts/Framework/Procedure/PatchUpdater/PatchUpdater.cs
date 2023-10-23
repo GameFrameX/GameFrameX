@@ -2,7 +2,7 @@
 using UnityEngine;
 using YooAsset;
 
-namespace UnityGameFramework.Procedure
+namespace GameFrameX.Procedure
 {
     public static class PatchUpdater
     {

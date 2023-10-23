@@ -3,9 +3,7 @@
     "references": [
         "MessagePack.Annotations",
         "MessagePack.Runtime",
-        "GameFramework.Runtime",
-        "UnityGameFramework.Runtime",
-        "UnityGameFramework.Runtime.Extension"
+        "GameFrameX.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

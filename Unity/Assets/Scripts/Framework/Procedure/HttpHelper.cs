@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityGameFramework.Runtime;
+using GameFrameX.Runtime;
 
 
 public static class HttpHelper
