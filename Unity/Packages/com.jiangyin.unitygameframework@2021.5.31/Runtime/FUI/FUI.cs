@@ -23,7 +23,11 @@ namespace UnityGameFramework.Runtime
             GObject = gObject;
             Parent = parent;
             // 在初始化的时候先隐藏UI。后续由声明周期控制
-            SetVisibleWithNoNotify(false);
+            if (parent == null)
+            {
+                SetVisibleWithNoNotify(false);
+            }
+
             parent?.Add(this);
 
             if (gObject.name.IsNullOrWhiteSpace())
