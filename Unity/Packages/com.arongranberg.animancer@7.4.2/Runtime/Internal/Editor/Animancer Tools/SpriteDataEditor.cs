@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using System;
 
-#if UNITY_2D_SPRITE
+#if UNITY_2D_SPRITE && !UNITY_2018_3_OR_NEWER
 using UnityEditor.U2D.Sprites;
 #else
 #pragma warning disable CS0618 // Type or member is obsolete.
@@ -18,7 +18,7 @@ namespace Animancer.Editor.Tools
     public class SpriteDataEditor
     {
         /************************************************************************************************************************/
-#if UNITY_2D_SPRITE
+#if UNITY_2D_SPRITE && !UNITY_2018_3_OR_NEWER
         /************************************************************************************************************************/
 
         private static SpriteDataProviderFactories _Factories;
@@ -139,7 +139,7 @@ namespace Animancer.Editor.Tools
         {
             Importer = importer;
 
-#if UNITY_2D_SPRITE
+#if UNITY_2D_SPRITE && !UNITY_2018_3_OR_NEWER
             Provider = Factories.GetSpriteEditorDataProviderFromObject(importer);
             Provider.InitSpriteEditorDataProvider();
 
@@ -220,7 +220,7 @@ namespace Animancer.Editor.Tools
         /// <summary>Applies any modifications to the target asset.</summary>
         public void Apply()
         {
-#if UNITY_2D_SPRITE
+#if UNITY_2D_SPRITE && !UNITY_2018_3_OR_NEWER
             Provider.SetSpriteRects(_SpriteRects);
             Provider.Apply();
 #else
