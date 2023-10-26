@@ -1,5 +1,4 @@
-﻿using Animancer;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Framework.Asset;
 using Game.Hotfix;
 using GameFrameX;
@@ -25,8 +24,6 @@ namespace Hotfix
             GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World Lua')");
 
             RegisterMessagePack();
-
-            GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<AnimancerComponent>();
 
             ProtoMessageIdHandler.Init(typeof(HotfixProtoHandler).Assembly);
             LoadConfig();
