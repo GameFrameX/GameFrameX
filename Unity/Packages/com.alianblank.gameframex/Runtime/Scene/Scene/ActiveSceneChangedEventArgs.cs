@@ -5,11 +5,9 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Event;
-using UnityEngine.SceneManagement;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Scene
 {
     /// <summary>
     /// 激活场景被改变事件。
@@ -35,29 +33,18 @@ namespace GameFrameX.Runtime
         /// </summary>
         public override int Id
         {
-            get
-            {
-                return EventId;
-            }
+            get { return EventId; }
         }
 
         /// <summary>
         /// 获取上一个被激活的场景。
         /// </summary>
-        public UnityEngine.SceneManagement.Scene LastActiveScene
-        {
-            get;
-            private set;
-        }
+        public UnityEngine.SceneManagement.Scene LastActiveScene { get; private set; }
 
         /// <summary>
         /// 获取被激活的场景。
         /// </summary>
-        public UnityEngine.SceneManagement.Scene ActiveScene
-        {
-            get;
-            private set;
-        }
+        public UnityEngine.SceneManagement.Scene ActiveScene { get; private set; }
 
         /// <summary>
         /// 创建激活场景被改变事件。

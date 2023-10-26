@@ -7,7 +7,8 @@
 
 using System;
 using System.Collections.Generic;
-using GameFrameX.Resource;
+using GameFrameX.Runtime;
+using UnityEngine.SceneManagement;
 
 namespace GameFrameX.Scene
 {
@@ -32,11 +33,6 @@ namespace GameFrameX.Scene
         event EventHandler<LoadSceneUpdateEventArgs> LoadSceneUpdate;
 
         /// <summary>
-        /// 加载场景时加载依赖资源事件。
-        /// </summary>
-        event EventHandler<LoadSceneDependencyAssetEventArgs> LoadSceneDependencyAsset;
-
-        /// <summary>
         /// 卸载场景成功事件。
         /// </summary>
         event EventHandler<UnloadSceneSuccessEventArgs> UnloadSceneSuccess;
@@ -49,8 +45,8 @@ namespace GameFrameX.Scene
         /// <summary>
         /// 设置资源管理器。
         /// </summary>
-        /// <param name="resourceManager">资源管理器。</param>
-        void SetResourceManager(IResourceManager resourceManager);
+        /// <param name="assetManager"></param>
+        void SetResourceManager(IAssetManager assetManager);
 
         /// <summary>
         /// 获取场景是否已加载。
@@ -126,13 +122,6 @@ namespace GameFrameX.Scene
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        /// <param name="priority">加载场景资源的优先级。</param>
-        void LoadScene(string sceneAssetName, int priority);
-
-        /// <summary>
-        /// 加载场景。
-        /// </summary>
-        /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="userData">用户自定义数据。</param>
         void LoadScene(string sceneAssetName, object userData);
 
@@ -140,9 +129,9 @@ namespace GameFrameX.Scene
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        /// <param name="priority">加载场景资源的优先级。</param>
+        /// <param name="sceneMode"></param>
         /// <param name="userData">用户自定义数据。</param>
-        void LoadScene(string sceneAssetName, int priority, object userData);
+        void LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData);
 
         /// <summary>
         /// 卸载场景。

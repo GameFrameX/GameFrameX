@@ -25,6 +25,7 @@ namespace GameFrameX.Runtime
         private const int DefaultPriority = 0;
 
         private IGameSceneManager _gameSceneManager = null;
+        private IAssetManager _assetManager = null;
         private EventComponent m_EventComponent = null;
 
         private readonly SortedDictionary<string, int> m_SceneOrder = new SortedDictionary<string, int>(StringComparer.Ordinal);
@@ -68,7 +69,7 @@ namespace GameFrameX.Runtime
 
             if (m_EnableLoadSceneDependencyAssetEvent)
             {
-                _gameSceneManager.LoadSceneDependencyAsset += OnLoadGameSceneDependencyAsset;
+                // _gameSceneManager.LoadSceneDependencyAsset += OnLoadGameSceneDependencyAsset;
             }
 
             _gameSceneManager.UnloadSceneSuccess += OnUnloadGameSceneSuccess;
@@ -98,8 +99,14 @@ namespace GameFrameX.Runtime
                 return;
             }
 
+            _assetManager = GameFrameworkEntry.GetModule<IAssetManager>();
+            if (_assetManager == null)
+            {
+                Log.Fatal("Asset Manager is invalid.");
+                return;
+            }
 
-            _gameSceneManager.SetResourceManager(GameFrameworkEntry.GetModule<IResourceManager>());
+            _gameSceneManager.SetResourceManager(_assetManager);
         }
 
         /// <summary>
@@ -245,36 +252,16 @@ namespace GameFrameX.Runtime
         /// <param name="sceneAssetName">场景资源名称。</param>
         public void LoadScene(string sceneAssetName)
         {
-            LoadScene(sceneAssetName, DefaultPriority, null);
+            LoadScene(sceneAssetName, LoadSceneMode.Additive, null);
         }
 
         /// <summary>
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        /// <param name="priority">加载场景资源的优先级。</param>
-        public void LoadScene(string sceneAssetName, int priority)
-        {
-            LoadScene(sceneAssetName, priority, null);
-        }
-
-        /// <summary>
-        /// 加载场景。
-        /// </summary>
-        /// <param name="sceneAssetName">场景资源名称。</param>
+        /// <param name="sceneMode">加载场景资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void LoadScene(string sceneAssetName, object userData)
-        {
-            LoadScene(sceneAssetName, DefaultPriority, userData);
-        }
-
-        /// <summary>
-        /// 加载场景。
-        /// </summary>
-        /// <param name="sceneAssetName">场景资源名称。</param>
-        /// <param name="priority">加载场景资源的优先级。</param>
-        /// <param name="userData">用户自定义数据。</param>
-        public void LoadScene(string sceneAssetName, int priority, object userData)
+        public void LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData = null)
         {
             if (string.IsNullOrEmpty(sceneAssetName))
             {
@@ -289,16 +276,7 @@ namespace GameFrameX.Runtime
                 return;
             }
 
-            _gameSceneManager.LoadScene(sceneAssetName, priority, userData);
-        }
-
-        /// <summary>
-        /// 卸载场景。
-        /// </summary>
-        /// <param name="sceneAssetName">场景资源名称。</param>
-        public void UnloadScene(string sceneAssetName)
-        {
-            UnloadScene(sceneAssetName, null);
+            _gameSceneManager.LoadScene(sceneAssetName, sceneMode, userData);
         }
 
         /// <summary>
@@ -306,7 +284,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void UnloadScene(string sceneAssetName, object userData)
+        public void UnloadScene(string sceneAssetName, object userData = null)
         {
             if (string.IsNullOrEmpty(sceneAssetName))
             {
@@ -429,45 +407,40 @@ namespace GameFrameX.Runtime
             RefreshMainCamera();
         }
 
-        private void OnLoadGameSceneSuccess(object sender, GameFrameX.Scene.LoadSceneSuccessEventArgs eventArgs)
+        private void OnLoadGameSceneSuccess(object sender, LoadSceneSuccessEventArgs eventArgs)
         {
             if (!m_SceneOrder.ContainsKey(eventArgs.SceneAssetName))
             {
                 m_SceneOrder.Add(eventArgs.SceneAssetName, 0);
             }
 
-            m_EventComponent.Fire(this, LoadSceneSuccessEventArgs.Create(eventArgs));
+            m_EventComponent.Fire(this, eventArgs);
             RefreshSceneOrder();
         }
 
-        private void OnLoadGameSceneFailure(object sender, GameFrameX.Scene.LoadSceneFailureEventArgs eventArgs)
+        private void OnLoadGameSceneFailure(object sender, LoadSceneFailureEventArgs eventArgs)
         {
             Log.Warning("Load scene failure, scene asset name '{0}', error message '{1}'.", eventArgs.SceneAssetName,
                 eventArgs.ErrorMessage);
-            m_EventComponent.Fire(this, LoadSceneFailureEventArgs.Create(eventArgs));
+            m_EventComponent.Fire(this, eventArgs);
         }
 
-        private void OnLoadGameSceneUpdate(object sender, GameFrameX.Scene.LoadSceneUpdateEventArgs eventArgs)
+        private void OnLoadGameSceneUpdate(object sender, LoadSceneUpdateEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, LoadSceneUpdateEventArgs.Create(eventArgs));
+            m_EventComponent.Fire(this, eventArgs);
         }
 
-        private void OnLoadGameSceneDependencyAsset(object sender, GameFrameX.Scene.LoadSceneDependencyAssetEventArgs eventArgs)
+        private void OnUnloadGameSceneSuccess(object sender, UnloadSceneSuccessEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, LoadSceneDependencyAssetEventArgs.Create(eventArgs));
-        }
-
-        private void OnUnloadGameSceneSuccess(object sender, GameFrameX.Scene.UnloadSceneSuccessEventArgs eventArgs)
-        {
-            m_EventComponent.Fire(this, UnloadSceneSuccessEventArgs.Create(eventArgs));
+            m_EventComponent.Fire(this, eventArgs);
             m_SceneOrder.Remove(eventArgs.SceneAssetName);
             RefreshSceneOrder();
         }
 
-        private void OnUnloadGameSceneFailure(object sender, GameFrameX.Scene.UnloadSceneFailureEventArgs eventArgs)
+        private void OnUnloadGameSceneFailure(object sender, UnloadSceneFailureEventArgs eventArgs)
         {
             Log.Warning("Unload scene failure, scene asset name '{0}'.", eventArgs.SceneAssetName);
-            m_EventComponent.Fire(this, UnloadSceneFailureEventArgs.Create(eventArgs));
+            m_EventComponent.Fire(this, eventArgs);
         }
     }
 }
