@@ -21,7 +21,7 @@ namespace GameFrameX.Procedure
         {
             var assetComponent = GameEntry.GetComponent<AssetComponent>();
 
-            await assetComponent.Initialize(GetHostServerURL());
+            assetComponent.Initialize(GetHostServerURL());
             // 运行补丁流程
             PatchUpdater.Run();
             await UniTask.DelayFrame(10);
