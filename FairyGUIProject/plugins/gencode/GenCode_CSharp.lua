@@ -67,16 +67,16 @@ __CREATETEMPLATE__
         }
         */
 
-        private void Awake(GObject go)
+        protected override void InitView()
         {
-            if(go == null)
+            if(GObject == null)
             {
                 return;
             }
 
-            self = ({superClassName})go;
+            self = ({superClassName})GObject;
             {comAdd}
-            var com = go.asCom;
+            var com = GObject.asCom;
             if(com != null)
             {
 __AWAKE__
@@ -97,7 +97,7 @@ __DISPOSE__
         }
         private {className}(GObject gObject, FUI parent = null) : base(gObject, parent)
         {
-            Awake(gObject);
+            // Awake(gObject);
         }
     }
 }]]

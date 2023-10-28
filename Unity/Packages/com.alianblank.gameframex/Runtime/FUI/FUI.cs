@@ -22,6 +22,7 @@ namespace GameFrameX.Runtime
         {
             GObject = gObject;
             Parent = parent;
+            InitView();
             // 在初始化的时候先隐藏UI。后续由声明周期控制
             // if (parent == null)
             // {
@@ -40,6 +41,9 @@ namespace GameFrameX.Runtime
             }
         }
 
+        protected virtual void InitView()
+        {
+        }
 
         /// <summary>
         /// 界面添加到UI系统之前执行
