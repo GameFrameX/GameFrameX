@@ -10,7 +10,7 @@ namespace GameFrameX.Runtime
     /// <summary>
     /// 资源组件。
     /// </summary>
-    public sealed class AssetManager : IAssetManager
+    public sealed class AssetManager :GameFrameworkModule, IAssetManager
     {
         private EPlayMode _gamePlayMode;
         private AssetsPackage _buildinPackage;
@@ -504,6 +504,16 @@ namespace GameFrameX.Runtime
         public void OnDestroy()
         {
             YooAssets.Destroy();
+        }
+
+        internal override void Update(float elapseSeconds, float realElapseSeconds)
+        {
+            
+        }
+
+        internal override void Shutdown()
+        {
+            OnDestroy();
         }
     }
 }
