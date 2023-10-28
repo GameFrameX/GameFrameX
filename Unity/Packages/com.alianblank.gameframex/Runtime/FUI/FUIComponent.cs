@@ -69,7 +69,6 @@ namespace GameFrameX.Runtime
 
             UIPackage.AddPackage(descFilePath);
             T ui = creator();
-            ui.Init();
             Add(ui, layer);
             if (isFullScreen)
             {
@@ -147,8 +146,6 @@ namespace GameFrameX.Runtime
                     break;
             }
 
-            // 显示UI
-            ui.Show();
             return ui;
         }
 

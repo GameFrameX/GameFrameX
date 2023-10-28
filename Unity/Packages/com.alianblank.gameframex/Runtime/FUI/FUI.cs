@@ -23,10 +23,10 @@ namespace GameFrameX.Runtime
             GObject = gObject;
             Parent = parent;
             // 在初始化的时候先隐藏UI。后续由声明周期控制
-            if (parent == null)
-            {
-                SetVisibleWithNoNotify(false);
-            }
+            // if (parent == null)
+            // {
+            SetVisibleWithNoNotify(false);
+            // }
 
             parent?.Add(this);
 
@@ -303,6 +303,7 @@ namespace GameFrameX.Runtime
                 throw new Exception($"ui.Name({ui.Name}) already exist");
             }
 
+            ui.Init();
             _children.Add(ui.Name, ui);
             if (index < 0 || index > _children.Count)
             {
@@ -314,6 +315,8 @@ namespace GameFrameX.Runtime
             }
 
             ui.Parent = this;
+            // 显示UI
+            ui.Show();
         }
 
         /// <summary>
