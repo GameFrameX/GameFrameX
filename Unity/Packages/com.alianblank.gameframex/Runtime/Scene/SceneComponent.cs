@@ -10,8 +10,10 @@ using GameFrameX.Resource;
 using GameFrameX.Scene;
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using YooAsset;
 
 namespace GameFrameX.Runtime
 {
@@ -51,7 +53,7 @@ namespace GameFrameX.Runtime
         protected override void Awake()
         {
             base.Awake();
-            new GameFrameX.Scene.GameSceneManager();
+            new GameSceneManager();
             _gameSceneManager = GameFrameworkEntry.GetModule<IGameSceneManager>();
             if (_gameSceneManager == null)
             {
@@ -250,9 +252,9 @@ namespace GameFrameX.Runtime
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        public void LoadScene(string sceneAssetName)
+        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName)
         {
-            LoadScene(sceneAssetName, LoadSceneMode.Additive, null);
+            return LoadScene(sceneAssetName, LoadSceneMode.Additive, null);
         }
 
         /// <summary>
@@ -261,22 +263,22 @@ namespace GameFrameX.Runtime
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="sceneMode">加载场景资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData = null)
+        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData = null)
         {
             if (string.IsNullOrEmpty(sceneAssetName))
             {
                 Log.Error("Scene asset name is invalid.");
-                return;
+                throw new ArgumentNullException(nameof(sceneAssetName));
             }
 
             if (!sceneAssetName.StartsWith("Assets/", StringComparison.Ordinal) ||
                 !sceneAssetName.EndsWith(".unity", StringComparison.Ordinal))
             {
                 Log.Error("Scene asset name '{0}' is invalid.", sceneAssetName);
-                return;
+                throw new ArgumentException(nameof(sceneAssetName));
             }
 
-            _gameSceneManager.LoadScene(sceneAssetName, sceneMode, userData);
+            return _gameSceneManager.LoadScene(sceneAssetName, sceneMode, userData);
         }
 
         /// <summary>
