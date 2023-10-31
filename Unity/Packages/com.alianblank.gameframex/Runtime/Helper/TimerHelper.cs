@@ -139,5 +139,63 @@ namespace GameFrameX.Runtime
         {
             return new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
         }
+        
+        
+        /// <summary>
+        /// 按照UTC时间判断两个时间戳是否是同一天
+        /// </summary>
+        /// <param name="timestamp1">时间戳1</param>
+        /// <param name="timestamp2">时间戳2</param>
+        /// <returns>是否是同一天</returns>
+        public static bool IsUnixSameDay(long timestamp1, long timestamp2)
+        {
+            DateTime time1 = DateTimeOffset.FromUnixTimeSeconds(timestamp1).UtcDateTime;
+            DateTime time2 = DateTimeOffset.FromUnixTimeSeconds(timestamp2).UtcDateTime;
+            return time1.Date == time2.Date;
+        }
+
+        /// <summary>
+        /// 按照本地时间判断两个时间戳是否是同一天
+        /// </summary>
+        /// <param name="timestamp1">时间戳1</param>
+        /// <param name="timestamp2">时间戳2</param>
+        /// <returns>是否是同一天</returns>
+        public static bool IsSameDay(long timestamp1, long timestamp2)
+        {
+            DateTime time1 = DateTimeOffset.FromUnixTimeSeconds(timestamp1).DateTime;
+            DateTime time2 = DateTimeOffset.FromUnixTimeSeconds(timestamp2).DateTime;
+            return time1.Date == time2.Date;
+        }
+
+        /// <summary>
+        /// UTC 时间戳 转换成UTC时间
+        /// </summary>
+        /// <param name="utcTimestamp">UTC时间戳,单位秒</param>
+        /// <returns></returns>
+        public static DateTime UtcToUtcDateTime(long utcTimestamp)
+        {
+            return DateTimeOffset.FromUnixTimeSeconds(utcTimestamp).UtcDateTime;
+        }
+
+        /// <summary>
+        /// UTC 时间戳 转换成本地时间
+        /// </summary>
+        /// <param name="utcTimestamp">UTC时间戳,单位秒</param>
+        /// <returns></returns>
+        public static DateTime UtcToDateTime(long utcTimestamp)
+        {
+            return DateTimeOffset.FromUnixTimeSeconds(utcTimestamp).DateTime;
+        }
+
+        /// <summary>
+        /// 判断两个时间是否是同一天
+        /// </summary>
+        /// <param name="time1">时间1</param>
+        /// <param name="time2">时间2</param>
+        /// <returns>是否是同一天</returns>
+        public static bool IsSameDay(DateTime time1, DateTime time2)
+        {
+            return time1.Date == time2.Date;
+        }
     }
 }
