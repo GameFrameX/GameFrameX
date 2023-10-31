@@ -5,10 +5,9 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using BestHTTP;
 using Cysharp.Threading.Tasks;
+using GameFrameX.Web;
 using UnityEngine;
 
 namespace GameFrameX.Runtime
@@ -20,15 +19,21 @@ namespace GameFrameX.Runtime
     [AddComponentMenu("Game Framework/Web")]
     public sealed class WebComponent : GameFrameworkComponent
     {
+        private IWebManager _webManager;
+
         /// <summary>
         /// 游戏框架组件初始化。
         /// </summary>
         protected override void Awake()
         {
             base.Awake();
-            HTTPManager.MaxConnectionPerServer = 20;
-            HTTPManager.ConnectTimeout = new TimeSpan(0, 0, 5);
-            HTTPManager.RequestTimeout = new TimeSpan(0, 0, 10);
+            new WebManager();
+            _webManager = GameFrameworkEntry.GetModule<IWebManager>();
+            if (_webManager == null)
+            {
+                Log.Fatal("Web manager is invalid.");
+                return;
+            }
         }
 
         /// <summary>
@@ -36,41 +41,68 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="url">请求地址</param>
         /// <returns></returns>
-        public UniTask<string> Get(string url)
+        public UniTask<string> GetToString(string url)
         {
-            UniTaskCompletionSource<string> uniTaskCompletionSource = new UniTaskCompletionSource<string>();
-            HTTPRequest httpRequest = new HTTPRequest(new Uri(url), HTTPMethods.Get, (request, response) =>
-            {
-                switch (request.State)
-                {
-                    case HTTPRequestStates.Finished:
-                    {
-                        if (response.IsSuccess)
-                        {
-                            uniTaskCompletionSource.TrySetResult(response.DataAsText);
-                        }
-                        else
-                        {
-                            uniTaskCompletionSource.TrySetException(new Exception(response.Message));
-                        }
-                    }
-                        break;
-                    case HTTPRequestStates.Error:
-                        uniTaskCompletionSource.TrySetException(new Exception(response.Message));
-                        break;
-                    case HTTPRequestStates.Aborted:
-                        uniTaskCompletionSource.TrySetCanceled();
-                        break;
-                    case HTTPRequestStates.ConnectionTimedOut:
-                    case HTTPRequestStates.TimedOut:
-                        uniTaskCompletionSource.TrySetException(new TimeoutException(response.Message));
-
-                        break;
-                }
-            });
-            httpRequest.Send();
-            return uniTaskCompletionSource.Task;
+            return _webManager.GetToString(url).AsUniTask();
         }
+
+        /// <summary>
+        /// 发送Get 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="queryString">请求参数</param>
+        /// <returns></returns>
+        public UniTask<string> GetToString(string url, Dictionary<string, string> queryString)
+        {
+            return _webManager.GetToString(url, queryString).AsUniTask();
+        }
+
+        /// <summary>
+        /// 发送Get 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="queryString">请求参数</param>
+        /// <param name="header">请求头</param>
+        /// <returns></returns>
+        public UniTask<string> GetToString(string url, Dictionary<string, string> queryString, Dictionary<string, string> header)
+        {
+            return _webManager.GetToString(url, queryString, header).AsUniTask();
+        }
+
+
+        /// <summary>
+        /// 发送Get 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <returns></returns>
+        public UniTask<byte[]> GetToBytes(string url)
+        {
+            return _webManager.GetToBytes(url).AsUniTask();
+        }
+
+        /// <summary>
+        /// 发送Get 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="queryString">请求参数</param>
+        /// <returns></returns>
+        public UniTask<byte[]> GetToBytes(string url, Dictionary<string, string> queryString)
+        {
+            return _webManager.GetToBytes(url, queryString).AsUniTask();
+        }
+
+        /// <summary>
+        /// 发送Get 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="queryString">请求参数</param>
+        /// <param name="header">请求头</param>
+        /// <returns></returns>
+        public UniTask<byte[]> GetToBytes(string url, Dictionary<string, string> queryString, Dictionary<string, string> header)
+        {
+            return _webManager.GetToBytes(url, queryString, header).AsUniTask();
+        }
+
 
         /// <summary>
         /// 发送Post 请求
@@ -78,45 +110,71 @@ namespace GameFrameX.Runtime
         /// <param name="url">请求地址</param>
         /// <param name="from">请求参数</param>
         /// <returns></returns>
-        public UniTask<string> Post(string url, Dictionary<string, string> from)
+        public UniTask<string> PostToString(string url, Dictionary<string, string> from)
         {
-            UniTaskCompletionSource<string> uniTaskCompletionSource = new UniTaskCompletionSource<string>();
-            HTTPRequest httpRequest = new HTTPRequest(new Uri(url), HTTPMethods.Post, (request, response) =>
-            {
-                switch (request.State)
-                {
-                    case HTTPRequestStates.Finished:
-                    {
-                        if (response.IsSuccess)
-                        {
-                            uniTaskCompletionSource.TrySetResult(response.DataAsText);
-                        }
-                        else
-                        {
-                            uniTaskCompletionSource.TrySetException(new Exception(response.Message));
-                        }
-                    }
-                        break;
-                    case HTTPRequestStates.Error:
-                        uniTaskCompletionSource.TrySetException(new Exception(response.Message));
-                        break;
-                    case HTTPRequestStates.Aborted:
-                        uniTaskCompletionSource.TrySetCanceled();
-                        break;
-                    case HTTPRequestStates.ConnectionTimedOut:
-                    case HTTPRequestStates.TimedOut:
-                        uniTaskCompletionSource.TrySetException(new TimeoutException(response.Message));
+            return _webManager.PostToString(url, from).AsUniTask();
+        }
 
-                        break;
-                }
-            });
-            foreach (var kv in from)
-            {
-                httpRequest.AddField(kv.Key, kv.Value);
-            }
+        /// <summary>
+        /// 发送Post 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="from">表单请求参数</param>
+        /// <param name="queryString">URl请求参数</param>
+        /// <returns></returns>
+        public UniTask<string> PostToString(string url, Dictionary<string, string> from, Dictionary<string, string> queryString)
+        {
+            return _webManager.PostToString(url, from, queryString).AsUniTask();
+        }
 
-            httpRequest.Send();
-            return uniTaskCompletionSource.Task;
+        /// <summary>
+        /// 发送Post 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="from">表单请求参数</param>
+        /// <param name="queryString">URl请求参数</param>
+        /// <param name="header">请求头</param>
+        /// <returns></returns>
+        public UniTask<string> PostToString(string url, Dictionary<string, string> from, Dictionary<string, string> queryString, Dictionary<string, string> header)
+        {
+            return _webManager.PostToString(url, from, queryString, header).AsUniTask();
+        }
+
+
+        /// <summary>
+        /// 发送Post 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="from">请求参数</param>
+        /// <returns></returns>
+        public UniTask<byte[]> PostToBytes(string url, Dictionary<string, string> from)
+        {
+            return _webManager.PostToBytes(url, from).AsUniTask();
+        }
+
+        /// <summary>
+        /// 发送Post 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="from">表单请求参数</param>
+        /// <param name="queryString">URl请求参数</param>
+        /// <returns></returns>
+        public UniTask<byte[]> PostToBytes(string url, Dictionary<string, string> from, Dictionary<string, string> queryString)
+        {
+            return _webManager.PostToBytes(url, from, queryString).AsUniTask();
+        }
+
+        /// <summary>
+        /// 发送Post 请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="from">表单请求参数</param>
+        /// <param name="queryString">URl请求参数</param>
+        /// <param name="header">请求头</param>
+        /// <returns></returns>
+        public UniTask<byte[]> PostToBytes(string url, Dictionary<string, string> from, Dictionary<string, string> queryString, Dictionary<string, string> header)
+        {
+            return _webManager.PostToBytes(url, from, queryString, header).AsUniTask();
         }
     }
 }

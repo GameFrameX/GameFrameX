@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using GameFrameX.Resource;
 using GameFrameX.Runtime;
@@ -280,9 +281,9 @@ namespace GameFrameX.Scene
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        public void LoadScene(string sceneAssetName)
+        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName)
         {
-            LoadScene(sceneAssetName, LoadSceneMode.Single);
+            return LoadScene(sceneAssetName, LoadSceneMode.Single);
         }
 
         /// <summary>
@@ -290,9 +291,9 @@ namespace GameFrameX.Scene
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="sceneMode">加载场景的方式。</param>
-        public void LoadScene(string sceneAssetName, LoadSceneMode sceneMode)
+        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode)
         {
-            LoadScene(sceneAssetName, sceneMode, null);
+            return LoadScene(sceneAssetName, sceneMode, null);
         }
 
         /// <summary>
@@ -300,9 +301,9 @@ namespace GameFrameX.Scene
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void LoadScene(string sceneAssetName, object userData)
+        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, object userData)
         {
-            LoadScene(sceneAssetName, LoadSceneMode.Single, userData);
+            return LoadScene(sceneAssetName, LoadSceneMode.Single, userData);
         }
 
         /// <summary>
@@ -311,7 +312,7 @@ namespace GameFrameX.Scene
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <param name="sceneMode"></param>
-        public async void LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData)
+        public async UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData)
         {
             if (string.IsNullOrEmpty(sceneAssetName))
             {
@@ -340,6 +341,14 @@ namespace GameFrameX.Scene
 
             var sceneOperationHandle = await m_assetManager.LoadSceneAsync(sceneAssetName, sceneMode, true);
             m_LoadingSceneAssetNames.Add(sceneAssetName, sceneOperationHandle);
+            sceneOperationHandle.Completed += OnLoadSceneCompleted;
+            return sceneOperationHandle;
+        }
+
+        private void OnLoadSceneCompleted(SceneOperationHandle sceneOperationHandle)
+        {
+            m_LoadingSceneAssetNames.Remove(sceneOperationHandle.GetAssetInfo().AssetPath);
+            m_LoadedSceneAssetNames.Add(sceneOperationHandle.GetAssetInfo().AssetPath, sceneOperationHandle);
         }
 
         /// <summary>
@@ -385,8 +394,10 @@ namespace GameFrameX.Scene
 
             if (m_LoadedSceneAssetNames.TryGetValue(sceneAssetName, out var sceneOperationHandle))
             {
-                sceneOperationHandle.UnloadAsync();
+                var unloadSceneOperationHandle = sceneOperationHandle.UnloadAsync();
+                m_LoadedSceneAssetNames.Remove(sceneAssetName);
                 m_UnloadingSceneAssetNames.Add(sceneAssetName, sceneOperationHandle);
+                unloadSceneOperationHandle.Completed += (s) => { m_UnloadingSceneAssetNames.Remove(sceneAssetName); };
             }
         }
 

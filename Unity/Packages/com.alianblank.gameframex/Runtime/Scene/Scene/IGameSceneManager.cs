@@ -7,8 +7,10 @@
 
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using GameFrameX.Runtime;
 using UnityEngine.SceneManagement;
+using YooAsset;
 
 namespace GameFrameX.Scene
 {
@@ -116,14 +118,14 @@ namespace GameFrameX.Scene
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        void LoadScene(string sceneAssetName);
+        UniTask<SceneOperationHandle> LoadScene(string sceneAssetName);
 
         /// <summary>
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="userData">用户自定义数据。</param>
-        void LoadScene(string sceneAssetName, object userData);
+        UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, object userData);
 
         /// <summary>
         /// 加载场景。
@@ -131,7 +133,7 @@ namespace GameFrameX.Scene
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="sceneMode"></param>
         /// <param name="userData">用户自定义数据。</param>
-        void LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData);
+        UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData);
 
         /// <summary>
         /// 卸载场景。
