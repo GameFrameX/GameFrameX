@@ -365,6 +365,7 @@ public static class GameApp
 
     private static AssetComponent _asset;
 
+
     /// <summary>
     /// 获取Lua组件。
     /// </summary>
@@ -382,4 +383,22 @@ public static class GameApp
     }
 
     private static LuaComponent _lua;
+
+    /// <summary>
+    /// 获取Mono组件。
+    /// </summary>
+    public static MonoComponent Mono
+    {
+        get
+        {
+            if (_mono == null)
+            {
+                _mono = GameEntry.GetComponent<MonoComponent>();
+            }
+
+            return _mono;
+        }
+    }
+
+    private static MonoComponent _mono;
 }
