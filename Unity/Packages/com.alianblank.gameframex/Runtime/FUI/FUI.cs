@@ -8,6 +8,8 @@ namespace GameFrameX.Runtime
 {
     public class FUI : ObjectBase, IDisposable
     {
+        protected object UserData { get; private set; }
+
         /// <summary>
         /// 界面显示之后触发
         /// </summary>
@@ -18,8 +20,9 @@ namespace GameFrameX.Runtime
         /// </summary>
         public Action<FUI> OnHideAction { get; set; }
 
-        public FUI(GObject gObject, FUI parent = null)
+        public FUI(GObject gObject, FUI parent = null, object userData = null)
         {
+            UserData = userData;
             GObject = gObject;
             Parent = parent;
             InitView();
@@ -241,7 +244,11 @@ namespace GameFrameX.Runtime
         }
 
         private readonly Dictionary<string, FUI> _children = new Dictionary<string, FUI>();
-        // protected bool isFromFGUIPool;
+
+        /// <summary>
+        /// 是否从对象池获取
+        /// </summary>
+        protected bool IsFromPool { get; set; }
 
 
         protected bool IsDisposed;

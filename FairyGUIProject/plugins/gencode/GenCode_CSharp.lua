@@ -9,17 +9,17 @@ local CreateTemplate=[[
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
     
-        public static {className} CreateInstance()
+        public static {className} CreateInstance(object userData = null)
         {
-            return new {className}(CreateGObject());
+            return new {className}(CreateGObject(), userData);
         }
     
-        public static UniTask<{className}> CreateInstanceAsync(Entity domain)
+        public static UniTask<{className}> CreateInstanceAsync(Entity domain, object userData = null)
         {
             UniTaskCompletionSource<{className}> tcs = new UniTaskCompletionSource<{className}>();
             CreateGObjectAsync((go) =>
             {
-                tcs.TrySetResult(new {className}(go));
+                tcs.TrySetResult(new {className}(go, userData));
             });
             return tcs.Task;
         }
@@ -47,9 +47,9 @@ namespace {namespaceName}
 __PROPERTY__
 
 __CREATETEMPLATE__
-        public static {className} Create(GObject go, FUI parent = null)
+        public static {className} Create(GObject go, FUI parent = null, object userData = null)
         {
-            return new {className}(go, parent);
+            return new {className}(go, userData, parent);
         }
         /*
         /// <summary>
@@ -95,7 +95,7 @@ __DISPOSE__
             self = null;
             base.Dispose();
         }
-        private {className}(GObject gObject, FUI parent = null) : base(gObject, parent)
+        private {className}(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);
         }
