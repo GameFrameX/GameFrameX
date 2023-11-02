@@ -19,7 +19,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 显示实体时加载依赖资源事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(ShowEntityDependencyAssetEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(ShowEntityDependencyAssetEventArgs).FullName;
 
         /// <summary>
         /// 初始化显示实体时加载依赖资源事件的新实例。
@@ -39,7 +39,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取显示实体时加载依赖资源事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

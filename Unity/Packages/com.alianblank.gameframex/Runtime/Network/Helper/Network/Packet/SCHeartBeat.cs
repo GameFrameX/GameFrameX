@@ -20,9 +20,6 @@ namespace GameFrameX.Runtime
         /// </summary>
         // [ProtoMember(1)]
         public long Timestamp { get; set; }
-
-        public override void Clear()
-        {
-        }
+        
     }
 }

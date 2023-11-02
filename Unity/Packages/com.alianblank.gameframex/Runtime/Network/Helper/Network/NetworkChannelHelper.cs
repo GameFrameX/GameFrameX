@@ -101,14 +101,14 @@ namespace GameFrameX.Runtime
         /// <returns>是否发送心跳消息包成功。</returns>
         public bool SendHeartBeat()
         {
-            var req = ReferencePool.Acquire<CSMessagePackage>();
-            var data = ReferencePool.Acquire<CSHeartBeat>();
-            data.Timestamp = GameTimeHelper.UnixTimeMilliseconds();
-            req.Code = data.Id;
-            req.MessageType = typeof(CSHeartBeat);
-            // req.Data = ProtobufHelper.ToBytes(data);
-            ReferencePool.Release(data);
-            m_NetworkChannel.Send(req);
+            // var req = ReferencePool.Acquire<CSMessagePackage>();
+            // var data = ReferencePool.Acquire<CSHeartBeat>();
+            // data.Timestamp = GameTimeHelper.UnixTimeMilliseconds();
+            // req.Code = data.Id;
+            // req.MessageType = typeof(CSHeartBeat);
+            // // req.Data = ProtobufHelper.ToBytes(data);
+            // // ReferencePool.Release(data);
+            // m_NetworkChannel.Send(req);
             return true;
         }
 
@@ -163,7 +163,7 @@ namespace GameFrameX.Runtime
 
                 // 数据
                 m_CachedStream.Write(packetHeader.Data, 0, packetHeader.Data.Length);
-                ReferencePool.Release(packet);
+                // ReferencePool.Release(packet);
             }
 
             m_CachedStream.WriteTo(destination);

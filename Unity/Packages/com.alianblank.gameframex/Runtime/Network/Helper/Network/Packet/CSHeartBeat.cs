@@ -19,9 +19,5 @@ namespace GameFrameX.Runtime
         public long Timestamp { get; set; }
 
         public override int Id => 1;
-
-        public override void Clear()
-        {
-        }
     }
 }

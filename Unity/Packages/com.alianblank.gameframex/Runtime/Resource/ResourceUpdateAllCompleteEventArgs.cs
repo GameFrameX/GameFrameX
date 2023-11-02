@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 资源更新全部完成事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(ResourceUpdateAllCompleteEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(ResourceUpdateAllCompleteEventArgs).FullName;
 
         /// <summary>
         /// 初始化资源更新全部完成事件的新实例。
@@ -30,7 +30,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取资源更新全部完成事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

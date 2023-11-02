@@ -27,10 +27,7 @@ namespace GameFrameX.Runtime
         /// 消息内容
         /// </summary>
         public byte[] Data { get; set; }
-
-        public override void Clear()
-        {
-        }
+        
 
         private static int _index = 0;
         public override int Id => _index++;

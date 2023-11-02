@@ -19,7 +19,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 播放声音更新事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(PlaySoundUpdateEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(PlaySoundUpdateEventArgs).FullName;
 
         /// <summary>
         /// 初始化播放声音更新事件的新实例。
@@ -38,7 +38,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取播放声音更新事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

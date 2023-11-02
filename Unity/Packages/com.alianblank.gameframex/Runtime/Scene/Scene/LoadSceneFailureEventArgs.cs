@@ -17,7 +17,7 @@ namespace GameFrameX.Scene
         /// <summary>
         /// 加载场景失败事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(LoadSceneFailureEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(LoadSceneFailureEventArgs).FullName;
 
         /// <summary>
         /// 初始化加载场景失败事件的新实例。
@@ -32,7 +32,7 @@ namespace GameFrameX.Scene
         /// <summary>
         /// 获取加载场景失败事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get { return EventId; }
         }

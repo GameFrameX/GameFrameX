@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 资源应用成功事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(ResourceApplySuccessEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(ResourceApplySuccessEventArgs).FullName;
 
         /// <summary>
         /// 初始化资源应用成功事件的新实例。
@@ -35,7 +35,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取资源应用成功事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

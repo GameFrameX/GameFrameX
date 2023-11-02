@@ -20,7 +20,7 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// Web 请求成功事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(WebRequestSuccessEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(WebRequestSuccessEventArgs).FullName;
 
         /// <summary>
         /// 初始化 Web 请求成功事件的新实例。
@@ -36,7 +36,7 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 获取 Web 请求成功事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

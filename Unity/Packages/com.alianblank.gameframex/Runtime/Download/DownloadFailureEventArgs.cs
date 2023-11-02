@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 下载失败事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(DownloadFailureEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(DownloadFailureEventArgs).FullName;
 
         /// <summary>
         /// 初始化下载失败事件的新实例。
@@ -35,7 +35,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取下载失败事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

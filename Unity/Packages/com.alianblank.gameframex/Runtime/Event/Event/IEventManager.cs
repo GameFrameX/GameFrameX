@@ -35,7 +35,7 @@ namespace GameFrameX.Event
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <returns>事件处理函数的数量。</returns>
-        int Count(int id);
+        int Count(string id);
 
         /// <summary>
         /// 检查是否存在事件处理函数。
@@ -43,21 +43,21 @@ namespace GameFrameX.Event
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要检查的事件处理函数。</param>
         /// <returns>是否存在事件处理函数。</returns>
-        bool Check(int id, EventHandler<GameEventArgs> handler);
+        bool Check(string id, EventHandler<GameEventArgs> handler);
 
         /// <summary>
         /// 订阅事件处理函数。
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要订阅的事件处理函数。</param>
-        void Subscribe(int id, EventHandler<GameEventArgs> handler);
+        void Subscribe(string id, EventHandler<GameEventArgs> handler);
 
         /// <summary>
         /// 取消订阅事件处理函数。
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要取消订阅的事件处理函数。</param>
-        void Unsubscribe(int id, EventHandler<GameEventArgs> handler);
+        void Unsubscribe(string id, EventHandler<GameEventArgs> handler);
 
         /// <summary>
         /// 设置默认事件处理函数。

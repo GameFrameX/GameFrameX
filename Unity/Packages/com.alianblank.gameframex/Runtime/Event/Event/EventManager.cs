@@ -81,7 +81,7 @@ namespace GameFrameX.Event
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <returns>事件处理函数的数量。</returns>
-        public int Count(int id)
+        public int Count(string id)
         {
             return m_EventPool.Count(id);
         }
@@ -92,7 +92,7 @@ namespace GameFrameX.Event
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要检查的事件处理函数。</param>
         /// <returns>是否存在事件处理函数。</returns>
-        public bool Check(int id, EventHandler<GameEventArgs> handler)
+        public bool Check(string id, EventHandler<GameEventArgs> handler)
         {
             return m_EventPool.Check(id, handler);
         }
@@ -102,7 +102,7 @@ namespace GameFrameX.Event
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要订阅的事件处理函数。</param>
-        public void Subscribe(int id, EventHandler<GameEventArgs> handler)
+        public void Subscribe(string id, EventHandler<GameEventArgs> handler)
         {
             m_EventPool.Subscribe(id, handler);
         }
@@ -112,7 +112,7 @@ namespace GameFrameX.Event
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要取消订阅的事件处理函数。</param>
-        public void Unsubscribe(int id, EventHandler<GameEventArgs> handler)
+        public void Unsubscribe(string id, EventHandler<GameEventArgs> handler)
         {
             m_EventPool.Unsubscribe(id, handler);
         }

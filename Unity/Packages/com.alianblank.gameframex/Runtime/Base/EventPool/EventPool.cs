@@ -17,7 +17,7 @@ namespace GameFrameX
     public sealed partial class EventPool<T> where T : BaseEventArgs
     {
         private readonly object _lock = new object();
-        private readonly GameFrameworkMultiDictionary<int, EventHandler<T>> _eventHandlers;
+        private readonly GameFrameworkMultiDictionary<string, EventHandler<T>> _eventHandlers;
         private readonly Queue<EventNode> _events;
         private readonly Dictionary<object, LinkedListNode<EventHandler<T>>> _cachedNodes;
         private readonly Dictionary<object, LinkedListNode<EventHandler<T>>> _tempNodes;
@@ -30,7 +30,7 @@ namespace GameFrameX
         /// <param name="mode">事件池模式。</param>
         public EventPool(EventPoolMode mode)
         {
-            _eventHandlers = new GameFrameworkMultiDictionary<int, EventHandler<T>>();
+            _eventHandlers = new GameFrameworkMultiDictionary<string, EventHandler<T>>();
             _events = new Queue<EventNode>();
             _cachedNodes = new Dictionary<object, LinkedListNode<EventHandler<T>>>();
             _tempNodes = new Dictionary<object, LinkedListNode<EventHandler<T>>>();
@@ -112,7 +112,7 @@ namespace GameFrameX
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <returns>事件处理函数的数量。</returns>
-        public int Count(int id)
+        public int Count(string id)
         {
             lock (_lock)
             {
@@ -131,7 +131,7 @@ namespace GameFrameX
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要检查的事件处理函数。</param>
         /// <returns>是否存在事件处理函数。</returns>
-        public bool Check(int id, EventHandler<T> handler)
+        public bool Check(string id, EventHandler<T> handler)
         {
             lock (_lock)
             {
@@ -149,7 +149,7 @@ namespace GameFrameX
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要订阅的事件处理函数。</param>
-        public void Subscribe(int id, EventHandler<T> handler)
+        public void Subscribe(string id, EventHandler<T> handler)
         {
             lock (_lock)
             {
@@ -182,7 +182,7 @@ namespace GameFrameX
         /// </summary>
         /// <param name="id">事件类型编号。</param>
         /// <param name="handler">要取消订阅的事件处理函数。</param>
-        public void Unsubscribe(int id, EventHandler<T> handler)
+        public void Unsubscribe(string id, EventHandler<T> handler)
         {
             lock (_lock)
             {

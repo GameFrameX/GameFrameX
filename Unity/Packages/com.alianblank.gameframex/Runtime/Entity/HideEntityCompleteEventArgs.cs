@@ -19,7 +19,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 隐藏实体完成事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(HideEntityCompleteEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(HideEntityCompleteEventArgs).FullName;
 
         /// <summary>
         /// 初始化隐藏实体完成事件的新实例。
@@ -35,7 +35,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取隐藏实体完成事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

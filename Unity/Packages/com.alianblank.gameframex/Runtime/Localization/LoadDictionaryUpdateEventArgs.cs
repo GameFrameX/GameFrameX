@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 加载字典更新事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(LoadDictionaryUpdateEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(LoadDictionaryUpdateEventArgs).FullName;
 
         /// <summary>
         /// 初始化加载字典更新事件的新实例。
@@ -33,7 +33,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取加载字典更新事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

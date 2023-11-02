@@ -19,7 +19,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 网络连接关闭事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(NetworkClosedEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(NetworkClosedEventArgs).FullName;
 
         /// <summary>
         /// 初始化网络连接关闭事件的新实例。
@@ -32,7 +32,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取网络连接关闭事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

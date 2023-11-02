@@ -20,7 +20,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 网络错误事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(NetworkErrorEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(NetworkErrorEventArgs).FullName;
 
         /// <summary>
         /// 初始化网络错误事件的新实例。
@@ -35,7 +35,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取网络错误事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

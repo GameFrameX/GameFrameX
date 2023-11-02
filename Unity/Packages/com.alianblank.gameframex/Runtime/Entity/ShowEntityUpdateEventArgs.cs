@@ -19,7 +19,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 显示实体更新事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(ShowEntityUpdateEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(ShowEntityUpdateEventArgs).FullName;
 
         /// <summary>
         /// 初始化显示实体更新事件的新实例。
@@ -37,7 +37,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取显示实体更新事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

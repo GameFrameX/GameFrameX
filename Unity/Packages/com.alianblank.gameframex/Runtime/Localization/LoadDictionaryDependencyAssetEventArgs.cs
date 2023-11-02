@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 加载字典时加载依赖资源事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(LoadDictionaryDependencyAssetEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(LoadDictionaryDependencyAssetEventArgs).FullName;
 
         /// <summary>
         /// 初始化加载字典时加载依赖资源事件的新实例。
@@ -35,7 +35,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取加载字典时加载依赖资源事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

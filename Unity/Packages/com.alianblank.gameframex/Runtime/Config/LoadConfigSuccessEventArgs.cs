@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 加载全局配置成功事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(LoadConfigSuccessEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(LoadConfigSuccessEventArgs).FullName;
 
         /// <summary>
         /// 初始化加载全局配置成功事件编号的新实例。
@@ -33,7 +33,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取加载全局配置成功事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

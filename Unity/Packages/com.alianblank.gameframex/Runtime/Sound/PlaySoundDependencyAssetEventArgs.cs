@@ -19,7 +19,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 播放声音时加载依赖资源事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(PlaySoundDependencyAssetEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(PlaySoundDependencyAssetEventArgs).FullName;
 
         /// <summary>
         /// 初始化播放声音时加载依赖资源事件的新实例。
@@ -40,7 +40,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取播放声音时加载依赖资源事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

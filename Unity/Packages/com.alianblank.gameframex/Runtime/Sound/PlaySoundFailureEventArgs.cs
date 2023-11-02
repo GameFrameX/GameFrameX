@@ -19,7 +19,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 播放声音失败事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(PlaySoundFailureEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(PlaySoundFailureEventArgs).FullName;
 
         /// <summary>
         /// 初始化播放声音失败事件的新实例。
@@ -39,7 +39,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取播放声音失败事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 资源校验成功事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(ResourceVerifySuccessEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(ResourceVerifySuccessEventArgs).FullName;
 
         /// <summary>
         /// 初始化资源校验成功事件的新实例。
@@ -32,7 +32,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取资源校验成功事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {

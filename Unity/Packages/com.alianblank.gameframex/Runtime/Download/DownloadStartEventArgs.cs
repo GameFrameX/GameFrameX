@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 下载开始事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(DownloadStartEventArgs).GetHashCode();
+        public static readonly string EventId = typeof(DownloadStartEventArgs).FullName;
 
         /// <summary>
         /// 初始化下载开始事件的新实例。
@@ -35,7 +35,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取下载开始事件编号。
         /// </summary>
-        public override int Id
+        public override string Id
         {
             get
             {
