@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GameFrameX.Timer;
 using UnityEngine;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Timer
 {
     /// <summary>
     /// 定时器管理器
