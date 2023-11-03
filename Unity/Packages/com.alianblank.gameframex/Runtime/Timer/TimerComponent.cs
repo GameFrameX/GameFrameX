@@ -16,6 +16,7 @@ namespace GameFrameX.Runtime
         protected override void Awake()
         {
             base.Awake();
+            new TimerManager();
             _timerManager = GameFrameworkEntry.GetModule<ITimerManager>();
             if (_timerManager == null)
             {

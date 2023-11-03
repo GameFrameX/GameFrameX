@@ -8,7 +8,7 @@ namespace GameFrameX.Runtime
     /// <summary>
     /// 定时器管理器
     /// </summary>
-    public class TimerManager : GameFrameworkModule, ITimerManager
+    public sealed class TimerManager : GameFrameworkModule, ITimerManager
     {
         class TimerItem
         {
