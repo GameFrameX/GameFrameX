@@ -34,24 +34,24 @@ namespace Game.Hotfix
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
     
-        public static UIAnnouncement CreateInstance()
+        public static UIAnnouncement CreateInstance(object userData = null)
         {
-            return new UIAnnouncement(CreateGObject());
+            return new UIAnnouncement(CreateGObject(), userData);
         }
     
-        public static UniTask<UIAnnouncement> CreateInstanceAsync(Entity domain)
+        public static UniTask<UIAnnouncement> CreateInstanceAsync(Entity domain, object userData = null)
         {
             UniTaskCompletionSource<UIAnnouncement> tcs = new UniTaskCompletionSource<UIAnnouncement>();
             CreateGObjectAsync((go) =>
             {
-                tcs.TrySetResult(new UIAnnouncement(go));
+                tcs.TrySetResult(new UIAnnouncement(go, userData));
             });
             return tcs.Task;
         }
 
-        public static UIAnnouncement Create(GObject go, FUI parent = null)
+        public static UIAnnouncement Create(GObject go, FUI parent = null, object userData = null)
         {
-            return new UIAnnouncement(go, parent);
+            return new UIAnnouncement(go, userData, parent);
         }
         /*
         /// <summary>
@@ -69,16 +69,16 @@ namespace Game.Hotfix
         }
         */
 
-        private void Awake(GObject go)
+        protected override void InitView()
         {
-            if(go == null)
+            if(GObject == null)
             {
                 return;
             }
 
-            self = (GComponent)go;
+            self = (GComponent)GObject;
             
-            var com = go.asCom;
+            var com = GObject.asCom;
             if(com != null)
             {
 				m_MaskLayer = (GGraph)com.GetChild("MaskLayer"); 
@@ -105,9 +105,9 @@ namespace Game.Hotfix
             self = null;
             base.Dispose();
         }
-        private UIAnnouncement(GObject gObject, FUI parent = null) : base(gObject, parent)
+        private UIAnnouncement(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
-            Awake(gObject);
+            // Awake(gObject);
         }
     }
 }

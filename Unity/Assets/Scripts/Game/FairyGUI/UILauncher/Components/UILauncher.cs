@@ -36,24 +36,24 @@ namespace Game.Model
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
     
-        public static UILauncher CreateInstance()
+        public static UILauncher CreateInstance(object userData = null)
         {
-            return new UILauncher(CreateGObject());
+            return new UILauncher(CreateGObject(), userData);
         }
     
-        public static UniTask<UILauncher> CreateInstanceAsync(Entity domain)
+        public static UniTask<UILauncher> CreateInstanceAsync(Entity domain, object userData = null)
         {
             UniTaskCompletionSource<UILauncher> tcs = new UniTaskCompletionSource<UILauncher>();
             CreateGObjectAsync((go) =>
             {
-                tcs.TrySetResult(new UILauncher(go));
+                tcs.TrySetResult(new UILauncher(go, userData));
             });
             return tcs.Task;
         }
 
-        public static UILauncher Create(GObject go, FUI parent = null)
+        public static UILauncher Create(GObject go, FUI parent = null, object userData = null)
         {
-            return new UILauncher(go, parent);
+            return new UILauncher(go, userData, parent);
         }
         /*
         /// <summary>
@@ -71,16 +71,16 @@ namespace Game.Model
         }
         */
 
-        private void Awake(GObject go)
+        protected override void InitView()
         {
-            if(go == null)
+            if(GObject == null)
             {
                 return;
             }
 
-            self = (GComponent)go;
+            self = (GComponent)GObject;
             
-            var com = go.asCom;
+            var com = GObject.asCom;
             if(com != null)
             {
 				m_IsUpgrade = com.GetController("IsUpgrade"); 
@@ -111,9 +111,9 @@ namespace Game.Model
             self = null;
             base.Dispose();
         }
-        private UILauncher(GObject gObject, FUI parent = null) : base(gObject, parent)
+        private UILauncher(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
-            Awake(gObject);
+            // Awake(gObject);
         }
     }
 }

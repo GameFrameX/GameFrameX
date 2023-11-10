@@ -24,9 +24,9 @@ namespace Game.Model
 
 
 
-        public static UILauncherUpgrade Create(GObject go, FUI parent = null)
+        public static UILauncherUpgrade Create(GObject go, FUI parent = null, object userData = null)
         {
-            return new UILauncherUpgrade(go, parent);
+            return new UILauncherUpgrade(go, userData, parent);
         }
         /*
         /// <summary>
@@ -44,16 +44,16 @@ namespace Game.Model
         }
         */
 
-        private void Awake(GObject go)
+        protected override void InitView()
         {
-            if(go == null)
+            if(GObject == null)
             {
                 return;
             }
 
-            self = (GComponent)go;
+            self = (GComponent)GObject;
             
-            var com = go.asCom;
+            var com = GObject.asCom;
             if(com != null)
             {
 				m_bg = (GGraph)com.GetChild("bg"); 
@@ -78,9 +78,9 @@ namespace Game.Model
             self = null;
             base.Dispose();
         }
-        private UILauncherUpgrade(GObject gObject, FUI parent = null) : base(gObject, parent)
+        private UILauncherUpgrade(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
-            Awake(gObject);
+            // Awake(gObject);
         }
     }
 }

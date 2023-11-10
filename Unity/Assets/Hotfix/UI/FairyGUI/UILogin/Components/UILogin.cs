@@ -34,24 +34,24 @@ namespace Game.Hotfix
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
     
-        public static UILogin CreateInstance()
+        public static UILogin CreateInstance(object userData = null)
         {
-            return new UILogin(CreateGObject());
+            return new UILogin(CreateGObject(), userData);
         }
     
-        public static UniTask<UILogin> CreateInstanceAsync(Entity domain)
+        public static UniTask<UILogin> CreateInstanceAsync(Entity domain, object userData = null)
         {
             UniTaskCompletionSource<UILogin> tcs = new UniTaskCompletionSource<UILogin>();
             CreateGObjectAsync((go) =>
             {
-                tcs.TrySetResult(new UILogin(go));
+                tcs.TrySetResult(new UILogin(go, userData));
             });
             return tcs.Task;
         }
 
-        public static UILogin Create(GObject go, FUI parent = null)
+        public static UILogin Create(GObject go, FUI parent = null, object userData = null)
         {
-            return new UILogin(go, parent);
+            return new UILogin(go, userData, parent);
         }
         /*
         /// <summary>
@@ -69,16 +69,16 @@ namespace Game.Hotfix
         }
         */
 
-        private void Awake(GObject go)
+        protected override void InitView()
         {
-            if(go == null)
+            if(GObject == null)
             {
                 return;
             }
 
-            self = (GComponent)go;
+            self = (GComponent)GObject;
             
-            var com = go.asCom;
+            var com = GObject.asCom;
             if(com != null)
             {
 				m_UserName = (GTextInput)com.GetChild("UserName"); 
@@ -105,9 +105,9 @@ namespace Game.Hotfix
             self = null;
             base.Dispose();
         }
-        private UILogin(GObject gObject, FUI parent = null) : base(gObject, parent)
+        private UILogin(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
-            Awake(gObject);
+            // Awake(gObject);
         }
     }
 }

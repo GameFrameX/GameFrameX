@@ -22,9 +22,9 @@ namespace Game.Hotfix
 
 
 
-        public static UIAnnouncementContent Create(GObject go, FUI parent = null)
+        public static UIAnnouncementContent Create(GObject go, FUI parent = null, object userData = null)
         {
-            return new UIAnnouncementContent(go, parent);
+            return new UIAnnouncementContent(go, userData, parent);
         }
         /*
         /// <summary>
@@ -42,16 +42,16 @@ namespace Game.Hotfix
         }
         */
 
-        private void Awake(GObject go)
+        protected override void InitView()
         {
-            if(go == null)
+            if(GObject == null)
             {
                 return;
             }
 
-            self = (GComponent)go;
+            self = (GComponent)GObject;
             
-            var com = go.asCom;
+            var com = GObject.asCom;
             if(com != null)
             {
 				m_LabelContent = (GRichTextField)com.GetChild("LabelContent"); 
@@ -72,9 +72,9 @@ namespace Game.Hotfix
             self = null;
             base.Dispose();
         }
-        private UIAnnouncementContent(GObject gObject, FUI parent = null) : base(gObject, parent)
+        private UIAnnouncementContent(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
-            Awake(gObject);
+            // Awake(gObject);
         }
     }
 }
