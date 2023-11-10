@@ -5,12 +5,14 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Event;
+
 namespace GameFrameX.Sound
 {
     /// <summary>
     /// 播放声音成功事件。
     /// </summary>
-    public sealed class PlaySoundSuccessEventArgs : GameFrameworkEventArgs
+    public sealed class PlaySoundSuccessEventArgs : GameEventArgs
     {
         /// <summary>
         /// 初始化播放声音成功事件的新实例。
@@ -27,47 +29,27 @@ namespace GameFrameX.Sound
         /// <summary>
         /// 获取声音的序列编号。
         /// </summary>
-        public int SerialId
-        {
-            get;
-            private set;
-        }
+        public int SerialId { get; private set; }
 
         /// <summary>
         /// 获取声音资源名称。
         /// </summary>
-        public string SoundAssetName
-        {
-            get;
-            private set;
-        }
+        public string SoundAssetName { get; private set; }
 
         /// <summary>
         /// 获取用于播放的声音代理。
         /// </summary>
-        public ISoundAgent SoundAgent
-        {
-            get;
-            private set;
-        }
+        public ISoundAgent SoundAgent { get; private set; }
 
         /// <summary>
         /// 获取加载持续时间。
         /// </summary>
-        public float Duration
-        {
-            get;
-            private set;
-        }
+        public float Duration { get; private set; }
 
         /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
-        public object UserData
-        {
-            get;
-            private set;
-        }
+        public object UserData { get; private set; }
 
         /// <summary>
         /// 创建播放声音成功事件。
@@ -99,6 +81,16 @@ namespace GameFrameX.Sound
             SoundAgent = null;
             Duration = 0f;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 播放声音成功事件编号。
+        /// </summary>
+        public static readonly string EventId = typeof(PlaySoundSuccessEventArgs).FullName;
+
+        public override string Id
+        {
+            get { return EventId; }
         }
     }
 }

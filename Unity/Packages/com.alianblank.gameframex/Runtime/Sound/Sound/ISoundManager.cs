@@ -7,7 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GameFrameX.Resource;
+using GameFrameX.Runtime;
 
 namespace GameFrameX.Sound
 {
@@ -19,10 +21,7 @@ namespace GameFrameX.Sound
         /// <summary>
         /// 获取声音组数量。
         /// </summary>
-        int SoundGroupCount
-        {
-            get;
-        }
+        int SoundGroupCount { get; }
 
         /// <summary>
         /// 播放声音成功事件。
@@ -34,21 +33,16 @@ namespace GameFrameX.Sound
         /// </summary>
         event EventHandler<PlaySoundFailureEventArgs> PlaySoundFailure;
 
-        /// <summary>
+        /*/// <summary>
         /// 播放声音更新事件。
         /// </summary>
-        event EventHandler<PlaySoundUpdateEventArgs> PlaySoundUpdate;
-
-        /// <summary>
-        /// 播放声音时加载依赖资源事件。
-        /// </summary>
-        event EventHandler<PlaySoundDependencyAssetEventArgs> PlaySoundDependencyAsset;
+        event EventHandler<PlaySoundUpdateEventArgs> PlaySoundUpdate;*/
 
         /// <summary>
         /// 设置资源管理器。
         /// </summary>
-        /// <param name="resourceManager">资源管理器。</param>
-        void SetResourceManager(IResourceManager resourceManager);
+        /// <param name="assetManager">资源管理器。</param>
+        void SetResourceManager(IAssetManager assetManager);
 
         /// <summary>
         /// 设置声音辅助器。
@@ -133,7 +127,7 @@ namespace GameFrameX.Sound
         /// <param name="soundAssetName">声音资源名称。</param>
         /// <param name="soundGroupName">声音组名称。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName);
+        Task<int> PlaySound(string soundAssetName, string soundGroupName);
 
         /// <summary>
         /// 播放声音。
@@ -142,7 +136,7 @@ namespace GameFrameX.Sound
         /// <param name="soundGroupName">声音组名称。</param>
         /// <param name="priority">加载声音资源的优先级。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName, int priority);
+        Task<int> PlaySound(string soundAssetName, string soundGroupName, int priority);
 
         /// <summary>
         /// 播放声音。
@@ -151,7 +145,7 @@ namespace GameFrameX.Sound
         /// <param name="soundGroupName">声音组名称。</param>
         /// <param name="playSoundParams">播放声音参数。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName, PlaySoundParams playSoundParams);
+        Task<int> PlaySound(string soundAssetName, string soundGroupName, PlaySoundParams playSoundParams);
 
         /// <summary>
         /// 播放声音。
@@ -160,7 +154,7 @@ namespace GameFrameX.Sound
         /// <param name="soundGroupName">声音组名称。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName, object userData);
+        Task<int> PlaySound(string soundAssetName, string soundGroupName, object userData);
 
         /// <summary>
         /// 播放声音。
@@ -170,7 +164,7 @@ namespace GameFrameX.Sound
         /// <param name="priority">加载声音资源的优先级。</param>
         /// <param name="playSoundParams">播放声音参数。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName, int priority, PlaySoundParams playSoundParams);
+        Task<int> PlaySound(string soundAssetName, string soundGroupName, int priority, PlaySoundParams playSoundParams);
 
         /// <summary>
         /// 播放声音。
@@ -180,7 +174,7 @@ namespace GameFrameX.Sound
         /// <param name="priority">加载声音资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName, int priority, object userData);
+        Task<int> PlaySound(string soundAssetName, string soundGroupName, int priority, object userData);
 
         /// <summary>
         /// 播放声音。
@@ -190,7 +184,7 @@ namespace GameFrameX.Sound
         /// <param name="playSoundParams">播放声音参数。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName, PlaySoundParams playSoundParams, object userData);
+        Task<int> PlaySound(string soundAssetName, string soundGroupName, PlaySoundParams playSoundParams, object userData);
 
         /// <summary>
         /// 播放声音。
@@ -201,7 +195,7 @@ namespace GameFrameX.Sound
         /// <param name="playSoundParams">播放声音参数。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <returns>声音的序列编号。</returns>
-        int PlaySound(string soundAssetName, string soundGroupName, int priority, PlaySoundParams playSoundParams, object userData);
+        Task<int> PlaySound(string soundAssetName, string soundGroupName, int priority, PlaySoundParams playSoundParams, object userData);
 
         /// <summary>
         /// 停止播放声音。
