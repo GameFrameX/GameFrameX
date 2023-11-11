@@ -47,7 +47,7 @@
         /// <returns></returns>
         public static string GetSoundPath(string soundName, string extension = ".mp3")
         {
-            return $"{BundlesPath}/Sound/{soundName}.{extension}";
+            return $"{BundlesPath}/Sound/{soundName}{extension}";
         }
     }
 }
