@@ -5,6 +5,7 @@
     /// </summary>
     public static class AssetUtility
     {
+        private const string BundlesPath = "Assets/Bundles";
         /// <summary>
         /// 获取配置文件路径
         /// </summary>
@@ -13,7 +14,7 @@
         /// <returns></returns>
         public static string GetConfigPath(string fileName, string extension = ".bytes")
         {
-            return $"Assets/Bundles/Config/{fileName}{extension}";
+            return $"{BundlesPath}/Config/{fileName}{extension}";
         }
 
         /// <summary>
@@ -24,7 +25,7 @@
         /// <returns></returns>
         public static string GetCodePath(string fileName, string extension = ".bytes")
         {
-            return $"Assets/Bundles/Code/{fileName}{extension}";
+            return $"{BundlesPath}/Code/{fileName}{extension}";
         }
 
         /// <summary>
@@ -35,7 +36,18 @@
         /// <returns></returns>
         public static string GetUIPackagePath(string uiPackageName, string extension = ".bytes")
         {
-            return $"Assets/Bundles/UI/{uiPackageName}/{uiPackageName}";
+            return $"{BundlesPath}/UI/{uiPackageName}/{uiPackageName}";
+        }
+
+        /// <summary>
+        /// 获取声音文件路径
+        /// </summary>
+        /// <param name="soundName">声音名称</param>
+        /// <param name="extension">扩展名</param>
+        /// <returns></returns>
+        public static string GetSoundPath(string soundName, string extension = ".mp3")
+        {
+            return $"{BundlesPath}/Sound/{soundName}.{extension}";
         }
     }
 }
