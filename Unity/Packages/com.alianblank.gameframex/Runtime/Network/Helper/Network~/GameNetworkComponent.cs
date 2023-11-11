@@ -77,14 +77,14 @@ namespace GameFrameX.Runtime
         private void DefaultPacketHandler(object sender, Packet e)
         {
             Packet s2CMessage = e;
-            if (messageList.TryGetValue(s2CMessage.Id, out var messagePacket))
-            {
-                messagePacket.Task.TrySetResult(s2CMessage);
-            }
-            else
-            {
-                NotifyMessageHandler?.Invoke(sender, s2CMessage);
-            }
+            // if (messageList.TryGetValue(s2CMessage.Id, out var messagePacket))
+            // {
+            //     messagePacket.Task.TrySetResult(s2CMessage);
+            // }
+            // else
+            // {
+            //     NotifyMessageHandler?.Invoke(sender, s2CMessage);
+            // }
         }
 
         private void OnConnected(object sender, GameEventArgs e)

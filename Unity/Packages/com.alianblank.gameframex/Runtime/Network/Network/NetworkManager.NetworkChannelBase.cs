@@ -293,7 +293,7 @@ namespace GameFrameX.Network
                     throw new GameFrameworkException("Packet handler is invalid.");
                 }
 
-                m_ReceivePacketPool.Subscribe(handler.Id, handler.Handle);
+                // m_ReceivePacketPool.Subscribe(handler.Id, handler.Handle);
             }
 
             /// <summary>
