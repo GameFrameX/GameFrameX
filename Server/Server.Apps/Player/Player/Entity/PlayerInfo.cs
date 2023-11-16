@@ -1,6 +1,6 @@
 using Server.DBServer.State;
 
-namespace Server.Apps.Player.Entity;
+namespace Server.Apps.Player.Player.Entity;
 
 public class PlayerInfo : InnerState
 {

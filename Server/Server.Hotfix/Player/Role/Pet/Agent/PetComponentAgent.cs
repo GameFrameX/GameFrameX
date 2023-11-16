@@ -1,5 +1,5 @@
-﻿using Server.Apps.Role.Pet.Component;
-using Server.Apps.Role.Pet.Entity;
+﻿using Server.Apps.Player.Role.Pet.Component;
+using Server.Apps.Player.Role.Pet.Entity;
 using Server.Hotfix.Server.Server.Agent;
 
 namespace Server.Hotfix.Player.Role.Pet.Agent

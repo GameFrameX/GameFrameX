@@ -1,6 +1,6 @@
-﻿using Server.Launcher.Common;
+﻿using Server.Apps.Player.Player.Component;
+using Server.Launcher.Common;
 using Server.Launcher.Common.Session;
-using Server.Apps.Player.Component;
 using Server.Hotfix.Player.Role.Bag.Agent;
 using Server.Hotfix.Server.Server.Agent;
 

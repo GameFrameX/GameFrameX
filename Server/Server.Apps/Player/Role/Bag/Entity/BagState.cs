@@ -1,6 +1,6 @@
 using Server.DBServer.State;
 
-namespace Server.Apps.Role.Bag.Entity;
+namespace Server.Apps.Player.Role.Bag.Entity;
 
 public class BagState : CacheState
 {

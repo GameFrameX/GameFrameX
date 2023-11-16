@@ -1,6 +1,6 @@
 using Server.DBServer.State;
 
-namespace Server.Apps.Player.Component;
+namespace Server.Apps.Player.Player.Component;
 
 public class PlayerState : CacheState
 {

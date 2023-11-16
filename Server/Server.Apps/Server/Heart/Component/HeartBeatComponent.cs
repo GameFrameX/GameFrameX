@@ -1,6 +1,6 @@
-using Server.Apps.Heart.Entity;
+using Server.Apps.Server.Heart.Entity;
 
-namespace Server.Apps.Heart.Component;
+namespace Server.Apps.Server.Heart.Component;
 
 [ComponentType(ActorType.Server)]
 public class HeartBeatComponent : StateComponent<HeartBeatState>

@@ -1,6 +1,6 @@
-﻿using Server.Apps.Server.Entity;
+﻿using Server.Apps.Server.Server.Entity;
 
-namespace Server.Apps.Server.Component
+namespace Server.Apps.Server.Server.Component
 {
     [ComponentType(ActorType.Server)]
     public class ServerComponent : StateComponent<ServerState>

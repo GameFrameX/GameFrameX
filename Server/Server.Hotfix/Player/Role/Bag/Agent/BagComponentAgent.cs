@@ -1,5 +1,5 @@
-﻿using Server.Apps.Role.Bag.Component;
-using Server.Apps.Role.Bag.Entity;
+﻿using Server.Apps.Player.Role.Bag.Component;
+using Server.Apps.Player.Role.Bag.Entity;
 using Server.Hotfix.Common.Events;
 using Server.Hotfix.Player.Role.Role.Agent;
 

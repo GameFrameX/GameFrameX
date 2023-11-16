@@ -1,6 +1,6 @@
 using Server.DBServer.State;
 
-namespace Server.Apps.Login.Entity;
+namespace Server.Apps.Account.Login.Entity;
 
 public class LoginState : CacheState
 {

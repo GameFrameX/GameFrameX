@@ -1,5 +1,5 @@
-﻿using Server.Apps.Server.Component;
-using Server.Apps.Server.Entity;
+﻿using Server.Apps.Server.Server.Component;
+using Server.Apps.Server.Server.Entity;
 using Server.Core.Timer.Handler;
 using Server.Hotfix.Player.Role.Role.Agent;
 

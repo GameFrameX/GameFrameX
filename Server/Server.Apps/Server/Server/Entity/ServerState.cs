@@ -1,6 +1,6 @@
 using Server.DBServer.State;
 
-namespace Server.Apps.Server.Entity;
+namespace Server.Apps.Server.Server.Entity;
 
 public class ServerState : CacheState
 {

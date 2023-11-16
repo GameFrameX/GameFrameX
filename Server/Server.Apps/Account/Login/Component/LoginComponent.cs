@@ -1,7 +1,7 @@
-﻿using Server.Apps.Login.Entity;
+﻿using Server.Apps.Account.Login.Entity;
 using Server.DBServer;
 
-namespace Server.Apps.Login.Component
+namespace Server.Apps.Account.Login.Component
 {
     [ComponentType(ActorType.Account)]
     public sealed class LoginComponent : StateComponent<LoginState>

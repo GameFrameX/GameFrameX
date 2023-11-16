@@ -1,5 +1,5 @@
-﻿using Server.Apps.Heart.Component;
-using Server.Apps.Heart.Entity;
+﻿using Server.Apps.Server.Heart.Component;
+using Server.Apps.Server.Heart.Entity;
 using Server.Core.Timer.Handler;
 
 namespace Server.Hotfix.Server.Heart.Agent;
