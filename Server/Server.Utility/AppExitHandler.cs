@@ -5,7 +5,7 @@ namespace Server.Utility
 {
     public static class AppExitHandler
     {
-        static readonly Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
+        static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static Action _existCallBack;
 
         public static void Init(Action existCallBack)
@@ -22,17 +22,17 @@ namespace Server.Utility
         private static void HandleFetalException(object e)
         {
             //这里可以发送短信或者钉钉消息通知到运维
-            LOGGER.Error("get unhandled exception");
+            Logger.Error("get unhandled exception");
             if (e is IEnumerable arr)
             {
                 foreach (var ex in arr)
                 {
-                    LOGGER.Error($"Unhandled Exception:{ex}");
+                    Logger.Error($"Unhandled Exception:{ex}");
                 }
             }
             else
             {
-                LOGGER.Error($"Unhandled Exception:{e}");
+                Logger.Error($"Unhandled Exception:{e}");
             }
 
             _existCallBack?.Invoke();
