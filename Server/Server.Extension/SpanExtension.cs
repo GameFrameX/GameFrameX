@@ -4,14 +4,14 @@ namespace Server.Extension;
 
 public static class SpanExtension
 {
-    public const int IntSize = sizeof(int);
-    public const int ShortSize = sizeof(short);
-    public const int LongSize = sizeof(long);
-    public const int FloatSize = sizeof(float);
-    public const int DoubleSize = sizeof(double);
-    public const int ByteSize = sizeof(byte);
-    public const int SbyteSize = sizeof(sbyte);
-    public const int BoolSize = sizeof(bool);
+    private const int IntSize = sizeof(int);
+    private const int ShortSize = sizeof(short);
+    private const int LongSize = sizeof(long);
+    private const int FloatSize = sizeof(float);
+    private const int DoubleSize = sizeof(double);
+    private const int ByteSize = sizeof(byte);
+    private const int SbyteSize = sizeof(sbyte);
+    private const int BoolSize = sizeof(bool);
 
     #region WriteSpan
 
@@ -82,7 +82,9 @@ public static class SpanExtension
     public static unsafe int ReadInt(this Span<byte> buffer, ref int offset)
     {
         if (offset > buffer.Length + IntSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -95,7 +97,9 @@ public static class SpanExtension
     public static unsafe short ReadShort(this Span<byte> buffer, ref int offset)
     {
         if (offset > buffer.Length + ShortSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -108,7 +112,9 @@ public static class SpanExtension
     public static unsafe long ReadLong(this Span<byte> buffer, ref int offset)
     {
         if (offset > buffer.Length + LongSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -121,7 +127,9 @@ public static class SpanExtension
     public static unsafe float ReadFloat(this Span<byte> buffer, ref int offset)
     {
         if (offset > buffer.Length + FloatSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -135,7 +143,9 @@ public static class SpanExtension
     public static unsafe double ReadDouble(this Span<byte> buffer, ref int offset)
     {
         if (offset > buffer.Length + DoubleSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -149,7 +159,9 @@ public static class SpanExtension
     public static unsafe byte ReadByte(this Span<byte> buffer, ref int offset)
     {
         if (offset > buffer.Length + ByteSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -162,9 +174,11 @@ public static class SpanExtension
     public static unsafe byte[] ReadBytes(this Span<byte> buffer, ref int offset)
     {
         var len = ReadInt(buffer, ref offset);
-        //?????????
+
         if (len <= 0 || offset > buffer.Length + len * ByteSize)
-            return new byte[0];
+        {
+            return Array.Empty<byte>();
+        }
 
         //var data = new byte[len];
         //System.Array.Copy(buffer, offset, data, 0, len);
@@ -176,7 +190,9 @@ public static class SpanExtension
     public static unsafe sbyte ReadSByte(this Span<byte> buffer, ref int offset)
     {
         if (offset > buffer.Length + ByteSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -189,9 +205,12 @@ public static class SpanExtension
     public static unsafe string ReadString(this Span<byte> buffer, ref int offset)
     {
         var len = ReadShort(buffer, ref offset);
-        //?????????
+
         if (len <= 0 || offset > buffer.Length + len * ByteSize)
-            return "";
+        {
+            return string.Empty;
+        }
+
         fixed (byte* ptr = buffer)
         {
             var value = System.Text.Encoding.UTF8.GetString(ptr + offset, len);
@@ -203,7 +222,9 @@ public static class SpanExtension
     public static unsafe bool ReadBool(this Span<byte> buffer, ref int offset)
     {
         if (offset > buffer.Length + BoolSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -347,14 +368,16 @@ public static class SpanExtension
     public static unsafe void WriteString(string value, byte[] buffer, ref int offset)
     {
         if (value == null)
-            value = "";
+            value = string.Empty;
 
         int len = System.Text.Encoding.UTF8.GetByteCount(value);
 
         if (len > short.MaxValue)
+        {
             throw new ArgumentException($"string length exceed short.MaxValue {len}, {short.MaxValue}");
+        }
 
-        //??????????????????????????????
+
         if (offset + len + ShortSize > buffer.Length)
         {
             offset += len + ShortSize;
@@ -391,7 +414,9 @@ public static class SpanExtension
     public static unsafe int ReadInt(this byte[] buffer, ref int offset)
     {
         if (offset > buffer.Length + IntSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -404,7 +429,9 @@ public static class SpanExtension
     public static unsafe short ReadShort(this byte[] buffer, ref int offset)
     {
         if (offset > buffer.Length + ShortSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -417,7 +444,9 @@ public static class SpanExtension
     public static unsafe long ReadLong(this byte[] buffer, ref int offset)
     {
         if (offset > buffer.Length + LongSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -430,7 +459,9 @@ public static class SpanExtension
     public static unsafe float ReadFloat(this byte[] buffer, ref int offset)
     {
         if (offset > buffer.Length + FloatSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -444,7 +475,9 @@ public static class SpanExtension
     public static unsafe double ReadDouble(this byte[] buffer, ref int offset)
     {
         if (offset > buffer.Length + DoubleSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -458,7 +491,9 @@ public static class SpanExtension
     public static unsafe byte ReadByte(this byte[] buffer, ref int offset)
     {
         if (offset > buffer.Length + ByteSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -471,9 +506,11 @@ public static class SpanExtension
     public static unsafe byte[] ReadBytes(this byte[] buffer, ref int offset)
     {
         var len = ReadInt(buffer, ref offset);
-        //?????????
+
         if (len <= 0 || offset > buffer.Length + len * ByteSize)
-            return new byte[0];
+        {
+            return Array.Empty<byte>();
+        }
 
         var data = new byte[len];
         System.Array.Copy(buffer, offset, data, 0, len);
@@ -484,7 +521,9 @@ public static class SpanExtension
     public static unsafe sbyte ReadSByte(this byte[] buffer, ref int offset)
     {
         if (offset > buffer.Length + ByteSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
@@ -499,9 +538,11 @@ public static class SpanExtension
         fixed (byte* ptr = buffer)
         {
             var len = ReadShort(buffer, ref offset);
-            //?????????
+
             if (len <= 0 || offset > buffer.Length + len * ByteSize)
-                return "";
+            {
+                return string.Empty;
+            }
 
             var value = System.Text.Encoding.UTF8.GetString(buffer, offset, len);
             offset += len;
@@ -512,7 +553,9 @@ public static class SpanExtension
     public static unsafe bool ReadBool(this byte[] buffer, ref int offset)
     {
         if (offset > buffer.Length + BoolSize)
+        {
             throw new Exception("xbuffer read out of index");
+        }
 
         fixed (byte* ptr = buffer)
         {
