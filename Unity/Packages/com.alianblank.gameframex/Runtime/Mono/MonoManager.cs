@@ -30,145 +30,221 @@ namespace GameFrameX.Mono
         private Queue<Action<bool>> _invokeOnApplicationFocus = new Queue<Action<bool>>();
 
 
+        /// <summary>
+        /// 在固定的帧率下调用。
+        /// </summary>
         public void FixedUpdate()
         {
             QueueInvoking(ref this._invokeFixedUpdate, ref this._fixedUpdate);
         }
 
+        /// <summary>
+        /// 在所有 Update 函数调用后每帧调用。
+        /// </summary>
         public void LateUpdate()
         {
             QueueInvoking(ref this._invokeLateUpdate, ref this._lateUpdate);
         }
 
+        /// <summary>
+        /// 当 MonoBehaviour 将被销毁时调用。
+        /// </summary>
         public void OnDestroy()
         {
             QueueInvoking(ref this._invokeDestroy, ref this._destroy);
         }
 
+        /// <summary>
+        /// 在绘制 Gizmos 时调用。
+        /// </summary>
         public void OnDrawGizmos()
         {
             QueueInvoking(ref this._invokeOnDrawGizmos, ref this._onDrawGizmos);
         }
 
+        /// <summary>
+        /// 当应用程序失去或获得焦点时调用。
+        /// </summary>
+        /// <param name="focusStatus">应用程序的焦点状态</param>
         public void OnApplicationFocus(bool focusStatus)
         {
             QueueInvoking(ref this._invokeOnApplicationFocus, ref this._onApplicationFocus, focusStatus);
         }
 
+        /// <summary>
+        /// 当应用程序暂停或恢复时调用。
+        /// </summary>
+        /// <param name="pauseStatus">应用程序的暂停状态</param>
         public void OnApplicationPause(bool pauseStatus)
         {
             QueueInvoking(ref this._invokeOnApplicationPause, ref this._onApplicationPause, pauseStatus);
         }
 
-        public void AddLateUpdateListener(Action fun)
+        /// <summary>
+        /// 添加一个在 LateUpdate 期间调用的监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void AddLateUpdateListener(Action action)
         {
             lock (Lock)
             {
-                _lateUpdate.Enqueue(fun);
+                _lateUpdate.Enqueue(action);
             }
         }
 
-        public void RemoveLateUpdateListener(Action fun)
+        /// <summary>
+        /// 从 LateUpdate 中移除一个监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void RemoveLateUpdateListener(Action action)
         {
             lock (Lock)
             {
-                Delete(ref this._lateUpdate, fun);
+                Delete(ref this._lateUpdate, action);
             }
         }
 
-        public void AddFixedUpdateListener(Action fun)
+        /// <summary>
+        /// 添加一个在 FixedUpdate 期间调用的监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void AddFixedUpdateListener(Action action)
         {
             lock (Lock)
             {
-                _fixedUpdate.Enqueue(fun);
+                _fixedUpdate.Enqueue(action);
             }
         }
 
-        public void RemoveFixedUpdateListener(Action fun)
+        /// <summary>
+        /// 从 FixedUpdate 中移除一个监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void RemoveFixedUpdateListener(Action action)
         {
             lock (Lock)
             {
-                Delete(ref this._fixedUpdate, fun);
+                Delete(ref this._fixedUpdate, action);
             }
         }
 
-        public void AddUpdateListener(Action fun)
+        /// <summary>
+        /// 添加一个在 Update 期间调用的监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void AddUpdateListener(Action action)
         {
             lock (Lock)
             {
-                _updateQueue.Enqueue(fun);
+                _updateQueue.Enqueue(action);
             }
         }
 
-        public void RemoveUpdateListener(Action fun)
+        /// <summary>
+        /// 从 Update 中移除一个监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void RemoveUpdateListener(Action action)
         {
             lock (Lock)
             {
-                Delete(ref this._updateQueue, fun);
+                Delete(ref this._updateQueue, action);
             }
         }
 
-        public void AddDestroyListener(Action fun)
+        /// <summary>
+        /// 添加一个在 Destroy 期间调用的监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void AddDestroyListener(Action action)
         {
             lock (Lock)
             {
-                _destroy.Enqueue(fun);
+                _destroy.Enqueue(action);
             }
         }
 
-        public void RemoveDestroyListener(Action fun)
+        /// <summary>
+        /// 从 Destroy 中移除一个监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void RemoveDestroyListener(Action action)
         {
             lock (Lock)
             {
-                Delete(ref this._destroy, fun);
+                Delete(ref this._destroy, action);
             }
         }
 
-        public void AddOnDrawGizmosListener(Action fun)
+        /// <summary>
+        /// 添加一个在 OnDrawGizmos 期间调用的监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void AddOnDrawGizmosListener(Action action)
         {
             lock (Lock)
             {
-                _onDrawGizmos.Enqueue(fun);
+                _onDrawGizmos.Enqueue(action);
             }
         }
 
-        public void RemoveOnDrawGizmosListener(Action fun)
+        /// <summary>
+        /// 从 OnDrawGizmos 中移除一个监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void RemoveOnDrawGizmosListener(Action action)
         {
             lock (Lock)
             {
-                Delete(ref this._onDrawGizmos, fun);
+                Delete(ref this._onDrawGizmos, action);
             }
         }
 
-        public void AddOnApplicationPauseListener(Action<bool> fun)
+        /// <summary>
+        /// 添加一个在 OnApplicationPause 期间调用的监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void AddOnApplicationPauseListener(Action<bool> action)
         {
             lock (Lock)
             {
-                _onApplicationPause.Enqueue(fun);
+                _onApplicationPause.Enqueue(action);
             }
         }
 
-        public void RemoveOnApplicationPauseListener(Action<bool> fun)
+        /// <summary>
+        /// 从 OnApplicationPause 中移除一个监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void RemoveOnApplicationPauseListener(Action<bool> action)
         {
             lock (Lock)
             {
-                Delete(ref this._onApplicationPause, fun);
+                Delete(ref this._onApplicationPause, action);
             }
         }
 
-        public void AddOnApplicationFocusListener(Action<bool> fun)
+        /// <summary>
+        /// 添加一个在 OnApplicationFocus 期间调用的监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void AddOnApplicationFocusListener(Action<bool> action)
         {
             lock (Lock)
             {
-                _onApplicationFocus.Enqueue(fun);
+                _onApplicationFocus.Enqueue(action);
             }
         }
 
-        public void RemoveOnApplicationFocusListener(Action<bool> fun)
+        /// <summary>
+        /// 从 OnApplicationFocus 中移除一个监听器。
+        /// </summary>
+        /// <param name="action">监听器函数</param>
+        public void RemoveOnApplicationFocusListener(Action<bool> action)
         {
             lock (Lock)
             {
-                Delete(ref this._onApplicationFocus, fun);
+                Delete(ref this._onApplicationFocus, action);
             }
         }
 
