@@ -26,7 +26,6 @@ namespace GameFrameX.Runtime
 
         [SerializeField] private bool m_EnableLoadDictionaryUpdateEvent = false;
 
-        [SerializeField] private bool m_EnableLoadDictionaryDependencyAssetEvent = false;
 
         [SerializeField]
         private string m_LocalizationHelperTypeName = "UnityGameFramework.Runtime.DefaultLocalizationHelper";
@@ -88,11 +87,6 @@ namespace GameFrameX.Runtime
             if (m_EnableLoadDictionaryUpdateEvent)
             {
                 m_LocalizationManager.ReadDataUpdate += OnReadDataUpdate;
-            }
-
-            if (m_EnableLoadDictionaryDependencyAssetEvent)
-            {
-                m_LocalizationManager.ReadDataDependencyAsset += OnReadDataDependencyAsset;
             }
         }
 
@@ -780,11 +774,6 @@ namespace GameFrameX.Runtime
         private void OnReadDataUpdate(object sender, ReadDataUpdateEventArgs e)
         {
             m_EventComponent.Fire(this, LoadDictionaryUpdateEventArgs.Create(e));
-        }
-
-        private void OnReadDataDependencyAsset(object sender, ReadDataDependencyAssetEventArgs e)
-        {
-            m_EventComponent.Fire(this, LoadDictionaryDependencyAssetEventArgs.Create(e));
         }
     }
 }

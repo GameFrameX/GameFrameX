@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Localization;
 using UnityEngine;
 
@@ -19,10 +18,7 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取系统语言。
         /// </summary>
-        public abstract Language SystemLanguage
-        {
-            get;
-        }
+        public abstract Language SystemLanguage { get; }
 
         /// <summary>
         /// 读取字典。

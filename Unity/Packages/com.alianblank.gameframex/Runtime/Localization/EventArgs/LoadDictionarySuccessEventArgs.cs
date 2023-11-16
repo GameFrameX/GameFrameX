@@ -8,7 +8,7 @@
 using GameFrameX;
 using GameFrameX.Event;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Localization
 {
     /// <summary>
     /// 加载字典成功事件。

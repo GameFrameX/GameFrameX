@@ -8,30 +8,30 @@
 using GameFrameX;
 using GameFrameX.Event;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Localization
 {
     /// <summary>
-    /// 加载字典更新事件。
+    /// 加载字典失败事件。
     /// </summary>
-    public sealed class LoadDictionaryUpdateEventArgs : GameEventArgs
+    public sealed class LoadDictionaryFailureEventArgs : GameEventArgs
     {
         /// <summary>
-        /// 加载字典更新事件编号。
+        /// 加载字典失败事件编号。
         /// </summary>
-        public static readonly string EventId = typeof(LoadDictionaryUpdateEventArgs).FullName;
+        public static readonly string EventId = typeof(LoadDictionaryFailureEventArgs).FullName;
 
         /// <summary>
-        /// 初始化加载字典更新事件的新实例。
+        /// 初始化加载字典失败事件的新实例。
         /// </summary>
-        public LoadDictionaryUpdateEventArgs()
+        public LoadDictionaryFailureEventArgs()
         {
             DictionaryAssetName = null;
-            Progress = 0f;
+            ErrorMessage = null;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取加载字典更新事件编号。
+        /// 获取加载字典失败事件编号。
         /// </summary>
         public override string Id
         {
@@ -51,9 +51,9 @@ namespace GameFrameX.Runtime
         }
 
         /// <summary>
-        /// 获取加载字典进度。
+        /// 获取错误信息。
         /// </summary>
-        public float Progress
+        public string ErrorMessage
         {
             get;
             private set;
@@ -69,26 +69,26 @@ namespace GameFrameX.Runtime
         }
 
         /// <summary>
-        /// 创建加载字典更新事件。
+        /// 创建加载字典失败事件。
         /// </summary>
         /// <param name="e">内部事件。</param>
-        /// <returns>创建的加载字典更新事件。</returns>
-        public static LoadDictionaryUpdateEventArgs Create(ReadDataUpdateEventArgs e)
+        /// <returns>创建的加载字典失败事件。</returns>
+        public static LoadDictionaryFailureEventArgs Create(ReadDataFailureEventArgs e)
         {
-            LoadDictionaryUpdateEventArgs loadDictionaryUpdateEventArgs = ReferencePool.Acquire<LoadDictionaryUpdateEventArgs>();
-            loadDictionaryUpdateEventArgs.DictionaryAssetName = e.DataAssetName;
-            loadDictionaryUpdateEventArgs.Progress = e.Progress;
-            loadDictionaryUpdateEventArgs.UserData = e.UserData;
-            return loadDictionaryUpdateEventArgs;
+            LoadDictionaryFailureEventArgs loadDictionaryFailureEventArgs = ReferencePool.Acquire<LoadDictionaryFailureEventArgs>();
+            loadDictionaryFailureEventArgs.DictionaryAssetName = e.DataAssetName;
+            loadDictionaryFailureEventArgs.ErrorMessage = e.ErrorMessage;
+            loadDictionaryFailureEventArgs.UserData = e.UserData;
+            return loadDictionaryFailureEventArgs;
         }
 
         /// <summary>
-        /// 清理加载字典更新事件。
+        /// 清理加载字典失败事件。
         /// </summary>
         public override void Clear()
         {
             DictionaryAssetName = null;
-            Progress = 0f;
+            ErrorMessage = null;
             UserData = null;
         }
     }
