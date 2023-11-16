@@ -8,6 +8,9 @@
         private static readonly DateTime epochLocal = TimeZoneInfo.ConvertTime(new DateTime(1970, 1, 1), TimeZoneInfo.Local);
         private static readonly DateTime epochUtc = TimeZoneInfo.ConvertTime(new DateTime(1970, 1, 1), TimeZoneInfo.Utc);
 
+        /// <summary>
+        /// 返回当前时间的毫秒表示。
+        /// </summary>
         public static long CurrentTimeMillis()
         {
             return TimeMillis(DateTime.Now, false);
@@ -189,8 +192,8 @@
         {
             return DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss.fff K");
         }
-        
-        
+
+
         /// <summary>
         /// 按照UTC时间判断两个时间戳是否是同一天
         /// </summary>
