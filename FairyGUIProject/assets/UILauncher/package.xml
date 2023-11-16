@@ -8,5 +8,5 @@
     <image id="qew11h" name="UI_icon_btn_green.png" path="/Images/" scale="9grid" scale9grid="152,17,194,90" atlas="alone"/>
     <component id="qew11i" name="UILauncherEnterButton.xml" path="/Widget/"/>
   </resources>
-  <publish name="" path="../Unity/Assets/Resources/UI" packageCount="2" codePath="../Unity/Assets/Scripts/Game/FairyGUI" maxAtlasSize="2048" rotation="true"/>
+  <publish name="" path="../Unity/Assets/Resources/UI" packageCount="2" genCode="true" codePath="../Unity/Assets/Scripts/Game/FairyGUI" maxAtlasSize="2048" rotation="true"/>
 </packageDescription>
