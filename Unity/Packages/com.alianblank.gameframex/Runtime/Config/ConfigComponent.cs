@@ -24,30 +24,20 @@ namespace GameFrameX.Runtime
         private IConfigManager m_ConfigManager = null;
         private EventComponent m_EventComponent = null;
 
-        [SerializeField]
-        private bool m_EnableLoadConfigUpdateEvent = false;
+        [SerializeField] private bool m_EnableLoadConfigUpdateEvent = false;
 
-        [SerializeField]
-        private bool m_EnableLoadConfigDependencyAssetEvent = false;
+        [SerializeField] private string m_ConfigHelperTypeName = "UnityGameFramework.Runtime.DefaultConfigHelper";
 
-        [SerializeField]
-        private string m_ConfigHelperTypeName = "UnityGameFramework.Runtime.DefaultConfigHelper";
+        [SerializeField] private ConfigHelperBase m_CustomConfigHelper = null;
 
-        [SerializeField]
-        private ConfigHelperBase m_CustomConfigHelper = null;
-
-        [SerializeField]
-        private int m_CachedBytesSize = 0;
+        [SerializeField] private int m_CachedBytesSize = 0;
 
         /// <summary>
         /// 获取全局配置项数量。
         /// </summary>
         public int Count
         {
-            get
-            {
-                return m_ConfigManager.Count;
-            }
+            get { return m_ConfigManager.Count; }
         }
 
         /// <summary>
@@ -55,10 +45,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public int CachedBytesSize
         {
-            get
-            {
-                return m_ConfigManager.CachedBytesSize;
-            }
+            get { return m_ConfigManager.CachedBytesSize; }
         }
 
         /// <summary>
@@ -81,11 +68,6 @@ namespace GameFrameX.Runtime
             if (m_EnableLoadConfigUpdateEvent)
             {
                 m_ConfigManager.ReadDataUpdate += OnReadDataUpdate;
-            }
-
-            if (m_EnableLoadConfigDependencyAssetEvent)
-            {
-                m_ConfigManager.ReadDataDependencyAsset += OnReadDataDependencyAsset;
             }
         }
 
@@ -382,23 +364,18 @@ namespace GameFrameX.Runtime
 
         private void OnReadDataSuccess(object sender, ReadDataSuccessEventArgs e)
         {
-            m_EventComponent.Fire(this, LoadConfigSuccessEventArgs.Create(e));
+            m_EventComponent.Fire(this, LoadConfigSuccessEventArgs.Create(e.DataAssetName, e.Duration, e.UserData));
         }
 
         private void OnReadDataFailure(object sender, ReadDataFailureEventArgs e)
         {
             Log.Warning("Load config failure, asset name '{0}', error message '{1}'.", e.DataAssetName, e.ErrorMessage);
-            m_EventComponent.Fire(this, LoadConfigFailureEventArgs.Create(e));
+            m_EventComponent.Fire(this, LoadConfigFailureEventArgs.Create(e.DataAssetName, e.ErrorMessage, e.UserData));
         }
 
         private void OnReadDataUpdate(object sender, ReadDataUpdateEventArgs e)
         {
-            m_EventComponent.Fire(this, LoadConfigUpdateEventArgs.Create(e));
-        }
-
-        private void OnReadDataDependencyAsset(object sender, ReadDataDependencyAssetEventArgs e)
-        {
-            m_EventComponent.Fire(this, LoadConfigDependencyAssetEventArgs.Create(e));
+            m_EventComponent.Fire(this, LoadConfigUpdateEventArgs.Create(e.DataAssetName, e.Progress, e.UserData));
         }
     }
 }

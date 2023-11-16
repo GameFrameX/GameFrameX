@@ -5,10 +5,9 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Event;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Config
 {
     /// <summary>
     /// 加载全局配置更新事件。
@@ -35,50 +34,37 @@ namespace GameFrameX.Runtime
         /// </summary>
         public override string Id
         {
-            get
-            {
-                return EventId;
-            }
+            get { return EventId; }
         }
 
         /// <summary>
         /// 获取全局配置资源名称。
         /// </summary>
-        public string ConfigAssetName
-        {
-            get;
-            private set;
-        }
+        public string ConfigAssetName { get; private set; }
 
         /// <summary>
         /// 获取加载全局配置进度。
         /// </summary>
-        public float Progress
-        {
-            get;
-            private set;
-        }
+        public float Progress { get; private set; }
 
         /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
-        public object UserData
-        {
-            get;
-            private set;
-        }
+        public object UserData { get; private set; }
 
         /// <summary>
         /// 创建加载全局配置更新事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="dataAssetName"></param>
+        /// <param name="progress"></param>
+        /// <param name="userData"></param>
         /// <returns>创建的加载全局配置更新事件。</returns>
-        public static LoadConfigUpdateEventArgs Create(ReadDataUpdateEventArgs e)
+        public static LoadConfigUpdateEventArgs Create(string dataAssetName, float progress, object userData)
         {
             LoadConfigUpdateEventArgs loadConfigUpdateEventArgs = ReferencePool.Acquire<LoadConfigUpdateEventArgs>();
-            loadConfigUpdateEventArgs.ConfigAssetName = e.DataAssetName;
-            loadConfigUpdateEventArgs.Progress = e.Progress;
-            loadConfigUpdateEventArgs.UserData = e.UserData;
+            loadConfigUpdateEventArgs.ConfigAssetName = dataAssetName;
+            loadConfigUpdateEventArgs.Progress = progress;
+            loadConfigUpdateEventArgs.UserData = userData;
             return loadConfigUpdateEventArgs;
         }
 

@@ -5,10 +5,9 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Event;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Config
 {
     /// <summary>
     /// 加载全局配置成功事件。
@@ -35,50 +34,37 @@ namespace GameFrameX.Runtime
         /// </summary>
         public override string Id
         {
-            get
-            {
-                return EventId;
-            }
+            get { return EventId; }
         }
 
         /// <summary>
         /// 获取全局配置资源名称。
         /// </summary>
-        public string ConfigAssetName
-        {
-            get;
-            private set;
-        }
+        public string ConfigAssetName { get; private set; }
 
         /// <summary>
         /// 获取加载持续时间。
         /// </summary>
-        public float Duration
-        {
-            get;
-            private set;
-        }
+        public float Duration { get; private set; }
 
         /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
-        public object UserData
-        {
-            get;
-            private set;
-        }
+        public object UserData { get; private set; }
 
         /// <summary>
         /// 创建加载全局配置成功事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="dataAssetName"></param>
+        /// <param name="duration"></param>
+        /// <param name="userData"></param>
         /// <returns>创建的加载全局配置成功事件。</returns>
-        public static LoadConfigSuccessEventArgs Create(ReadDataSuccessEventArgs e)
+        public static LoadConfigSuccessEventArgs Create(string dataAssetName, float duration, object userData)
         {
             LoadConfigSuccessEventArgs loadConfigSuccessEventArgs = ReferencePool.Acquire<LoadConfigSuccessEventArgs>();
-            loadConfigSuccessEventArgs.ConfigAssetName = e.DataAssetName;
-            loadConfigSuccessEventArgs.Duration = e.Duration;
-            loadConfigSuccessEventArgs.UserData = e.UserData;
+            loadConfigSuccessEventArgs.ConfigAssetName = dataAssetName;
+            loadConfigSuccessEventArgs.Duration = duration;
+            loadConfigSuccessEventArgs.UserData = userData;
             return loadConfigSuccessEventArgs;
         }
 
