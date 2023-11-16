@@ -2,6 +2,11 @@ namespace Server.Setting;
 
 public abstract class BaseSetting
 {
+    /// <summary>
+    /// 是否是本地
+    /// </summary>
+    /// <param name="serverId">服务ID</param>
+    /// <returns>返回是否是本地</returns>
     public virtual bool IsLocal(int serverId)
     {
         return serverId == ServerId;
