@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Download;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,37 +24,25 @@ namespace GameFrameX.Runtime
         private IDownloadManager m_DownloadManager = null;
         private EventComponent m_EventComponent = null;
 
-        [SerializeField]
-        private Transform m_InstanceRoot = null;
+        [SerializeField] private Transform m_InstanceRoot = null;
 
-        [SerializeField]
-        private string m_DownloadAgentHelperTypeName = "UnityGameFramework.Runtime.UnityWebRequestDownloadAgentHelper";
+        [SerializeField] private string m_DownloadAgentHelperTypeName = "UnityGameFramework.Runtime.UnityWebRequestDownloadAgentHelper";
 
-        [SerializeField]
-        private DownloadAgentHelperBase m_CustomDownloadAgentHelper = null;
+        [SerializeField] private DownloadAgentHelperBase m_CustomDownloadAgentHelper = null;
 
-        [SerializeField]
-        private int m_DownloadAgentHelperCount = 3;
+        [SerializeField] private int m_DownloadAgentHelperCount = 3;
 
-        [SerializeField]
-        private float m_Timeout = 30f;
+        [SerializeField] private float m_Timeout = 30f;
 
-        [SerializeField]
-        private int m_FlushSize = OneMegaBytes;
+        [SerializeField] private int m_FlushSize = OneMegaBytes;
 
         /// <summary>
         /// 获取或设置下载是否被暂停。
         /// </summary>
         public bool Paused
         {
-            get
-            {
-                return m_DownloadManager.Paused;
-            }
-            set
-            {
-                m_DownloadManager.Paused = value;
-            }
+            get { return m_DownloadManager.Paused; }
+            set { m_DownloadManager.Paused = value; }
         }
 
         /// <summary>
@@ -63,10 +50,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public int TotalAgentCount
         {
-            get
-            {
-                return m_DownloadManager.TotalAgentCount;
-            }
+            get { return m_DownloadManager.TotalAgentCount; }
         }
 
         /// <summary>
@@ -74,10 +58,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public int FreeAgentCount
         {
-            get
-            {
-                return m_DownloadManager.FreeAgentCount;
-            }
+            get { return m_DownloadManager.FreeAgentCount; }
         }
 
         /// <summary>
@@ -85,10 +66,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public int WorkingAgentCount
         {
-            get
-            {
-                return m_DownloadManager.WorkingAgentCount;
-            }
+            get { return m_DownloadManager.WorkingAgentCount; }
         }
 
         /// <summary>
@@ -96,10 +74,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public int WaitingTaskCount
         {
-            get
-            {
-                return m_DownloadManager.WaitingTaskCount;
-            }
+            get { return m_DownloadManager.WaitingTaskCount; }
         }
 
         /// <summary>
@@ -107,14 +82,8 @@ namespace GameFrameX.Runtime
         /// </summary>
         public float Timeout
         {
-            get
-            {
-                return m_DownloadManager.Timeout;
-            }
-            set
-            {
-                m_DownloadManager.Timeout = m_Timeout = value;
-            }
+            get { return m_DownloadManager.Timeout; }
+            set { m_DownloadManager.Timeout = m_Timeout = value; }
         }
 
         /// <summary>
@@ -122,14 +91,8 @@ namespace GameFrameX.Runtime
         /// </summary>
         public int FlushSize
         {
-            get
-            {
-                return m_DownloadManager.FlushSize;
-            }
-            set
-            {
-                m_DownloadManager.FlushSize = m_FlushSize = value;
-            }
+            get { return m_DownloadManager.FlushSize; }
+            set { m_DownloadManager.FlushSize = m_FlushSize = value; }
         }
 
         /// <summary>
@@ -137,10 +100,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public float CurrentSpeed
         {
-            get
-            {
-                return m_DownloadManager.CurrentSpeed;
-            }
+            get { return m_DownloadManager.CurrentSpeed; }
         }
 
         /// <summary>
@@ -385,25 +345,25 @@ namespace GameFrameX.Runtime
             m_DownloadManager.AddDownloadAgentHelper(downloadAgentHelper);
         }
 
-        private void OnDownloadStart(object sender, GameFrameX.Download.DownloadStartEventArgs e)
+        private void OnDownloadStart(object sender, DownloadStartEventArgs e)
         {
-            m_EventComponent.Fire(this, DownloadStartEventArgs.Create(e));
+            m_EventComponent.Fire(this, DownloadStartEventArgs.Create(e.SerialId, e.DownloadPath, e.DownloadUri, e.CurrentLength, e.UserData));
         }
 
-        private void OnDownloadUpdate(object sender, GameFrameX.Download.DownloadUpdateEventArgs e)
+        private void OnDownloadUpdate(object sender, DownloadUpdateEventArgs e)
         {
-            m_EventComponent.Fire(this, DownloadUpdateEventArgs.Create(e));
+            m_EventComponent.Fire(this, DownloadUpdateEventArgs.Create(e.SerialId, e.DownloadPath, e.DownloadUri, e.CurrentLength, e.UserData));
         }
 
-        private void OnDownloadSuccess(object sender, GameFrameX.Download.DownloadSuccessEventArgs e)
+        private void OnDownloadSuccess(object sender, DownloadSuccessEventArgs e)
         {
-            m_EventComponent.Fire(this, DownloadSuccessEventArgs.Create(e));
+            m_EventComponent.Fire(this, DownloadSuccessEventArgs.Create(e.SerialId, e.DownloadPath, e.DownloadUri, e.CurrentLength, e.UserData));
         }
 
-        private void OnDownloadFailure(object sender, GameFrameX.Download.DownloadFailureEventArgs e)
+        private void OnDownloadFailure(object sender, DownloadFailureEventArgs e)
         {
             Log.Warning("Download failure, download serial id '{0}', download path '{1}', download uri '{2}', error message '{3}'.", e.SerialId, e.DownloadPath, e.DownloadUri, e.ErrorMessage);
-            m_EventComponent.Fire(this, DownloadFailureEventArgs.Create(e));
+            m_EventComponent.Fire(this, DownloadFailureEventArgs.Create(e.SerialId, e.DownloadPath, e.DownloadUri, e.ErrorMessage, e.UserData));
         }
     }
 }

@@ -5,13 +5,17 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Event;
+
 namespace GameFrameX.Download
 {
     /// <summary>
     /// 下载代理辅助器错误事件。
     /// </summary>
-    public sealed class DownloadAgentHelperErrorEventArgs : GameFrameworkEventArgs
+    public sealed class DownloadAgentHelperErrorEventArgs : GameEventArgs
     {
+        public static readonly string EventId = typeof(DownloadAgentHelperErrorEventArgs).FullName;
+
         /// <summary>
         /// 初始化下载代理辅助器错误事件的新实例。
         /// </summary>
@@ -24,20 +28,12 @@ namespace GameFrameX.Download
         /// <summary>
         /// 获取是否需要删除正在下载的文件。
         /// </summary>
-        public bool DeleteDownloading
-        {
-            get;
-            private set;
-        }
+        public bool DeleteDownloading { get; private set; }
 
         /// <summary>
         /// 获取错误信息。
         /// </summary>
-        public string ErrorMessage
-        {
-            get;
-            private set;
-        }
+        public string ErrorMessage { get; private set; }
 
         /// <summary>
         /// 创建下载代理辅助器错误事件。
@@ -60,6 +56,11 @@ namespace GameFrameX.Download
         {
             DeleteDownloading = false;
             ErrorMessage = null;
+        }
+
+        public override string Id
+        {
+            get { return EventId; }
         }
     }
 }

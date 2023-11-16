@@ -5,19 +5,15 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Event;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Download
 {
     /// <summary>
     /// 下载失败事件。
     /// </summary>
     public sealed class DownloadFailureEventArgs : GameEventArgs
     {
-        /// <summary>
-        /// 下载失败事件编号。
-        /// </summary>
         public static readonly string EventId = typeof(DownloadFailureEventArgs).FullName;
 
         /// <summary>
@@ -33,74 +29,47 @@ namespace GameFrameX.Runtime
         }
 
         /// <summary>
-        /// 获取下载失败事件编号。
-        /// </summary>
-        public override string Id
-        {
-            get
-            {
-                return EventId;
-            }
-        }
-
-        /// <summary>
         /// 获取下载任务的序列编号。
         /// </summary>
-        public int SerialId
-        {
-            get;
-            private set;
-        }
+        public int SerialId { get; private set; }
 
         /// <summary>
         /// 获取下载后存放路径。
         /// </summary>
-        public string DownloadPath
-        {
-            get;
-            private set;
-        }
+        public string DownloadPath { get; private set; }
 
         /// <summary>
         /// 获取下载地址。
         /// </summary>
-        public string DownloadUri
-        {
-            get;
-            private set;
-        }
+        public string DownloadUri { get; private set; }
 
         /// <summary>
         /// 获取错误信息。
         /// </summary>
-        public string ErrorMessage
-        {
-            get;
-            private set;
-        }
+        public string ErrorMessage { get; private set; }
 
         /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
-        public object UserData
-        {
-            get;
-            private set;
-        }
+        public object UserData { get; private set; }
 
         /// <summary>
         /// 创建下载失败事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="serialId">下载任务的序列编号。</param>
+        /// <param name="downloadPath">下载后存放路径。</param>
+        /// <param name="downloadUri">下载地址。</param>
+        /// <param name="errorMessage">错误信息。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的下载失败事件。</returns>
-        public static DownloadFailureEventArgs Create(GameFrameX.Download.DownloadFailureEventArgs e)
+        public static DownloadFailureEventArgs Create(int serialId, string downloadPath, string downloadUri, string errorMessage, object userData)
         {
             DownloadFailureEventArgs downloadFailureEventArgs = ReferencePool.Acquire<DownloadFailureEventArgs>();
-            downloadFailureEventArgs.SerialId = e.SerialId;
-            downloadFailureEventArgs.DownloadPath = e.DownloadPath;
-            downloadFailureEventArgs.DownloadUri = e.DownloadUri;
-            downloadFailureEventArgs.ErrorMessage = e.ErrorMessage;
-            downloadFailureEventArgs.UserData = e.UserData;
+            downloadFailureEventArgs.SerialId = serialId;
+            downloadFailureEventArgs.DownloadPath = downloadPath;
+            downloadFailureEventArgs.DownloadUri = downloadUri;
+            downloadFailureEventArgs.ErrorMessage = errorMessage;
+            downloadFailureEventArgs.UserData = userData;
             return downloadFailureEventArgs;
         }
 
@@ -114,6 +83,11 @@ namespace GameFrameX.Runtime
             DownloadUri = null;
             ErrorMessage = null;
             UserData = null;
+        }
+
+        public override string Id
+        {
+            get { return EventId; }
         }
     }
 }

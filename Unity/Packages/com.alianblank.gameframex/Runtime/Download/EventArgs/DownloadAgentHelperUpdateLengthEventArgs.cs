@@ -5,13 +5,17 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Event;
+
 namespace GameFrameX.Download
 {
     /// <summary>
     /// 下载代理辅助器更新数据大小事件。
     /// </summary>
-    public sealed class DownloadAgentHelperUpdateLengthEventArgs : GameFrameworkEventArgs
+    public sealed class DownloadAgentHelperUpdateLengthEventArgs : GameEventArgs
     {
+        public static readonly string EventId = typeof(DownloadAgentHelperUpdateLengthEventArgs).FullName;
+
         /// <summary>
         /// 初始化下载代理辅助器更新数据大小事件的新实例。
         /// </summary>
@@ -23,11 +27,7 @@ namespace GameFrameX.Download
         /// <summary>
         /// 获取下载的增量数据大小。
         /// </summary>
-        public int DeltaLength
-        {
-            get;
-            private set;
-        }
+        public int DeltaLength { get; private set; }
 
         /// <summary>
         /// 创建下载代理辅助器更新数据大小事件。
@@ -52,6 +52,11 @@ namespace GameFrameX.Download
         public override void Clear()
         {
             DeltaLength = 0;
+        }
+
+        public override string Id
+        {
+            get { return EventId; }
         }
     }
 }

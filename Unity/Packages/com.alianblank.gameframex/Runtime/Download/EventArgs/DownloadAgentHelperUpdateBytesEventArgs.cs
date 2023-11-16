@@ -5,13 +5,17 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Event;
+
 namespace GameFrameX.Download
 {
     /// <summary>
     /// 下载代理辅助器更新数据流事件。
     /// </summary>
-    public sealed class DownloadAgentHelperUpdateBytesEventArgs : GameFrameworkEventArgs
+    public sealed class DownloadAgentHelperUpdateBytesEventArgs : GameEventArgs
     {
+        public static readonly string EventId = typeof(DownloadAgentHelperUpdateBytesEventArgs).FullName;
+        
         private byte[] m_Bytes;
 
         /// <summary>
@@ -89,6 +93,11 @@ namespace GameFrameX.Download
         public byte[] GetBytes()
         {
             return m_Bytes;
+        }
+        
+        public override string Id
+        {
+            get { return EventId; }
         }
     }
 }
