@@ -266,14 +266,16 @@ local function genCode(handler)
 
     local packageTempleteString = FUIPackageTemplate;
     local pkgNamesStr = "";
+    local pkgNamesTable = {};
     packageTempleteString = string.gsub(packageTempleteString, '{namespaceName}', namespaceName)
 
-    pkgNamesStr = pkgNamesStr .. '\t\tpublic const string ' .. codePkgName .. ' = "' .. codePkgName .. '"; \n'
+    table.insert(pkgNamesTable, '\t\tpublic const string ' .. codePkgName .. ' = "' .. codePkgName .. '";');
     for i = 0, classCnt - 1 do
         local classInfo = classes[i];
-        pkgNamesStr = pkgNamesStr .. '\t\tpublic const string ' .. codePkgName .. '_' .. classInfo.resName ..
-                          ' = "ui://' .. codePkgName .. '/' .. classInfo.resName .. '"; \n'
+        table.insert(pkgNamesTable, '\t\tpublic const string ' .. codePkgName .. '_' .. classInfo.resName ..
+                          ' = "ui://' .. codePkgName .. '/' .. classInfo.resName .. '";');
     end
+    pkgNamesStr = table.concat(pkgNamesTable,'\n');
     packageTempleteString = string.gsub(packageTempleteString, '__PKGNAMES__', pkgNamesStr)
 
     local binderName = 'Package' .. codePkgName;
