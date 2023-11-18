@@ -5,40 +5,39 @@ using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
 using GameFrameX.Runtime;
 
-namespace Game.Hotfix
+namespace Hotfix.UI
 {
-
     public sealed partial class UIAnnouncement : FUI
     {
         public const string UIPackageName = "UILogin";
         public const string UIResName = "UIAnnouncement";
         public const string URL = "ui://f011l0h9aneks9g";
+
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
-        public GComponent self;
+        public GComponent self { get; private set; }
 
-		public GGraph m_MaskLayer;  
-		public GComponent m_ConfirmBtn;  
-		public UIAnnouncementContent m_TextContent;  
-		public GTextField m_TextTitle;  
-
+		public GGraph m_MaskLayer { get; private set; }
+		public GComponent m_ConfirmBtn { get; private set; }
+		public UIAnnouncementContent m_TextContent { get; private set; }
+		public GTextField m_TextTitle { get; private set; }
 
         private static GObject CreateGObject()
         {
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
-    
+
         private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
         {
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
-    
+
         public static UIAnnouncement CreateInstance(object userData = null)
         {
             return new UIAnnouncement(CreateGObject(), userData);
         }
-    
+
         public static UniTask<UIAnnouncement> CreateInstanceAsync(Entity domain, object userData = null)
         {
             UniTaskCompletionSource<UIAnnouncement> tcs = new UniTaskCompletionSource<UIAnnouncement>();
@@ -81,11 +80,10 @@ namespace Game.Hotfix
             var com = GObject.asCom;
             if(com != null)
             {
-				m_MaskLayer = (GGraph)com.GetChild("MaskLayer"); 
-				m_ConfirmBtn = (GComponent)com.GetChild("ConfirmBtn"); 
-				m_TextContent = UIAnnouncementContent.Create(com.GetChild("TextContent"), this);  
-				m_TextTitle = (GTextField)com.GetChild("TextTitle"); 
-
+				m_MaskLayer = (GGraph)com.GetChild("MaskLayer");
+				m_ConfirmBtn = (GComponent)com.GetChild("ConfirmBtn");
+				m_TextContent = UIAnnouncementContent.Create(com.GetChild("TextContent"), this);
+				m_TextTitle = (GTextField)com.GetChild("TextTitle");
             }
         }
 
@@ -96,15 +94,14 @@ namespace Game.Hotfix
                 return;
             }
 
-			m_MaskLayer = null; 
-			m_ConfirmBtn = null; 
-			m_TextContent = null; 
-			m_TextTitle = null; 
-
-            
-            self = null;
             base.Dispose();
+			m_MaskLayer = null;
+			m_ConfirmBtn = null;
+			m_TextContent = null;
+			m_TextTitle = null;
+            self = null;            
         }
+
         private UIAnnouncement(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);

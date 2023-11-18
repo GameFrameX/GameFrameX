@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using Framework.Asset;
-using Game.Hotfix;
 using GameFrameX;
 using GameFrameX.Network;
 using Hotfix.Proto.Proto;
@@ -9,6 +8,7 @@ using SimpleJSON;
 using UnityEngine;
 using GameFrameX.Network.Pipelines;
 using GameFrameX.Runtime;
+using Hotfix.UI;
 
 namespace Hotfix
 {

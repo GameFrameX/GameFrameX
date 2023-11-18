@@ -2,12 +2,10 @@ using System.Text;
 using Game.Model;
 using GameFrameX.Fsm;
 using GameFrameX.Localization;
-using GameFrameX.Procedure;
 using GameFrameX.Runtime;
 using UnityEngine;
 using UnityEngine.Networking;
 using YooAsset;
-using Utility = GameFrameX.Utility;
 
 namespace GameFrameX.Procedure
 {

@@ -5,40 +5,39 @@ using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
 using GameFrameX.Runtime;
 
-namespace Game.Hotfix
+namespace Hotfix.UI
 {
-
     public sealed partial class UILogin : FUI
     {
         public const string UIPackageName = "UILogin";
         public const string UIResName = "UILogin";
         public const string URL = "ui://f011l0h9nmd0c";
+
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
-        public GComponent self;
+        public GComponent self { get; private set; }
 
-		public GTextInput m_UserName;  
-		public GTextInput m_Password;  
-		public GTextField m_ErrorText;  
-		public GButton m_enter;  
-
+		public GTextInput m_UserName { get; private set; }
+		public GTextInput m_Password { get; private set; }
+		public GTextField m_ErrorText { get; private set; }
+		public GButton m_enter { get; private set; }
 
         private static GObject CreateGObject()
         {
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
-    
+
         private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
         {
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
-    
+
         public static UILogin CreateInstance(object userData = null)
         {
             return new UILogin(CreateGObject(), userData);
         }
-    
+
         public static UniTask<UILogin> CreateInstanceAsync(Entity domain, object userData = null)
         {
             UniTaskCompletionSource<UILogin> tcs = new UniTaskCompletionSource<UILogin>();
@@ -81,11 +80,10 @@ namespace Game.Hotfix
             var com = GObject.asCom;
             if(com != null)
             {
-				m_UserName = (GTextInput)com.GetChild("UserName"); 
-				m_Password = (GTextInput)com.GetChild("Password"); 
-				m_ErrorText = (GTextField)com.GetChild("ErrorText"); 
-				m_enter = (GButton)com.GetChild("enter"); 
-
+				m_UserName = (GTextInput)com.GetChild("UserName");
+				m_Password = (GTextInput)com.GetChild("Password");
+				m_ErrorText = (GTextField)com.GetChild("ErrorText");
+				m_enter = (GButton)com.GetChild("enter");
             }
         }
 
@@ -96,15 +94,14 @@ namespace Game.Hotfix
                 return;
             }
 
-			m_UserName = null; 
-			m_Password = null; 
-			m_ErrorText = null; 
-			m_enter = null; 
-
-            
-            self = null;
             base.Dispose();
+			m_UserName = null;
+			m_Password = null;
+			m_ErrorText = null;
+			m_enter = null;
+            self = null;            
         }
+
         private UILogin(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);

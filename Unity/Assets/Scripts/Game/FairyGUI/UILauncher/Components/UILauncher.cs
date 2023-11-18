@@ -7,40 +7,39 @@ using GameFrameX.Runtime;
 
 namespace Game.Model
 {
-
     public sealed partial class UILauncher : FUI
     {
         public const string UIPackageName = "UILauncher";
         public const string UIResName = "UILauncher";
         public const string URL = "ui://u7deosq0mw8e0";
+
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
-        public GComponent self;
+        public GComponent self { get; private set; }
 
-		public Controller m_IsUpgrade;  
-		public Controller m_IsDownload;  
-		public GLoader m_bg;  
-		public GTextField m_TipText;  
-		public GProgressBar m_ProgressBar;  
-		public UILauncherUpgrade m_upgrade;  
-
+		public Controller m_IsUpgrade { get; private set; }
+		public Controller m_IsDownload { get; private set; }
+		public GLoader m_bg { get; private set; }
+		public GTextField m_TipText { get; private set; }
+		public GProgressBar m_ProgressBar { get; private set; }
+		public UILauncherUpgrade m_upgrade { get; private set; }
 
         private static GObject CreateGObject()
         {
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
-    
+
         private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
         {
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
-    
+
         public static UILauncher CreateInstance(object userData = null)
         {
             return new UILauncher(CreateGObject(), userData);
         }
-    
+
         public static UniTask<UILauncher> CreateInstanceAsync(Entity domain, object userData = null)
         {
             UniTaskCompletionSource<UILauncher> tcs = new UniTaskCompletionSource<UILauncher>();
@@ -83,13 +82,12 @@ namespace Game.Model
             var com = GObject.asCom;
             if(com != null)
             {
-				m_IsUpgrade = com.GetController("IsUpgrade"); 
-				m_IsDownload = com.GetController("IsDownload"); 
-				m_bg = (GLoader)com.GetChild("bg"); 
-				m_TipText = (GTextField)com.GetChild("TipText"); 
-				m_ProgressBar = (GProgressBar)com.GetChild("ProgressBar"); 
-				m_upgrade = UILauncherUpgrade.Create(com.GetChild("upgrade"), this);  
-
+				m_IsUpgrade = com.GetController("IsUpgrade");
+				m_IsDownload = com.GetController("IsDownload");
+				m_bg = (GLoader)com.GetChild("bg");
+				m_TipText = (GTextField)com.GetChild("TipText");
+				m_ProgressBar = (GProgressBar)com.GetChild("ProgressBar");
+				m_upgrade = UILauncherUpgrade.Create(com.GetChild("upgrade"), this);
             }
         }
 
@@ -100,17 +98,16 @@ namespace Game.Model
                 return;
             }
 
-			m_IsUpgrade = null; 
-			m_IsDownload = null; 
-			m_bg = null; 
-			m_TipText = null; 
-			m_ProgressBar = null; 
-			m_upgrade = null; 
-
-            
-            self = null;
             base.Dispose();
+			m_IsUpgrade = null;
+			m_IsDownload = null;
+			m_bg = null;
+			m_TipText = null;
+			m_ProgressBar = null;
+			m_upgrade = null;
+            self = null;            
         }
+
         private UILauncher(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);

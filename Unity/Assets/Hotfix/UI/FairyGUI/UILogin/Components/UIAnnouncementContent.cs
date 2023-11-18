@@ -5,21 +5,20 @@ using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
 using GameFrameX.Runtime;
 
-namespace Game.Hotfix
+namespace Hotfix.UI
 {
-
     public sealed partial class UIAnnouncementContent : FUI
     {
         public const string UIPackageName = "UILogin";
         public const string UIResName = "UIAnnouncementContent";
         public const string URL = "ui://f011l0h9aneks9i";
+
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
-        public GComponent self;
+        public GComponent self { get; private set; }
 
-		public GRichTextField m_LabelContent;  
-
+		public GRichTextField m_LabelContent { get; private set; }
 
 
         public static UIAnnouncementContent Create(GObject go, FUI parent = null, object userData = null)
@@ -54,8 +53,7 @@ namespace Game.Hotfix
             var com = GObject.asCom;
             if(com != null)
             {
-				m_LabelContent = (GRichTextField)com.GetChild("LabelContent"); 
-
+				m_LabelContent = (GRichTextField)com.GetChild("LabelContent");
             }
         }
 
@@ -66,12 +64,11 @@ namespace Game.Hotfix
                 return;
             }
 
-			m_LabelContent = null; 
-
-            
-            self = null;
             base.Dispose();
+			m_LabelContent = null;
+            self = null;            
         }
+
         private UIAnnouncementContent(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);

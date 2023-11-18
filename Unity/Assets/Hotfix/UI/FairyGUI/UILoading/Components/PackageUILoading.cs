@@ -4,7 +4,7 @@ using FairyGUI;
 using FairyGUI.Utils;
 using Cysharp.Threading.Tasks;
 
-namespace Game.Hotfix
+namespace Hotfix.UI
 {
     public static partial class FUIPackage {
 		public const string UILoading = "UILoading"; 

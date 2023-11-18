@@ -1,6 +1,4 @@
-﻿using FairyGUI;
-using Game.Model;
-using GameFrameX;
+﻿using Game.Model;
 using GameFrameX.Runtime;
 
 namespace GameFrameX.Procedure

@@ -7,21 +7,20 @@ using GameFrameX.Runtime;
 
 namespace Game.Model
 {
-
     public sealed partial class UILauncherUpgrade : FUI
     {
         public const string UIPackageName = "UILauncher";
         public const string UIResName = "UILauncherUpgrade";
         public const string URL = "ui://u7deosq0qew11e";
+
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
-        public GComponent self;
+        public GComponent self { get; private set; }
 
-		public GGraph m_bg;  
-		public GButton m_EnterButton;  
-		public GLabel m_TextContent;  
-
+		public GGraph m_bg { get; private set; }
+		public GButton m_EnterButton { get; private set; }
+		public GLabel m_TextContent { get; private set; }
 
 
         public static UILauncherUpgrade Create(GObject go, FUI parent = null, object userData = null)
@@ -56,10 +55,9 @@ namespace Game.Model
             var com = GObject.asCom;
             if(com != null)
             {
-				m_bg = (GGraph)com.GetChild("bg"); 
-				m_EnterButton = (GButton)com.GetChild("EnterButton"); 
-				m_TextContent = (GLabel)com.GetChild("TextContent"); 
-
+				m_bg = (GGraph)com.GetChild("bg");
+				m_EnterButton = (GButton)com.GetChild("EnterButton");
+				m_TextContent = (GLabel)com.GetChild("TextContent");
             }
         }
 
@@ -70,14 +68,13 @@ namespace Game.Model
                 return;
             }
 
-			m_bg = null; 
-			m_EnterButton = null; 
-			m_TextContent = null; 
-
-            
-            self = null;
             base.Dispose();
+			m_bg = null;
+			m_EnterButton = null;
+			m_TextContent = null;
+            self = null;            
         }
+
         private UILauncherUpgrade(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);
