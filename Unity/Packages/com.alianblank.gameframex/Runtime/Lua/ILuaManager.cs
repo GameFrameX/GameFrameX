@@ -1,34 +1,20 @@
-﻿using System;
-using GameFrameX.Lua;
-using UnityEngine;
+using System;
 using XLua;
 using XLua.LuaDLL;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Lua
 {
     /// <summary>
-    /// Lua组件。
+    /// Lua管理器接口
     /// </summary>
-    [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Lua")]
-    public sealed class LuaComponent : GameFrameworkComponent
+    public interface ILuaManager
     {
-        private ILuaManager _luaManager;
-
-        protected override void Awake()
-        {
-            base.Awake();
-            new LuaManager();
-            _luaManager = GameFrameworkEntry.GetModule<ILuaManager>();
-            if (_luaManager == null)
-            {
-                Log.Fatal("Lua manager is invalid.");
-                return;
-            }
-
-            _luaManager.InitLuaEnv(new LuaEnv());
-        }
-
+        /// <summary>
+        /// 设置LUA环境
+        /// </summary>
+        /// <param name="luaEnv">Lua环境</param>
+        void InitLuaEnv(LuaEnv luaEnv);
+        
         /// <summary>
         /// 执行Lua代码字符串
         /// </summary>
@@ -36,10 +22,7 @@ namespace GameFrameX.Runtime
         /// <param name="chunkName">代码块名称</param>
         /// <param name="env">Lua环境表</param>
         /// <returns>执行结果</returns>
-        public object[] DoString(string lua, string chunkName = "chunk", LuaTable env = null)
-        {
-            return _luaManager.DoString(lua, chunkName, env);
-        }
+        object[] DoString(string lua, string chunkName = "chunk", LuaTable env = null);
 
         /// <summary>
         /// 执行Lua字节数组
@@ -48,10 +31,7 @@ namespace GameFrameX.Runtime
         /// <param name="chunkName">代码块名称</param>
         /// <param name="env">Lua环境表</param>
         /// <returns>执行结果</returns>
-        public object[] DoString(byte[] luaBytes, string chunkName = "chunk", LuaTable env = null)
-        {
-            return _luaManager.DoString(luaBytes, chunkName, env);
-        }
+        object[] DoString(byte[] luaBytes, string chunkName = "chunk", LuaTable env = null);
 
         /// <summary>
         /// 加载Lua代码字符串
@@ -60,10 +40,7 @@ namespace GameFrameX.Runtime
         /// <param name="chunkName">代码块名称</param>
         /// <param name="env">Lua环境表</param>
         /// <returns>加载的Lua函数</returns>
-        public LuaFunction LoadString(string lua, string chunkName = "chunk", LuaTable env = null)
-        {
-            return _luaManager.LoadString(lua, chunkName, env);
-        }
+        LuaFunction LoadString(string lua, string chunkName = "chunk", LuaTable env = null);
 
         /// <summary>
         /// 加载Lua代码字符串并返回指定类型
@@ -73,113 +50,74 @@ namespace GameFrameX.Runtime
         /// <param name="chunkName">代码块名称</param>
         /// <param name="env">Lua环境表</param>
         /// <returns>加载的Lua函数</returns>
-        public T LoadString<T>(string lua, string chunkName = "chunk", LuaTable env = null)
-        {
-            return _luaManager.LoadString<T>(lua, chunkName, env);
-        }
+        T LoadString<T>(string lua, string chunkName = "chunk", LuaTable env = null);
 
         /// <summary>
         /// 添加内置函数
         /// </summary>
         /// <param name="buildInName">内置函数名称</param>
         /// <param name="init">初始化函数</param>
-        public void AddBuildIn(string buildInName, lua_CSFunction init)
-        {
-            _luaManager.AddBuildIn(buildInName, init);
-        }
+        void AddBuildIn(string buildInName, lua_CSFunction init);
 
         /// <summary>
         /// 添加自定义加载器
         /// </summary>
         /// <param name="loader">自定义加载器</param>
-        public void AddLoader(LuaEnv.CustomLoader loader)
-        {
-            _luaManager.AddLoader(loader);
-        }
+        void AddLoader(LuaEnv.CustomLoader loader);
 
         /// <summary>
         /// 创建新的Lua表
         /// </summary>
         /// <returns>新的Lua表</returns>
-        public LuaTable NewTable()
-        {
-            return _luaManager.NewTable();
-        }
+        LuaTable NewTable();
 
         /// <summary>
         /// 释放Lua环境
         /// </summary>
-        public void Dispose()
-        {
-            _luaManager.Dispose();
-        }
+        void Dispose();
 
         /// <summary>
         /// 获取全局Lua表
         /// </summary>
         /// <returns>全局Lua表</returns>
-        public LuaTable GetGlobal()
-        {
-            return _luaManager.GetGlobal();
-        }
+        LuaTable GetGlobal();
 
         /// <summary>
         /// 进行一次Lua垃圾回收
         /// </summary>
-        public void Tick()
-        {
-            _luaManager.Tick();
-        }
+        void Tick();
 
         /// <summary>
         /// 为指定类型添加别名
         /// </summary>
         /// <param name="type">指定类型</param>
         /// <param name="alias">类型别名</param>
-        public void Alias(Type type, string alias)
-        {
-            _luaManager.Alias(type, alias);
-        }
+        void Alias(Type type, string alias);
 
         /// <summary>
         /// 执行一次Lua垃圾回收
         /// </summary>
-        public void GC()
-        {
-            _luaManager.GC();
-        }
+        void GC();
 
         /// <summary>
         /// 重新启动Lua垃圾回收
         /// </summary>
-        public void RestartGc()
-        {
-            _luaManager.RestartGc();
-        }
+        void RestartGc();
 
         /// <summary>
         /// 进行一次完整Lua垃圾回收
         /// </summary>
-        public void FullGc()
-        {
-            _luaManager.FullGc();
-        }
+        void FullGc();
 
         /// <summary>
         /// 执行Lua垃圾回收一步
         /// </summary>
         /// <param name="data">回收数据</param>
-        public void GcStep(int data)
-        {
-            _luaManager.GcStep(data);
-        }
+        void GcStep(int data);
 
         /// <summary>
         /// 停止Lua垃圾回收
         /// </summary>
-        public void StopGc()
-        {
-            _luaManager.StopGc();
-        }
+        void StopGc();
     }
 }

@@ -1,32 +1,23 @@
 ﻿using System;
-using GameFrameX.Lua;
-using UnityEngine;
 using XLua;
 using XLua.LuaDLL;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Lua
 {
     /// <summary>
     /// Lua组件。
     /// </summary>
-    [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Lua")]
-    public sealed class LuaComponent : GameFrameworkComponent
+    public sealed class LuaManager : GameFrameworkModule, ILuaManager
     {
-        private ILuaManager _luaManager;
+        private LuaEnv _luaEnv;
 
-        protected override void Awake()
+        /// <summary>
+        /// 设置LUA环境
+        /// </summary>
+        /// <param name="luaEnv">Lua环境</param>
+        public void InitLuaEnv(LuaEnv luaEnv)
         {
-            base.Awake();
-            new LuaManager();
-            _luaManager = GameFrameworkEntry.GetModule<ILuaManager>();
-            if (_luaManager == null)
-            {
-                Log.Fatal("Lua manager is invalid.");
-                return;
-            }
-
-            _luaManager.InitLuaEnv(new LuaEnv());
+            _luaEnv = luaEnv;
         }
 
         /// <summary>
@@ -38,7 +29,7 @@ namespace GameFrameX.Runtime
         /// <returns>执行结果</returns>
         public object[] DoString(string lua, string chunkName = "chunk", LuaTable env = null)
         {
-            return _luaManager.DoString(lua, chunkName, env);
+            return _luaEnv.DoString(lua, chunkName, env);
         }
 
         /// <summary>
@@ -50,7 +41,7 @@ namespace GameFrameX.Runtime
         /// <returns>执行结果</returns>
         public object[] DoString(byte[] luaBytes, string chunkName = "chunk", LuaTable env = null)
         {
-            return _luaManager.DoString(luaBytes, chunkName, env);
+            return _luaEnv.DoString(luaBytes, chunkName, env);
         }
 
         /// <summary>
@@ -62,7 +53,7 @@ namespace GameFrameX.Runtime
         /// <returns>加载的Lua函数</returns>
         public LuaFunction LoadString(string lua, string chunkName = "chunk", LuaTable env = null)
         {
-            return _luaManager.LoadString(lua, chunkName, env);
+            return _luaEnv.LoadString(lua, chunkName, env);
         }
 
         /// <summary>
@@ -75,7 +66,7 @@ namespace GameFrameX.Runtime
         /// <returns>加载的Lua函数</returns>
         public T LoadString<T>(string lua, string chunkName = "chunk", LuaTable env = null)
         {
-            return _luaManager.LoadString<T>(lua, chunkName, env);
+            return _luaEnv.LoadString<T>(lua, chunkName, env);
         }
 
         /// <summary>
@@ -85,7 +76,7 @@ namespace GameFrameX.Runtime
         /// <param name="init">初始化函数</param>
         public void AddBuildIn(string buildInName, lua_CSFunction init)
         {
-            _luaManager.AddBuildIn(buildInName, init);
+            _luaEnv.AddBuildin(buildInName, init);
         }
 
         /// <summary>
@@ -94,7 +85,7 @@ namespace GameFrameX.Runtime
         /// <param name="loader">自定义加载器</param>
         public void AddLoader(LuaEnv.CustomLoader loader)
         {
-            _luaManager.AddLoader(loader);
+            _luaEnv.AddLoader(loader);
         }
 
         /// <summary>
@@ -103,7 +94,7 @@ namespace GameFrameX.Runtime
         /// <returns>新的Lua表</returns>
         public LuaTable NewTable()
         {
-            return _luaManager.NewTable();
+            return _luaEnv.NewTable();
         }
 
         /// <summary>
@@ -111,7 +102,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public void Dispose()
         {
-            _luaManager.Dispose();
+            _luaEnv.Dispose();
         }
 
         /// <summary>
@@ -120,15 +111,16 @@ namespace GameFrameX.Runtime
         /// <returns>全局Lua表</returns>
         public LuaTable GetGlobal()
         {
-            return _luaManager.GetGlobal();
+            return _luaEnv.Global;
         }
+
 
         /// <summary>
         /// 进行一次Lua垃圾回收
         /// </summary>
         public void Tick()
         {
-            _luaManager.Tick();
+            _luaEnv.Tick();
         }
 
         /// <summary>
@@ -138,15 +130,16 @@ namespace GameFrameX.Runtime
         /// <param name="alias">类型别名</param>
         public void Alias(Type type, string alias)
         {
-            _luaManager.Alias(type, alias);
+            _luaEnv.Alias(type, alias);
         }
+
 
         /// <summary>
         /// 执行一次Lua垃圾回收
         /// </summary>
         public void GC()
         {
-            _luaManager.GC();
+            _luaEnv.GC();
         }
 
         /// <summary>
@@ -154,7 +147,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public void RestartGc()
         {
-            _luaManager.RestartGc();
+            _luaEnv.RestartGc();
         }
 
         /// <summary>
@@ -162,7 +155,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public void FullGc()
         {
-            _luaManager.FullGc();
+            _luaEnv.FullGc();
         }
 
         /// <summary>
@@ -171,7 +164,7 @@ namespace GameFrameX.Runtime
         /// <param name="data">回收数据</param>
         public void GcStep(int data)
         {
-            _luaManager.GcStep(data);
+            _luaEnv.GcStep(data);
         }
 
         /// <summary>
@@ -179,7 +172,16 @@ namespace GameFrameX.Runtime
         /// </summary>
         public void StopGc()
         {
-            _luaManager.StopGc();
+            _luaEnv.StopGc();
+        }
+
+        internal override void Update(float elapseSeconds, float realElapseSeconds)
+        {
+        }
+
+        internal override void Shutdown()
+        {
+            _luaEnv.Dispose();
         }
     }
 }
