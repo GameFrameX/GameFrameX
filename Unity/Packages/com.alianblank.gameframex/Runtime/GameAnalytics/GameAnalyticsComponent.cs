@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GameFrameX.GameAnalytics;
 using UnityEngine;
 
 namespace GameFrameX.Runtime
@@ -10,54 +11,94 @@ namespace GameFrameX.Runtime
     [AddComponentMenu("Game Framework/GameAnalytics")]
     public sealed class GameAnalyticsComponent : GameFrameworkComponent
     {
-        private static bool _isInit = false;
+        private bool _isInit = false;
+        private IGameAnalyticsManager _gameAnalyticsManager;
 
-        public static void Init()
+        protected override void Awake()
         {
+            base.Awake();
+            _gameAnalyticsManager = GameFrameworkEntry.GetModule<IGameAnalyticsManager>();
+            if (_gameAnalyticsManager == null)
+            {
+                Log.Fatal("GameAnalytics manager is invalid.");
+                return;
+            }
+
+            Init();
+        }
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public void Init()
+        {
+            _gameAnalyticsManager.Init();
             _isInit = true;
         }
 
-        public static void StartTimer(string eventName)
+        /// <summary>
+        /// 开始计时
+        /// </summary>
+        /// <param name="eventName">事件名称</param>
+        public void StartTimer(string eventName)
         {
             if (!_isInit)
             {
                 return;
             }
 
-            // GameAnalytics.NewDesignEvent(eventName);
+            _gameAnalyticsManager.StartTimer(eventName);
         }
 
-        public static void StopTimer(string eventName)
+        /// <summary>
+        /// 结束计时
+        /// </summary>
+        /// <param name="eventName">事件名称</param>
+        public void StopTimer(string eventName)
         {
             if (!_isInit)
             {
                 return;
             }
 
-            // GameAnalytics.NewDesignEvent(eventName);
+            _gameAnalyticsManager.StopTimer(eventName);
         }
 
-        public static void DesignEvent(string eventName)
+        /// <summary>
+        /// 上报事件
+        /// </summary>
+        /// <param name="eventName">事件名称</param>
+        public void Event(string eventName)
         {
             if (!_isInit)
             {
                 return;
             }
 
-            // GameAnalytics.NewDesignEvent(eventName);
+            _gameAnalyticsManager.Event(eventName);
         }
 
-        public static void DesignEvent(string eventName, float eventValue)
+        /// <summary>
+        /// 上报带有数值的事件
+        /// </summary>
+        /// <param name="eventName">事件名称</param>
+        /// <param name="eventValue">事件数值</param>
+        public void Event(string eventName, float eventValue)
         {
             if (!_isInit)
             {
                 return;
             }
 
-            // GameAnalytics.NewDesignEvent(eventName, eventValue);
+            _gameAnalyticsManager.Event(eventName, eventValue);
         }
 
-        public static void DesignEvent(string eventName, Dictionary<string, string> customF)
+        /// <summary>
+        /// 上报自定义字段的事件
+        /// </summary>
+        /// <param name="eventName">事件名称</param>
+        /// <param name="customF">自定义字段</param>
+        public void Event(string eventName, Dictionary<string, string> customF)
         {
             if (!_isInit)
             {
@@ -71,10 +112,16 @@ namespace GameFrameX.Runtime
                 value[kv.Key] = kv.Value;
             }
 
-            // GameAnalytics.NewDesignEvent(eventName, value);
+            _gameAnalyticsManager.Event(eventName, value);
         }
 
-        public static void DesignEvent(string eventName, float eventValue, Dictionary<string, string> customF)
+        /// <summary>
+        /// 上报带有数值和自定义字段的事件
+        /// </summary>
+        /// <param name="eventName">事件名称</param>
+        /// <param name="eventValue">事件数值</param>
+        /// <param name="customF">自定义字段</param>
+        public void Event(string eventName, float eventValue, Dictionary<string, string> customF)
         {
             if (!_isInit)
             {
@@ -88,7 +135,7 @@ namespace GameFrameX.Runtime
                 value[kv.Key] = kv.Value;
             }
 
-            // GameAnalytics.NewDesignEvent(eventName, eventValue, value);
+            _gameAnalyticsManager.Event(eventName, eventValue, value);
         }
     }
 }
