@@ -1,19 +1,19 @@
-local CreateTemplate=[[
+local CreateTemplate = [[
         private static GObject CreateGObject()
         {
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
-    
+
         private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
         {
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
-    
+
         public static {className} CreateInstance(object userData = null)
         {
             return new {className}(CreateGObject(), userData);
         }
-    
+
         public static UniTask<{className}> CreateInstanceAsync(Entity domain, object userData = null)
         {
             UniTaskCompletionSource<{className}> tcs = new UniTaskCompletionSource<{className}>();
@@ -33,16 +33,16 @@ using GameFrameX.Runtime;
 
 namespace {namespaceName}
 {
-
     public sealed partial class {className} : FUI
     {
         public const string UIPackageName = "{codePkgName}";
         public const string UIResName = "{resName}";
         public const string URL = "{URL}";
+
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
-        public {superClassName} self;
+        public {superClassName} self { get; private set; }
 
 __PROPERTY__
 
@@ -90,11 +90,11 @@ __AWAKE__
                 return;
             }
 
-__DISPOSE__
-            {comRemove}
-            self = null;
             base.Dispose();
+__DISPOSE__
+            self = null;            
         }
+
         private {className}(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);
@@ -151,12 +151,12 @@ end
 
 local function genCode(handler)
     local settings = handler.project:GetSettings("Publish").codeGeneration
-    local codePkgName = handler:ToFilename(handler.pkg.name); --convert chinese to pinyin, remove special chars etc.
+    local codePkgName = handler:ToFilename(handler.pkg.name); -- convert chinese to pinyin, remove special chars etc.
     ---@type string
     local exportCodePath = handler.exportCodePath;
-    --规范化路径
+    -- 规范化路径
     exportCodePath = string.gsub(exportCodePath, '\\', '/')
-    --UI组件
+    -- UI组件
     local exportCodeComponentPath = handler.exportCodePath .. '/' .. codePkgName .. '/Components';
     handler:SetupCodeFolder(exportCodeComponentPath, "cs")
     local namespaceName = codePkgName
@@ -165,13 +165,13 @@ local function genCode(handler)
         namespaceName = settings.packageName .. '.' .. namespaceName;
     end
 
-    namespaceName = "Game.Hotfix";
+    namespaceName = "Hotfix.UI";
     if string.find(exportCodePath, "Unity/Assets/Scripts") then
         namespaceName = "Game.Model";
     end
-    --CollectClasses(stripeMemeber, stripeClass, fguiNamespace)
+    -- CollectClasses(stripeMemeber, stripeClass, fguiNamespace)
     local classes = handler:CollectClasses(settings.ignoreNoname, settings.ignoreNoname, nil)
-    --check if target folder exists, and delete old files
+    -- check if target folder exists, and delete old files
 
     local getMemberByName = settings.getMemberByName
 
@@ -203,8 +203,11 @@ local function genCode(handler)
         genCodeString = string.gsub(genCodeString, '{URL}', 'ui://' .. handler.pkg.id .. classInfo.resId)
 
         local propertyStr = "";
+        local propertyTable = {};
         local AwakeStr = "";
+        local AwakeTable = {};
         local DisposeStr = "";
+        local disposeTable = {};
         local memberCnt = members.Count
         for j = 0, memberCnt - 1 do
             local memberInfo = members[j]
@@ -212,30 +215,32 @@ local function genCode(handler)
             local varName = memberInfo.varName
             local memberInfoName = memberInfo.name;
 
-
-
-            propertyStr = propertyStr .. '\t\tpublic ' .. typeName .. ' ' .. varName .. ';  \n'
+            table.insert(propertyTable, '\t\tpublic ' .. typeName .. ' ' .. varName .. ' { get; private set; }');
 
             if string.find(typeName, "Scene") then
-                DisposeStr = DisposeStr .. '\t\t\t' .. varName .. '.Dispose(); \n'
+                table.insert(disposeTable, '\t\t\t' .. varName .. '.Dispose();');
             end
-            DisposeStr = DisposeStr .. '\t\t\t' .. varName .. ' = null; \n'
+            table.insert(disposeTable, '\t\t\t' .. varName .. ' = null;');
 
             if memberInfo.group == 0 then
 
-                --判断是不是自定义类型组件
+                -- 判断是不是自定义类型组件
                 if IsCustomComponent(classes, typeName) then
-                    AwakeStr = AwakeStr .. '\t\t\t\t' .. varName .. ' = ' .. typeName .. '.Create(com.GetChild("' .. memberInfoName .. '"), this);  \n'
+                    table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = ' .. typeName .. '.Create(com.GetChild("' ..
+                        memberInfoName .. '"), this);');
                 else
-                    AwakeStr = AwakeStr .. '\t\t\t\t' .. varName .. ' = (' .. typeName .. ')com.GetChild("' .. memberInfoName .. '"); \n'
+                    table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = (' .. typeName .. ')com.GetChild("' ..
+                        memberInfoName .. '");');
                 end
             elseif memberInfo.group == 1 then
-                AwakeStr = AwakeStr .. '\t\t\t\t' .. varName .. ' = com.GetController("' .. memberInfoName .. '"); \n'
+                table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = com.GetController("' .. memberInfoName .. '");');
             else
-                AwakeStr = AwakeStr .. '\t\t\t\t' .. varName .. ' = com.GetTransition("' .. memberInfoName .. '"); \n'
+                table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = com.GetTransition("' .. memberInfoName .. '");');
             end
         end
-
+        propertyStr = table.concat(propertyTable, '\n')
+        DisposeStr = table.concat(disposeTable, '\n')
+        AwakeStr = table.concat(AwakeTable, '\n')
         genCodeString = string.gsub(genCodeString, '__PROPERTY__', propertyStr)
         genCodeString = string.gsub(genCodeString, '__AWAKE__', AwakeStr)
         genCodeString = string.gsub(genCodeString, '__DISPOSE__', DisposeStr)
@@ -244,14 +249,14 @@ local function genCode(handler)
             genCodeString = string.gsub(genCodeString, '{comE}', '***/')
 
             genCodeString = string.gsub(genCodeString, '{comAdd}', '')
-            genCodeString = string.gsub(genCodeString, '{comRemove}', '')
+            -- genCodeString = string.gsub(genCodeString, '{comRemove}', '')
 
         else
             genCodeString = string.gsub(genCodeString, '{comB}', '')
             genCodeString = string.gsub(genCodeString, '{comE}', '')
 
             genCodeString = string.gsub(genCodeString, '{comAdd}', '')
-            genCodeString = string.gsub(genCodeString, '{comRemove}', '')
+            -- genCodeString = string.gsub(genCodeString, '{comRemove}', '')
         end
         writer:writeln(genCodeString);
         writer:save(exportCodeComponentPath .. '/' .. classInfo.className .. '.cs');
@@ -266,7 +271,8 @@ local function genCode(handler)
     pkgNamesStr = pkgNamesStr .. '\t\tpublic const string ' .. codePkgName .. ' = "' .. codePkgName .. '"; \n'
     for i = 0, classCnt - 1 do
         local classInfo = classes[i];
-        pkgNamesStr = pkgNamesStr .. '\t\tpublic const string ' .. codePkgName .. '_' .. classInfo.resName .. ' = "ui://' .. codePkgName .. '/' .. classInfo.resName .. '"; \n'
+        pkgNamesStr = pkgNamesStr .. '\t\tpublic const string ' .. codePkgName .. '_' .. classInfo.resName ..
+                          ' = "ui://' .. codePkgName .. '/' .. classInfo.resName .. '"; \n'
     end
     packageTempleteString = string.gsub(packageTempleteString, '__PKGNAMES__', pkgNamesStr)
 
@@ -275,11 +281,11 @@ local function genCode(handler)
     local resStr = "";
     if codePkgName == 'UIRes' then
         resStr = "\n\n \t\t/**************** res uri *****************/ \n\n"
-        --local itemsCnt = handler.items.Count;
-        --for i = 0, itemsCnt - 1 do
+        -- local itemsCnt = handler.items.Count;
+        -- for i = 0, itemsCnt - 1 do
         --    local item = handler.items[i];
         --    resStr = resStr .. '\t\tpublic const string Res_' .. item.type .. '_' .. item.name .. ' = "' .. item:GetURL() .. '"; \n'
-        --end
+        -- end
     end
 
     packageTempleteString = string.gsub(packageTempleteString, '__RES__', resStr)
