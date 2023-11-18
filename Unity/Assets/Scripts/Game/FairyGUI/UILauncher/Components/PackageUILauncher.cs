@@ -7,10 +7,9 @@ using Cysharp.Threading.Tasks;
 namespace Game.Model
 {
     public static partial class FUIPackage {
-		public const string UILauncher = "UILauncher"; 
-		public const string UILauncher_UILauncher = "ui://UILauncher/UILauncher"; 
-		public const string UILauncher_UILauncherUpgrade = "ui://UILauncher/UILauncherUpgrade"; 
-
+		public const string UILauncher = "UILauncher";
+		public const string UILauncher_UILauncher = "ui://UILauncher/UILauncher";
+		public const string UILauncher_UILauncherUpgrade = "ui://UILauncher/UILauncherUpgrade";
 
     }
 }
