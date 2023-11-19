@@ -9,13 +9,16 @@ namespace FairyGUI
     /// 这是一个提供特殊拖放功能的功能类。与GObject.draggable不同，拖动开始后，他使用一个替代的图标作为拖动对象。
     /// 当玩家释放鼠标/手指，目标组件会发出一个onDrop事件。
     /// </summary>
-    public class DragDropManager
+    public sealed class DragDropManager
     {
         private GLoader _agent;
+        private GObject _customAgent;
+        private bool _useCustomAgent;
         private object _sourceData;
         private GObject _source;
 
         private static DragDropManager _inst;
+
         public static DragDropManager inst
         {
             get
@@ -31,7 +34,7 @@ namespace FairyGUI
             _agent = (GLoader)UIObjectFactory.NewObject(ObjectType.Loader);
             _agent.gameObjectName = "DragDropAgent";
             _agent.SetHome(GRoot.inst);
-            _agent.touchable = false;//important
+            _agent.touchable = false; //important
             _agent.draggable = true;
             _agent.SetSize(100, 100);
             _agent.SetPivot(0.5f, 0.5f, true);
@@ -39,15 +42,16 @@ namespace FairyGUI
             _agent.verticalAlign = VertAlignType.Middle;
             _agent.sortingOrder = int.MaxValue;
             _agent.onDragEnd.Add(__dragEnd);
+
+            _useCustomAgent = false;
         }
 
         /// <summary>
-        /// Loader object for real dragging.
-        /// 用于实际拖动的Loader对象。你可以根据实际情况设置loader的大小，对齐等。
+        /// 用于实际拖动的对象。你可以根据实际情况设置对象的大小，对齐等。
         /// </summary>
-        public GLoader dragAgent
+        public GObject DragAgent
         {
-            get { return _agent; }
+            get { return _useCustomAgent ? _customAgent : _agent; }
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace FairyGUI
         /// </summary>
         public bool dragging
         {
-            get { return _agent.parent != null; }
+            get { return DragAgent.parent != null; }
         }
 
         /// <summary>
@@ -69,15 +73,38 @@ namespace FairyGUI
         /// <param name="touchPointID">Copy the touchId from InputEvent to here, if has one.</param>
         public void StartDrag(GObject source, string icon, object sourceData, int touchPointID = -1)
         {
-            if (_agent.parent != null)
+            if (DragAgent.parent != null)
                 return;
 
             _sourceData = sourceData;
             _source = source;
             _agent.url = icon;
+            _useCustomAgent = false;
             GRoot.inst.AddChild(_agent);
             _agent.xy = GRoot.inst.GlobalToLocal(Stage.inst.GetTouchPosition(touchPointID));
             _agent.StartDrag(touchPointID);
+        }
+
+        /// <summary>
+        /// 开始拖动
+        /// </summary>
+        /// <param name="source">拖动源对象</param>
+        /// <param name="customAgent">自定义拖动中的代理对象</param>
+        /// <param name="sourceData">源数据</param>
+        /// <param name="touchPointID">触摸ID</param>
+        public void StartDrag(GObject source, GObject customAgent, object sourceData, int touchPointID = -1)
+        {
+            if (DragAgent.parent != null)
+                return;
+
+            _sourceData = sourceData;
+            _source = source;
+            _customAgent = customAgent;
+            _customAgent.visible = true;
+            _useCustomAgent = true;
+            GRoot.inst.AddChild(_customAgent);
+            _customAgent.xy = GRoot.inst.GlobalToLocal(Stage.inst.GetTouchPosition(touchPointID));
+            _customAgent.StartDrag(touchPointID);
         }
 
         /// <summary>
@@ -86,25 +113,33 @@ namespace FairyGUI
         /// </summary>
         public void Cancel()
         {
-            if (_agent.parent != null)
+            if (DragAgent.parent == null)
             {
-                _agent.StopDrag();
-                GRoot.inst.RemoveChild(_agent);
-                _sourceData = null;
+                return;
             }
+
+            DragAgent.StopDrag();
+            GRoot.inst.RemoveChild(DragAgent);
+            _sourceData = null;
+            _customAgent = null;
+            _useCustomAgent = false;
         }
 
         private void __dragEnd(EventContext evt)
         {
-            if (_agent.parent == null) //cancelled
+            if (DragAgent.parent == null) //cancelled
+            {
                 return;
+            }
 
-            GRoot.inst.RemoveChild(_agent);
+            GRoot.inst.RemoveChild(DragAgent);
 
             object sourceData = _sourceData;
             GObject source = _source;
             _sourceData = null;
             _source = null;
+            _customAgent = null;
+            _useCustomAgent = false;
 
             GObject obj = GRoot.inst.touchTarget;
             while (obj != null)
@@ -115,6 +150,7 @@ namespace FairyGUI
                     obj.DispatchEvent("onDrop", sourceData, source);
                     return;
                 }
+
                 obj = obj.parent;
             }
         }
