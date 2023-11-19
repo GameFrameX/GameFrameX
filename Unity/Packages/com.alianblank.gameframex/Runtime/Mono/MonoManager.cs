@@ -8,23 +8,23 @@ namespace GameFrameX.Mono
     {
         private static readonly object Lock = new object();
 
-        private Queue<Action> _updateQueue = new Queue<Action>();
-        private Queue<Action> _invokeUpdateQueue = new Queue<Action>();
+        private List<Action> _updateQueue = new List<Action>();
+        private List<Action> _invokeUpdateQueue = new List<Action>();
 
-        private Queue<Action> _fixedUpdate = new Queue<Action>();
-        private Queue<Action> _invokeFixedUpdate = new Queue<Action>();
+        private List<Action> _fixedUpdate = new List<Action>();
+        private List<Action> _invokeFixedUpdate = new List<Action>();
 
-        private Queue<Action> _lateUpdate = new Queue<Action>();
-        private Queue<Action> _invokeLateUpdate = new Queue<Action>();
+        private List<Action> _lateUpdate = new List<Action>();
+        private List<Action> _invokeLateUpdate = new List<Action>();
 
-        private Queue<Action> _destroy = new Queue<Action>();
-        private Queue<Action> _invokeDestroy = new Queue<Action>();
+        private List<Action> _destroy = new List<Action>();
+        private List<Action> _invokeDestroy = new List<Action>();
 
-        private Queue<Action<bool>> _onApplicationPause = new Queue<Action<bool>>();
-        private Queue<Action<bool>> _invokeOnApplicationPause = new Queue<Action<bool>>();
+        private List<Action<bool>> _onApplicationPause = new List<Action<bool>>();
+        private List<Action<bool>> _invokeOnApplicationPause = new List<Action<bool>>();
 
-        private Queue<Action<bool>> _onApplicationFocus = new Queue<Action<bool>>();
-        private Queue<Action<bool>> _invokeOnApplicationFocus = new Queue<Action<bool>>();
+        private List<Action<bool>> _onApplicationFocus = new List<Action<bool>>();
+        private List<Action<bool>> _invokeOnApplicationFocus = new List<Action<bool>>();
 
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace GameFrameX.Mono
         /// </summary>
         public void FixedUpdate()
         {
-            QueueInvoking(ref this._invokeFixedUpdate, ref this._fixedUpdate);
+            QueueInvoking(this._invokeFixedUpdate, this._fixedUpdate);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace GameFrameX.Mono
         /// </summary>
         public void LateUpdate()
         {
-            QueueInvoking(ref this._invokeLateUpdate, ref this._lateUpdate);
+            QueueInvoking(this._invokeLateUpdate, this._lateUpdate);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace GameFrameX.Mono
         /// </summary>
         public void OnDestroy()
         {
-            QueueInvoking(ref this._invokeDestroy, ref this._destroy);
+            QueueInvoking(this._invokeDestroy, this._destroy);
         }
 
         /// <summary>
@@ -75,9 +75,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void AddLateUpdateListener(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                _lateUpdate.Enqueue(action);
+                _lateUpdate.Add(action);
             }
         }
 
@@ -87,9 +92,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void RemoveLateUpdateListener(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                Delete(ref this._lateUpdate, action);
+                _lateUpdate.Remove(action);
             }
         }
 
@@ -99,9 +109,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void AddFixedUpdateListener(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                _fixedUpdate.Enqueue(action);
+                _fixedUpdate.Add(action);
             }
         }
 
@@ -111,9 +126,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void RemoveFixedUpdateListener(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                Delete(ref this._fixedUpdate, action);
+                this._fixedUpdate.Remove(action);
             }
         }
 
@@ -123,9 +143,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void AddUpdateListener(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                _updateQueue.Enqueue(action);
+                _updateQueue.Add(action);
             }
         }
 
@@ -135,9 +160,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void RemoveUpdateListener(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                Delete(ref this._updateQueue, action);
+                _updateQueue.Remove(action);
             }
         }
 
@@ -147,9 +177,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void AddDestroyListener(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                _destroy.Enqueue(action);
+                _destroy.Add(action);
             }
         }
 
@@ -159,9 +194,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void RemoveDestroyListener(Action action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                Delete(ref this._destroy, action);
+                _destroy.Remove(action);
             }
         }
 
@@ -171,9 +211,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void AddOnApplicationPauseListener(Action<bool> action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                _onApplicationPause.Enqueue(action);
+                _onApplicationPause.Add(action);
             }
         }
 
@@ -183,9 +228,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void RemoveOnApplicationPauseListener(Action<bool> action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                Delete(ref this._onApplicationPause, action);
+                _onApplicationPause.Remove(action);
             }
         }
 
@@ -195,9 +245,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void AddOnApplicationFocusListener(Action<bool> action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                _onApplicationFocus.Enqueue(action);
+                _onApplicationFocus.Add(action);
             }
         }
 
@@ -207,9 +262,14 @@ namespace GameFrameX.Mono
         /// <param name="action">监听器函数</param>
         public void RemoveOnApplicationFocusListener(Action<bool> action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Lock)
             {
-                Delete(ref this._onApplicationFocus, action);
+                _onApplicationFocus.Remove(action);
             }
         }
 
@@ -223,15 +283,15 @@ namespace GameFrameX.Mono
             this._onApplicationPause.Clear();
         }
 
-        private static void QueueInvoking(ref Queue<Action> a, ref Queue<Action> b)
+
+        private static void QueueInvoking(List<Action> a, List<Action> b)
         {
             lock (Lock)
             {
                 ObjectHelper.Swap(ref a, ref b);
 
-                while (a.Count > 0)
+                foreach (var action in a)
                 {
-                    var action = a.Dequeue();
                     try
                     {
                         action.Invoke();
@@ -244,15 +304,14 @@ namespace GameFrameX.Mono
             }
         }
 
-        private static void QueueInvoking(ref Queue<Action<bool>> a, ref Queue<Action<bool>> b, bool value)
+        private static void QueueInvoking(ref List<Action<bool>> a, ref List<Action<bool>> b, bool value)
         {
             lock (Lock)
             {
                 ObjectHelper.Swap(ref a, ref b);
 
-                while (a.Count > 0)
+                foreach (var action in a)
                 {
-                    var action = a.Dequeue();
                     try
                     {
                         action.Invoke(value);
@@ -265,37 +324,9 @@ namespace GameFrameX.Mono
             }
         }
 
-        private static void Delete<T>(ref Queue<T> queue, T item)
-        {
-            lock (Lock)
-            {
-                // 创建一个临时队列
-                Queue<T> tempQueue = new Queue<T>();
-
-                // 将要删除的对象之前的所有对象从原始队列移到临时队列
-                while (queue.Peek().Equals(item) == false)
-                {
-                    tempQueue.Enqueue(queue.Dequeue());
-                }
-
-                // 跳过要删除的对象
-                queue.Dequeue();
-
-                // 将临时队列中的元素移到原始队列
-                while (tempQueue.Count > 0)
-                {
-                    tempQueue.Enqueue(queue.Dequeue());
-                }
-
-                ObjectHelper.Swap(ref queue, ref tempQueue);
-                tempQueue.Clear();
-            }
-        }
-
-
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            QueueInvoking(ref this._invokeUpdateQueue, ref this._updateQueue);
+            QueueInvoking(this._invokeUpdateQueue, this._updateQueue);
         }
 
         internal override void Shutdown()

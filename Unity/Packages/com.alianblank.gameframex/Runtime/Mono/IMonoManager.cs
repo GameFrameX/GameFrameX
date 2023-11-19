@@ -22,6 +22,7 @@ namespace GameFrameX.Mono
         /// </summary>
         void OnDestroy();
 
+
         /// <summary>
         /// 当应用程序失去或获得焦点时调用。
         /// </summary>

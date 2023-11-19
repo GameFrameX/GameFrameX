@@ -50,7 +50,6 @@ namespace GameFrameX.Runtime
             _monoManager.OnDestroy();
         }
 
-
         private void OnApplicationFocus(bool focusStatus)
         {
             _monoManager.OnApplicationFocus(focusStatus);
