@@ -17,6 +17,7 @@ namespace GameFrameX.Runtime
         protected override void Awake()
         {
             base.Awake();
+            new GameAnalyticsManager();
             _gameAnalyticsManager = GameFrameworkEntry.GetModule<IGameAnalyticsManager>();
             if (_gameAnalyticsManager == null)
             {
