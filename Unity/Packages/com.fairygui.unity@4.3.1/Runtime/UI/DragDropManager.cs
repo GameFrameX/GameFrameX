@@ -11,7 +11,7 @@ namespace FairyGUI
     /// </summary>
     public sealed class DragDropManager
     {
-        private GLoader _agent;
+        private readonly GLoader _agent;
         private GObject _customAgent;
         private bool _useCustomAgent;
         private object _sourceData;
@@ -19,7 +19,10 @@ namespace FairyGUI
 
         private static DragDropManager _inst;
 
-        public static DragDropManager inst
+        /// <summary>
+        /// 拖动对象单例
+        /// </summary>
+        public static DragDropManager Instance
         {
             get
             {
