@@ -21,21 +21,21 @@ namespace GameFrameX.Runtime
         public Action<FUI> OnHideAction { get; set; }
 
         /// <summary>
-        /// 默认是否显示
+        /// 记录初始化UI是否是显示的状态
         /// </summary>
-        protected bool IsInitVisible { get; set; }
+        private bool IsInitVisible { get; }
 
         public FUI(GObject gObject, FUI parent = null, object userData = null)
         {
             UserData = userData;
             GObject = gObject;
             Parent = parent;
-            IsInitVisible = gObject.visible;
+            IsInitVisible = GObject.visible;
             InitView();
             // 在初始化的时候先隐藏UI。后续由声明周期控制
             // if (parent == null)
             // {
-            SetVisibleWithNoNotify(false);
+            // SetVisibleWithNoNotify(false);
             // }
 
             parent?.Add(this);
@@ -100,12 +100,15 @@ namespace GameFrameX.Runtime
         /// </summary>
         public void Show()
         {
+            Log.Info("Show " + Name);
             if (Visible)
             {
+                OnShowAction?.Invoke(this);
+                OnShow();
+                Refresh();
                 return;
             }
 
-            Log.Info("Show " + Name);
             Visible = true;
         }
 
@@ -115,12 +118,14 @@ namespace GameFrameX.Runtime
         /// </summary>
         public void Hide()
         {
+            Log.Info("Hide " + Name);
             if (!Visible)
             {
+                OnHideAction?.Invoke(this);
+                OnHide();
                 return;
             }
 
-            Log.Info("Hide " + Name);
             Visible = false;
         }
 
@@ -170,6 +175,11 @@ namespace GameFrameX.Runtime
         /// <param name="value"></param>
         private void SetVisibleWithNoNotify(bool value)
         {
+            if (GObject.visible == value)
+            {
+                return;
+            }
+
             GObject.visible = value;
         }
 
@@ -203,8 +213,8 @@ namespace GameFrameX.Runtime
 
                 if (!value)
                 {
-                    OnHide();
                     OnHideAction?.Invoke(this);
+                    OnHide();
                 }
 
                 GObject.visible = value;
@@ -270,14 +280,15 @@ namespace GameFrameX.Runtime
             }
 
             IsDisposed = true;
+            // 删除所有的孩子
+            DisposeChildren();
+
             // 删除自己的UI
             if (!IsRoot)
             {
                 RemoveFromParent();
             }
 
-            // 删除所有的孩子
-            DisposeChildren();
             // 释放UI
             OnDispose();
             // 删除自己的UI
@@ -332,6 +343,7 @@ namespace GameFrameX.Runtime
             }
 
             ui.Parent = this;
+
             if (ui.IsInitVisible)
             {
                 // 显示UI
