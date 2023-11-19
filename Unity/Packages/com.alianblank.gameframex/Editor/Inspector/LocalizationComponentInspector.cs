@@ -14,7 +14,6 @@ namespace GameFrameX.Editor
     internal sealed class LocalizationComponentInspector : GameFrameworkInspector
     {
         private SerializedProperty m_EnableLoadDictionaryUpdateEvent = null;
-        private SerializedProperty m_EnableLoadDictionaryDependencyAssetEvent = null;
         private SerializedProperty m_CachedBytesSize = null;
 
         private HelperInfo<LocalizationHelperBase> m_LocalizationHelperInfo = new HelperInfo<LocalizationHelperBase>("Localization");
@@ -30,7 +29,6 @@ namespace GameFrameX.Editor
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
                 EditorGUILayout.PropertyField(m_EnableLoadDictionaryUpdateEvent);
-                EditorGUILayout.PropertyField(m_EnableLoadDictionaryDependencyAssetEvent);
                 m_LocalizationHelperInfo.Draw();
                 EditorGUILayout.PropertyField(m_CachedBytesSize);
             }
@@ -59,7 +57,6 @@ namespace GameFrameX.Editor
         private void OnEnable()
         {
             m_EnableLoadDictionaryUpdateEvent = serializedObject.FindProperty("m_EnableLoadDictionaryUpdateEvent");
-            m_EnableLoadDictionaryDependencyAssetEvent = serializedObject.FindProperty("m_EnableLoadDictionaryDependencyAssetEvent");
             m_CachedBytesSize = serializedObject.FindProperty("m_CachedBytesSize");
 
             m_LocalizationHelperInfo.Init(serializedObject);
