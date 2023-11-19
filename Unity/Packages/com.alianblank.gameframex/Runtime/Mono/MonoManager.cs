@@ -20,9 +20,6 @@ namespace GameFrameX.Mono
         private Queue<Action> _destroy = new Queue<Action>();
         private Queue<Action> _invokeDestroy = new Queue<Action>();
 
-        private Queue<Action> _onDrawGizmos = new Queue<Action>();
-        private Queue<Action> _invokeOnDrawGizmos = new Queue<Action>();
-
         private Queue<Action<bool>> _onApplicationPause = new Queue<Action<bool>>();
         private Queue<Action<bool>> _invokeOnApplicationPause = new Queue<Action<bool>>();
 
@@ -52,14 +49,6 @@ namespace GameFrameX.Mono
         public void OnDestroy()
         {
             QueueInvoking(ref this._invokeDestroy, ref this._destroy);
-        }
-
-        /// <summary>
-        /// 在绘制 Gizmos 时调用。
-        /// </summary>
-        public void OnDrawGizmos()
-        {
-            QueueInvoking(ref this._invokeOnDrawGizmos, ref this._onDrawGizmos);
         }
 
         /// <summary>
@@ -177,30 +166,6 @@ namespace GameFrameX.Mono
         }
 
         /// <summary>
-        /// 添加一个在 OnDrawGizmos 期间调用的监听器。
-        /// </summary>
-        /// <param name="action">监听器函数</param>
-        public void AddOnDrawGizmosListener(Action action)
-        {
-            lock (Lock)
-            {
-                _onDrawGizmos.Enqueue(action);
-            }
-        }
-
-        /// <summary>
-        /// 从 OnDrawGizmos 中移除一个监听器。
-        /// </summary>
-        /// <param name="action">监听器函数</param>
-        public void RemoveOnDrawGizmosListener(Action action)
-        {
-            lock (Lock)
-            {
-                Delete(ref this._onDrawGizmos, action);
-            }
-        }
-
-        /// <summary>
         /// 添加一个在 OnApplicationPause 期间调用的监听器。
         /// </summary>
         /// <param name="action">监听器函数</param>
@@ -256,7 +221,6 @@ namespace GameFrameX.Mono
             this._lateUpdate.Clear();
             this._onApplicationFocus.Clear();
             this._onApplicationPause.Clear();
-            this._onDrawGizmos.Clear();
         }
 
         private static void QueueInvoking(ref Queue<Action> a, ref Queue<Action> b)
@@ -337,12 +301,11 @@ namespace GameFrameX.Mono
         internal override void Shutdown()
         {
             this._updateQueue.Clear();
-            this._destroy.Clear();
             this._fixedUpdate.Clear();
             this._lateUpdate.Clear();
             this._onApplicationFocus.Clear();
             this._onApplicationPause.Clear();
-            this._onDrawGizmos.Clear();
+            this._destroy.Clear();
         }
     }
 }

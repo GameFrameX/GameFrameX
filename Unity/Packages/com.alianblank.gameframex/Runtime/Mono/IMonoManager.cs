@@ -23,11 +23,6 @@ namespace GameFrameX.Mono
         void OnDestroy();
 
         /// <summary>
-        /// 在绘制 Gizmos 时调用。
-        /// </summary>
-        void OnDrawGizmos();
-
-        /// <summary>
         /// 当应用程序失去或获得焦点时调用。
         /// </summary>
         /// <param name="focusStatus">应用程序的焦点状态</param>
@@ -86,18 +81,6 @@ namespace GameFrameX.Mono
         /// </summary>
         /// <param name="action">监听器函数</param>
         void RemoveDestroyListener(Action action);
-
-        /// <summary>
-        /// 添加一个在 OnDrawGizmos 期间调用的监听器。
-        /// </summary>
-        /// <param name="action">监听器函数</param>
-        void AddOnDrawGizmosListener(Action action);
-
-        /// <summary>
-        /// 从 OnDrawGizmos 中移除一个监听器。
-        /// </summary>
-        /// <param name="action">监听器函数</param>
-        void RemoveOnDrawGizmosListener(Action action);
 
         /// <summary>
         /// 添加一个在 OnApplicationPause 期间调用的监听器。

@@ -50,10 +50,6 @@ namespace GameFrameX.Runtime
             _monoManager.OnDestroy();
         }
 
-        private void OnDrawGizmos()
-        {
-            _monoManager.OnDrawGizmos();
-        }
 
         private void OnApplicationFocus(bool focusStatus)
         {
@@ -185,36 +181,6 @@ namespace GameFrameX.Runtime
             }
 
             _monoManager.RemoveDestroyListener(fun);
-        }
-
-        /// <summary>
-        /// 添加 OnDrawGizmos 监听器
-        /// </summary>
-        /// <param name="fun">要添加的 OnDrawGizmos 监听器回调函数</param>
-        public void AddOnDrawGizmosListener(Action fun)
-        {
-            if (fun == null)
-            {
-                Log.Fatal(nameof(fun) + "is invalid.");
-                return;
-            }
-
-            _monoManager.AddOnDrawGizmosListener(fun);
-        }
-
-        /// <summary>
-        /// 移除 OnDrawGizmos 监听器
-        /// </summary>
-        /// <param name="fun">要移除的 OnDrawGizmos 监听器回调函数</param>
-        public void RemoveOnDrawGizmosListener(Action fun)
-        {
-            if (fun == null)
-            {
-                Log.Fatal(nameof(fun) + "is invalid.");
-                return;
-            }
-
-            _monoManager.RemoveOnDrawGizmosListener(fun);
         }
 
         /// <summary>
