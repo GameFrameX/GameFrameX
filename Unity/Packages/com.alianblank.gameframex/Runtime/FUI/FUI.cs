@@ -20,11 +20,17 @@ namespace GameFrameX.Runtime
         /// </summary>
         public Action<FUI> OnHideAction { get; set; }
 
+        /// <summary>
+        /// 默认是否显示
+        /// </summary>
+        protected bool IsInitVisible { get; set; }
+
         public FUI(GObject gObject, FUI parent = null, object userData = null)
         {
             UserData = userData;
             GObject = gObject;
             Parent = parent;
+            IsInitVisible = gObject.visible;
             InitView();
             // 在初始化的时候先隐藏UI。后续由声明周期控制
             // if (parent == null)
@@ -326,8 +332,11 @@ namespace GameFrameX.Runtime
             }
 
             ui.Parent = this;
-            // 显示UI
-            ui.Show();
+            if (ui.IsInitVisible)
+            {
+                // 显示UI
+                ui.Show();
+            }
         }
 
         /// <summary>
