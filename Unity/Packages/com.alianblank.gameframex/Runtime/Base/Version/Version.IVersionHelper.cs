@@ -21,14 +21,6 @@ namespace GameFrameX
             {
                 get;
             }
-
-            /// <summary>
-            /// 获取内部游戏版本号。
-            /// </summary>
-            int InternalGameVersion
-            {
-                get;
-            }
         }
     }
 }

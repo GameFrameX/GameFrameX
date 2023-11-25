@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using UnityEngine;
 
 namespace GameFrameX.Runtime
@@ -20,21 +19,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public string GameVersion
         {
-            get
-            {
-                return Application.version;
-            }
-        }
-
-        /// <summary>
-        /// 获取内部游戏版本号。
-        /// </summary>
-        public int InternalGameVersion
-        {
-            get
-            {
-                return 0;
-            }
+            get { return Application.version; }
         }
     }
 }

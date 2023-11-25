@@ -34,8 +34,7 @@ namespace GameFrameX.Runtime
 
         [SerializeField] private string m_LogHelperTypeName = "UnityGameFramework.Runtime.DefaultLogHelper";
 
-        [SerializeField]
-        private string m_CompressionHelperTypeName = "UnityGameFramework.Runtime.DefaultCompressionHelper";
+        [SerializeField] private string m_CompressionHelperTypeName = "UnityGameFramework.Runtime.DefaultCompressionHelper";
 
         [SerializeField] private string m_JsonHelperTypeName = "UnityGameFramework.Runtime.DefaultJsonHelper";
 
@@ -138,8 +137,7 @@ namespace GameFrameX.Runtime
             InitVersionHelper();
             InitLogHelper();
             // Log.Info("Game Framework Version: {0}", GameFramework.Version.GameFrameworkVersion);
-            Log.Info("Game Version: {0} ({1}), Unity Version: {2}", GameFrameX.Version.GameVersion,
-                GameFrameX.Version.InternalGameVersion, Application.unityVersion);
+            Log.Info("Game Version: {0}, Unity Version: {1}", GameFrameX.Version.GameVersion, Application.unityVersion);
 #if UNITY_5_3_OR_NEWER || UNITY_5_3
             InitCompressionHelper();
             InitJsonHelper();
@@ -251,7 +249,7 @@ namespace GameFrameX.Runtime
                 return;
             }
 
-            Utility.Text.ITextHelper textHelper = (Utility.Text.ITextHelper) Activator.CreateInstance(textHelperType);
+            Utility.Text.ITextHelper textHelper = (Utility.Text.ITextHelper)Activator.CreateInstance(textHelperType);
             if (textHelper == null)
             {
                 Log.Error("Can not create text helper instance '{0}'.", m_TextHelperTypeName);
@@ -276,7 +274,7 @@ namespace GameFrameX.Runtime
             }
 
             GameFrameX.Version.IVersionHelper versionHelper =
-                (GameFrameX.Version.IVersionHelper) Activator.CreateInstance(versionHelperType);
+                (GameFrameX.Version.IVersionHelper)Activator.CreateInstance(versionHelperType);
             if (versionHelper == null)
             {
                 throw new GameFrameworkException(Utility.Text.Format("Can not create version helper instance '{0}'.",
@@ -301,7 +299,7 @@ namespace GameFrameX.Runtime
             }
 
             GameFrameworkLog.ILogHelper logHelper =
-                (GameFrameworkLog.ILogHelper) Activator.CreateInstance(logHelperType);
+                (GameFrameworkLog.ILogHelper)Activator.CreateInstance(logHelperType);
             if (logHelper == null)
             {
                 throw new GameFrameworkException(Utility.Text.Format("Can not create log helper instance '{0}'.",
@@ -326,7 +324,7 @@ namespace GameFrameX.Runtime
             }
 
             Utility.Compression.ICompressionHelper compressionHelper =
-                (Utility.Compression.ICompressionHelper) Activator.CreateInstance(compressionHelperType);
+                (Utility.Compression.ICompressionHelper)Activator.CreateInstance(compressionHelperType);
             if (compressionHelper == null)
             {
                 Log.Error("Can not create compression helper instance '{0}'.", m_CompressionHelperTypeName);
@@ -350,7 +348,7 @@ namespace GameFrameX.Runtime
                 return;
             }
 
-            Utility.Json.IJsonHelper jsonHelper = (Utility.Json.IJsonHelper) Activator.CreateInstance(jsonHelperType);
+            Utility.Json.IJsonHelper jsonHelper = (Utility.Json.IJsonHelper)Activator.CreateInstance(jsonHelperType);
             if (jsonHelper == null)
             {
                 Log.Error("Can not create JSON helper instance '{0}'.", m_JsonHelperTypeName);

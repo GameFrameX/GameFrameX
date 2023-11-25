@@ -12,19 +12,16 @@ namespace GameFrameX
     /// </summary>
     public static partial class Version
     {
-        private const string GameFrameworkVersionString = "2021.05.31";
+        private const string GameFrameworkVersionString = "0.1.0";
 
-        private static IVersionHelper s_VersionHelper = null;
+        private static IVersionHelper _versionHelper = null;
 
         /// <summary>
         /// 获取游戏框架版本号。
         /// </summary>
         public static string GameFrameworkVersion
         {
-            get
-            {
-                return GameFrameworkVersionString;
-            }
+            get { return GameFrameworkVersionString; }
         }
 
         /// <summary>
@@ -34,28 +31,12 @@ namespace GameFrameX
         {
             get
             {
-                if (s_VersionHelper == null)
+                if (_versionHelper == null)
                 {
                     return string.Empty;
                 }
 
-                return s_VersionHelper.GameVersion;
-            }
-        }
-
-        /// <summary>
-        /// 获取内部游戏版本号。
-        /// </summary>
-        public static int InternalGameVersion
-        {
-            get
-            {
-                if (s_VersionHelper == null)
-                {
-                    return 0;
-                }
-
-                return s_VersionHelper.InternalGameVersion;
+                return _versionHelper.GameVersion;
             }
         }
 
@@ -65,7 +46,7 @@ namespace GameFrameX
         /// <param name="versionHelper">要设置的版本号辅助器。</param>
         public static void SetVersionHelper(IVersionHelper versionHelper)
         {
-            s_VersionHelper = versionHelper;
+            _versionHelper = versionHelper;
         }
     }
 }
