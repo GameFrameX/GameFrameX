@@ -12,189 +12,222 @@ namespace GameFrameX
 {
     public static partial class ReferencePool
     {
+        /// <summary>
+        /// 引用集合
+        /// </summary>
         private sealed class ReferenceCollection
         {
-            private readonly Queue<IReference> m_References;
-            private readonly Type m_ReferenceType;
-            private int m_UsingReferenceCount;
-            private int m_AcquireReferenceCount;
-            private int m_ReleaseReferenceCount;
-            private int m_AddReferenceCount;
-            private int m_RemoveReferenceCount;
+            private readonly Queue<IReference> _references;
+            private readonly Type _referenceType;
+            private int _usingReferenceCount;
+            private int _acquireReferenceCount;
+            private int _releaseReferenceCount;
+            private int _addReferenceCount;
+            private int _removeReferenceCount;
 
             public ReferenceCollection(Type referenceType)
             {
-                m_References = new Queue<IReference>();
-                m_ReferenceType = referenceType;
-                m_UsingReferenceCount = 0;
-                m_AcquireReferenceCount = 0;
-                m_ReleaseReferenceCount = 0;
-                m_AddReferenceCount = 0;
-                m_RemoveReferenceCount = 0;
+                _references = new Queue<IReference>();
+                _referenceType = referenceType;
+                _usingReferenceCount = 0;
+                _acquireReferenceCount = 0;
+                _releaseReferenceCount = 0;
+                _addReferenceCount = 0;
+                _removeReferenceCount = 0;
             }
 
+            /// <summary>
+            /// 引用类型
+            /// </summary>
             public Type ReferenceType
             {
-                get
-                {
-                    return m_ReferenceType;
-                }
+                get { return _referenceType; }
             }
 
+            /// <summary>
+            /// 未使用的引用计数。
+            /// </summary>
             public int UnusedReferenceCount
             {
-                get
-                {
-                    return m_References.Count;
-                }
+                get { return _references.Count; }
             }
 
+            /// <summary>
+            /// 正在使用的引用计数。
+            /// </summary>
             public int UsingReferenceCount
             {
-                get
-                {
-                    return m_UsingReferenceCount;
-                }
+                get { return _usingReferenceCount; }
             }
 
+            /// <summary>
+            /// 获取引用的次数。
+            /// </summary>
             public int AcquireReferenceCount
             {
-                get
-                {
-                    return m_AcquireReferenceCount;
-                }
+                get { return _acquireReferenceCount; }
             }
 
+            /// <summary>
+            /// 归还引用的次数。
+            /// </summary>
             public int ReleaseReferenceCount
             {
-                get
-                {
-                    return m_ReleaseReferenceCount;
-                }
+                get { return _releaseReferenceCount; }
             }
 
+            /// <summary>
+            /// 添加引用的次数。
+            /// </summary>
             public int AddReferenceCount
             {
-                get
-                {
-                    return m_AddReferenceCount;
-                }
+                get { return _addReferenceCount; }
             }
 
+            /// <summary>
+            /// 移除引用的次数。
+            /// </summary>
             public int RemoveReferenceCount
             {
-                get
-                {
-                    return m_RemoveReferenceCount;
-                }
+                get { return _removeReferenceCount; }
             }
 
+            /// <summary>
+            /// 从引用池获取引用。
+            /// </summary>
+            /// <typeparam name="T">引用类型。</typeparam>
+            /// <returns>引用。</returns>
             public T Acquire<T>() where T : class, IReference, new()
             {
-                if (typeof(T) != m_ReferenceType)
+                if (typeof(T) != _referenceType)
                 {
                     throw new GameFrameworkException("Type is invalid.");
                 }
 
-                m_UsingReferenceCount++;
-                m_AcquireReferenceCount++;
-                lock (m_References)
+                _usingReferenceCount++;
+                _acquireReferenceCount++;
+                lock (_references)
                 {
-                    if (m_References.Count > 0)
+                    if (_references.Count > 0)
                     {
-                        return (T)m_References.Dequeue();
+                        return (T)_references.Dequeue();
                     }
                 }
 
-                m_AddReferenceCount++;
+                _addReferenceCount++;
                 return new T();
             }
 
+            /// <summary>
+            /// 从引用池获取引用。
+            /// </summary>
+            /// <returns>引用。</returns>
             public IReference Acquire()
             {
-                m_UsingReferenceCount++;
-                m_AcquireReferenceCount++;
-                lock (m_References)
+                _usingReferenceCount++;
+                _acquireReferenceCount++;
+                lock (_references)
                 {
-                    if (m_References.Count > 0)
+                    if (_references.Count > 0)
                     {
-                        return m_References.Dequeue();
+                        return _references.Dequeue();
                     }
                 }
 
-                m_AddReferenceCount++;
-                return (IReference)Activator.CreateInstance(m_ReferenceType);
+                _addReferenceCount++;
+                return (IReference)Activator.CreateInstance(_referenceType);
             }
 
+            /// <summary>
+            /// 释放一个引用对象。
+            /// </summary>
+            /// <param name="reference">要释放的引用对象。</param>
             public void Release(IReference reference)
             {
                 reference.Clear();
-                lock (m_References)
+                lock (_references)
                 {
-                    if (m_EnableStrictCheck && m_References.Contains(reference))
+                    if (m_EnableStrictCheck && _references.Contains(reference))
                     {
                         throw new GameFrameworkException("The reference has been released.");
                     }
 
-                    m_References.Enqueue(reference);
+                    _references.Enqueue(reference);
                 }
 
-                m_ReleaseReferenceCount++;
-                m_UsingReferenceCount--;
+                _releaseReferenceCount++;
+                _usingReferenceCount--;
             }
 
+            /// <summary>
+            /// 添加指定类型的引用对象到引用池中。
+            /// </summary>
+            /// <typeparam name="T">要添加的引用对象类型。</typeparam>
+            /// <param name="count">要添加的引用对象数量。</param>
+            /// <exception cref="GameFrameworkException">类型无效。</exception>
             public void Add<T>(int count) where T : class, IReference, new()
             {
-                if (typeof(T) != m_ReferenceType)
+                if (typeof(T) != _referenceType)
                 {
                     throw new GameFrameworkException("Type is invalid.");
                 }
 
-                lock (m_References)
+                lock (_references)
                 {
-                    m_AddReferenceCount += count;
+                    _addReferenceCount += count;
                     while (count-- > 0)
                     {
-                        m_References.Enqueue(new T());
+                        _references.Enqueue(new T());
                     }
                 }
             }
 
+            /// <summary>
+            /// 向引用池中添加指定数量的引用。
+            /// </summary>
+            /// <param name="count">要添加的引用数量。</param>
             public void Add(int count)
             {
-                lock (m_References)
+                lock (_references)
                 {
-                    m_AddReferenceCount += count;
+                    _addReferenceCount += count;
                     while (count-- > 0)
                     {
-                        m_References.Enqueue((IReference)Activator.CreateInstance(m_ReferenceType));
+                        _references.Enqueue((IReference)Activator.CreateInstance(_referenceType));
                     }
                 }
             }
 
+            /// <summary>
+            /// 从引用池中移除指定数量的引用。
+            /// </summary>
+            /// <param name="count">要移除的引用数量。</param>
             public void Remove(int count)
             {
-                lock (m_References)
+                lock (_references)
                 {
-                    if (count > m_References.Count)
+                    if (count > _references.Count)
                     {
-                        count = m_References.Count;
+                        count = _references.Count;
                     }
 
-                    m_RemoveReferenceCount += count;
+                    _removeReferenceCount += count;
                     while (count-- > 0)
                     {
-                        m_References.Dequeue();
+                        _references.Dequeue();
                     }
                 }
             }
 
+            /// <summary>
+            /// 从引用池中移除所有的引用。
+            /// </summary>
             public void RemoveAll()
             {
-                lock (m_References)
+                lock (_references)
                 {
-                    m_RemoveReferenceCount += m_References.Count;
-                    m_References.Clear();
+                    _removeReferenceCount += _references.Count;
+                    _references.Clear();
                 }
             }
         }

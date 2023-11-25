@@ -14,7 +14,7 @@ namespace GameFrameX
     /// 引用池信息。
     /// </summary>
     [StructLayout(LayoutKind.Auto)]
-    public struct ReferencePoolInfo
+    public readonly struct ReferencePoolInfo
     {
         private readonly Type m_Type;
         private readonly int m_UnusedReferenceCount;
@@ -50,10 +50,7 @@ namespace GameFrameX
         /// </summary>
         public Type Type
         {
-            get
-            {
-                return m_Type;
-            }
+            get { return m_Type; }
         }
 
         /// <summary>
@@ -61,10 +58,7 @@ namespace GameFrameX
         /// </summary>
         public int UnusedReferenceCount
         {
-            get
-            {
-                return m_UnusedReferenceCount;
-            }
+            get { return m_UnusedReferenceCount; }
         }
 
         /// <summary>
@@ -72,10 +66,7 @@ namespace GameFrameX
         /// </summary>
         public int UsingReferenceCount
         {
-            get
-            {
-                return m_UsingReferenceCount;
-            }
+            get { return m_UsingReferenceCount; }
         }
 
         /// <summary>
@@ -83,10 +74,7 @@ namespace GameFrameX
         /// </summary>
         public int AcquireReferenceCount
         {
-            get
-            {
-                return m_AcquireReferenceCount;
-            }
+            get { return m_AcquireReferenceCount; }
         }
 
         /// <summary>
@@ -94,10 +82,7 @@ namespace GameFrameX
         /// </summary>
         public int ReleaseReferenceCount
         {
-            get
-            {
-                return m_ReleaseReferenceCount;
-            }
+            get { return m_ReleaseReferenceCount; }
         }
 
         /// <summary>
@@ -105,10 +90,7 @@ namespace GameFrameX
         /// </summary>
         public int AddReferenceCount
         {
-            get
-            {
-                return m_AddReferenceCount;
-            }
+            get { return m_AddReferenceCount; }
         }
 
         /// <summary>
@@ -116,10 +98,7 @@ namespace GameFrameX
         /// </summary>
         public int RemoveReferenceCount
         {
-            get
-            {
-                return m_RemoveReferenceCount;
-            }
+            get { return m_RemoveReferenceCount; }
         }
     }
 }

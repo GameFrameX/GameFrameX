@@ -23,14 +23,8 @@ namespace GameFrameX
         /// </summary>
         public static bool EnableStrictCheck
         {
-            get
-            {
-                return m_EnableStrictCheck;
-            }
-            set
-            {
-                m_EnableStrictCheck = value;
-            }
+            get { return m_EnableStrictCheck; }
+            set { m_EnableStrictCheck = value; }
         }
 
         /// <summary>
@@ -38,10 +32,7 @@ namespace GameFrameX
         /// </summary>
         public static int Count
         {
-            get
-            {
-                return s_ReferenceCollections.Count;
-            }
+            get { return s_ReferenceCollections.Count; }
         }
 
         /// <summary>
@@ -56,9 +47,10 @@ namespace GameFrameX
             lock (s_ReferenceCollections)
             {
                 results = new ReferencePoolInfo[s_ReferenceCollections.Count];
-                foreach (KeyValuePair<Type, ReferenceCollection> referenceCollection in s_ReferenceCollections)
+                foreach (var referenceCollection in s_ReferenceCollections)
                 {
-                    results[index++] = new ReferencePoolInfo(referenceCollection.Key, referenceCollection.Value.UnusedReferenceCount, referenceCollection.Value.UsingReferenceCount, referenceCollection.Value.AcquireReferenceCount, referenceCollection.Value.ReleaseReferenceCount, referenceCollection.Value.AddReferenceCount, referenceCollection.Value.RemoveReferenceCount);
+                    results[index++] = new ReferencePoolInfo(referenceCollection.Key, referenceCollection.Value.UnusedReferenceCount, referenceCollection.Value.UsingReferenceCount, referenceCollection.Value.AcquireReferenceCount, referenceCollection.Value.ReleaseReferenceCount,
+                        referenceCollection.Value.AddReferenceCount, referenceCollection.Value.RemoveReferenceCount);
                 }
             }
 
@@ -72,7 +64,7 @@ namespace GameFrameX
         {
             lock (s_ReferenceCollections)
             {
-                foreach (KeyValuePair<Type, ReferenceCollection> referenceCollection in s_ReferenceCollections)
+                foreach (var referenceCollection in s_ReferenceCollections)
                 {
                     referenceCollection.Value.RemoveAll();
                 }
