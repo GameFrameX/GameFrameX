@@ -34,28 +34,44 @@ namespace GameFrameX.Runtime
             }
         }
 
-
+        /// <summary>
+        /// 在固定的帧率下调用。
+        /// </summary>
         private void FixedUpdate()
         {
             _monoManager.FixedUpdate();
         }
 
+        /// <summary>
+        /// 在所有 Update 函数调用后每帧调用。
+        /// </summary>
         private void LateUpdate()
         {
             _monoManager.LateUpdate();
         }
 
+        /// <summary>
+        /// 当 MonoBehaviour 将被销毁时调用。
+        /// </summary>
         private void OnDestroy()
         {
             _monoManager.OnDestroy();
         }
 
+        /// <summary>
+        /// 当应用程序失去或获得焦点时调用。
+        /// </summary>
+        /// <param name="focusStatus">应用程序的焦点状态</param>
         private void OnApplicationFocus(bool focusStatus)
         {
             _monoManager.OnApplicationFocus(focusStatus);
             _eventManager.Fire(this, OnApplicationFocusChangedEventArgs.Create(focusStatus));
         }
 
+        /// <summary>
+        /// 当应用程序暂停或恢复时调用。
+        /// </summary>
+        /// <param name="pauseStatus">应用程序的暂停状态</param>
         private void OnApplicationPause(bool pauseStatus)
         {
             _monoManager.OnApplicationPause(pauseStatus);
