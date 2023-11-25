@@ -13,7 +13,7 @@ namespace GameFrameX
     public abstract class BaseEventArgs : GameFrameworkEventArgs
     {
         /// <summary>
-        /// 获取类型编号。
+        /// 获取事件ID。
         /// </summary>
         public abstract string Id
         {
