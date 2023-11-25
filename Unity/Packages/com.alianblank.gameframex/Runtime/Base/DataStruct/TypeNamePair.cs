@@ -14,7 +14,7 @@ namespace GameFrameX
     /// 类型和名称的组合值。
     /// </summary>
     [StructLayout(LayoutKind.Auto)]
-    internal struct TypeNamePair : IEquatable<TypeNamePair>
+    internal readonly struct TypeNamePair : IEquatable<TypeNamePair>
     {
         private readonly Type m_Type;
         private readonly string m_Name;
@@ -23,8 +23,7 @@ namespace GameFrameX
         /// 初始化类型和名称的组合值的新实例。
         /// </summary>
         /// <param name="type">类型。</param>
-        public TypeNamePair(Type type)
-            : this(type, string.Empty)
+        public TypeNamePair(Type type) : this(type, string.Empty)
         {
         }
 
@@ -49,10 +48,7 @@ namespace GameFrameX
         /// </summary>
         public Type Type
         {
-            get
-            {
-                return m_Type;
-            }
+            get { return m_Type; }
         }
 
         /// <summary>
@@ -60,10 +56,7 @@ namespace GameFrameX
         /// </summary>
         public string Name
         {
-            get
-            {
-                return m_Name;
-            }
+            get { return m_Name; }
         }
 
         /// <summary>
@@ -78,7 +71,7 @@ namespace GameFrameX
             }
 
             string typeName = m_Type.FullName;
-            return string.IsNullOrEmpty(m_Name) ? typeName : Utility.Text.Format("{0}.{1}", typeName, m_Name);
+            return (string.IsNullOrEmpty(m_Name) ? typeName : Utility.Text.Format("{0}.{1}", typeName, m_Name)) ?? string.Empty;
         }
 
         /// <summary>
@@ -97,7 +90,7 @@ namespace GameFrameX
         /// <returns>被比较的对象是否与自身相等。</returns>
         public override bool Equals(object obj)
         {
-            return obj is TypeNamePair && Equals((TypeNamePair)obj);
+            return obj is TypeNamePair pair && Equals(pair);
         }
 
         /// <summary>
