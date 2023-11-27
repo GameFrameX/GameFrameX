@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using GameFrameX.ObjectPool;
 using GameFrameX.Resource;
+using GameFrameX.Runtime;
 
 namespace GameFrameX.Entity
 {
@@ -20,18 +21,12 @@ namespace GameFrameX.Entity
         /// <summary>
         /// 获取实体数量。
         /// </summary>
-        int EntityCount
-        {
-            get;
-        }
+        int EntityCount { get; }
 
         /// <summary>
         /// 获取实体组数量。
         /// </summary>
-        int EntityGroupCount
-        {
-            get;
-        }
+        int EntityGroupCount { get; }
 
         /// <summary>
         /// 显示实体成功事件。
@@ -67,8 +62,8 @@ namespace GameFrameX.Entity
         /// <summary>
         /// 设置资源管理器。
         /// </summary>
-        /// <param name="resourceManager">资源管理器。</param>
-        void SetResourceManager(IResourceManager resourceManager);
+        /// <param name="assetManager">资源管理器。</param>
+        void SetResourceManager(IAssetManager assetManager);
 
         /// <summary>
         /// 设置实体辅助器。

@@ -7,6 +7,7 @@
 
 using GameFrameX.Entity;
 using UnityEngine;
+using YooAsset;
 
 namespace GameFrameX.Runtime
 {
@@ -15,7 +16,9 @@ namespace GameFrameX.Runtime
     /// </summary>
     public class DefaultEntityHelper : EntityHelperBase
     {
-        private ResourceComponent m_ResourceComponent = null;
+        private IAssetManager _assetManager = null;
+
+        private AssetOperationHandle _assetOperationHandle;
 
         /// <summary>
         /// 实例化实体。
@@ -24,7 +27,16 @@ namespace GameFrameX.Runtime
         /// <returns>实例化后的实体。</returns>
         public override object InstantiateEntity(object entityAsset)
         {
-            return Instantiate((Object)entityAsset);
+            _assetOperationHandle = entityAsset as AssetOperationHandle;
+            if (_assetOperationHandle != null)
+            {
+                return _assetOperationHandle.InstantiateSync();
+            }
+            else
+            {
+                Log.Error("entityAsset is AssetOperationHandle invalid.");
+                return null;
+            }
         }
 
         /// <summary>
@@ -56,14 +68,21 @@ namespace GameFrameX.Runtime
         /// <param name="entityInstance">要释放的实体实例。</param>
         public override void ReleaseEntity(object entityAsset, object entityInstance)
         {
-            m_ResourceComponent.UnloadAsset(entityAsset);
+            AssetOperationHandle assetOperationHandle = entityAsset as AssetOperationHandle;
+            if (assetOperationHandle == null)
+            {
+                Log.Error("entityAsset is AssetOperationHandle invalid.");
+                return;
+            }
+
+            assetOperationHandle.Release();
             Destroy((Object)entityInstance);
         }
 
         private void Start()
         {
-            m_ResourceComponent = GameEntry.GetComponent<ResourceComponent>();
-            if (m_ResourceComponent == null)
+            _assetManager = GameFrameworkEntry.GetModule<IAssetManager>();
+            if (_assetManager == null)
             {
                 Log.Fatal("Resource component is invalid.");
                 return;

@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using GameFrameX.ObjectPool;
 using GameFrameX.Resource;
+using GameFrameX.Runtime;
+using YooAsset;
 
 namespace GameFrameX.Entity
 {
@@ -22,9 +24,8 @@ namespace GameFrameX.Entity
         private readonly Dictionary<int, int> m_EntitiesBeingLoaded;
         private readonly HashSet<int> m_EntitiesToReleaseOnLoad;
         private readonly Queue<EntityInfo> m_RecycleQueue;
-        private readonly LoadAssetCallbacks m_LoadAssetCallbacks;
         private IObjectPoolManager m_ObjectPoolManager;
-        private IResourceManager m_ResourceManager;
+        private IAssetManager _assetManager;
         private IEntityHelper m_EntityHelper;
         private int m_Serial;
         private bool m_IsShutdown;
@@ -44,9 +45,9 @@ namespace GameFrameX.Entity
             m_EntitiesBeingLoaded = new Dictionary<int, int>();
             m_EntitiesToReleaseOnLoad = new HashSet<int>();
             m_RecycleQueue = new Queue<EntityInfo>();
-            m_LoadAssetCallbacks = new LoadAssetCallbacks(LoadAssetSuccessCallback, LoadAssetFailureCallback, LoadAssetUpdateCallback, LoadAssetDependencyAssetCallback);
+            // m_LoadAssetCallbacks = new LoadAssetCallbacks(LoadAssetSuccessCallback, LoadAssetFailureCallback, LoadAssetUpdateCallback, LoadAssetDependencyAssetCallback);
             m_ObjectPoolManager = null;
-            m_ResourceManager = null;
+            _assetManager = null;
             m_EntityHelper = null;
             m_Serial = 0;
             m_IsShutdown = false;
@@ -62,10 +63,7 @@ namespace GameFrameX.Entity
         /// </summary>
         public int EntityCount
         {
-            get
-            {
-                return m_EntityInfos.Count;
-            }
+            get { return m_EntityInfos.Count; }
         }
 
         /// <summary>
@@ -73,10 +71,7 @@ namespace GameFrameX.Entity
         /// </summary>
         public int EntityGroupCount
         {
-            get
-            {
-                return m_EntityGroups.Count;
-            }
+            get { return m_EntityGroups.Count; }
         }
 
         /// <summary>
@@ -84,14 +79,8 @@ namespace GameFrameX.Entity
         /// </summary>
         public event EventHandler<ShowEntitySuccessEventArgs> ShowEntitySuccess
         {
-            add
-            {
-                m_ShowEntitySuccessEventHandler += value;
-            }
-            remove
-            {
-                m_ShowEntitySuccessEventHandler -= value;
-            }
+            add { m_ShowEntitySuccessEventHandler += value; }
+            remove { m_ShowEntitySuccessEventHandler -= value; }
         }
 
         /// <summary>
@@ -99,14 +88,8 @@ namespace GameFrameX.Entity
         /// </summary>
         public event EventHandler<ShowEntityFailureEventArgs> ShowEntityFailure
         {
-            add
-            {
-                m_ShowEntityFailureEventHandler += value;
-            }
-            remove
-            {
-                m_ShowEntityFailureEventHandler -= value;
-            }
+            add { m_ShowEntityFailureEventHandler += value; }
+            remove { m_ShowEntityFailureEventHandler -= value; }
         }
 
         /// <summary>
@@ -114,14 +97,8 @@ namespace GameFrameX.Entity
         /// </summary>
         public event EventHandler<ShowEntityUpdateEventArgs> ShowEntityUpdate
         {
-            add
-            {
-                m_ShowEntityUpdateEventHandler += value;
-            }
-            remove
-            {
-                m_ShowEntityUpdateEventHandler -= value;
-            }
+            add { m_ShowEntityUpdateEventHandler += value; }
+            remove { m_ShowEntityUpdateEventHandler -= value; }
         }
 
         /// <summary>
@@ -129,14 +106,8 @@ namespace GameFrameX.Entity
         /// </summary>
         public event EventHandler<ShowEntityDependencyAssetEventArgs> ShowEntityDependencyAsset
         {
-            add
-            {
-                m_ShowEntityDependencyAssetEventHandler += value;
-            }
-            remove
-            {
-                m_ShowEntityDependencyAssetEventHandler -= value;
-            }
+            add { m_ShowEntityDependencyAssetEventHandler += value; }
+            remove { m_ShowEntityDependencyAssetEventHandler -= value; }
         }
 
         /// <summary>
@@ -144,14 +115,8 @@ namespace GameFrameX.Entity
         /// </summary>
         public event EventHandler<HideEntityCompleteEventArgs> HideEntityComplete
         {
-            add
-            {
-                m_HideEntityCompleteEventHandler += value;
-            }
-            remove
-            {
-                m_HideEntityCompleteEventHandler -= value;
-            }
+            add { m_HideEntityCompleteEventHandler += value; }
+            remove { m_HideEntityCompleteEventHandler -= value; }
         }
 
         /// <summary>
@@ -214,15 +179,15 @@ namespace GameFrameX.Entity
         /// <summary>
         /// 设置资源管理器。
         /// </summary>
-        /// <param name="resourceManager">资源管理器。</param>
-        public void SetResourceManager(IResourceManager resourceManager)
+        /// <param name="assetManager">资源管理器。</param>
+        public void SetResourceManager(IAssetManager assetManager)
         {
-            if (resourceManager == null)
+            if (assetManager == null)
             {
                 throw new GameFrameworkException("Resource manager is invalid.");
             }
 
-            m_ResourceManager = resourceManager;
+            _assetManager = assetManager;
         }
 
         /// <summary>
@@ -605,9 +570,9 @@ namespace GameFrameX.Entity
         /// <param name="entityGroupName">实体组名称。</param>
         /// <param name="priority">加载实体资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void ShowEntity(int entityId, string entityAssetName, string entityGroupName, int priority, object userData)
+        public async void ShowEntity(int entityId, string entityAssetName, string entityGroupName, int priority, object userData)
         {
-            if (m_ResourceManager == null)
+            if (_assetManager == null)
             {
                 throw new GameFrameworkException("You must set resource manager first.");
             }
@@ -648,8 +613,20 @@ namespace GameFrameX.Entity
             {
                 int serialId = ++m_Serial;
                 m_EntitiesBeingLoaded.Add(entityId, serialId);
-                m_ResourceManager.LoadAsset(entityAssetName, priority, m_LoadAssetCallbacks, ShowEntityInfo.Create(serialId, entityId, entityGroup, userData));
-                return;
+
+                var assetOperationHandle = await _assetManager.LoadAssetAsync<UnityEngine.Object>(entityAssetName);
+                assetOperationHandle.Completed += (handle) =>
+                {
+                    var newUserData = ShowEntityInfo.Create(serialId, entityId, entityGroup, userData);
+                    if (handle.IsSucceed)
+                    {
+                        LoadAssetSuccessCallback(entityAssetName, handle.AssetObject, handle.Progress, newUserData);
+                    }
+                    else
+                    {
+                        LoadAssetFailureCallback(entityAssetName, handle.Status, handle.LastError, newUserData);
+                    }
+                };
             }
 
             InternalShowEntity(entityId, entityAssetName, entityGroup, entityInstanceObject.Target, false, 0f, userData);
@@ -1265,7 +1242,7 @@ namespace GameFrameX.Entity
             ReferencePool.Release(showEntityInfo);
         }
 
-        private void LoadAssetFailureCallback(string entityAssetName, LoadResourceStatus status, string errorMessage, object userData)
+        private void LoadAssetFailureCallback(string entityAssetName, EOperationStatus status, string errorMessage, object userData)
         {
             ShowEntityInfo showEntityInfo = (ShowEntityInfo)userData;
             if (showEntityInfo == null)

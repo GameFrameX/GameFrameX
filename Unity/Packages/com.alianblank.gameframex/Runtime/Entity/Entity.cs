@@ -27,10 +27,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public int Id
         {
-            get
-            {
-                return m_Id;
-            }
+            get { return m_Id; }
         }
 
         /// <summary>
@@ -38,10 +35,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public string EntityAssetName
         {
-            get
-            {
-                return m_EntityAssetName;
-            }
+            get { return m_EntityAssetName; }
         }
 
         /// <summary>
@@ -49,10 +43,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public object Handle
         {
-            get
-            {
-                return gameObject;
-            }
+            get { return gameObject; }
         }
 
         /// <summary>
@@ -60,10 +51,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public IEntityGroup EntityGroup
         {
-            get
-            {
-                return m_EntityGroup;
-            }
+            get { return m_EntityGroup; }
         }
 
         /// <summary>
@@ -71,10 +59,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public EntityLogic Logic
         {
-            get
-            {
-                return m_EntityLogic;
-            }
+            get { return m_EntityLogic; }
         }
 
         /// <summary>

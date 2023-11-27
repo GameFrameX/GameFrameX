@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Entity;
 using GameFrameX.ObjectPool;
 using GameFrameX.Resource;
@@ -39,8 +38,7 @@ namespace GameFrameX.Runtime
 
         [SerializeField] private EntityHelperBase m_CustomEntityHelper = null;
 
-        [SerializeField]
-        private string m_EntityGroupHelperTypeName = "UnityGameFramework.Runtime.DefaultEntityGroupHelper";
+        [SerializeField] private string m_EntityGroupHelperTypeName = "UnityGameFramework.Runtime.DefaultEntityGroupHelper";
 
         [SerializeField] private EntityGroupHelperBase m_CustomEntityGroupHelper = null;
 
@@ -108,7 +106,7 @@ namespace GameFrameX.Runtime
                 return;
             }
 
-            m_EntityManager.SetResourceManager(GameFrameworkEntry.GetModule<IResourceManager>());
+            m_EntityManager.SetResourceManager(GameFrameworkEntry.GetModule<IAssetManager>());
 
             m_EntityManager.SetObjectPoolManager(GameFrameworkEntry.GetModule<IObjectPoolManager>());
 
@@ -135,11 +133,10 @@ namespace GameFrameX.Runtime
 
             for (int i = 0; i < m_EntityGroups.Length; i++)
             {
-                if (!AddEntityGroup(m_EntityGroups[i].Name, m_EntityGroups[i].InstanceAutoReleaseInterval,
-                        m_EntityGroups[i].InstanceCapacity, m_EntityGroups[i].InstanceExpireTime,
-                        m_EntityGroups[i].InstancePriority))
+                var entityGroup = m_EntityGroups[i];
+                if (!AddEntityGroup(entityGroup.Name, entityGroup.InstanceAutoReleaseInterval, entityGroup.InstanceCapacity, entityGroup.InstanceExpireTime, entityGroup.InstancePriority))
                 {
-                    Log.Warning("Add entity group '{0}' failure.", m_EntityGroups[i].Name);
+                    Log.Warning("Add entity group '{0}' failure.", entityGroup.Name);
                     continue;
                 }
             }
@@ -200,8 +197,7 @@ namespace GameFrameX.Runtime
                 return false;
             }
 
-            EntityGroupHelperBase entityGroupHelper = Helper.CreateHelper(m_EntityGroupHelperTypeName,
-                m_CustomEntityGroupHelper, EntityGroupCount);
+            EntityGroupHelperBase entityGroupHelper = Helper.CreateHelper(m_EntityGroupHelperTypeName, m_CustomEntityGroupHelper, EntityGroupCount);
             if (entityGroupHelper == null)
             {
                 Log.Error("Can not create entity group helper.");
@@ -213,8 +209,7 @@ namespace GameFrameX.Runtime
             transform.SetParent(m_InstanceRoot);
             transform.localScale = Vector3.one;
 
-            return m_EntityManager.AddEntityGroup(entityGroupName, instanceAutoReleaseInterval, instanceCapacity,
-                instanceExpireTime, instancePriority, entityGroupHelper);
+            return m_EntityManager.AddEntityGroup(entityGroupName, instanceAutoReleaseInterval, instanceCapacity, instanceExpireTime, instancePriority, entityGroupHelper);
         }
 
         /// <summary>
@@ -244,7 +239,7 @@ namespace GameFrameX.Runtime
         /// <returns>实体。</returns>
         public Entity GetEntity(int entityId)
         {
-            return (Entity) m_EntityManager.GetEntity(entityId);
+            return (Entity)m_EntityManager.GetEntity(entityId);
         }
 
         /// <summary>
@@ -254,7 +249,7 @@ namespace GameFrameX.Runtime
         /// <returns>要获取的实体。</returns>
         public Entity GetEntity(string entityAssetName)
         {
-            return (Entity) m_EntityManager.GetEntity(entityAssetName);
+            return (Entity)m_EntityManager.GetEntity(entityAssetName);
         }
 
         /// <summary>
@@ -268,7 +263,7 @@ namespace GameFrameX.Runtime
             Entity[] entityImpls = new Entity[entities.Length];
             for (int i = 0; i < entities.Length; i++)
             {
-                entityImpls[i] = (Entity) entities[i];
+                entityImpls[i] = (Entity)entities[i];
             }
 
             return entityImpls;
@@ -291,7 +286,7 @@ namespace GameFrameX.Runtime
             m_EntityManager.GetEntities(entityAssetName, m_InternalEntityResults);
             foreach (IEntity entity in m_InternalEntityResults)
             {
-                results.Add((Entity) entity);
+                results.Add((Entity)entity);
             }
         }
 
@@ -305,7 +300,7 @@ namespace GameFrameX.Runtime
             Entity[] entityImpls = new Entity[entities.Length];
             for (int i = 0; i < entities.Length; i++)
             {
-                entityImpls[i] = (Entity) entities[i];
+                entityImpls[i] = (Entity)entities[i];
             }
 
             return entityImpls;
@@ -327,7 +322,7 @@ namespace GameFrameX.Runtime
             m_EntityManager.GetAllLoadedEntities(m_InternalEntityResults);
             foreach (IEntity entity in m_InternalEntityResults)
             {
-                results.Add((Entity) entity);
+                results.Add((Entity)entity);
             }
         }
 
@@ -482,8 +477,7 @@ namespace GameFrameX.Runtime
                 return;
             }
 
-            m_EntityManager.ShowEntity(entityId, entityAssetName, entityGroupName, priority,
-                ShowEntityInfo.Create(entityLogicType, userData));
+            m_EntityManager.ShowEntity(entityId, entityAssetName, entityGroupName, priority, ShowEntityInfo.Create(entityLogicType, userData));
         }
 
         /// <summary>
@@ -556,7 +550,7 @@ namespace GameFrameX.Runtime
         /// <returns>子实体的父实体。</returns>
         public Entity GetParentEntity(int childEntityId)
         {
-            return (Entity) m_EntityManager.GetParentEntity(childEntityId);
+            return (Entity)m_EntityManager.GetParentEntity(childEntityId);
         }
 
         /// <summary>
@@ -566,7 +560,7 @@ namespace GameFrameX.Runtime
         /// <returns>子实体的父实体。</returns>
         public Entity GetParentEntity(Entity childEntity)
         {
-            return (Entity) m_EntityManager.GetParentEntity(childEntity);
+            return (Entity)m_EntityManager.GetParentEntity(childEntity);
         }
 
         /// <summary>
@@ -586,7 +580,7 @@ namespace GameFrameX.Runtime
         /// <returns>子实体。</returns>
         public Entity GetChildEntity(int parentEntityId)
         {
-            return (Entity) m_EntityManager.GetChildEntity(parentEntityId);
+            return (Entity)m_EntityManager.GetChildEntity(parentEntityId);
         }
 
         /// <summary>
@@ -596,7 +590,7 @@ namespace GameFrameX.Runtime
         /// <returns>子实体。</returns>
         public Entity GetChildEntity(IEntity parentEntity)
         {
-            return (Entity) m_EntityManager.GetChildEntity(parentEntity);
+            return (Entity)m_EntityManager.GetChildEntity(parentEntity);
         }
 
         /// <summary>
@@ -610,7 +604,7 @@ namespace GameFrameX.Runtime
             Entity[] entityImpls = new Entity[entities.Length];
             for (int i = 0; i < entities.Length; i++)
             {
-                entityImpls[i] = (Entity) entities[i];
+                entityImpls[i] = (Entity)entities[i];
             }
 
             return entityImpls;
@@ -631,9 +625,9 @@ namespace GameFrameX.Runtime
 
             results.Clear();
             m_EntityManager.GetChildEntities(parentEntityId, m_InternalEntityResults);
-            foreach (IEntity entity in m_InternalEntityResults)
+            foreach (var entity in m_InternalEntityResults)
             {
-                results.Add((Entity) entity);
+                results.Add((Entity)entity);
             }
         }
 
@@ -648,7 +642,7 @@ namespace GameFrameX.Runtime
             Entity[] entityImpls = new Entity[entities.Length];
             for (int i = 0; i < entities.Length; i++)
             {
-                entityImpls[i] = (Entity) entities[i];
+                entityImpls[i] = (Entity)entities[i];
             }
 
             return entityImpls;
@@ -671,7 +665,7 @@ namespace GameFrameX.Runtime
             m_EntityManager.GetChildEntities(parentEntity, m_InternalEntityResults);
             foreach (IEntity entity in m_InternalEntityResults)
             {
-                results.Add((Entity) entity);
+                results.Add((Entity)entity);
             }
         }
 
@@ -1110,33 +1104,31 @@ namespace GameFrameX.Runtime
             entityGroup.SetEntityInstancePriority(entity.gameObject, priority);
         }
 
-        private void OnShowEntitySuccess(object sender, GameFrameX.Entity.ShowEntitySuccessEventArgs e)
+        private void OnShowEntitySuccess(object sender, ShowEntitySuccessEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, ShowEntitySuccessEventArgs.Create(e));
+            m_EventComponent.Fire(this, eventArgs);
         }
 
-        private void OnShowEntityFailure(object sender, GameFrameX.Entity.ShowEntityFailureEventArgs e)
+        private void OnShowEntityFailure(object sender, ShowEntityFailureEventArgs eventArgs)
         {
-            Log.Warning(
-                "Show entity failure, entity id '{0}', asset name '{1}', entity group name '{2}', error message '{3}'.",
-                e.EntityId, e.EntityAssetName, e.EntityGroupName, e.ErrorMessage);
-            m_EventComponent.Fire(this, ShowEntityFailureEventArgs.Create(e));
+            Log.Warning("Show entity failure, entity id '{0}', asset name '{1}', entity group name '{2}', error message '{3}'.",
+                eventArgs.EntityId, eventArgs.EntityAssetName, eventArgs.EntityGroupName, eventArgs.ErrorMessage);
+            m_EventComponent.Fire(this, eventArgs);
         }
 
-        private void OnShowEntityUpdate(object sender, GameFrameX.Entity.ShowEntityUpdateEventArgs e)
+        private void OnShowEntityUpdate(object sender, ShowEntityUpdateEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, ShowEntityUpdateEventArgs.Create(e));
+            m_EventComponent.Fire(this, eventArgs);
         }
 
-        private void OnShowEntityDependencyAsset(object sender,
-            GameFrameX.Entity.ShowEntityDependencyAssetEventArgs e)
+        private void OnShowEntityDependencyAsset(object sender, ShowEntityDependencyAssetEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, ShowEntityDependencyAssetEventArgs.Create(e));
+            m_EventComponent.Fire(this, eventArgs);
         }
 
-        private void OnHideEntityComplete(object sender, GameFrameX.Entity.HideEntityCompleteEventArgs e)
+        private void OnHideEntityComplete(object sender, HideEntityCompleteEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, HideEntityCompleteEventArgs.Create(e));
+            m_EventComponent.Fire(this, eventArgs);
         }
     }
 }

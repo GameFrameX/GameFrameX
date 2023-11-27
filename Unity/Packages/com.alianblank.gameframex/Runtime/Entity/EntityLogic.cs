@@ -26,10 +26,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public Entity Entity
         {
-            get
-            {
-                return m_Entity;
-            }
+            get { return m_Entity; }
         }
 
         /// <summary>
@@ -37,14 +34,8 @@ namespace GameFrameX.Runtime
         /// </summary>
         public string Name
         {
-            get
-            {
-                return gameObject.name;
-            }
-            set
-            {
-                gameObject.name = value;
-            }
+            get { return gameObject.name; }
+            set { gameObject.name = value; }
         }
 
         /// <summary>
@@ -52,10 +43,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public bool Available
         {
-            get
-            {
-                return m_Available;
-            }
+            get { return m_Available; }
         }
 
         /// <summary>
@@ -63,10 +51,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public bool Visible
         {
-            get
-            {
-                return m_Available && m_Visible;
-            }
+            get { return m_Available && m_Visible; }
             set
             {
                 if (!m_Available)
@@ -90,10 +75,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         public Transform CachedTransform
         {
-            get
-            {
-                return m_CachedTransform;
-            }
+            get { return m_CachedTransform; }
         }
 
         /// <summary>

@@ -23,18 +23,12 @@ namespace GameFrameX.Runtime
 
         public Type EntityLogicType
         {
-            get
-            {
-                return m_EntityLogicType;
-            }
+            get { return m_EntityLogicType; }
         }
 
         public object UserData
         {
-            get
-            {
-                return m_UserData;
-            }
+            get { return m_UserData; }
         }
 
         public static ShowEntityInfo Create(Type entityLogicType, object userData)
