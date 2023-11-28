@@ -22,9 +22,9 @@ namespace GameFrameX.Scene
     /// </summary>
     public sealed class GameSceneManager : GameFrameworkModule, IGameSceneManager
     {
-        private readonly Dictionary<string, SceneOperationHandle> m_LoadedSceneAssetNames;
-        private readonly Dictionary<string, SceneOperationHandle> m_LoadingSceneAssetNames;
-        private readonly Dictionary<string, SceneOperationHandle> m_UnloadingSceneAssetNames;
+        private readonly Dictionary<string, SceneHandle> m_LoadedSceneAssetNames;
+        private readonly Dictionary<string, SceneHandle> m_LoadingSceneAssetNames;
+        private readonly Dictionary<string, SceneHandle> m_UnloadingSceneAssetNames;
         private readonly LoadSceneCallbacks m_LoadSceneCallbacks;
         private readonly UnloadSceneCallbacks m_UnloadSceneCallbacks;
         private IAssetManager m_assetManager;
@@ -39,9 +39,9 @@ namespace GameFrameX.Scene
         /// </summary>
         public GameSceneManager()
         {
-            m_LoadedSceneAssetNames = new Dictionary<string, SceneOperationHandle>();
-            m_LoadingSceneAssetNames = new Dictionary<string, SceneOperationHandle>();
-            m_UnloadingSceneAssetNames = new Dictionary<string, SceneOperationHandle>();
+            m_LoadedSceneAssetNames = new Dictionary<string, SceneHandle>();
+            m_LoadingSceneAssetNames = new Dictionary<string, SceneHandle>();
+            m_UnloadingSceneAssetNames = new Dictionary<string, SceneHandle>();
             m_LoadSceneCallbacks = new LoadSceneCallbacks(LoadSceneSuccessCallback, LoadSceneFailureCallback, LoadSceneUpdateCallback);
             m_UnloadSceneCallbacks = new UnloadSceneCallbacks(UnloadSceneSuccessCallback, UnloadSceneFailureCallback);
             m_assetManager = null;
@@ -281,7 +281,7 @@ namespace GameFrameX.Scene
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName)
+        public UniTask<SceneHandle> LoadScene(string sceneAssetName)
         {
             return LoadScene(sceneAssetName, LoadSceneMode.Single);
         }
@@ -291,7 +291,7 @@ namespace GameFrameX.Scene
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="sceneMode">加载场景的方式。</param>
-        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode)
+        public UniTask<SceneHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode)
         {
             return LoadScene(sceneAssetName, sceneMode, null);
         }
@@ -301,7 +301,7 @@ namespace GameFrameX.Scene
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, object userData)
+        public UniTask<SceneHandle> LoadScene(string sceneAssetName, object userData)
         {
             return LoadScene(sceneAssetName, LoadSceneMode.Single, userData);
         }
@@ -312,7 +312,7 @@ namespace GameFrameX.Scene
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="userData">用户自定义数据。</param>
         /// <param name="sceneMode"></param>
-        public async UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData)
+        public async UniTask<SceneHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData)
         {
             if (string.IsNullOrEmpty(sceneAssetName))
             {
@@ -345,7 +345,7 @@ namespace GameFrameX.Scene
             return sceneOperationHandle;
         }
 
-        private void OnLoadSceneCompleted(SceneOperationHandle sceneOperationHandle)
+        private void OnLoadSceneCompleted(SceneHandle sceneOperationHandle)
         {
             m_LoadingSceneAssetNames.Remove(sceneOperationHandle.GetAssetInfo().AssetPath);
             m_LoadedSceneAssetNames.Add(sceneOperationHandle.GetAssetInfo().AssetPath, sceneOperationHandle);

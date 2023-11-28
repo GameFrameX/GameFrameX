@@ -39,7 +39,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        UniTask<SubAssetsOperationHandle> LoadSubAssetsAsync(AssetInfo assetInfo);
+        UniTask<SubAssetsHandle> LoadSubAssetsAsync(AssetInfo assetInfo);
 
         /// <summary>
         /// 异步加载子资源对象
@@ -47,14 +47,14 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <param name="type"></param>
         /// <returns></returns>
-        UniTask<SubAssetsOperationHandle> LoadSubAssetsAsync(string path, Type type);
+        UniTask<SubAssetsHandle> LoadSubAssetsAsync(string path, Type type);
 
         /// <summary>
         /// 异步加载子资源对象
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        UniTask<SubAssetsOperationHandle> LoadSubAssetsAsync<T>(string path) where T : Object;
+        UniTask<SubAssetsHandle> LoadSubAssetsAsync<T>(string path) where T : Object;
 
         #endregion
 
@@ -65,7 +65,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        UniTask<SubAssetsOperationHandle> LoadSubAssetsSync(AssetInfo assetInfo);
+        UniTask<SubAssetsHandle> LoadSubAssetsSync(AssetInfo assetInfo);
 
         /// <summary>
         /// 同步加载子资源对象
@@ -73,14 +73,14 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <param name="type"></param>
         /// <returns></returns>
-        UniTask<SubAssetsOperationHandle> LoadSubAssetsSync(string path, Type type);
+        UniTask<SubAssetsHandle> LoadSubAssetsSync(string path, Type type);
 
         /// <summary>
         /// 同步加载子资源对象
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        UniTask<SubAssetsOperationHandle> LoadSubAssetsSync<T>(string path) where T : Object;
+        UniTask<SubAssetsHandle> LoadSubAssetsSync<T>(string path) where T : Object;
 
         #endregion
 
@@ -91,14 +91,14 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        UniTask<RawFileOperationHandle> LoadRawFileAsync(AssetInfo assetInfo);
+        UniTask<RawFileHandle> LoadRawFileAsync(AssetInfo assetInfo);
 
         /// <summary>
         /// 异步加载原生文件
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        UniTask<RawFileOperationHandle> LoadRawFileAsync(string path);
+        UniTask<RawFileHandle> LoadRawFileAsync(string path);
 
         #endregion
 
@@ -109,14 +109,14 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        RawFileOperationHandle LoadRawFileSync(AssetInfo assetInfo);
+        RawFileHandle LoadRawFileSync(AssetInfo assetInfo);
 
         /// <summary>
         /// 同步加载原生文件
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        RawFileOperationHandle LoadRawFileSync(string path);
+        RawFileHandle LoadRawFileSync(string path);
 
         #endregion
 
@@ -128,7 +128,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        UniTask<AssetOperationHandle> LoadAssetAsync(AssetInfo assetInfo);
+        UniTask<AssetHandle> LoadAssetAsync(AssetInfo assetInfo);
 
         /// <summary>
         /// 异步加载资源
@@ -136,7 +136,7 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <param name="type">资源类型</param>
         /// <returns></returns>
-        UniTask<AssetOperationHandle> LoadAssetAsync(string path, Type type);
+        UniTask<AssetHandle> LoadAssetAsync(string path, Type type);
 
         /// <summary>
         /// 异步加载资源
@@ -144,7 +144,7 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <typeparam name="T">资源类型</typeparam>
         /// <returns></returns>
-        UniTask<AssetOperationHandle> LoadAssetAsync<T>(string path) where T : Object;
+        UniTask<AssetHandle> LoadAssetAsync<T>(string path) where T : Object;
 
         #endregion
 
@@ -156,21 +156,21 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <param name="type"></param>
         /// <returns></returns>
-        AssetOperationHandle LoadAssetSync(string path, Type type);
+        AssetHandle LoadAssetSync(string path, Type type);
 
         /// <summary>
         /// 同步加载资源
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        AssetOperationHandle LoadAssetSync(AssetInfo assetInfo);
+        AssetHandle LoadAssetSync(AssetInfo assetInfo);
 
         /// <summary>
         /// 同步加载资源
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        AssetOperationHandle LoadAssetSync<T>(string path) where T : Object;
+        AssetHandle LoadAssetSync<T>(string path) where T : Object;
 
         #endregion
 
@@ -183,7 +183,7 @@ namespace GameFrameX.Runtime
         /// <param name="sceneMode">场景模式</param>
         /// <param name="activateOnLoad">是否加载完成自动激活</param>
         /// <returns></returns>
-        UniTask<SceneOperationHandle> LoadSceneAsync(string path, LoadSceneMode sceneMode,
+        UniTask<SceneHandle> LoadSceneAsync(string path, LoadSceneMode sceneMode,
             bool activateOnLoad = true);
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace GameFrameX.Runtime
         /// <param name="sceneMode">场景模式</param>
         /// <param name="activateOnLoad">是否加载完成自动激活</param>
         /// <returns></returns>
-        UniTask<SceneOperationHandle> LoadSceneAsync(AssetInfo assetInfo, LoadSceneMode sceneMode,
+        UniTask<SceneHandle> LoadSceneAsync(AssetInfo assetInfo, LoadSceneMode sceneMode,
             bool activateOnLoad = true);
 
         #endregion
@@ -205,14 +205,14 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="packageName">资源包名称</param>
         /// <returns></returns>
-        AssetsPackage CreateAssetsPackage(string packageName);
+        ResourcePackage CreateAssetsPackage(string packageName);
 
         /// <summary>
         /// 尝试获取资源包
         /// </summary>
         /// <param name="packageName">资源包名称</param>
         /// <returns></returns>
-        AssetsPackage TryGetAssetsPackage(string packageName);
+        ResourcePackage TryGetAssetsPackage(string packageName);
 
         /// <summary>
         /// 检查资源包是否存在
@@ -226,7 +226,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="packageName">资源包名称</param>
         /// <returns></returns>
-        AssetsPackage GetAssetsPackage(string packageName);
+        ResourcePackage GetAssetsPackage(string packageName);
 
         #endregion
 
@@ -264,22 +264,11 @@ namespace GameFrameX.Runtime
         AssetInfo GetAssetInfo(string path);
 
         /// <summary>
-        /// 获取缓存目录根路径
-        /// </summary>
-        /// <returns></returns>
-        string GetCacheRootPath();
-
-        /// <summary>
-        /// 清空缓存
-        /// </summary>
-        void ClearCache();
-
-        /// <summary>
         /// 设置默认资源包
         /// </summary>
-        /// <param name="assetsPackage">资源信息</param>
+        /// <param name="resourcePackage">资源信息</param>
         /// <returns></returns>
-        void SetDefaultAssetsPackage(AssetsPackage assetsPackage);
+        void SetDefaultAssetsPackage(ResourcePackage resourcePackage);
 
         /// <summary>
         /// 销毁资源

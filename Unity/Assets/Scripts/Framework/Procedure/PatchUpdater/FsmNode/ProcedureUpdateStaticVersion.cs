@@ -22,7 +22,7 @@ namespace GameFrameX.Procedure
         {
             yield return new WaitForSecondsRealtime(0.5f);
 
-            var package = YooAssets.GetAssetsPackage(AssetComponent.BuildInPackageName);
+            var package = YooAssets.GetPackage(AssetComponent.BuildInPackageName);
             var operation = package.UpdatePackageVersionAsync();
             yield return operation;
 

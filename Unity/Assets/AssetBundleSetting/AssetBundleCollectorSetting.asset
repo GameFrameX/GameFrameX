@@ -13,11 +13,16 @@ MonoBehaviour:
   m_Name: AssetBundleCollectorSetting
   m_EditorClassIdentifier: 
   ShowPackageView: 1
+  ShowEditorAlias: 1
   UniqueBundleName: 0
-  ShowEditorAlias: 0
   Packages:
   - PackageName: DefaultPackage
     PackageDesc: 
+    EnableAddressable: 0
+    LocationToLower: 1
+    IncludeAssetGUID: 0
+    IgnoreDefaultType: 1
+    AutoCollectShaders: 1
     Groups:
     - GroupName: Config
       GroupDesc: 
@@ -31,18 +36,20 @@ MonoBehaviour:
         PackRuleName: PackRawFile
         FilterRuleName: CollectAll
         AssetTags: 
+        UserData: 
     - GroupName: Code
       GroupDesc: "\u70ED\u66F4\u65B0\u903B\u8F91\u4EE3\u7801"
       AssetTags: code
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/Bundles/Code
-        CollectorGUID: fb2b5b6715f0e28419ebca2b4df07bcd
+        CollectorGUID: 
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
+        UserData: 
     - GroupName: Shader
       GroupDesc: 
       AssetTags: 
@@ -60,3 +67,4 @@ MonoBehaviour:
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
+        UserData: 

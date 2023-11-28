@@ -252,7 +252,7 @@ namespace GameFrameX.Runtime
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName)
+        public UniTask<SceneHandle> LoadScene(string sceneAssetName)
         {
             return LoadScene(sceneAssetName, LoadSceneMode.Additive, null);
         }
@@ -263,7 +263,7 @@ namespace GameFrameX.Runtime
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="sceneMode">加载场景资源的优先级。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData = null)
+        public UniTask<SceneHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData = null)
         {
             if (string.IsNullOrEmpty(sceneAssetName))
             {

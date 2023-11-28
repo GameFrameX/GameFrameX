@@ -21,7 +21,7 @@ namespace GameFrameX.Procedure
             // Debug.Log("创建补丁下载器.");
             int downloadingMaxNum = 10;
             int failedTryAgain = 3;
-            PatchUpdater.Downloader = YooAssets.CreatePatchDownloader(downloadingMaxNum, failedTryAgain);
+            PatchUpdater.Downloader = YooAssets.CreateResourceDownloader(downloadingMaxNum, failedTryAgain);
             if (PatchUpdater.Downloader.TotalDownloadCount == 0)
             {
                 Debug.Log("没有发现需要下载的资源");

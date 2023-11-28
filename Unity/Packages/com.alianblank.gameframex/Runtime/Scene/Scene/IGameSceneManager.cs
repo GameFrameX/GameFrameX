@@ -118,14 +118,14 @@ namespace GameFrameX.Scene
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
-        UniTask<SceneOperationHandle> LoadScene(string sceneAssetName);
+        UniTask<SceneHandle> LoadScene(string sceneAssetName);
 
         /// <summary>
         /// 加载场景。
         /// </summary>
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="userData">用户自定义数据。</param>
-        UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, object userData);
+        UniTask<SceneHandle> LoadScene(string sceneAssetName, object userData);
 
         /// <summary>
         /// 加载场景。
@@ -133,7 +133,7 @@ namespace GameFrameX.Scene
         /// <param name="sceneAssetName">场景资源名称。</param>
         /// <param name="sceneMode"></param>
         /// <param name="userData">用户自定义数据。</param>
-        UniTask<SceneOperationHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData);
+        UniTask<SceneHandle> LoadScene(string sceneAssetName, LoadSceneMode sceneMode, object userData);
 
         /// <summary>
         /// 卸载场景。

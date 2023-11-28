@@ -22,7 +22,7 @@ namespace GameFrameX.Procedure
         private IEnumerator UpdateManifest(IFsm<IProcedureManager> procedureOwner)
         {
             yield return new WaitForSecondsRealtime(0.5f);
-            var package = YooAssets.GetAssetsPackage(AssetComponent.BuildInPackageName);
+            var package = YooAssets.GetPackage(AssetComponent.BuildInPackageName);
             var operation = package.UpdatePackageManifestAsync(GameApp.Asset.StaticVersion);
             yield return operation;
 

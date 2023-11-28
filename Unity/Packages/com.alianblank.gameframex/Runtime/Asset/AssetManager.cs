@@ -10,10 +10,10 @@ namespace GameFrameX.Runtime
     /// <summary>
     /// 资源组件。
     /// </summary>
-    public sealed class AssetManager :GameFrameworkModule, IAssetManager
+    public sealed class AssetManager : GameFrameworkModule, IAssetManager
     {
         private EPlayMode _gamePlayMode;
-        private AssetsPackage _buildinPackage;
+        private ResourcePackage _buildinPackage;
         public const string BuildInPackageName = "DefaultPackage";
 
         private InitializationOperation _initializationOperation;
@@ -50,16 +50,16 @@ namespace GameFrameX.Runtime
             Debug.Log($"资源系统运行模式：{_gamePlayMode}");
             YooAssets.Initialize();
             YooAssets.SetOperationSystemMaxTimeSlice(30);
-            YooAssets.SetCacheSystemCachedFileVerifyLevel(EVerifyLevel.High);
-            YooAssets.SetDownloadSystemBreakpointResumeFileSize(4096 * 8);
+            // YooAssets.SetCacheSystemCachedFileVerifyLevel(EVerifyLevel.High);
+            // YooAssets.SetDownloadSystemBreakpointResumeFileSize(4096 * 8);
 
             // 创建默认的资源包
-            _buildinPackage = YooAssets.TryGetAssetsPackage(BuildInPackageName);
+            _buildinPackage = YooAssets.TryGetPackage(BuildInPackageName);
             if (_buildinPackage == null)
             {
-                _buildinPackage = YooAssets.CreateAssetsPackage(BuildInPackageName);
+                _buildinPackage = YooAssets.CreatePackage(BuildInPackageName);
                 // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
-                YooAssets.SetDefaultAssetsPackage(_buildinPackage);
+                YooAssets.SetDefaultPackage(_buildinPackage);
             }
 
             if (_gamePlayMode == EPlayMode.EditorSimulateMode)
@@ -77,6 +77,11 @@ namespace GameFrameX.Runtime
                 // 联机运行模式
                 InitializeYooAssetHostPlayMode();
             }
+            else if (_gamePlayMode == EPlayMode.WebPlayMode)
+            {
+                // WebGL运行模式
+                InitializeYooAssetWebPlayMode();
+            }
 
             await _initializationOperation.ToUniTask();
 
@@ -86,36 +91,66 @@ namespace GameFrameX.Runtime
         private void InitializeYooAssetEditorSimulateMode()
         {
             var initParameters = new EditorSimulateModeParameters();
-            initParameters.SimulatePatchManifestPath = EditorSimulateModeHelper.SimulateBuild(BuildInPackageName);
-            initParameters.AssetLoadingMaxNumber = 10;
+            initParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline.ToString(), BuildInPackageName);
+            
             _initializationOperation = _buildinPackage.InitializeAsync(initParameters);
         }
 
         private void InitializeYooAssetOfflinePlayMode()
         {
             var initParameters = new OfflinePlayModeParameters();
-            // initParameters.DecryptionServices = new GameDecryptionServices();
+            _initializationOperation = _buildinPackage.InitializeAsync(initParameters);
+        }
+
+        private void InitializeYooAssetWebPlayMode()
+        {
+            var initParameters = new WebPlayModeParameters();
+            initParameters.BuildinQueryServices = new QueryStreamingAssetsFileServices();
+            initParameters.RemoteServices = new RemoteServices(_hostServer, _hostServer);
             _initializationOperation = _buildinPackage.InitializeAsync(initParameters);
         }
 
         private void InitializeYooAssetHostPlayMode()
         {
             var initParameters = new HostPlayModeParameters();
-            initParameters.QueryServices = new QueryStreamingAssetsFileServices();
-            initParameters.DefaultHostServer = _hostServer;
-            initParameters.FallbackHostServer = _hostServer;
+            initParameters.BuildinQueryServices = new QueryStreamingAssetsFileServices();
+            initParameters.RemoteServices = new RemoteServices(_hostServer, _hostServer);
+            // initParameters.DeliveryQueryServices = new WebDeliveryQueryServices();
+            // initParameters.DeliveryLoadServices = new WebDeliveryLoadServices();
             _initializationOperation = _buildinPackage.InitializeAsync(initParameters);
+        }
+
+        private class RemoteServices : IRemoteServices
+        {
+            public string HostServer { get; }
+            public string FallbackHostServer { get; }
+
+            public RemoteServices(string hostServer, string fallbackHostServer)
+            {
+                HostServer = hostServer;
+                FallbackHostServer = fallbackHostServer;
+            }
+
+            public string GetRemoteMainURL(string fileName)
+            {
+                return HostServer + fileName;
+            }
+
+            public string GetRemoteFallbackURL(string fileName)
+            {
+                return FallbackHostServer + fileName;
+            }
         }
 
         /// <summary>
         /// 内置文件查询服务类
         /// </summary>
-        private class QueryStreamingAssetsFileServices : IQueryServices
+        private class QueryStreamingAssetsFileServices : IBuildinQueryServices
         {
-            public bool QueryStreamingAssets(string fileName)
+            public bool Query(string packageName, string fileName)
             {
                 // 注意：使用了BetterStreamingAssets插件，使用前需要初始化该插件！
-                string buildinFolderName = YooAssets.GetStreamingAssetBuildinFolderName();
+                string buildinFolderName = PathHelper.AppResPath;
                 return BetterStreamingAssets.FileExists($"{buildinFolderName}/{fileName}");
             }
         }
@@ -127,11 +162,11 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        public UniTask<SubAssetsOperationHandle> LoadSubAssetsAsync(AssetInfo assetInfo)
+        public UniTask<SubAssetsHandle> LoadSubAssetsAsync(AssetInfo assetInfo)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadSubAssetsAsync(assetInfo);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsHandle>();
+            var assetHandle = YooAssets.LoadSubAssetsAsync(assetInfo);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -141,11 +176,11 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public UniTask<SubAssetsOperationHandle> LoadSubAssetsAsync(string path, Type type)
+        public UniTask<SubAssetsHandle> LoadSubAssetsAsync(string path, Type type)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadSubAssetsAsync(path, type);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsHandle>();
+            var assetHandle = YooAssets.LoadSubAssetsAsync(path, type);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -154,11 +189,11 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        public UniTask<SubAssetsOperationHandle> LoadSubAssetsAsync<T>(string path) where T : Object
+        public UniTask<SubAssetsHandle> LoadSubAssetsAsync<T>(string path) where T : Object
         {
-            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadSubAssetsAsync<T>(path);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsHandle>();
+            var assetHandle = YooAssets.LoadSubAssetsAsync<T>(path);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -171,11 +206,11 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        public UniTask<SubAssetsOperationHandle> LoadSubAssetsSync(AssetInfo assetInfo)
+        public UniTask<SubAssetsHandle> LoadSubAssetsSync(AssetInfo assetInfo)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadSubAssetsSync(assetInfo);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsHandle>();
+            var assetHandle = YooAssets.LoadSubAssetsSync(assetInfo);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -185,11 +220,11 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public UniTask<SubAssetsOperationHandle> LoadSubAssetsSync(string path, Type type)
+        public UniTask<SubAssetsHandle> LoadSubAssetsSync(string path, Type type)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadSubAssetsSync(path, type);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsHandle>();
+            var assetHandle = YooAssets.LoadSubAssetsSync(path, type);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -198,11 +233,11 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        public UniTask<SubAssetsOperationHandle> LoadSubAssetsSync<T>(string path) where T : Object
+        public UniTask<SubAssetsHandle> LoadSubAssetsSync<T>(string path) where T : Object
         {
-            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadSubAssetsSync<T>(path);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<SubAssetsHandle>();
+            var assetHandle = YooAssets.LoadSubAssetsSync<T>(path);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -215,11 +250,11 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        public UniTask<RawFileOperationHandle> LoadRawFileAsync(AssetInfo assetInfo)
+        public UniTask<RawFileHandle> LoadRawFileAsync(AssetInfo assetInfo)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<RawFileOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadRawFileAsync(assetInfo);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<RawFileHandle>();
+            var assetHandle = YooAssets.LoadRawFileAsync(assetInfo);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -228,11 +263,11 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        public UniTask<RawFileOperationHandle> LoadRawFileAsync(string path)
+        public UniTask<RawFileHandle> LoadRawFileAsync(string path)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<RawFileOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadRawFileAsync(path);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<RawFileHandle>();
+            var assetHandle = YooAssets.LoadRawFileAsync(path);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -245,7 +280,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        public RawFileOperationHandle LoadRawFileSync(AssetInfo assetInfo)
+        public RawFileHandle LoadRawFileSync(AssetInfo assetInfo)
         {
             return YooAssets.LoadRawFileSync(assetInfo);
         }
@@ -255,7 +290,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        public RawFileOperationHandle LoadRawFileSync(string path)
+        public RawFileHandle LoadRawFileSync(string path)
         {
             return YooAssets.LoadRawFileSync(path);
         }
@@ -270,11 +305,11 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        public UniTask<AssetOperationHandle> LoadAssetAsync(AssetInfo assetInfo)
+        public UniTask<AssetHandle> LoadAssetAsync(AssetInfo assetInfo)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<AssetOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadAssetAsync(assetInfo);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<AssetHandle>();
+            var assetHandle = YooAssets.LoadAssetAsync(assetInfo);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -284,11 +319,11 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <param name="type">资源类型</param>
         /// <returns></returns>
-        public UniTask<AssetOperationHandle> LoadAssetAsync(string path, Type type)
+        public UniTask<AssetHandle> LoadAssetAsync(string path, Type type)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<AssetOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadAssetAsync(path, type);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<AssetHandle>();
+            var assetHandle = YooAssets.LoadAssetAsync(path, type);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -298,11 +333,11 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <typeparam name="T">资源类型</typeparam>
         /// <returns></returns>
-        public UniTask<AssetOperationHandle> LoadAssetAsync<T>(string path) where T : Object
+        public UniTask<AssetHandle> LoadAssetAsync<T>(string path) where T : Object
         {
-            var taskCompletionSource = new UniTaskCompletionSource<AssetOperationHandle>();
-            var assetOperationHandle = YooAssets.LoadAssetAsync<T>(path);
-            assetOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<AssetHandle>();
+            var assetHandle = YooAssets.LoadAssetAsync<T>(path);
+            assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -316,7 +351,7 @@ namespace GameFrameX.Runtime
         /// <param name="path">资源路径</param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public AssetOperationHandle LoadAssetSync(string path, Type type)
+        public AssetHandle LoadAssetSync(string path, Type type)
         {
             return YooAssets.LoadAssetSync(path, type);
         }
@@ -326,7 +361,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="assetInfo">资源信息</param>
         /// <returns></returns>
-        public AssetOperationHandle LoadAssetSync(AssetInfo assetInfo)
+        public AssetHandle LoadAssetSync(AssetInfo assetInfo)
         {
             return YooAssets.LoadAssetSync(assetInfo);
         }
@@ -336,7 +371,7 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="path">资源路径</param>
         /// <returns></returns>
-        public AssetOperationHandle LoadAssetSync<T>(string path) where T : Object
+        public AssetHandle LoadAssetSync<T>(string path) where T : Object
         {
             return YooAssets.LoadAssetSync<T>(path);
         }
@@ -352,12 +387,12 @@ namespace GameFrameX.Runtime
         /// <param name="sceneMode">场景模式</param>
         /// <param name="activateOnLoad">是否加载完成自动激活</param>
         /// <returns></returns>
-        public UniTask<SceneOperationHandle> LoadSceneAsync(string path, LoadSceneMode sceneMode,
+        public UniTask<SceneHandle> LoadSceneAsync(string path, LoadSceneMode sceneMode,
             bool activateOnLoad = true)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<SceneOperationHandle>();
-            var sceneOperationHandle = YooAssets.LoadSceneAsync(path, sceneMode, activateOnLoad);
-            sceneOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<SceneHandle>();
+            var sceneHandle = YooAssets.LoadSceneAsync(path, sceneMode, activateOnLoad);
+            sceneHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -368,12 +403,12 @@ namespace GameFrameX.Runtime
         /// <param name="sceneMode">场景模式</param>
         /// <param name="activateOnLoad">是否加载完成自动激活</param>
         /// <returns></returns>
-        public UniTask<SceneOperationHandle> LoadSceneAsync(AssetInfo assetInfo, LoadSceneMode sceneMode,
+        public UniTask<SceneHandle> LoadSceneAsync(AssetInfo assetInfo, LoadSceneMode sceneMode,
             bool activateOnLoad = true)
         {
-            var taskCompletionSource = new UniTaskCompletionSource<SceneOperationHandle>();
-            var sceneOperationHandle = YooAssets.LoadSceneAsync(assetInfo, sceneMode, activateOnLoad);
-            sceneOperationHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
+            var taskCompletionSource = new UniTaskCompletionSource<SceneHandle>();
+            var sceneHandle = YooAssets.LoadSceneAsync(assetInfo, sceneMode, activateOnLoad);
+            sceneHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
 
@@ -386,9 +421,9 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="packageName">资源包名称</param>
         /// <returns></returns>
-        public AssetsPackage CreateAssetsPackage(string packageName)
+        public ResourcePackage CreateAssetsPackage(string packageName)
         {
-            return YooAssets.CreateAssetsPackage(packageName);
+            return YooAssets.CreatePackage(packageName);
         }
 
         /// <summary>
@@ -396,9 +431,9 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="packageName">资源包名称</param>
         /// <returns></returns>
-        public AssetsPackage TryGetAssetsPackage(string packageName)
+        public ResourcePackage TryGetAssetsPackage(string packageName)
         {
-            return YooAssets.TryGetAssetsPackage(packageName);
+            return YooAssets.TryGetPackage(packageName);
         }
 
         /// <summary>
@@ -408,7 +443,7 @@ namespace GameFrameX.Runtime
         /// <returns></returns>
         public bool HasAssetsPackage(string packageName)
         {
-            return YooAssets.HasAssetsPackage(packageName);
+            return YooAssets.TryGetPackage(packageName) != null;
         }
 
         /// <summary>
@@ -416,9 +451,9 @@ namespace GameFrameX.Runtime
         /// </summary>
         /// <param name="packageName">资源包名称</param>
         /// <returns></returns>
-        public AssetsPackage GetAssetsPackage(string packageName)
+        public ResourcePackage GetAssetsPackage(string packageName)
         {
-            return YooAssets.GetAssetsPackage(packageName);
+            return YooAssets.GetPackage(packageName);
         }
 
         #endregion
@@ -471,31 +506,15 @@ namespace GameFrameX.Runtime
             return YooAssets.GetAssetInfo(path);
         }
 
-        /// <summary>
-        /// 获取缓存目录根路径
-        /// </summary>
-        /// <returns></returns>
-        public string GetCacheRootPath()
-        {
-            return YooAssets.GetSandboxRoot();
-        }
-
-        /// <summary>
-        /// 清空缓存
-        /// </summary>
-        public void ClearCache()
-        {
-            YooAssets.ClearSandbox();
-        }
 
         /// <summary>
         /// 设置默认资源包
         /// </summary>
-        /// <param name="assetsPackage">资源信息</param>
+        /// <param name="resourcePackage">资源信息</param>
         /// <returns></returns>
-        public void SetDefaultAssetsPackage(AssetsPackage assetsPackage)
+        public void SetDefaultAssetsPackage(ResourcePackage resourcePackage)
         {
-            YooAssets.SetDefaultAssetsPackage(assetsPackage);
+            YooAssets.SetDefaultPackage(resourcePackage);
         }
 
         /// <summary>
@@ -508,7 +527,6 @@ namespace GameFrameX.Runtime
 
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-            
         }
 
         internal override void Shutdown()

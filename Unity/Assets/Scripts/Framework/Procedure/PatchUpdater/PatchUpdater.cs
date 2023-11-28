@@ -11,7 +11,7 @@ namespace GameFrameX.Procedure
         /// <summary>
         /// 下载器
         /// </summary>
-        public static PatchDownloaderOperation Downloader { set; get; }
+        public static ResourceDownloaderOperation Downloader { set; get; }
 
         /// <summary>
         /// 资源版本

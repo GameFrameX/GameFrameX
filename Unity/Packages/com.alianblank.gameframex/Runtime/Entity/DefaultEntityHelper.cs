@@ -18,7 +18,7 @@ namespace GameFrameX.Runtime
     {
         private IAssetManager _assetManager = null;
 
-        private AssetOperationHandle _assetOperationHandle;
+        private AssetHandle _assetOperationHandle;
 
         /// <summary>
         /// 实例化实体。
@@ -27,7 +27,7 @@ namespace GameFrameX.Runtime
         /// <returns>实例化后的实体。</returns>
         public override object InstantiateEntity(object entityAsset)
         {
-            _assetOperationHandle = entityAsset as AssetOperationHandle;
+            _assetOperationHandle = entityAsset as AssetHandle;
             if (_assetOperationHandle != null)
             {
                 return _assetOperationHandle.InstantiateSync();
@@ -68,7 +68,7 @@ namespace GameFrameX.Runtime
         /// <param name="entityInstance">要释放的实体实例。</param>
         public override void ReleaseEntity(object entityAsset, object entityInstance)
         {
-            AssetOperationHandle assetOperationHandle = entityAsset as AssetOperationHandle;
+            AssetHandle assetOperationHandle = entityAsset as AssetHandle;
             if (assetOperationHandle == null)
             {
                 Log.Error("entityAsset is AssetOperationHandle invalid.");
