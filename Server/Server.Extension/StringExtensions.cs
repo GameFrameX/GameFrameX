@@ -1,55 +1,79 @@
-﻿namespace Server.Extension;
-
-public static class StringExtension
+﻿namespace Server.Extension
 {
-    public static bool IsNullOrEmpty(this string str)
+    /// <summary>
+    /// 提供对 <see cref="string"/> 类型的扩展方法。
+    /// </summary>
+    public static class StringExtension
     {
-        return string.IsNullOrEmpty(str);
-    }
-
-    public static int[] SplitToIntArray(this string str, char sep = '+')
-    {
-        if (string.IsNullOrEmpty(str))
-            return Array.Empty<int>();
-
-        var arr = str.Split(sep);
-        int[] ret = new int[arr.Length];
-        for (int i = 0; i < arr.Length; ++i)
+        /// <summary>
+        /// 检查字符串是否为 null 或空。
+        /// </summary>
+        /// <param name="str">要检查的字符串。</param>
+        /// <returns>如果字符串为 null 或空，则为 true；否则为 false。</returns>
+        public static bool IsNullOrEmpty(this string str)
         {
-            if (int.TryParse(arr[i], out var t))
-                ret[i] = t;
+            return string.IsNullOrEmpty(str);
         }
 
-        return ret;
-    }
-
-    public static int[][] SplitTo2IntArray(this string str, char sep1 = ';', char sep2 = '+')
-    {
-        if (string.IsNullOrEmpty(str))
-            return Array.Empty<int[]>();
-
-        var arr = str.Split(sep1);
-        if (arr.Length <= 0)
-            return Array.Empty<int[]>();
-
-        int[][] ret = new int[arr.Length][];
-
-        for (int i = 0; i < arr.Length; ++i)
-            ret[i] = arr[i].SplitToIntArray(sep2);
-        return ret;
-    }
-
-    /// <summary>
-    /// 根据字符串创建目录,递归
-    /// </summary>
-    public static void CreateAsDirectory(this string path, bool isFile = false)
-    {
-        if (isFile)
-            path = Path.GetDirectoryName(path);
-        if (!Directory.Exists(path))
+        /// <summary>
+        /// 将字符串按指定的分隔符拆分为整数数组。
+        /// </summary>
+        /// <param name="str">要拆分的字符串。</param>
+        /// <param name="sep">用于分隔字符串的字符。</param>
+        /// <returns>拆分得到的整数数组。</returns>
+        public static int[] SplitToIntArray(this string str, char sep = '+')
         {
-            CreateAsDirectory(path, true);
-            Directory.CreateDirectory(path);
+            if (string.IsNullOrEmpty(str))
+                return Array.Empty<int>();
+
+            var arr = str.Split(sep);
+            int[] ret = new int[arr.Length];
+            for (int i = 0; i < arr.Length; ++i)
+            {
+                if (int.TryParse(arr[i], out var t))
+                    ret[i] = t;
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 将字符串按指定的分隔符拆分为二维整数数组。
+        /// </summary>
+        /// <param name="str">要拆分的字符串。</param>
+        /// <param name="sep1">用于第一层分隔的字符。</param>
+        /// <param name="sep2">用于第二层分隔的字符。</param>
+        /// <returns>拆分得到的二维整数数组。</returns>
+        public static int[][] SplitTo2IntArray(this string str, char sep1 = ';', char sep2 = '+')
+        {
+            if (string.IsNullOrEmpty(str))
+                return Array.Empty<int[]>();
+
+            var arr = str.Split(sep1);
+            if (arr.Length <= 0)
+                return Array.Empty<int[]>();
+
+            int[][] ret = new int[arr.Length][];
+
+            for (int i = 0; i < arr.Length; ++i)
+                ret[i] = arr[i].SplitToIntArray(sep2);
+            return ret;
+        }
+
+        /// <summary>
+        /// 根据字符串创建目录，递归创建。
+        /// </summary>
+        /// <param name="path">要创建的目录路径。</param>
+        /// <param name="isFile">指示是否为文件路径。</param>
+        public static void CreateAsDirectory(this string path, bool isFile = false)
+        {
+            if (isFile)
+                path = Path.GetDirectoryName(path);
+            if (!Directory.Exists(path))
+            {
+                CreateAsDirectory(path, true);
+                Directory.CreateDirectory(path);
+            }
         }
     }
 }

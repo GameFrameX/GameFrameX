@@ -7,14 +7,14 @@
     {
         private static int _seed = Environment.TickCount;
 
-        private static readonly ThreadLocal<Random> _rng = new(() => new Random(Interlocked.Increment(ref _seed)));
+        private static readonly ThreadLocal<Random> Rng = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref _seed)));
 
         /// <summary>
         /// The current random number seed available to this thread
         /// </summary>
         public static Random Current
         {
-            get { return _rng.Value; }
+            get { return Rng.Value; }
         }
     }
 }
