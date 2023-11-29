@@ -52,22 +52,30 @@
             return new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
         }
 
+        /// <summary>
+        /// 获取当前时间距离纪元时间（UTC时间）的毫秒数。
+        /// </summary>
+        /// <returns>距离纪元时间的毫秒数。</returns>
         public static long CurrentTimeMillisWithUTC()
         {
             return TimeMillis(DateTime.UtcNow, true);
         }
 
+        /// <summary>
+        /// 获取当前时间距离纪元时间（UTC时间）的秒数。
+        /// </summary>
+        /// <returns>距离纪元时间的秒数。</returns>
         public static int CurrentTimeSecondWithUTC()
         {
             return TimeSecond(DateTime.UtcNow, true);
         }
 
         /// <summary>
-        /// 某个时间的毫秒数
+        /// 获取指定时间距离纪元时间（本地时间或UTC时间）的毫秒数。
         /// </summary>
-        /// <param name="time"></param>
-        /// <param name="utc"></param>
-        /// <returns></returns>
+        /// <param name="time">指定时间。</param>
+        /// <param name="utc">是否使用UTC时间。</param>
+        /// <returns>距离纪元时间的毫秒数。</returns>
         public static long TimeMillis(DateTime time, bool utc = false)
         {
             if (utc)
@@ -75,6 +83,12 @@
             return (long)(time - epochLocal).TotalMilliseconds;
         }
 
+        /// <summary>
+        /// 获取指定时间距离纪元时间（本地时间或UTC时间）的秒数。
+        /// </summary>
+        /// <param name="time">指定时间。</param>
+        /// <param name="utc">是否使用UTC时间。</param>
+        /// <returns>距离纪元时间的秒数。</returns>
         public static int TimeSecond(DateTime time, bool utc = false)
         {
             if (utc)
@@ -97,16 +111,23 @@
 
 
         /// <summary>
-        /// 获取跨过了几天
+        /// 获取从指定日期到当前日期之间跨越的天数。
         /// </summary>
+        /// <param name="begin">起始日期。</param>
+        /// <param name="hour">小时。</param>
+        /// <returns>跨越的天数。</returns>
         public static int GetCrossDays(DateTime begin, int hour = 0)
         {
             return GetCrossDays(begin, DateTime.Now, hour);
         }
 
         /// <summary>
-        /// 获取跨过了几天
+        /// 获取两个日期之间跨越的天数。
         /// </summary>
+        /// <param name="begin">起始日期。</param>
+        /// <param name="after">结束日期。</param>
+        /// <param name="hour">小时。</param>
+        /// <returns>跨越的天数。</returns>
         public static int GetCrossDays(DateTime begin, DateTime after, int hour = 0)
         {
             int days = (int)(after.Date - begin.Date).TotalDays + 1;
@@ -117,11 +138,21 @@
             return days;
         }
 
+        /// <summary>
+        /// 判断当前时间是否与指定时间处于同一周。
+        /// </summary>
+        /// <param name="start">指定时间的起始时间。</param>
+        /// <returns>如果当前时间与指定时间处于同一周，则为 true；否则为 false。</returns>
         public static bool IsNowSameWeek(long start)
         {
             return IsNowSameWeek(new DateTime(start));
         }
 
+        /// <summary>
+        /// 判断当前时间是否与指定时间处于同一周。
+        /// </summary>
+        /// <param name="start">指定时间的起始时间。</param>
+        /// <returns>如果当前时间与指定时间处于同一周，则为 true；否则为 false。</returns>
         public static bool IsNowSameWeek(DateTime start)
         {
             return IsSameWeek(start, DateTime.Now);
@@ -149,6 +180,12 @@
             return startsWeekLastDate >= end.Date;
         }
 
+        /// <summary>
+        /// 获取指定日期所在星期的时间。
+        /// </summary>
+        /// <param name="t">指定日期。</param>
+        /// <param name="d">星期几。</param>
+        /// <returns>指定日期所在星期的时间。</returns>
         public static DateTime GetDayOfWeekTime(DateTime t, DayOfWeek d)
         {
             int dd = (int)d;
@@ -158,11 +195,21 @@
             return t.AddDays(dd - dayOfWeek).Date;
         }
 
+        /// <summary>
+        /// 获取当前日期所在星期的时间。
+        /// </summary>
+        /// <param name="d">星期几。</param>
+        /// <returns>当前日期所在星期的时间。</returns>
         public static DateTime GetDayOfWeekTime(DayOfWeek d)
         {
             return GetDayOfWeekTime(DateTime.Now, d);
         }
 
+        /// <summary>
+        /// 获取指定星期在中国的对应数字。
+        /// </summary>
+        /// <param name="d">星期几。</param>
+        /// <returns>星期在中国的对应数字。</returns>
         public static int GetChinaDayOfWeek(DayOfWeek d)
         {
             int dayOfWeek = (int)d;
@@ -170,6 +217,10 @@
             return dayOfWeek;
         }
 
+        /// <summary>
+        /// 获取当前星期在中国的对应数字。
+        /// </summary>
+        /// <returns>当前星期在中国的对应数字。</returns>
         public static int GetChinaDayOfWeek()
         {
             return GetChinaDayOfWeek(DateTime.Now.DayOfWeek);
