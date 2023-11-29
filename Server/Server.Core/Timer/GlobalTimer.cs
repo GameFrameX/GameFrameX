@@ -7,10 +7,24 @@ namespace Server.Core.Timer
 {
     public static class GlobalTimer
     {
+        /// <summary>
+        /// 日志记录器
+        /// </summary>
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// 循环任务
+        /// </summary>
         private static Task LoopTask;
+
+        /// <summary>
+        /// 是否正在工作
+        /// </summary>
         public static volatile bool working = false;
 
+        /// <summary>
+        /// 开始全局定时
+        /// </summary>
         public static void Start()
         {
             working = true;
@@ -18,14 +32,19 @@ namespace Server.Core.Timer
             Log.Info($"初始化全局定时完成");
         }
 
+        /// <summary>
+        /// 循环执行的方法
+        /// </summary>
         private static async Task Loop()
         {
             var nextSaveTime = NextSaveTime();
             var saveInterval = TimeSpan.FromMilliseconds(GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
             var ONCE_DELAY = TimeSpan.FromMilliseconds(200);
+
             while (working)
             {
                 Log.Info($"下次定时回存时间 {nextSaveTime}");
+
                 while (DateTime.Now < nextSaveTime && working)
                 {
                     await Task.Delay(ONCE_DELAY);
@@ -33,8 +52,11 @@ namespace Server.Core.Timer
 
                 if (!working)
                     break;
+
                 var startTime = DateTime.Now;
+
                 await GameDb.TimerSave();
+
                 var cost = (DateTime.Now - startTime).TotalMilliseconds;
                 Log.Info($"定时回存完成 耗时: {cost:f4}ms");
 
@@ -47,10 +69,15 @@ namespace Server.Core.Timer
             }
         }
 
+        /// <summary>
+        /// 计算下次回存时间
+        /// </summary>
+        /// <returns>下次回存时间</returns>
         private static DateTime NextSaveTime()
         {
             var now = DateTime.Now;
             var t = now.Date.AddHours(now.Hour);
+
             while (t < now)
             {
                 t = t.AddMilliseconds(GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
@@ -63,6 +90,7 @@ namespace Server.Core.Timer
             int r = ThreadLocalRandom.Current.Next(0, c);
             int delay = b * c + r;
             t = t.AddMilliseconds(delay);
+
             if ((t - now).TotalMilliseconds > GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS)
             {
                 t = t.AddMilliseconds(-GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
@@ -71,7 +99,9 @@ namespace Server.Core.Timer
             return t;
         }
 
-
+        /// <summary>
+        /// 停止全局定时
+        /// </summary>
         public static async Task Stop()
         {
             working = false;
