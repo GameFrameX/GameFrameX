@@ -10,6 +10,7 @@
     "com.alianblank.blankgetchannel": "https://github.com/AlianBlank/com.alianblank.blankgetchannel.git",
     "com.alianblank.blankoperationclipboard": "https://github.com/AlianBlank/com.alianblank.blankoperationclipboard.git",
     "com.esotericsoftware.spine.spine-unity": "https://github.com/AlianBlank/com.esotericsoftware.spine.spine-unity.git",
+    "com.xincger.litjson": "https://github.com/AlianBlank/com.xincger.litjson.git",
     "com.unity.ide.rider": "2.0.7",
     "com.unity.nuget.newtonsoft-json": "3.0.2",
     "com.unity.ugui": "1.0.0",
