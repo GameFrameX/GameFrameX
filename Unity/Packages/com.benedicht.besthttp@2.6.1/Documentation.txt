@@ -1,1 +1,0 @@
-The latest documentation can be read online here: https://benedicht.github.io/BestHTTP-Documentation/
