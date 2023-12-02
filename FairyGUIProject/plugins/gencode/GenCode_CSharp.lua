@@ -170,10 +170,8 @@ local function genCode(handler)
         namespaceName = "Game.Model";
     end
     -- CollectClasses(stripeMemeber, stripeClass, fguiNamespace)
-    local classes = handler:CollectClasses(settings.ignoreNoname, settings.ignoreNoname, nil)
+    local classes = handler:CollectClasses(settings.ignoreNoname, nil, nil)
     -- check if target folder exists, and delete old files
-
-    local getMemberByName = settings.getMemberByName
 
     local templeteString = FUITemplate;
 
@@ -184,7 +182,7 @@ local function genCode(handler)
         local members = classInfo.members
         local memberInfoExported = classInfo.res.exported;
         writer:reset()
-        fprint(' ' .. tostring(memberInfoExported) .. '  ')
+        
         local genCreateString = CreateTemplate;
 
         local genCodeString = templeteString;
@@ -214,6 +212,13 @@ local function genCode(handler)
             local typeName = memberInfo.type
             local varName = memberInfo.varName
             local memberInfoName = memberInfo.name;
+            -- 这里查找组件是否是其他包里的资源
+            local isWhetherToCrossPackages = false;
+            if memberInfo.res ~= nil then
+                local memberResName = memberInfo.res.name;
+                typeName = memberResName;
+                isWhetherToCrossPackages = true;
+            end
 
             table.insert(propertyTable, '\t\tpublic ' .. typeName .. ' ' .. varName .. ' { get; private set; }');
 
@@ -224,8 +229,8 @@ local function genCode(handler)
 
             if memberInfo.group == 0 then
 
-                -- 判断是不是自定义类型组件
-                if IsCustomComponent(classes, typeName) then
+                -- 判断是不是自定义类型组件 和跨包引用
+                if IsCustomComponent(classes, typeName) or isWhetherToCrossPackages then
                     table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = ' .. typeName .. '.Create(com.GetChild("' ..
                         memberInfoName .. '"), this);');
                 else
@@ -272,10 +277,11 @@ local function genCode(handler)
     table.insert(pkgNamesTable, '\t\tpublic const string ' .. codePkgName .. ' = "' .. codePkgName .. '";');
     for i = 0, classCnt - 1 do
         local classInfo = classes[i];
-        table.insert(pkgNamesTable, '\t\tpublic const string ' .. codePkgName .. '_' .. classInfo.resName ..
-                          ' = "ui://' .. codePkgName .. '/' .. classInfo.resName .. '";');
+        table.insert(pkgNamesTable,
+            '\t\tpublic const string ' .. codePkgName .. '_' .. classInfo.resName .. ' = "ui://' .. codePkgName .. '/' ..
+                classInfo.resName .. '";');
     end
-    pkgNamesStr = table.concat(pkgNamesTable,'\n');
+    pkgNamesStr = table.concat(pkgNamesTable, '\n');
     packageTempleteString = string.gsub(packageTempleteString, '__PKGNAMES__', pkgNamesStr)
 
     local binderName = 'Package' .. codePkgName;
