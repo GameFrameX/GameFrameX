@@ -5,6 +5,7 @@
     "com.fairygui.unity": "https://github.com/AlianBlank/com.fairygui.unity.git",
     "com.json.simplejson": "https://github.com/AlianBlank/com.json.simplejson.git",
     "com.tencent.xlua": "https://github.com/AlianBlank/com.tencent.xlua.git",
+    "com.sharelib.logviewer": "https://github.com/AlianBlank/com.sharelib.logviewer.git",
     "com.unity.ide.rider": "2.0.7",
     "com.unity.nuget.newtonsoft-json": "3.0.2",
     "com.unity.ugui": "1.0.0",
