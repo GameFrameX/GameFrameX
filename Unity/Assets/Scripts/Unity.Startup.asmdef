@@ -3,7 +3,7 @@
     "references": [
         "GameFrameX.Runtime",
         "YooAsset.Runtime",
-        "UniTask",
+        "UniTask.Runtime",
         "FairyGUI.Runtime",
         "BlankGetChannel.Runtime"
     ],

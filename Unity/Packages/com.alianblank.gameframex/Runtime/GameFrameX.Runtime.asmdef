@@ -7,11 +7,11 @@
         "FairyGUI.Runtime",
         "XLua.Runtime",
         "BestHTTP",
-        "UniTask",
         "BetterStreamingAssets",
         "MessagePack.Runtime",
         "MessagePack.Annotations",
-        "SimpleJSON.Runtime"
+        "SimpleJSON.Runtime",
+        "UniTask.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

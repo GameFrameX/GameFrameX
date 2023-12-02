@@ -9,7 +9,7 @@
         "HybridCLR.Runtime",
         "XLua.Runtime",
         "DOTween.Runtime.Modules",
-        "UniTask",
+        "UniTask.Runtime",
         "YooAsset.Runtime",
         "GameAnalytics.Runtime",
         "MessagePack.Runtime",
