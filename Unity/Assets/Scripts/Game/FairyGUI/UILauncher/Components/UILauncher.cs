@@ -22,7 +22,7 @@ namespace Game.Model
 		public Controller m_IsDownload { get; private set; }
 		public GLoader m_bg { get; private set; }
 		public GTextField m_TipText { get; private set; }
-		public GProgressBar m_ProgressBar { get; private set; }
+		public UILoadingMainProgressBar m_ProgressBar { get; private set; }
 		public UILauncherUpgrade m_upgrade { get; private set; }
 
         private static GObject CreateGObject()
@@ -86,7 +86,7 @@ namespace Game.Model
 				m_IsDownload = com.GetController("IsDownload");
 				m_bg = (GLoader)com.GetChild("bg");
 				m_TipText = (GTextField)com.GetChild("TipText");
-				m_ProgressBar = (GProgressBar)com.GetChild("ProgressBar");
+				m_ProgressBar = UILoadingMainProgressBar.Create(com.GetChild("ProgressBar"), this);
 				m_upgrade = UILauncherUpgrade.Create(com.GetChild("upgrade"), this);
             }
         }

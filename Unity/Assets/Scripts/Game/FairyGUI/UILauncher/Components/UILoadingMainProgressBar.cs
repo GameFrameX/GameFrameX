@@ -7,33 +7,31 @@ using GameFrameX.Runtime;
 
 namespace Game.Model
 {
-    public sealed partial class UILauncherUpgrade : FUI
+    public sealed partial class UILoadingMainProgressBar : FUI
     {
         public const string UIPackageName = "UILauncher";
-        public const string UIResName = "UILauncherUpgrade";
-        public const string URL = "ui://u7deosq0qew11e";
+        public const string UIResName = "UILoadingMainProgressBar";
+        public const string URL = "ui://u7deosq0mw8e3";
 
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
-        public GComponent self { get; private set; }
-
-		public GGraph m_bg { get; private set; }
-		public UILauncherEnterButton m_EnterButton { get; private set; }
-		public UILauncherUpgradeContent m_TextContent { get; private set; }
+        public GProgressBar self { get; private set; }
 
 
-        public static UILauncherUpgrade Create(GObject go, FUI parent = null, object userData = null)
+
+
+        public static UILoadingMainProgressBar Create(GObject go, FUI parent = null, object userData = null)
         {
-            return new UILauncherUpgrade(go, userData, parent);
+            return new UILoadingMainProgressBar(go, userData, parent);
         }
         /*
         /// <summary>
         /// 通过此方法获取的FUI，在Dispose时不会释放GObject，需要自行管理（一般在配合FGUI的Pool机制时使用）。
         /// </summary>
-        public static UILauncherUpgrade GetFormPool(GObject go)
+        public static UILoadingMainProgressBar GetFormPool(GObject go)
         {
-            var fui =  go.Get<UILauncherUpgrade>();
+            var fui =  go.Get<UILoadingMainProgressBar>();
             if(fui == null)
             {
                 fui = Create(go);
@@ -50,14 +48,12 @@ namespace Game.Model
                 return;
             }
 
-            self = (GComponent)GObject;
+            self = (GProgressBar)GObject;
             
             var com = GObject.asCom;
             if(com != null)
             {
-				m_bg = (GGraph)com.GetChild("bg");
-				m_EnterButton = UILauncherEnterButton.Create(com.GetChild("EnterButton"), this);
-				m_TextContent = UILauncherUpgradeContent.Create(com.GetChild("TextContent"), this);
+
             }
         }
 
@@ -69,13 +65,11 @@ namespace Game.Model
             }
 
             base.Dispose();
-			m_bg = null;
-			m_EnterButton = null;
-			m_TextContent = null;
+
             self = null;            
         }
 
-        private UILauncherUpgrade(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
+        private UILoadingMainProgressBar(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);
         }

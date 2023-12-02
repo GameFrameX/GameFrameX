@@ -21,7 +21,7 @@ namespace Hotfix.UI
 		public GTextInput m_UserName { get; private set; }
 		public GTextInput m_Password { get; private set; }
 		public GTextField m_ErrorText { get; private set; }
-		public GButton m_enter { get; private set; }
+		public UILoginButton m_enter { get; private set; }
 
         private static GObject CreateGObject()
         {
@@ -83,7 +83,7 @@ namespace Hotfix.UI
 				m_UserName = (GTextInput)com.GetChild("UserName");
 				m_Password = (GTextInput)com.GetChild("Password");
 				m_ErrorText = (GTextField)com.GetChild("ErrorText");
-				m_enter = (GButton)com.GetChild("enter");
+				m_enter = UILoginButton.Create(com.GetChild("enter"), this);
             }
         }
 

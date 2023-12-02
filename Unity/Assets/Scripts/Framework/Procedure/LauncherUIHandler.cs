@@ -35,7 +35,7 @@ namespace GameFrameX.Procedure
             float progress = message.CurrentDownloadSizeBytes / (message.TotalDownloadSizeBytes * 1f);
             string currentSizeMb = Utility.File.GetBytesSize(message.CurrentDownloadSizeBytes);
             string totalSizeMb = Utility.File.GetBytesSize(message.TotalDownloadSizeBytes);
-            _ui.m_ProgressBar.value = progress * 100;
+            _ui.m_ProgressBar.self.value = progress * 100;
             _ui.m_TipText.text = $"Downloading {currentSizeMb}/{totalSizeMb}";
         }
     }

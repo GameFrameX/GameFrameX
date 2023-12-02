@@ -7,20 +7,18 @@ using GameFrameX.Runtime;
 
 namespace Hotfix.UI
 {
-    public sealed partial class UIAnnouncement : FUI
+    public sealed partial class UILoadingScene : FUI
     {
-        public const string UIPackageName = "UILogin";
-        public const string UIResName = "UIAnnouncement";
-        public const string URL = "ui://f011l0h9aneks9g";
+        public const string UIPackageName = "UILoading";
+        public const string UIResName = "UILoadingScene";
+        public const string URL = "ui://qecztwbp5euk0";
 
         /// <summary>
         /// {uiResName}的组件类型(GComponent、GButton、GProcessBar等)，它们都是GObject的子类。
         /// </summary>
         public GComponent self { get; private set; }
 
-		public GGraph m_MaskLayer { get; private set; }
-		public UIAnnouncementContent m_TextContent { get; private set; }
-		public GTextField m_TextTitle { get; private set; }
+
 
         private static GObject CreateGObject()
         {
@@ -32,32 +30,32 @@ namespace Hotfix.UI
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
 
-        public static UIAnnouncement CreateInstance(object userData = null)
+        public static UILoadingScene CreateInstance(object userData = null)
         {
-            return new UIAnnouncement(CreateGObject(), userData);
+            return new UILoadingScene(CreateGObject(), userData);
         }
 
-        public static UniTask<UIAnnouncement> CreateInstanceAsync(Entity domain, object userData = null)
+        public static UniTask<UILoadingScene> CreateInstanceAsync(Entity domain, object userData = null)
         {
-            UniTaskCompletionSource<UIAnnouncement> tcs = new UniTaskCompletionSource<UIAnnouncement>();
+            UniTaskCompletionSource<UILoadingScene> tcs = new UniTaskCompletionSource<UILoadingScene>();
             CreateGObjectAsync((go) =>
             {
-                tcs.TrySetResult(new UIAnnouncement(go, userData));
+                tcs.TrySetResult(new UILoadingScene(go, userData));
             });
             return tcs.Task;
         }
 
-        public static UIAnnouncement Create(GObject go, FUI parent = null, object userData = null)
+        public static UILoadingScene Create(GObject go, FUI parent = null, object userData = null)
         {
-            return new UIAnnouncement(go, userData, parent);
+            return new UILoadingScene(go, userData, parent);
         }
         /*
         /// <summary>
         /// 通过此方法获取的FUI，在Dispose时不会释放GObject，需要自行管理（一般在配合FGUI的Pool机制时使用）。
         /// </summary>
-        public static UIAnnouncement GetFormPool(GObject go)
+        public static UILoadingScene GetFormPool(GObject go)
         {
-            var fui =  go.Get<UIAnnouncement>();
+            var fui =  go.Get<UILoadingScene>();
             if(fui == null)
             {
                 fui = Create(go);
@@ -79,9 +77,7 @@ namespace Hotfix.UI
             var com = GObject.asCom;
             if(com != null)
             {
-				m_MaskLayer = (GGraph)com.GetChild("MaskLayer");
-				m_TextContent = UIAnnouncementContent.Create(com.GetChild("TextContent"), this);
-				m_TextTitle = (GTextField)com.GetChild("TextTitle");
+
             }
         }
 
@@ -93,13 +89,11 @@ namespace Hotfix.UI
             }
 
             base.Dispose();
-			m_MaskLayer = null;
-			m_TextContent = null;
-			m_TextTitle = null;
+
             self = null;            
         }
 
-        private UIAnnouncement(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
+        private UILoadingScene(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
         {
             // Awake(gObject);
         }

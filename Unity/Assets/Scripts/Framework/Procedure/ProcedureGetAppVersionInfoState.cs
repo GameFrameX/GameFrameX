@@ -69,10 +69,10 @@ namespace GameFrameX.Procedure
                             bool isChinese = GameApp.Localization.SystemLanguage == Language.ChineseSimplified ||
                                              GameApp.Localization.SystemLanguage == Language.ChineseTraditional;
 
-                            uiLoadingMainScene.m_upgrade.m_EnterButton.title = isChinese ? "确认" : "Enter";
-                            uiLoadingMainScene.m_upgrade.m_TextContent.title = responseGameAppVersion.UpdateAnnouncement;
-                            uiLoadingMainScene.m_upgrade.m_TextContent.onClickLink.Set((context => { Application.OpenURL(context.data.ToString()); }));
-                            uiLoadingMainScene.m_upgrade.m_EnterButton.onClick.Set(() =>
+                            uiLoadingMainScene.m_upgrade.m_EnterButton.self.title = isChinese ? "确认" : "Enter";
+                            uiLoadingMainScene.m_upgrade.m_TextContent.self.title = responseGameAppVersion.UpdateAnnouncement;
+                            uiLoadingMainScene.m_upgrade.m_TextContent.self.onClickLink.Set((context => { Application.OpenURL(context.data.ToString()); }));
+                            uiLoadingMainScene.m_upgrade.m_EnterButton.self.onClick.Set(() =>
                             {
                                 if (responseGameAppVersion.IsForce)
                                 {
