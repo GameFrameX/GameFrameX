@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+// using Sirenix.OdinInspector;
 
 namespace Luban.Editor
 {
@@ -6,16 +6,28 @@ namespace Luban.Editor
     {
         None,
 
-        [LabelText("语言推荐")]
+        /// <summary>
+        /// 语言推荐
+        /// </summary>
+        // [LabelText("语言推荐")]
         language_recommend,
 
-        [LabelText("小驼峰 camelCase")]
+        /// <summary>
+        /// 小驼峰 camelCase
+        /// </summary>
+        // [LabelText("小驼峰 camelCase")]
         camelCase,
 
-        [LabelText("大驼峰 PascalCase")]
+        /// <summary>
+        /// 大驼峰 PascalCase
+        /// </summary>
+        // [LabelText("大驼峰 PascalCase")]
         PascalCase,
 
-        [LabelText("下划线 under_scores")]
+        /// <summary>
+        /// 下划线
+        /// </summary>
+        // [LabelText("下划线 under_scores")]
         under_scores
     }
 }

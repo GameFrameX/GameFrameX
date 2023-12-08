@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Sirenix.OdinInspector;
+// using Sirenix.OdinInspector;
 using UnityEditor;
 
 namespace Luban.Editor
@@ -20,6 +20,7 @@ namespace Luban.Editor
         }
     }
 
+    /*
     [IncludeMyAttributes]
     [ValueDropdown("@BeforeGenSelectorAttribute.Get()")]
     public class BeforeGenSelectorAttribute : Attribute
@@ -71,5 +72,5 @@ namespace Luban.Editor
                 yield return new ValueDropdownItem(name, type.FullName);
             }
         }
-    }
+    }*/
 }
