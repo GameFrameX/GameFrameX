@@ -5,7 +5,7 @@ namespace GameFrameX.Network
     /// <summary>
     /// 消息基类
     /// </summary>
-    [MessagePackObject(true)]
+    [MessagePackageObject]
     public class MessageObject
     {
     }
