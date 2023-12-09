@@ -3,7 +3,8 @@
     "references": [
         "MessagePack.Annotations",
         "MessagePack.Runtime",
-        "GameFrameX.Runtime"
+        "GameFrameX.Runtime",
+        "ProtoBuffer.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
