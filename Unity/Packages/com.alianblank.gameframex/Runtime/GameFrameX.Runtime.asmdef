@@ -11,7 +11,8 @@
         "MessagePack.Runtime",
         "MessagePack.Annotations",
         "SimpleJSON.Runtime",
-        "UniTask.Runtime"
+        "UniTask.Runtime",
+        "ProtoBuffer.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -20,6 +21,37 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.google.protobuf",
+            "expression": "",
+            "define": "ENABLE_PROTOBUF"
+        },
+        {
+            "name": "com.neuecc.messagepack",
+            "expression": "",
+            "define": "ENABLE_MESSAGEPACK"
+        },
+        {
+            "name": "com.tencent.xlua",
+            "expression": "",
+            "define": "ENABLE_XLUA"
+        },
+        {
+            "name": "com.fairygui.unity",
+            "expression": "",
+            "define": "ENABLE_FAIRYGUI"
+        },
+        {
+            "name": "com.focus-creative-games.hybridclr_unity",
+            "expression": "",
+            "define": "ENABLE_HYBIRDCLR"
+        },
+        {
+            "name": "com.esotericsoftware.spine.spine-unity",
+            "expression": "",
+            "define": "ENABLE_SPINE"
+        }
+    ],
     "noEngineReferences": false
 }
