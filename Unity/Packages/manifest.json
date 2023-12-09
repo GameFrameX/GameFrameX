@@ -16,6 +16,7 @@
     "com.cysharp.unitask": "https://github.com/AlianBlank/com.cysharp.unitask.git",
     "com.demigiant.dotween": "https://github.com/AlianBlank/com.demigiant.dotween.git",
     "com.focus-creative-games.luban": "https://github.com/AlianBlank/com.focus-creative-games.luban.git",
+    "com.neuecc.messagepack": "https://github.com/AlianBlank/com.neuecc.messagepack.git",
     "com.unity.ide.rider": "2.0.7",
     "com.unity.nuget.newtonsoft-json": "3.0.2",
     "com.unity.ugui": "1.0.0",
