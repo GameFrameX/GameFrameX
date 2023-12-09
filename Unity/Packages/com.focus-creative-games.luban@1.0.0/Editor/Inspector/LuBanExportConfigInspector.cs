@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -90,7 +89,7 @@ namespace Luban.Editor
             EditorGUILayout.PropertyField(m_service, new GUIContent("服务类型"));
 
             EditorGUILayout.PropertyField(m_input_data_dir, new GUIContent("输入数据文件夹"));
-            
+
             EditorGUILayout.PropertyField(m_output_data_dir, new GUIContent("输出数据文件夹"));
             EditorGUILayout.PropertyField(m_output_code_dir, new GUIContent("输出代码文件夹"));
             EditorGUILayout.PropertyField(m_output_data_resources_list_file, new GUIContent("输出数据资源列表文件"));
@@ -98,6 +97,7 @@ namespace Luban.Editor
             EditorGUILayout.PropertyField(m_output_data_file_extension, new GUIContent("输出数据文件扩展名"));
             EditorGUILayout.PropertyField(m_output_data_compact_json, new GUIContent("输出数据压缩JSON"));
             EditorGUILayout.PropertyField(m_output_data_json_monolithic_file, new GUIContent("输出数据JSON独立文件"));
+
 
             EditorGUILayout.PropertyField(m_i10n_timezone, new GUIContent("多语言时区"));
             EditorGUILayout.PropertyField(m_i10n_input_text_files, new GUIContent("多语言文本文件"));

@@ -10,14 +10,19 @@ namespace Luban.Editor
 {
     internal static class GenUtils
     {
-        internal static readonly string _DOTNET =
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "dotnet.exe" : "dotnet";
+        internal static readonly string _DOTNET = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "dotnet.exe" : "dotnet";
 
+        /// <summary>
+        /// 生成执行
+        /// </summary>
+        /// <param name="arguments">参数</param>
+        /// <param name="before">前置执行器</param>
+        /// <param name="after">后置执行器</param>
         public static void Gen(string arguments, string before, string after)
         {
             Debug.Log(arguments);
 
-            IBeforeGen before_gen = null;
+            IBeforeGen beforeGen = null;
 
             if (!string.IsNullOrEmpty(before))
             {
@@ -25,11 +30,11 @@ namespace Luban.Editor
 
                 if (type != null)
                 {
-                    before_gen = Activator.CreateInstance(type) as IBeforeGen;
+                    beforeGen = Activator.CreateInstance(type) as IBeforeGen;
                 }
             }
 
-            IAfterGen after_gen = null;
+            IAfterGen afterGen = null;
 
             if (!string.IsNullOrEmpty(after))
             {
@@ -37,11 +42,11 @@ namespace Luban.Editor
 
                 if (type != null)
                 {
-                    after_gen = Activator.CreateInstance(type) as IAfterGen;
+                    afterGen = Activator.CreateInstance(type) as IAfterGen;
                 }
             }
 
-            before_gen?.Process();
+            beforeGen?.Process();
 
             var process = _Run(
                 _DOTNET,
@@ -51,42 +56,41 @@ namespace Luban.Editor
             );
 
             #region 捕捉生成错误
+
             string processLog = process.StandardOutput.ReadToEnd();
             Debug.Log(processLog);
             if (process.ExitCode != 0)
             {
                 Debug.LogError("Error  生成出现错误");
             }
+
             #endregion
 
-            after_gen?.Process();
+            afterGen?.Process();
 
             AssetDatabase.Refresh();
         }
 
-        private static Process _Run(string exe,
-                                    string arguments,
-                                    string workingDir = ".",
-                                    bool waitExit = false)
+        private static Process _Run(string exe, string arguments, string workingDir = ".", bool waitExit = false)
         {
             try
             {
-                bool redirect_standard_output = true;
-                bool redirect_standard_error = true;
-                bool use_shell_execute = false;
+                bool redirectStandardOutput = true;
+                bool redirectStandardError = true;
+                bool useShellExecute = false;
 
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    redirect_standard_output = false;
-                    redirect_standard_error = false;
-                    use_shell_execute = true;
+                    redirectStandardOutput = false;
+                    redirectStandardError = false;
+                    useShellExecute = true;
                 }
 
                 if (waitExit)
                 {
-                    redirect_standard_output = true;
-                    redirect_standard_error = true;
-                    use_shell_execute = false;
+                    redirectStandardOutput = true;
+                    redirectStandardError = true;
+                    useShellExecute = false;
                 }
 
                 ProcessStartInfo info = new ProcessStartInfo
@@ -94,10 +98,10 @@ namespace Luban.Editor
                     FileName = exe,
                     Arguments = arguments,
                     CreateNoWindow = true,
-                    UseShellExecute = use_shell_execute,
+                    UseShellExecute = useShellExecute,
                     WorkingDirectory = workingDir,
-                    RedirectStandardOutput = redirect_standard_output,
-                    RedirectStandardError = redirect_standard_error,
+                    RedirectStandardOutput = redirectStandardOutput,
+                    RedirectStandardError = redirectStandardError,
                 };
 
                 Process process = Process.Start(info);
