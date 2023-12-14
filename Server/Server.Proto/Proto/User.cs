@@ -1,5 +1,4 @@
 ﻿using System;
-using MessagePack;
 using System.Collections.Generic;
 using Server.Core.Net.Messages;
 
@@ -9,7 +8,7 @@ namespace Server.Proto.Proto
 	/// 请求登录
 	/// </summary>
 	[MessageTypeHandler(10)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ReqLogin : Server.Core.Net.Messages.MessageObject, IRequestMessage
 	{
 		/// <summary>
@@ -48,7 +47,7 @@ namespace Server.Proto.Proto
 	/// 请求登录返回
 	/// </summary>
 	[MessageTypeHandler(10)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class RespLogin : Server.Core.Net.Messages.MessageObject, IResponseMessage
 	{
 		/// <summary>
@@ -67,7 +66,7 @@ namespace Server.Proto.Proto
 	/// 客户端每次请求都会回复错误码
 	/// </summary>
 	
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class RespErrorCode : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
@@ -83,7 +82,7 @@ namespace Server.Proto.Proto
 	}
 
 	[MessageTypeHandler(200)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class RespPrompt : Server.Core.Net.Messages.MessageObject, IResponseMessage
 	{
 		/// <summary>

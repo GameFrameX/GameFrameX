@@ -1,5 +1,4 @@
 ﻿using System;
-using MessagePack;
 using System.Collections.Generic;
 using Server.Core.Net.Messages;
 
@@ -26,7 +25,7 @@ namespace Server.Proto.Proto
 	/// 玩家基础信息
 	/// </summary>
 	
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class UserInfo : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
@@ -76,7 +75,7 @@ namespace Server.Proto.Proto
 	}
 
 	
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class PhoneNumber : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
@@ -92,7 +91,7 @@ namespace Server.Proto.Proto
 	}
 
 	
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class Person : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>
@@ -121,7 +120,7 @@ namespace Server.Proto.Proto
 	/// Ouraddressbookfileisjustoneofthese.
 	/// </summary>
 	
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class AddressBook : Server.Core.Net.Messages.MessageObject
 	{
 		/// <summary>

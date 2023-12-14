@@ -1,5 +1,4 @@
 ﻿using System;
-using MessagePack;
 using System.Collections.Generic;
 using Server.Core.Net.Messages;
 
@@ -9,7 +8,7 @@ namespace Server.Proto.Proto
 	/// 请求心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ReqHeartBeat : Server.Core.Net.Messages.MessageObject, IRequestMessage
 	{
 		/// <summary>
@@ -23,7 +22,7 @@ namespace Server.Proto.Proto
 	/// 返回心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class RespHeartBeat : Server.Core.Net.Messages.MessageObject, IResponseMessage
 	{
 		/// <summary>
