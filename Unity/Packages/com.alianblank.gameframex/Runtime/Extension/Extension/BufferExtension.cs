@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 public static class BufferExtension
 {
@@ -492,4 +493,111 @@ public static class BufferExtension
     }
 
     #endregion
+
+    private static readonly StringBuilder StringBuilder = new StringBuilder();
+
+    /// <summary>
+    /// 将字节转换为十六进制字符串。
+    /// </summary>
+    /// <param name="b">要转换的字节。</param>
+    /// <returns>表示字节的十六进制字符串。</returns>
+    public static string ToHex(this byte b)
+    {
+        return b.ToString("X2");
+    }
+
+    /// <summary>
+    /// 将字节数组转换为十六进制字符串。
+    /// </summary>
+    /// <param name="bytes">要转换的字节数组。</param>
+    /// <returns>表示字节数组的十六进制字符串。</returns>
+    public static string ToHex(this byte[] bytes)
+    {
+        StringBuilder.Clear();
+        foreach (byte b in bytes)
+        {
+            StringBuilder.Append(b.ToString("X2"));
+        }
+
+        return StringBuilder.ToString();
+    }
+
+    /// <summary>
+    /// 使用指定格式将字节数组转换为十六进制字符串。
+    /// </summary>
+    /// <param name="bytes">要转换的字节数组。</param>
+    /// <param name="format">十六进制格式。</param>
+    /// <returns>表示字节数组的十六进制字符串。</returns>
+    public static string ToHex(this byte[] bytes, string format)
+    {
+        StringBuilder.Clear();
+        foreach (byte b in bytes)
+        {
+            StringBuilder.Append(b.ToString(format));
+        }
+
+        return StringBuilder.ToString();
+    }
+
+    /// <summary>
+    /// 将字节数组中指定范围的字节转换为十六进制字符串。
+    /// </summary>
+    /// <param name="bytes">要转换的字节数组。</param>
+    /// <param name="offset">起始偏移量。</param>
+    /// <param name="count">要转换的字节数。</param>
+    /// <returns>表示指定范围内字节的十六进制字符串。</returns>
+    public static string ToHex(this byte[] bytes, int offset, int count)
+    {
+        StringBuilder.Clear();
+        for (int i = offset; i < offset + count; ++i)
+        {
+            StringBuilder.Append(bytes[i].ToString("X2"));
+        }
+
+        return StringBuilder.ToString();
+    }
+
+    /// <summary>
+    /// 将字节数组转换为字符串，使用默认编码。
+    /// </summary>
+    /// <param name="bytes">要转换的字节数组。</param>
+    /// <returns>转换后的字符串。</returns>
+    public static string ToDefaultString(this byte[] bytes)
+    {
+        return Encoding.Default.GetString(bytes);
+    }
+
+    /// <summary>
+    /// 将字节数组的一部分转换为字符串，使用默认编码。
+    /// </summary>
+    /// <param name="bytes">要转换的字节数组。</param>
+    /// <param name="index">起始位置。</param>
+    /// <param name="count">要转换的字节数。</param>
+    /// <returns>转换后的字符串。</returns>
+    public static string ToDefaultString(this byte[] bytes, int index, int count)
+    {
+        return Encoding.Default.GetString(bytes, index, count);
+    }
+
+    /// <summary>
+    /// 将字节数组转换为字符串，使用UTF-8编码。
+    /// </summary>
+    /// <param name="bytes">要转换的字节数组。</param>
+    /// <returns>转换后的字符串。</returns>
+    public static string ToUtf8String(this byte[] bytes)
+    {
+        return Encoding.UTF8.GetString(bytes);
+    }
+
+    /// <summary>
+    /// 将字节数组的一部分转换为字符串，使用UTF-8编码。
+    /// </summary>
+    /// <param name="bytes">要转换的字节数组。</param>
+    /// <param name="index">起始位置。</param>
+    /// <param name="count">要转换的字节数。</param>
+    /// <returns>转换后的字符串。</returns>
+    public static string ToUtf8String(this byte[] bytes, int index, int count)
+    {
+        return Encoding.UTF8.GetString(bytes, index, count);
+    }
 }
