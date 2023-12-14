@@ -25,7 +25,7 @@ namespace Hotfix
 
             RegisterMessagePack();
 
-            ProtoMessageIdHandler.Init(typeof(HotfixProtoHandler).Assembly);
+            ProtoMessageIdHandler.Init(HotfixProtoHandler.CurrentAssembly);
             LoadConfig();
 
 
