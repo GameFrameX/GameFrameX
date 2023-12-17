@@ -211,8 +211,13 @@ namespace GameFrameX.Runtime
                     return;
                 }
 
-                if (!value)
+                if (value == false)
                 {
+                    foreach (var child in this._children)
+                    {
+                        child.Value.Visible = value;
+                    }
+
                     OnHideAction?.Invoke(this);
                     OnHide();
                 }
@@ -220,6 +225,11 @@ namespace GameFrameX.Runtime
                 GObject.visible = value;
                 if (value)
                 {
+                    foreach (var child in this._children)
+                    {
+                        child.Value.Visible = value;
+                    }
+
                     OnShowAction?.Invoke(this);
                     OnShow();
                     Refresh();
