@@ -5,9 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Localization;
-using GameFrameX.Resource;
 using System;
 using UnityEngine;
 
@@ -64,10 +62,10 @@ namespace GameFrameX.Runtime
             set { m_EditorLanguage = value; }
         }
 
-        /// <summary>
+        /*/// <summary>
         /// 获取或设置编辑器资源辅助器。
         /// </summary>
-        public IResourceManager EditorResourceHelper { get; set; }
+        public IResourceManager EditorResourceHelper { get; set; }*/
 
         /// <summary>
         /// 获取或设置游戏帧率。
@@ -368,10 +366,10 @@ namespace GameFrameX.Runtime
                 objectPoolComponent.ReleaseAllUnused();
             }
 
-            ResourceComponent resourceComponent = GameEntry.GetComponent<ResourceComponent>();
+            AssetComponent resourceComponent = GameEntry.GetComponent<AssetComponent>();
             if (resourceComponent != null)
             {
-                resourceComponent.ForceUnloadUnusedAssets(true);
+                // resourceComponent.ForceUnloadUnusedAssets(true);
             }
         }
     }

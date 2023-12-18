@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Event;
 
 namespace GameFrameX.Localization
@@ -35,50 +34,37 @@ namespace GameFrameX.Localization
         /// </summary>
         public override string Id
         {
-            get
-            {
-                return EventId;
-            }
+            get { return EventId; }
         }
 
         /// <summary>
         /// 获取字典资源名称。
         /// </summary>
-        public string DictionaryAssetName
-        {
-            get;
-            private set;
-        }
+        public string DictionaryAssetName { get; private set; }
 
         /// <summary>
         /// 获取加载字典进度。
         /// </summary>
-        public float Progress
-        {
-            get;
-            private set;
-        }
+        public float Progress { get; private set; }
 
         /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
-        public object UserData
-        {
-            get;
-            private set;
-        }
+        public object UserData { get; private set; }
 
         /// <summary>
         /// 创建加载字典更新事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="dataAssetName">字典资源名称。</param>
+        /// <param name="progress">加载字典进度。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的加载字典更新事件。</returns>
-        public static LoadDictionaryUpdateEventArgs Create(ReadDataUpdateEventArgs e)
+        public static LoadDictionaryUpdateEventArgs Create(string dataAssetName, float progress, object userData)
         {
             LoadDictionaryUpdateEventArgs loadDictionaryUpdateEventArgs = ReferencePool.Acquire<LoadDictionaryUpdateEventArgs>();
-            loadDictionaryUpdateEventArgs.DictionaryAssetName = e.DataAssetName;
-            loadDictionaryUpdateEventArgs.Progress = e.Progress;
-            loadDictionaryUpdateEventArgs.UserData = e.UserData;
+            loadDictionaryUpdateEventArgs.DictionaryAssetName = dataAssetName;
+            loadDictionaryUpdateEventArgs.Progress = progress;
+            loadDictionaryUpdateEventArgs.UserData = userData;
             return loadDictionaryUpdateEventArgs;
         }
 

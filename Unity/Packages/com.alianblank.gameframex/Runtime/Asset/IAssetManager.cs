@@ -5,13 +5,65 @@ using UnityEngine.SceneManagement;
 using YooAsset;
 using Object = UnityEngine.Object;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Asset
 {
     /// <summary>
     /// 资源组件。
     /// </summary>
     public interface IAssetManager
     {
+        /// <summary>
+        /// 同时下载的最大数目。
+        /// </summary>
+        int DownloadingMaxNum { get; set; }
+
+        /// <summary>
+        /// 失败重试最大数目。
+        /// </summary>
+        int FailedTryAgain { get; set; }
+
+        /// <summary>
+        /// 获取资源只读区路径。
+        /// </summary>
+        string ReadOnlyPath { get; }
+
+        /// <summary>
+        /// 获取资源读写区路径。
+        /// </summary>
+        string ReadWritePath { get; }
+
+        /// <summary>
+        /// 设置资源只读区路径。
+        /// </summary>
+        /// <param name="readOnlyPath">资源只读区路径。</param>
+        void SetReadOnlyPath(string readOnlyPath);
+
+        /// <summary>
+        /// 设置资源读写区路径。
+        /// </summary>
+        /// <param name="readWritePath">资源读写区路径。</param>
+        void SetReadWritePath(string readWritePath);
+
+        /// <summary>
+        /// 获取或设置资源包名称。
+        /// </summary>
+        string DefaultPackageName { get; set; }
+
+        /// <summary>
+        /// 获取或设置运行模式。
+        /// </summary>
+        EPlayMode PlayMode { get; }
+
+        /// <summary>
+        /// 获取或设置下载文件校验等级。
+        /// </summary>
+        EVerifyLevel VerifyLevel { get; }
+
+        /// <summary>
+        /// 获取或设置异步系统参数，每帧执行消耗的最大时间切片（单位：毫秒）。
+        /// </summary>
+        long Milliseconds { get; set; }
+
         /// <summary>
         /// 更新静态版本
         /// </summary>
@@ -25,12 +77,45 @@ namespace GameFrameX.Runtime
         void SetPlayMode(EPlayMode playMode);
 
         /// <summary>
+        /// 热更链接URL。
+        /// </summary>
+        string HostServerURL { get; }
+
+        /// <summary>
+        /// 备用热更链接URL。
+        /// </summary>
+        string FallbackHostServerURL { get; }
+
+        /// <summary>
+        /// 设置热更链接URL。
+        /// </summary>
+        /// <param name="hostServerURL">热更链接URL。</param>
+        void SetHostServerURL(string hostServerURL);
+
+        /// <summary>
+        /// 设置备用热更链接URL
+        /// </summary>
+        /// <param name="fallbackHostServerURL"></param>
+        void SetFallbackHostServerURL(string fallbackHostServerURL);
+
+        /// <summary>
         /// 初始化
         /// </summary>
-        /// <param name="host"></param>
         /// <returns></returns>
-        UniTask Initialize(string host);
+        void Initialize();
 
+        /// <summary>
+        /// 初始化操作。
+        /// </summary>
+        /// <returns></returns>
+        InitializationOperation InitPackage();
+
+
+        /// <summary>
+        /// 卸载资源
+        /// </summary>
+        /// <param name="assetPath"></param>
+        void UnloadAsset(string assetPath);
 
         #region 异步加载子资源对象
 
@@ -146,6 +231,14 @@ namespace GameFrameX.Runtime
         /// <returns></returns>
         UniTask<AssetHandle> LoadAssetAsync<T>(string path) where T : Object;
 
+        /// <summary>
+        /// 异步加载资源。
+        /// </summary>
+        /// <param name="assetPath"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        System.Threading.Tasks.Task<T> LoadAssetTaskAsync<T>(string assetPath) where T : UnityEngine.Object;
+
         #endregion
 
         #region 同步加载资源
@@ -183,8 +276,7 @@ namespace GameFrameX.Runtime
         /// <param name="sceneMode">场景模式</param>
         /// <param name="activateOnLoad">是否加载完成自动激活</param>
         /// <returns></returns>
-        UniTask<SceneHandle> LoadSceneAsync(string path, LoadSceneMode sceneMode,
-            bool activateOnLoad = true);
+        UniTask<SceneHandle> LoadSceneAsync(string path, LoadSceneMode sceneMode, bool activateOnLoad = true);
 
         /// <summary>
         /// 异步加载场景
@@ -193,8 +285,7 @@ namespace GameFrameX.Runtime
         /// <param name="sceneMode">场景模式</param>
         /// <param name="activateOnLoad">是否加载完成自动激活</param>
         /// <returns></returns>
-        UniTask<SceneHandle> LoadSceneAsync(AssetInfo assetInfo, LoadSceneMode sceneMode,
-            bool activateOnLoad = true);
+        UniTask<SceneHandle> LoadSceneAsync(AssetInfo assetInfo, LoadSceneMode sceneMode, bool activateOnLoad = true);
 
         #endregion
 

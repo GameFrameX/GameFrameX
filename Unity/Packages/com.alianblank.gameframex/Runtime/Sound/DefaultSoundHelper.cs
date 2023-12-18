@@ -5,6 +5,8 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Asset;
+
 namespace GameFrameX.Runtime
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace GameFrameX.Runtime
     /// </summary>
     public class DefaultSoundHelper : SoundHelperBase
     {
-        private ResourceComponent m_ResourceComponent = null;
+        private IAssetManager m_ResourceComponent = null;
 
         /// <summary>
         /// 释放声音资源。
@@ -20,12 +22,12 @@ namespace GameFrameX.Runtime
         /// <param name="soundAsset">要释放的声音资源。</param>
         public override void ReleaseSoundAsset(object soundAsset)
         {
-            m_ResourceComponent.UnloadAsset(soundAsset);
+            // m_ResourceComponent.UnloadAsset(soundAsset);
         }
 
         private void Start()
         {
-            m_ResourceComponent = GameEntry.GetComponent<ResourceComponent>();
+            m_ResourceComponent = GameFrameworkEntry.GetModule<IAssetManager>();
             if (m_ResourceComponent == null)
             {
                 Log.Fatal("Resource component is invalid.");

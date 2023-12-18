@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using GameFrameX.Asset;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using YooAsset;
@@ -43,11 +44,13 @@ namespace GameFrameX.Runtime
             StaticVersion = version;
         }
 
-        public async void Initialize(string host)
+        public async void Initialize(string host, string fallbackHost)
         {
             _hostServer = host;
-
-            await _assetManager.Initialize(host);
+            _assetManager.SetHostServerURL(host);
+            _assetManager.SetFallbackHostServerURL(fallbackHost);
+            _assetManager.Initialize();
+            await _assetManager.InitPackage().ToUniTask();
         }
 
 
@@ -360,6 +363,7 @@ namespace GameFrameX.Runtime
         {
             return _assetManager.GetAssetInfo(path);
         }
+
         /// <summary>
         /// 设置默认资源包
         /// </summary>

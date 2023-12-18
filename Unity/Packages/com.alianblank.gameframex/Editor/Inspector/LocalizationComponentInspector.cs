@@ -24,7 +24,7 @@ namespace GameFrameX.Editor
 
             serializedObject.Update();
 
-            LocalizationComponent t = (LocalizationComponent)target;
+            LocalizationComponent localizationComponent = (LocalizationComponent)target;
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
@@ -34,12 +34,12 @@ namespace GameFrameX.Editor
             }
             EditorGUI.EndDisabledGroup();
 
-            if (EditorApplication.isPlaying && IsPrefabInHierarchy(t.gameObject))
+            if (EditorApplication.isPlaying && IsPrefabInHierarchy(localizationComponent.gameObject))
             {
-                EditorGUILayout.LabelField("Language", t.Language.ToString());
-                EditorGUILayout.LabelField("System Language", t.SystemLanguage.ToString());
-                EditorGUILayout.LabelField("Dictionary Count", t.DictionaryCount.ToString());
-                EditorGUILayout.LabelField("Cached Bytes Size", t.CachedBytesSize.ToString());
+                EditorGUILayout.LabelField("Language", localizationComponent.Language.ToString());
+                EditorGUILayout.LabelField("System Language", localizationComponent.SystemLanguage.ToString());
+                EditorGUILayout.LabelField("Dictionary Count", localizationComponent.DictionaryCount.ToString());
+                // EditorGUILayout.LabelField("Cached Bytes Size", t.CachedBytesSize.ToString());
             }
 
             serializedObject.ApplyModifiedProperties();

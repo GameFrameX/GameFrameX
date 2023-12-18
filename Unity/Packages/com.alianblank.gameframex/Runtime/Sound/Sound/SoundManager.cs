@@ -8,8 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GameFrameX.Resource;
-using GameFrameX.Runtime;
+using GameFrameX.Asset;
 using UnityEngine;
 
 namespace GameFrameX.Sound
@@ -313,7 +312,7 @@ namespace GameFrameX.Sound
         /// <returns>声音的序列编号。</returns>
         public Task<int> PlaySound(string soundAssetName, string soundGroupName)
         {
-            return PlaySound(soundAssetName, soundGroupName, Resource.Constant.DefaultPriority, null, null);
+            return PlaySound(soundAssetName, soundGroupName, Asset.Constant.DefaultPriority, null, null);
         }
 
         /// <summary>
@@ -337,7 +336,7 @@ namespace GameFrameX.Sound
         /// <returns>声音的序列编号。</returns>
         public Task<int> PlaySound(string soundAssetName, string soundGroupName, PlaySoundParams playSoundParams)
         {
-            return PlaySound(soundAssetName, soundGroupName, Resource.Constant.DefaultPriority, playSoundParams, null);
+            return PlaySound(soundAssetName, soundGroupName, Asset.Constant.DefaultPriority, playSoundParams, null);
         }
 
         /// <summary>
@@ -349,7 +348,7 @@ namespace GameFrameX.Sound
         /// <returns>声音的序列编号。</returns>
         public Task<int> PlaySound(string soundAssetName, string soundGroupName, object userData)
         {
-            return PlaySound(soundAssetName, soundGroupName, Resource.Constant.DefaultPriority, null, userData);
+            return PlaySound(soundAssetName, soundGroupName, Asset.Constant.DefaultPriority, null, userData);
         }
 
         /// <summary>
@@ -388,7 +387,7 @@ namespace GameFrameX.Sound
         /// <returns>声音的序列编号。</returns>
         public async Task<int> PlaySound(string soundAssetName, string soundGroupName, PlaySoundParams playSoundParams, object userData)
         {
-            return await PlaySound(soundAssetName, soundGroupName, Resource.Constant.DefaultPriority, playSoundParams, userData);
+            return await PlaySound(soundAssetName, soundGroupName, Asset.Constant.DefaultPriority, playSoundParams, userData);
         }
 
         /// <summary>
@@ -653,6 +652,7 @@ namespace GameFrameX.Sound
             throw new GameFrameworkException(errorMessage);
         }
 
+        /*
         private void LoadAssetFailureCallback(string soundAssetName, LoadResourceStatus status, string errorMessage, object userData)
         {
             PlaySoundInfo playSoundInfo = (PlaySoundInfo)userData;
@@ -690,7 +690,7 @@ namespace GameFrameX.Sound
             }
 
             throw new GameFrameworkException(appendErrorMessage);
-        }
+        }*/
 
         /*
         private void LoadAssetUpdateCallback(string soundAssetName, float progress, object userData)

@@ -1,25 +1,31 @@
 using System;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using YooAsset;
 using Object = UnityEngine.Object;
 
-namespace GameFrameX.Runtime
+namespace GameFrameX.Asset
 {
     /// <summary>
     /// 资源组件。
     /// </summary>
-    public sealed class AssetManager : GameFrameworkModule, IAssetManager
+    public partial class AssetManager : GameFrameworkModule, IAssetManager
     {
-        private EPlayMode _gamePlayMode;
         private ResourcePackage _buildinPackage;
-        public const string BuildInPackageName = "DefaultPackage";
+        public string DefaultPackageName { get; set; } = "DefaultPackage";
 
         private InitializationOperation _initializationOperation;
-        private string _hostServer;
+
         public string StaticVersion { get; private set; }
 
+        public int DownloadingMaxNum { get; set; }
+        public int FailedTryAgain { get; set; }
+
+
+        public EVerifyLevel VerifyLevel { get; set; }
+        public long Milliseconds { get; set; }
 
         /// <summary>
         /// 更新静态版本
@@ -30,130 +36,63 @@ namespace GameFrameX.Runtime
             StaticVersion = version;
         }
 
-        /// <summary>
-        /// 设置运行模式
-        /// </summary>
-        /// <param name="playMode">运行模式</param>
-        public void SetPlayMode(EPlayMode playMode)
+
+        public string HostServerURL { get; private set; }
+        public string FallbackHostServerURL { get; private set; }
+
+        public void SetHostServerURL(string hostServerURL)
         {
-            _gamePlayMode = playMode;
+            GameFrameworkGuard.NotNull(hostServerURL, nameof(hostServerURL));
+            HostServerURL = hostServerURL;
         }
+
+        public void SetFallbackHostServerURL(string fallbackHostServerURL)
+        {
+            GameFrameworkGuard.NotNull(fallbackHostServerURL, nameof(fallbackHostServerURL));
+            FallbackHostServerURL = fallbackHostServerURL;
+        }
+
 
         /// <summary>
         /// 初始化
         /// </summary>
-        /// <param name="host"></param>
         /// <returns></returns>
-        public async UniTask Initialize(string host)
+        public void Initialize()
         {
-            _hostServer = host;
-            Debug.Log($"资源系统运行模式：{_gamePlayMode}");
+            Debug.Log($"资源系统运行模式：{PlayMode}");
             YooAssets.Initialize();
             YooAssets.SetOperationSystemMaxTimeSlice(30);
             // YooAssets.SetCacheSystemCachedFileVerifyLevel(EVerifyLevel.High);
             // YooAssets.SetDownloadSystemBreakpointResumeFileSize(4096 * 8);
 
+            Debug.Log("Asset Init Over");
+        }
+
+        public InitializationOperation InitPackage()
+        {
             // 创建默认的资源包
-            _buildinPackage = YooAssets.TryGetPackage(BuildInPackageName);
+            _buildinPackage = YooAssets.TryGetPackage(DefaultPackageName);
             if (_buildinPackage == null)
             {
-                _buildinPackage = YooAssets.CreatePackage(BuildInPackageName);
+                _buildinPackage = YooAssets.CreatePackage(DefaultPackageName);
                 // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
                 YooAssets.SetDefaultPackage(_buildinPackage);
             }
 
-            if (_gamePlayMode == EPlayMode.EditorSimulateMode)
-            {
-                // 编辑器下的模拟模式
-                InitializeYooAssetEditorSimulateMode();
-            }
-            else if (_gamePlayMode == EPlayMode.OfflinePlayMode)
-            {
-                // 单机运行模式
-                InitializeYooAssetOfflinePlayMode();
-            }
-            else if (_gamePlayMode == EPlayMode.HostPlayMode)
-            {
-                // 联机运行模式
-                InitializeYooAssetHostPlayMode();
-            }
-            else if (_gamePlayMode == EPlayMode.WebPlayMode)
-            {
-                // WebGL运行模式
-                InitializeYooAssetWebPlayMode();
-            }
-
-            await _initializationOperation.ToUniTask();
-
-            Debug.Log("Asset Init Over");
-        }
-
-        private void InitializeYooAssetEditorSimulateMode()
-        {
-            var initParameters = new EditorSimulateModeParameters();
-            initParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline.ToString(), BuildInPackageName);
-            
-            _initializationOperation = _buildinPackage.InitializeAsync(initParameters);
-        }
-
-        private void InitializeYooAssetOfflinePlayMode()
-        {
-            var initParameters = new OfflinePlayModeParameters();
-            _initializationOperation = _buildinPackage.InitializeAsync(initParameters);
-        }
-
-        private void InitializeYooAssetWebPlayMode()
-        {
-            var initParameters = new WebPlayModeParameters();
-            initParameters.BuildinQueryServices = new QueryStreamingAssetsFileServices();
-            initParameters.RemoteServices = new RemoteServices(_hostServer, _hostServer);
-            _initializationOperation = _buildinPackage.InitializeAsync(initParameters);
-        }
-
-        private void InitializeYooAssetHostPlayMode()
-        {
-            var initParameters = new HostPlayModeParameters();
-            initParameters.BuildinQueryServices = new QueryStreamingAssetsFileServices();
-            initParameters.RemoteServices = new RemoteServices(_hostServer, _hostServer);
-            // initParameters.DeliveryQueryServices = new WebDeliveryQueryServices();
-            // initParameters.DeliveryLoadServices = new WebDeliveryLoadServices();
-            _initializationOperation = _buildinPackage.InitializeAsync(initParameters);
-        }
-
-        private class RemoteServices : IRemoteServices
-        {
-            public string HostServer { get; }
-            public string FallbackHostServer { get; }
-
-            public RemoteServices(string hostServer, string fallbackHostServer)
-            {
-                HostServer = hostServer;
-                FallbackHostServer = fallbackHostServer;
-            }
-
-            public string GetRemoteMainURL(string fileName)
-            {
-                return HostServer + fileName;
-            }
-
-            public string GetRemoteFallbackURL(string fileName)
-            {
-                return FallbackHostServer + fileName;
-            }
+            return CreateInitializationOperationHandler();
         }
 
         /// <summary>
-        /// 内置文件查询服务类
+        /// 卸载资源
         /// </summary>
-        private class QueryStreamingAssetsFileServices : IBuildinQueryServices
+        /// <param name="assetPath"></param>
+        public void UnloadAsset(string assetPath)
         {
-            public bool Query(string packageName, string fileName)
-            {
-                // 注意：使用了BetterStreamingAssets插件，使用前需要初始化该插件！
-                string buildinFolderName = PathHelper.AppResPath;
-                return BetterStreamingAssets.FileExists($"{buildinFolderName}/{fileName}");
-            }
+            GameFrameworkGuard.NotNull(assetPath, nameof(assetPath));
+            var package = YooAssets.GetPackage(DefaultPackageName);
+            package.TryUnloadUnusedAsset(assetPath);
         }
+
 
         #region 异步加载子资源对象
 
@@ -339,6 +278,26 @@ namespace GameFrameX.Runtime
             var assetHandle = YooAssets.LoadAssetAsync<T>(path);
             assetHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
+        }
+
+        public async Task<TObject> LoadAssetTaskAsync<TObject>(string assetPath) where TObject : Object
+        {
+            ResourcePackage assetPackage = YooAssets.TryGetPackage(DefaultPackageName);
+            var handle = assetPackage.LoadAssetAsync<TObject>(assetPath);
+            await handle.Task;
+            if (handle == null || handle.AssetObject == null || handle.Status == EOperationStatus.Failed)
+            {
+                string errorMessage = Utility.Text.Format("Can not load asset '{0}'.", assetPath);
+                throw new GameFrameworkException(errorMessage);
+            }
+
+            var result = handle.AssetObject as TObject;
+            if (result == null)
+            {
+                throw new GameFrameworkException(Utility.Text.Format("TObject '{0}' is invalid.", typeof(TObject).FullName));
+            }
+
+            return result;
         }
 
         #endregion
@@ -532,6 +491,51 @@ namespace GameFrameX.Runtime
         internal override void Shutdown()
         {
             OnDestroy();
+        }
+
+
+        /// <summary>
+        /// 获取或设置运行模式。
+        /// </summary>
+        public EPlayMode PlayMode { get; private set; }
+
+        /// <summary>
+        /// 设置运行模式
+        /// </summary>
+        /// <param name="playMode">运行模式</param>
+        public void SetPlayMode(EPlayMode playMode)
+        {
+            PlayMode = playMode;
+        }
+
+        /// <summary>
+        /// 获取资源只读区路径。
+        /// </summary>
+        public string ReadOnlyPath { get; private set; }
+
+        /// <summary>
+        /// 设置资源只读区路径。
+        /// </summary>
+        /// <param name="readOnlyPath">资源只读区路径。</param>
+        public void SetReadOnlyPath(string readOnlyPath)
+        {
+            GameFrameworkGuard.NotNull(readOnlyPath, nameof(readOnlyPath));
+            ReadOnlyPath = readOnlyPath;
+        }
+
+        /// <summary>
+        /// 获取资源读写区路径。
+        /// </summary>
+        public string ReadWritePath { get; private set; }
+
+        /// <summary>
+        /// 设置资源读写区路径。
+        /// </summary>
+        /// <param name="readWritePath">资源读写区路径。</param>
+        public void SetReadWritePath(string readWritePath)
+        {
+            GameFrameworkGuard.NotNull(readWritePath, nameof(readWritePath));
+            ReadWritePath = readWritePath;
         }
     }
 }

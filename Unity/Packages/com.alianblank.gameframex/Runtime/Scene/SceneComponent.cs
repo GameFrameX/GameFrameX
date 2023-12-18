@@ -5,12 +5,11 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
-using GameFrameX.Resource;
 using GameFrameX.Scene;
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GameFrameX.Asset;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using YooAsset;

@@ -7,9 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using GameFrameX.Asset;
 using GameFrameX.ObjectPool;
-using GameFrameX.Resource;
-using GameFrameX.Runtime;
 
 namespace GameFrameX.Entity
 {

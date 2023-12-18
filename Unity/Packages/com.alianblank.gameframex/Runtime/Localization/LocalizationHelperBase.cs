@@ -13,7 +13,7 @@ namespace GameFrameX.Runtime
     /// <summary>
     /// 本地化辅助器基类。
     /// </summary>
-    public abstract class LocalizationHelperBase : MonoBehaviour, IDataProviderHelper<ILocalizationManager>, ILocalizationHelper
+    public abstract class LocalizationHelperBase : MonoBehaviour, ILocalizationHelper
     {
         /// <summary>
         /// 获取系统语言。

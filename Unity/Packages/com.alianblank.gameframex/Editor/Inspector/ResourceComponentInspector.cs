@@ -1,4 +1,5 @@
-﻿//------------------------------------------------------------
+﻿/*
+//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2021 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -13,7 +14,6 @@ using System.Text;
 using GameFrameX.Runtime;
 using UnityEditor;
 using UnityEngine;
-using ResourceComponent = GameFrameX.Runtime.ResourceComponent;
 
 namespace GameFrameX.Editor
 {
@@ -270,8 +270,8 @@ namespace GameFrameX.Editor
             if (EditorApplication.isPlaying && IsPrefabInHierarchy(t.gameObject))
             {
                 EditorGUILayout.LabelField("Unload Unused Assets", Utility.Text.Format("{0:F2} / {1:F2}", t.LastUnloadUnusedAssetsOperationElapseSeconds, t.MaxUnloadUnusedAssetsInterval));
-                EditorGUILayout.LabelField("Read-Only Path", t.ReadOnlyPath.ToString());
-                EditorGUILayout.LabelField("Read-Write Path", t.ReadWritePath.ToString());
+                // EditorGUILayout.LabelField("Read-Only Path", t.ReadOnlyPath.ToString());
+                // EditorGUILayout.LabelField("Read-Write Path", t.ReadWritePath.ToString());
                 EditorGUILayout.LabelField("Applicable Game Version", isEditorResourceMode ? "N/A" : t.ApplicableGameVersion ?? "<Unknwon>");
                 EditorGUILayout.LabelField("Internal Resource Version", isEditorResourceMode ? "N/A" : t.InternalResourceVersion.ToString());
                 EditorGUILayout.LabelField("Asset Count", isEditorResourceMode ? "N/A" : t.AssetCount.ToString());
@@ -395,3 +395,4 @@ namespace GameFrameX.Editor
         }
     }
 }
+*/

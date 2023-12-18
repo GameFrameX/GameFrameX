@@ -5,42 +5,30 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX.Resource;
+using GameFrameX.Asset;
 
 namespace GameFrameX.Config
 {
     /// <summary>
     /// 全局配置管理器接口。
     /// </summary>
-    public interface IConfigManager : IDataProvider<IConfigManager>
+    public interface IConfigManager
     {
         /// <summary>
         /// 获取全局配置项数量。
         /// </summary>
-        int Count
-        {
-            get;
-        }
+        int Count { get; }
 
         /// <summary>
         /// 获取缓冲二进制流的大小。
         /// </summary>
-        int CachedBytesSize
-        {
-            get;
-        }
+        int CachedBytesSize { get; }
 
         /// <summary>
         /// 设置资源管理器。
         /// </summary>
-        /// <param name="resourceManager">资源管理器。</param>
-        void SetResourceManager(IResourceManager resourceManager);
-
-        /// <summary>
-        /// 设置全局配置数据提供者辅助器。
-        /// </summary>
-        /// <param name="dataProviderHelper">全局配置数据提供者辅助器。</param>
-        void SetDataProviderHelper(IDataProviderHelper<IConfigManager> dataProviderHelper);
+        /// <param name="assetManager">资源管理器。</param>
+        void SetAssetManager(IAssetManager assetManager);
 
         /// <summary>
         /// 设置全局配置辅助器。

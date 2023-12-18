@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Localization;
 using System;
 using System.IO;
@@ -23,7 +22,7 @@ namespace GameFrameX.Runtime
         private static readonly string BytesAssetExtension = ".bytes";
         private const int ColumnCount = 4;
 
-        private ResourceComponent m_ResourceComponent = null;
+        private AssetComponent m_ResourceComponent = null;
 
         /// <summary>
         /// 获取系统语言。
@@ -92,20 +91,20 @@ namespace GameFrameX.Runtime
         /// <returns>是否读取字典成功。</returns>
         public override bool ReadData(ILocalizationManager localizationManager, string dictionaryAssetName, object dictionaryAsset, object userData)
         {
-            TextAsset dictionaryTextAsset = dictionaryAsset as TextAsset;
-            if (dictionaryTextAsset != null)
-            {
-                if (dictionaryAssetName.EndsWith(BytesAssetExtension, StringComparison.Ordinal))
-                {
-                    return localizationManager.ParseData(dictionaryTextAsset.bytes, userData);
-                }
-                else
-                {
-                    return localizationManager.ParseData(dictionaryTextAsset.text, userData);
-                }
-            }
-
-            Log.Warning("Dictionary asset '{0}' is invalid.", dictionaryAssetName);
+            // TextAsset dictionaryTextAsset = dictionaryAsset as TextAsset;
+            // if (dictionaryTextAsset != null)
+            // {
+            //     if (dictionaryAssetName.EndsWith(BytesAssetExtension, StringComparison.Ordinal))
+            //     {
+            //         return localizationManager.ParseData(dictionaryTextAsset.bytes, userData);
+            //     }
+            //     else
+            //     {
+            //         return localizationManager.ParseData(dictionaryTextAsset.text, userData);
+            //     }
+            // }
+            //
+            // Log.Warning("Dictionary asset '{0}' is invalid.", dictionaryAssetName);
             return false;
         }
 
@@ -121,14 +120,15 @@ namespace GameFrameX.Runtime
         /// <returns>是否读取字典成功。</returns>
         public override bool ReadData(ILocalizationManager localizationManager, string dictionaryAssetName, byte[] dictionaryBytes, int startIndex, int length, object userData)
         {
-            if (dictionaryAssetName.EndsWith(BytesAssetExtension, StringComparison.Ordinal))
-            {
-                return localizationManager.ParseData(dictionaryBytes, startIndex, length, userData);
-            }
-            else
-            {
-                return localizationManager.ParseData(Utility.Converter.GetString(dictionaryBytes, startIndex, length), userData);
-            }
+            return true;
+            // if (dictionaryAssetName.EndsWith(BytesAssetExtension, StringComparison.Ordinal))
+            // {
+            //     return localizationManager.ParseData(dictionaryBytes, startIndex, length, userData);
+            // }
+            // else
+            // {
+            //     return localizationManager.ParseData(Utility.Converter.GetString(dictionaryBytes, startIndex, length), userData);
+            // }
         }
 
         /// <summary>
@@ -222,12 +222,12 @@ namespace GameFrameX.Runtime
         /// <param name="dictionaryAsset">要释放的字典资源。</param>
         public override void ReleaseDataAsset(ILocalizationManager localizationManager, object dictionaryAsset)
         {
-            m_ResourceComponent.UnloadAsset(dictionaryAsset);
+            // m_ResourceComponent.UnloadAsset(dictionaryAsset);
         }
 
         private void Start()
         {
-            m_ResourceComponent = GameEntry.GetComponent<ResourceComponent>();
+            m_ResourceComponent = GameEntry.GetComponent<AssetComponent>();
             if (m_ResourceComponent == null)
             {
                 Log.Fatal("Resource component is invalid.");

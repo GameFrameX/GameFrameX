@@ -5,9 +5,8 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
+using GameFrameX.Asset;
 using GameFrameX.Localization;
-using GameFrameX.Resource;
 using UnityEngine;
 
 namespace GameFrameX.Runtime
@@ -27,8 +26,7 @@ namespace GameFrameX.Runtime
         [SerializeField] private bool m_EnableLoadDictionaryUpdateEvent = false;
 
 
-        [SerializeField]
-        private string m_LocalizationHelperTypeName = "UnityGameFramework.Runtime.DefaultLocalizationHelper";
+        [SerializeField] private string m_LocalizationHelperTypeName = "UnityGameFramework.Runtime.DefaultLocalizationHelper";
 
         [SerializeField] private LocalizationHelperBase m_CustomLocalizationHelper = null;
 
@@ -62,10 +60,10 @@ namespace GameFrameX.Runtime
         /// <summary>
         /// 获取缓冲二进制流的大小。
         /// </summary>
-        public int CachedBytesSize
-        {
-            get { return m_LocalizationManager.CachedBytesSize; }
-        }
+        // public int CachedBytesSize
+        // {
+        //     get { return m_LocalizationManager.CachedBytesSize; }
+        // }
 
         /// <summary>
         /// 游戏框架组件初始化。
@@ -81,13 +79,13 @@ namespace GameFrameX.Runtime
                 return;
             }
 
-            m_LocalizationManager.ReadDataSuccess += OnReadDataSuccess;
+            /*m_LocalizationManager.ReadDataSuccess += OnReadDataSuccess;
             m_LocalizationManager.ReadDataFailure += OnReadDataFailure;
 
             if (m_EnableLoadDictionaryUpdateEvent)
             {
                 m_LocalizationManager.ReadDataUpdate += OnReadDataUpdate;
-            }
+            }*/
         }
 
         private void Start()
@@ -107,7 +105,7 @@ namespace GameFrameX.Runtime
             }
 
 
-            m_LocalizationManager.SetResourceManager(GameFrameworkEntry.GetModule<IResourceManager>());
+            m_LocalizationManager.SetAssetManager(GameFrameworkEntry.GetModule<IAssetManager>());
 
 
             LocalizationHelperBase localizationHelper =
@@ -119,11 +117,10 @@ namespace GameFrameX.Runtime
             }
 
             localizationHelper.name = "Localization Helper";
-            Transform transform = localizationHelper.transform;
-            transform.SetParent(this.transform);
-            transform.localScale = Vector3.one;
+            Transform localizationHelperTransform = localizationHelper.transform;
+            localizationHelperTransform.SetParent(this.transform);
+            localizationHelperTransform.localScale = Vector3.one;
 
-            m_LocalizationManager.SetDataProviderHelper(localizationHelper);
             m_LocalizationManager.SetLocalizationHelper(localizationHelper);
             m_LocalizationManager.Language = baseComponent.EditorLanguage != Language.Unspecified
                 ? baseComponent.EditorLanguage
@@ -140,15 +137,7 @@ namespace GameFrameX.Runtime
         /// <param name="ensureSize">要确保二进制流缓存分配内存的大小。</param>
         public void EnsureCachedBytesSize(int ensureSize)
         {
-            m_LocalizationManager.EnsureCachedBytesSize(ensureSize);
-        }
-
-        /// <summary>
-        /// 释放缓存的二进制流。
-        /// </summary>
-        public void FreeCachedBytes()
-        {
-            m_LocalizationManager.FreeCachedBytes();
+            // m_LocalizationManager.EnsureCachedBytesSize(ensureSize);
         }
 
         /// <summary>
@@ -157,7 +146,7 @@ namespace GameFrameX.Runtime
         /// <param name="dictionaryAssetName">字典资源名称。</param>
         public void ReadData(string dictionaryAssetName)
         {
-            m_LocalizationManager.ReadData(dictionaryAssetName);
+            // m_LocalizationManager.ReadData(dictionaryAssetName);
         }
 
         /// <summary>
@@ -167,7 +156,7 @@ namespace GameFrameX.Runtime
         /// <param name="priority">加载字典资源的优先级。</param>
         public void ReadData(string dictionaryAssetName, int priority)
         {
-            m_LocalizationManager.ReadData(dictionaryAssetName, priority);
+            // m_LocalizationManager.ReadData(dictionaryAssetName, priority);
         }
 
         /// <summary>
@@ -177,7 +166,7 @@ namespace GameFrameX.Runtime
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(string dictionaryAssetName, object userData)
         {
-            m_LocalizationManager.ReadData(dictionaryAssetName, userData);
+            // m_LocalizationManager.ReadData(dictionaryAssetName, userData);
         }
 
         /// <summary>
@@ -188,7 +177,7 @@ namespace GameFrameX.Runtime
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(string dictionaryAssetName, int priority, object userData)
         {
-            m_LocalizationManager.ReadData(dictionaryAssetName, priority, userData);
+            // m_LocalizationManager.ReadData(dictionaryAssetName, priority, userData);
         }
 
         /// <summary>
@@ -198,7 +187,8 @@ namespace GameFrameX.Runtime
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(string dictionaryString)
         {
-            return m_LocalizationManager.ParseData(dictionaryString);
+            // return m_LocalizationManager.ParseData(dictionaryString);
+            return false;
         }
 
         /// <summary>
@@ -209,7 +199,8 @@ namespace GameFrameX.Runtime
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(string dictionaryString, object userData)
         {
-            return m_LocalizationManager.ParseData(dictionaryString, userData);
+            // return m_LocalizationManager.ParseData(dictionaryString, userData);
+            return false;
         }
 
         /// <summary>
@@ -219,7 +210,8 @@ namespace GameFrameX.Runtime
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(byte[] dictionaryBytes)
         {
-            return m_LocalizationManager.ParseData(dictionaryBytes);
+            // return m_LocalizationManager.ParseData(dictionaryBytes);
+            return false;
         }
 
         /// <summary>
@@ -230,7 +222,8 @@ namespace GameFrameX.Runtime
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(byte[] dictionaryBytes, object userData)
         {
-            return m_LocalizationManager.ParseData(dictionaryBytes, userData);
+            // return m_LocalizationManager.ParseData(dictionaryBytes, userData);
+            return false;
         }
 
         /// <summary>
@@ -242,7 +235,8 @@ namespace GameFrameX.Runtime
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(byte[] dictionaryBytes, int startIndex, int length)
         {
-            return m_LocalizationManager.ParseData(dictionaryBytes, startIndex, length);
+            // return m_LocalizationManager.ParseData(dictionaryBytes, startIndex, length);
+            return false;
         }
 
         /// <summary>
@@ -255,7 +249,8 @@ namespace GameFrameX.Runtime
         /// <returns>是否解析字典成功。</returns>
         public bool ParseData(byte[] dictionaryBytes, int startIndex, int length, object userData)
         {
-            return m_LocalizationManager.ParseData(dictionaryBytes, startIndex, length, userData);
+            // return m_LocalizationManager.ParseData(dictionaryBytes, startIndex, length, userData);
+            return false;
         }
 
         /// <summary>
@@ -759,6 +754,7 @@ namespace GameFrameX.Runtime
             m_LocalizationManager.RemoveAllRawStrings();
         }
 
+        /*
         private void OnReadDataSuccess(object sender, ReadDataSuccessEventArgs e)
         {
             m_EventComponent.Fire(this, LoadDictionarySuccessEventArgs.Create(e));
@@ -774,6 +770,6 @@ namespace GameFrameX.Runtime
         private void OnReadDataUpdate(object sender, ReadDataUpdateEventArgs e)
         {
             m_EventComponent.Fire(this, LoadDictionaryUpdateEventArgs.Create(e));
-        }
+        }*/
     }
 }

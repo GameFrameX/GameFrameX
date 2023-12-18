@@ -5,14 +5,12 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
-using GameFrameX.Resource;
 #if UNITY_5_3
 using GameFramework.Scene;
 #endif
 using GameFrameX.Sound;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using GameFrameX.Asset;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;

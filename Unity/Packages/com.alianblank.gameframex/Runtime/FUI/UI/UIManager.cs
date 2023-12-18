@@ -7,8 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using GameFrameX.Asset;
 using GameFrameX.ObjectPool;
-using GameFrameX.Resource;
 
 namespace GameFrameX.UI
 {
@@ -21,9 +21,11 @@ namespace GameFrameX.UI
         private readonly Dictionary<int, string> m_UIFormsBeingLoaded;
         private readonly HashSet<int> m_UIFormsToReleaseOnLoad;
         private readonly Queue<IUIForm> m_RecycleQueue;
-        private readonly LoadAssetCallbacks m_LoadAssetCallbacks;
+        // private readonly LoadAssetCallbacks m_LoadAssetCallbacks;
+
         private IObjectPoolManager m_ObjectPoolManager;
-        private IResourceManager m_ResourceManager;
+
+        // private IResourceManager m_ResourceManager;
         private IObjectPool<UIFormInstanceObject> m_InstancePool;
         private IUIFormHelper m_UIFormHelper;
         private int m_Serial;
@@ -43,9 +45,9 @@ namespace GameFrameX.UI
             m_UIFormsBeingLoaded = new Dictionary<int, string>();
             m_UIFormsToReleaseOnLoad = new HashSet<int>();
             m_RecycleQueue = new Queue<IUIForm>();
-            m_LoadAssetCallbacks = new LoadAssetCallbacks(LoadAssetSuccessCallback, LoadAssetFailureCallback, LoadAssetUpdateCallback, LoadAssetDependencyAssetCallback);
+            // m_LoadAssetCallbacks = new LoadAssetCallbacks(LoadAssetSuccessCallback, LoadAssetFailureCallback, LoadAssetUpdateCallback, LoadAssetDependencyAssetCallback);
             m_ObjectPoolManager = null;
-            m_ResourceManager = null;
+            // m_ResourceManager = null;
             m_InstancePool = null;
             m_UIFormHelper = null;
             m_Serial = 0;
@@ -62,10 +64,7 @@ namespace GameFrameX.UI
         /// </summary>
         public int UIGroupCount
         {
-            get
-            {
-                return m_UIGroups.Count;
-            }
+            get { return m_UIGroups.Count; }
         }
 
         /// <summary>
@@ -73,14 +72,8 @@ namespace GameFrameX.UI
         /// </summary>
         public float InstanceAutoReleaseInterval
         {
-            get
-            {
-                return m_InstancePool.AutoReleaseInterval;
-            }
-            set
-            {
-                m_InstancePool.AutoReleaseInterval = value;
-            }
+            get { return m_InstancePool.AutoReleaseInterval; }
+            set { m_InstancePool.AutoReleaseInterval = value; }
         }
 
         /// <summary>
@@ -88,14 +81,8 @@ namespace GameFrameX.UI
         /// </summary>
         public int InstanceCapacity
         {
-            get
-            {
-                return m_InstancePool.Capacity;
-            }
-            set
-            {
-                m_InstancePool.Capacity = value;
-            }
+            get { return m_InstancePool.Capacity; }
+            set { m_InstancePool.Capacity = value; }
         }
 
         /// <summary>
@@ -103,14 +90,8 @@ namespace GameFrameX.UI
         /// </summary>
         public float InstanceExpireTime
         {
-            get
-            {
-                return m_InstancePool.ExpireTime;
-            }
-            set
-            {
-                m_InstancePool.ExpireTime = value;
-            }
+            get { return m_InstancePool.ExpireTime; }
+            set { m_InstancePool.ExpireTime = value; }
         }
 
         /// <summary>
@@ -118,14 +99,8 @@ namespace GameFrameX.UI
         /// </summary>
         public int InstancePriority
         {
-            get
-            {
-                return m_InstancePool.Priority;
-            }
-            set
-            {
-                m_InstancePool.Priority = value;
-            }
+            get { return m_InstancePool.Priority; }
+            set { m_InstancePool.Priority = value; }
         }
 
         /// <summary>
@@ -133,14 +108,8 @@ namespace GameFrameX.UI
         /// </summary>
         public event EventHandler<OpenUIFormSuccessEventArgs> OpenUIFormSuccess
         {
-            add
-            {
-                m_OpenUIFormSuccessEventHandler += value;
-            }
-            remove
-            {
-                m_OpenUIFormSuccessEventHandler -= value;
-            }
+            add { m_OpenUIFormSuccessEventHandler += value; }
+            remove { m_OpenUIFormSuccessEventHandler -= value; }
         }
 
         /// <summary>
@@ -148,14 +117,8 @@ namespace GameFrameX.UI
         /// </summary>
         public event EventHandler<OpenUIFormFailureEventArgs> OpenUIFormFailure
         {
-            add
-            {
-                m_OpenUIFormFailureEventHandler += value;
-            }
-            remove
-            {
-                m_OpenUIFormFailureEventHandler -= value;
-            }
+            add { m_OpenUIFormFailureEventHandler += value; }
+            remove { m_OpenUIFormFailureEventHandler -= value; }
         }
 
         /// <summary>
@@ -163,14 +126,8 @@ namespace GameFrameX.UI
         /// </summary>
         public event EventHandler<OpenUIFormUpdateEventArgs> OpenUIFormUpdate
         {
-            add
-            {
-                m_OpenUIFormUpdateEventHandler += value;
-            }
-            remove
-            {
-                m_OpenUIFormUpdateEventHandler -= value;
-            }
+            add { m_OpenUIFormUpdateEventHandler += value; }
+            remove { m_OpenUIFormUpdateEventHandler -= value; }
         }
 
         /// <summary>
@@ -178,14 +135,8 @@ namespace GameFrameX.UI
         /// </summary>
         public event EventHandler<OpenUIFormDependencyAssetEventArgs> OpenUIFormDependencyAsset
         {
-            add
-            {
-                m_OpenUIFormDependencyAssetEventHandler += value;
-            }
-            remove
-            {
-                m_OpenUIFormDependencyAssetEventHandler -= value;
-            }
+            add { m_OpenUIFormDependencyAssetEventHandler += value; }
+            remove { m_OpenUIFormDependencyAssetEventHandler -= value; }
         }
 
         /// <summary>
@@ -193,14 +144,8 @@ namespace GameFrameX.UI
         /// </summary>
         public event EventHandler<CloseUIFormCompleteEventArgs> CloseUIFormComplete
         {
-            add
-            {
-                m_CloseUIFormCompleteEventHandler += value;
-            }
-            remove
-            {
-                m_CloseUIFormCompleteEventHandler -= value;
-            }
+            add { m_CloseUIFormCompleteEventHandler += value; }
+            remove { m_CloseUIFormCompleteEventHandler -= value; }
         }
 
         /// <summary>
@@ -255,14 +200,14 @@ namespace GameFrameX.UI
         /// 设置资源管理器。
         /// </summary>
         /// <param name="resourceManager">资源管理器。</param>
-        public void SetResourceManager(IResourceManager resourceManager)
+        public void SetResourceManager(IAssetManager resourceManager)
         {
             if (resourceManager == null)
             {
                 throw new GameFrameworkException("Resource manager is invalid.");
             }
 
-            m_ResourceManager = resourceManager;
+            // m_ResourceManager = resourceManager;
         }
 
         /// <summary>
@@ -722,10 +667,10 @@ namespace GameFrameX.UI
         /// <returns>界面的序列编号。</returns>
         public int OpenUIForm(string uiFormAssetName, string uiGroupName, int priority, bool pauseCoveredUIForm, object userData)
         {
-            if (m_ResourceManager == null)
-            {
-                throw new GameFrameworkException("You must set resource manager first.");
-            }
+            // if (m_ResourceManager == null)
+            // {
+            //     throw new GameFrameworkException("You must set resource manager first.");
+            // }
 
             if (m_UIFormHelper == null)
             {
@@ -753,7 +698,7 @@ namespace GameFrameX.UI
             if (uiFormInstanceObject == null)
             {
                 m_UIFormsBeingLoaded.Add(serialId, uiFormAssetName);
-                m_ResourceManager.LoadAsset(uiFormAssetName, priority, m_LoadAssetCallbacks, OpenUIFormInfo.Create(serialId, uiGroup, pauseCoveredUIForm, userData));
+                // m_ResourceManager.LoadAsset(uiFormAssetName, priority, m_LoadAssetCallbacks, OpenUIFormInfo.Create(serialId, uiGroup, pauseCoveredUIForm, userData));
             }
             else
             {
@@ -997,6 +942,7 @@ namespace GameFrameX.UI
             ReferencePool.Release(openUIFormInfo);
         }
 
+        /*
         private void LoadAssetFailureCallback(string uiFormAssetName, LoadResourceStatus status, string errorMessage, object userData)
         {
             OpenUIFormInfo openUIFormInfo = (OpenUIFormInfo)userData;
@@ -1022,7 +968,7 @@ namespace GameFrameX.UI
             }
 
             throw new GameFrameworkException(appendErrorMessage);
-        }
+        }*/
 
         private void LoadAssetUpdateCallback(string uiFormAssetName, float progress, object userData)
         {
@@ -1050,7 +996,8 @@ namespace GameFrameX.UI
 
             if (m_OpenUIFormDependencyAssetEventHandler != null)
             {
-                OpenUIFormDependencyAssetEventArgs openUIFormDependencyAssetEventArgs = OpenUIFormDependencyAssetEventArgs.Create(openUIFormInfo.SerialId, uiFormAssetName, openUIFormInfo.UIGroup.Name, openUIFormInfo.PauseCoveredUIForm, dependencyAssetName, loadedCount, totalCount, openUIFormInfo.UserData);
+                OpenUIFormDependencyAssetEventArgs openUIFormDependencyAssetEventArgs =
+                    OpenUIFormDependencyAssetEventArgs.Create(openUIFormInfo.SerialId, uiFormAssetName, openUIFormInfo.UIGroup.Name, openUIFormInfo.PauseCoveredUIForm, dependencyAssetName, loadedCount, totalCount, openUIFormInfo.UserData);
                 m_OpenUIFormDependencyAssetEventHandler(this, openUIFormDependencyAssetEventArgs);
                 ReferencePool.Release(openUIFormDependencyAssetEventArgs);
             }

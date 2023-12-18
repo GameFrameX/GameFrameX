@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
 using GameFrameX.Config;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ namespace GameFrameX.Runtime
     /// <summary>
     /// 全局配置辅助器基类。
     /// </summary>
-    public abstract class ConfigHelperBase : MonoBehaviour, IDataProviderHelper<IConfigManager>, IConfigHelper
+    public abstract class ConfigHelperBase : MonoBehaviour, IConfigHelper
     {
         /// <summary>
         /// 读取全局配置。

@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GameFrameX.Resource;
+using GameFrameX.Asset;
 using GameFrameX.Runtime;
 
 namespace GameFrameX.Sound

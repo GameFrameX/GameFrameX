@@ -5,6 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Asset;
 using GameFrameX.Entity;
 using UnityEngine;
 using YooAsset;

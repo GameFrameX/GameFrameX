@@ -7,8 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using GameFrameX.Asset;
 using GameFrameX.ObjectPool;
-using GameFrameX.Resource;
 
 namespace GameFrameX.UI
 {
@@ -20,46 +20,27 @@ namespace GameFrameX.UI
         /// <summary>
         /// 获取界面组数量。
         /// </summary>
-        int UIGroupCount
-        {
-            get;
-        }
+        int UIGroupCount { get; }
 
         /// <summary>
         /// 获取或设置界面实例对象池自动释放可释放对象的间隔秒数。
         /// </summary>
-        float InstanceAutoReleaseInterval
-        {
-            get;
-            set;
-        }
+        float InstanceAutoReleaseInterval { get; set; }
 
         /// <summary>
         /// 获取或设置界面实例对象池的容量。
         /// </summary>
-        int InstanceCapacity
-        {
-            get;
-            set;
-        }
+        int InstanceCapacity { get; set; }
 
         /// <summary>
         /// 获取或设置界面实例对象池对象过期秒数。
         /// </summary>
-        float InstanceExpireTime
-        {
-            get;
-            set;
-        }
+        float InstanceExpireTime { get; set; }
 
         /// <summary>
         /// 获取或设置界面实例对象池的优先级。
         /// </summary>
-        int InstancePriority
-        {
-            get;
-            set;
-        }
+        int InstancePriority { get; set; }
 
         /// <summary>
         /// 打开界面成功事件。
@@ -96,7 +77,7 @@ namespace GameFrameX.UI
         /// 设置资源管理器。
         /// </summary>
         /// <param name="resourceManager">资源管理器。</param>
-        void SetResourceManager(IResourceManager resourceManager);
+        void SetResourceManager(IAssetManager resourceManager);
 
         /// <summary>
         /// 设置界面辅助器。

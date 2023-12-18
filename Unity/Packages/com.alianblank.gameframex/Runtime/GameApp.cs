@@ -201,24 +201,6 @@ public static class GameApp
     private static ProcedureComponent _procedure;
 
     /// <summary>
-    /// 获取资源组件。
-    /// </summary>
-    public static ResourceComponent Resource
-    {
-        get
-        {
-            if (_resource == null)
-            {
-                _resource = GameEntry.GetComponent<ResourceComponent>();
-            }
-
-            return _resource;
-        }
-    }
-
-    private static ResourceComponent _resource;
-
-    /// <summary>
     /// 获取场景组件。
     /// </summary>
     public static SceneComponent Scene

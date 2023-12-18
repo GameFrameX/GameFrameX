@@ -5,9 +5,8 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX;
+using GameFrameX.Asset;
 using GameFrameX.Config;
-using GameFrameX.Resource;
 using UnityEngine;
 
 namespace GameFrameX.Runtime
@@ -62,12 +61,12 @@ namespace GameFrameX.Runtime
                 return;
             }
 
-            m_ConfigManager.ReadDataSuccess += OnReadDataSuccess;
-            m_ConfigManager.ReadDataFailure += OnReadDataFailure;
+            // m_ConfigManager.ReadDataSuccess += OnReadDataSuccess;
+            // m_ConfigManager.ReadDataFailure += OnReadDataFailure;
 
             if (m_EnableLoadConfigUpdateEvent)
             {
-                m_ConfigManager.ReadDataUpdate += OnReadDataUpdate;
+                // m_ConfigManager.ReadDataUpdate += OnReadDataUpdate;
             }
         }
 
@@ -89,7 +88,7 @@ namespace GameFrameX.Runtime
 
 
             {
-                m_ConfigManager.SetResourceManager(GameFrameworkEntry.GetModule<IResourceManager>());
+                m_ConfigManager.SetAssetManager(GameFrameworkEntry.GetModule<IAssetManager>());
             }
 
             ConfigHelperBase configHelper = Helper.CreateHelper(m_ConfigHelperTypeName, m_CustomConfigHelper);
@@ -104,7 +103,7 @@ namespace GameFrameX.Runtime
             transform.SetParent(this.transform);
             transform.localScale = Vector3.one;
 
-            m_ConfigManager.SetDataProviderHelper(configHelper);
+            // m_ConfigManager.SetDataProviderHelper(configHelper);
             m_ConfigManager.SetConfigHelper(configHelper);
             if (m_CachedBytesSize > 0)
             {
@@ -129,6 +128,7 @@ namespace GameFrameX.Runtime
             m_ConfigManager.FreeCachedBytes();
         }
 
+        /*
         /// <summary>
         /// 读取全局配置。
         /// </summary>
@@ -235,6 +235,7 @@ namespace GameFrameX.Runtime
         {
             return m_ConfigManager.ParseData(configBytes, startIndex, length, userData);
         }
+        */
 
         /// <summary>
         /// 检查是否存在指定全局配置项。
@@ -362,6 +363,7 @@ namespace GameFrameX.Runtime
             m_ConfigManager.RemoveAllConfigs();
         }
 
+        /*
         private void OnReadDataSuccess(object sender, ReadDataSuccessEventArgs e)
         {
             m_EventComponent.Fire(this, LoadConfigSuccessEventArgs.Create(e.DataAssetName, e.Duration, e.UserData));
@@ -376,6 +378,6 @@ namespace GameFrameX.Runtime
         private void OnReadDataUpdate(object sender, ReadDataUpdateEventArgs e)
         {
             m_EventComponent.Fire(this, LoadConfigUpdateEventArgs.Create(e.DataAssetName, e.Progress, e.UserData));
-        }
+        }*/
     }
 }

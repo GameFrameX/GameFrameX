@@ -7,9 +7,9 @@
 
 using GameFrameX.Entity;
 using GameFrameX.ObjectPool;
-using GameFrameX.Resource;
 using System;
 using System.Collections.Generic;
+using GameFrameX.Asset;
 using UnityEngine;
 
 namespace GameFrameX.Runtime

@@ -8,10 +8,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using GameFrameX.Resource;
-using GameFrameX.Runtime;
+using GameFrameX.Asset;
 using UnityEngine.SceneManagement;
 using YooAsset;
 
@@ -25,8 +23,6 @@ namespace GameFrameX.Scene
         private readonly Dictionary<string, SceneHandle> m_LoadedSceneAssetNames;
         private readonly Dictionary<string, SceneHandle> m_LoadingSceneAssetNames;
         private readonly Dictionary<string, SceneHandle> m_UnloadingSceneAssetNames;
-        private readonly LoadSceneCallbacks m_LoadSceneCallbacks;
-        private readonly UnloadSceneCallbacks m_UnloadSceneCallbacks;
         private IAssetManager m_assetManager;
         private EventHandler<LoadSceneSuccessEventArgs> m_LoadSceneSuccessEventHandler;
         private EventHandler<LoadSceneFailureEventArgs> m_LoadSceneFailureEventHandler;
@@ -42,8 +38,6 @@ namespace GameFrameX.Scene
             m_LoadedSceneAssetNames = new Dictionary<string, SceneHandle>();
             m_LoadingSceneAssetNames = new Dictionary<string, SceneHandle>();
             m_UnloadingSceneAssetNames = new Dictionary<string, SceneHandle>();
-            m_LoadSceneCallbacks = new LoadSceneCallbacks(LoadSceneSuccessCallback, LoadSceneFailureCallback, LoadSceneUpdateCallback);
-            m_UnloadSceneCallbacks = new UnloadSceneCallbacks(UnloadSceneSuccessCallback, UnloadSceneFailureCallback);
             m_assetManager = null;
             m_LoadSceneSuccessEventHandler = null;
             m_LoadSceneFailureEventHandler = null;
@@ -412,21 +406,21 @@ namespace GameFrameX.Scene
                 ReferencePool.Release(loadSceneSuccessEventArgs);
             }
         }
-
-        private void LoadSceneFailureCallback(string sceneAssetName, LoadResourceStatus status, string errorMessage, object userData)
-        {
-            m_LoadingSceneAssetNames.Remove(sceneAssetName);
-            string appendErrorMessage = Utility.Text.Format("Load scene failure, scene asset name '{0}', status '{1}', error message '{2}'.", sceneAssetName, status, errorMessage);
-            if (m_LoadSceneFailureEventHandler != null)
-            {
-                LoadSceneFailureEventArgs loadSceneFailureEventArgs = LoadSceneFailureEventArgs.Create(sceneAssetName, appendErrorMessage, userData);
-                m_LoadSceneFailureEventHandler(this, loadSceneFailureEventArgs);
-                ReferencePool.Release(loadSceneFailureEventArgs);
-                return;
-            }
-
-            throw new GameFrameworkException(appendErrorMessage);
-        }
+        //
+        // private void LoadSceneFailureCallback(string sceneAssetName, LoadResourceStatus status, string errorMessage, object userData)
+        // {
+        //     m_LoadingSceneAssetNames.Remove(sceneAssetName);
+        //     string appendErrorMessage = Utility.Text.Format("Load scene failure, scene asset name '{0}', status '{1}', error message '{2}'.", sceneAssetName, status, errorMessage);
+        //     if (m_LoadSceneFailureEventHandler != null)
+        //     {
+        //         LoadSceneFailureEventArgs loadSceneFailureEventArgs = LoadSceneFailureEventArgs.Create(sceneAssetName, appendErrorMessage, userData);
+        //         m_LoadSceneFailureEventHandler(this, loadSceneFailureEventArgs);
+        //         ReferencePool.Release(loadSceneFailureEventArgs);
+        //         return;
+        //     }
+        //
+        //     throw new GameFrameworkException(appendErrorMessage);
+        // }
 
         private void LoadSceneUpdateCallback(string sceneAssetName, float progress, object userData)
         {

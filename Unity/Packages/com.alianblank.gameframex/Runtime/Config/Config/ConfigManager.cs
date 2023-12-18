@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using GameFrameX.Resource;
+using GameFrameX.Asset;
 
 namespace GameFrameX.Config
 {
@@ -17,7 +17,6 @@ namespace GameFrameX.Config
     public sealed partial class ConfigManager : GameFrameworkModule, IConfigManager
     {
         private readonly Dictionary<string, ConfigData> m_ConfigDatas;
-        private readonly DataProvider<IConfigManager> m_DataProvider;
         private IConfigHelper m_ConfigHelper;
 
         /// <summary>
@@ -26,7 +25,6 @@ namespace GameFrameX.Config
         public ConfigManager()
         {
             m_ConfigDatas = new Dictionary<string, ConfigData>(StringComparer.Ordinal);
-            m_DataProvider = new DataProvider<IConfigManager>(this);
             m_ConfigHelper = null;
         }
 
@@ -35,10 +33,7 @@ namespace GameFrameX.Config
         /// </summary>
         public int Count
         {
-            get
-            {
-                return m_ConfigDatas.Count;
-            }
+            get { return m_ConfigDatas.Count; }
         }
 
         /// <summary>
@@ -48,23 +43,18 @@ namespace GameFrameX.Config
         {
             get
             {
-                return DataProvider<IConfigManager>.CachedBytesSize;
+                return 0; // DataProvider<IConfigManager>.CachedBytesSize; }
             }
         }
 
+        /*
         /// <summary>
         /// 读取全局配置成功事件。
         /// </summary>
         public event EventHandler<ReadDataSuccessEventArgs> ReadDataSuccess
         {
-            add
-            {
-                m_DataProvider.ReadDataSuccess += value;
-            }
-            remove
-            {
-                m_DataProvider.ReadDataSuccess -= value;
-            }
+            add { m_DataProvider.ReadDataSuccess += value; }
+            remove { m_DataProvider.ReadDataSuccess -= value; }
         }
 
         /// <summary>
@@ -72,14 +62,8 @@ namespace GameFrameX.Config
         /// </summary>
         public event EventHandler<ReadDataFailureEventArgs> ReadDataFailure
         {
-            add
-            {
-                m_DataProvider.ReadDataFailure += value;
-            }
-            remove
-            {
-                m_DataProvider.ReadDataFailure -= value;
-            }
+            add { m_DataProvider.ReadDataFailure += value; }
+            remove { m_DataProvider.ReadDataFailure -= value; }
         }
 
         /// <summary>
@@ -87,14 +71,8 @@ namespace GameFrameX.Config
         /// </summary>
         public event EventHandler<ReadDataUpdateEventArgs> ReadDataUpdate
         {
-            add
-            {
-                m_DataProvider.ReadDataUpdate += value;
-            }
-            remove
-            {
-                m_DataProvider.ReadDataUpdate -= value;
-            }
+            add { m_DataProvider.ReadDataUpdate += value; }
+            remove { m_DataProvider.ReadDataUpdate -= value; }
         }
 
         /// <summary>
@@ -102,15 +80,10 @@ namespace GameFrameX.Config
         /// </summary>
         public event EventHandler<ReadDataDependencyAssetEventArgs> ReadDataDependencyAsset
         {
-            add
-            {
-                m_DataProvider.ReadDataDependencyAsset += value;
-            }
-            remove
-            {
-                m_DataProvider.ReadDataDependencyAsset -= value;
-            }
+            add { m_DataProvider.ReadDataDependencyAsset += value; }
+            remove { m_DataProvider.ReadDataDependencyAsset -= value; }
         }
+        */
 
         /// <summary>
         /// 全局配置管理器轮询。
@@ -131,19 +104,10 @@ namespace GameFrameX.Config
         /// <summary>
         /// 设置资源管理器。
         /// </summary>
-        /// <param name="resourceManager">资源管理器。</param>
-        public void SetResourceManager(IResourceManager resourceManager)
+        /// <param name="assetManager">资源管理器。</param>
+        public void SetAssetManager(IAssetManager assetManager)
         {
-            m_DataProvider.SetResourceManager(resourceManager);
-        }
-
-        /// <summary>
-        /// 设置全局配置数据提供者辅助器。
-        /// </summary>
-        /// <param name="dataProviderHelper">全局配置数据提供者辅助器。</param>
-        public void SetDataProviderHelper(IDataProviderHelper<IConfigManager> dataProviderHelper)
-        {
-            m_DataProvider.SetDataProviderHelper(dataProviderHelper);
+            // m_DataProvider.SetAssetManager(assetManager);
         }
 
         /// <summary>
@@ -152,11 +116,7 @@ namespace GameFrameX.Config
         /// <param name="configHelper">全局配置辅助器。</param>
         public void SetConfigHelper(IConfigHelper configHelper)
         {
-            if (configHelper == null)
-            {
-                throw new GameFrameworkException("Config helper is invalid.");
-            }
-
+            GameFrameworkGuard.NotNull(configHelper, nameof(configHelper));
             m_ConfigHelper = configHelper;
         }
 
@@ -166,7 +126,7 @@ namespace GameFrameX.Config
         /// <param name="ensureSize">要确保二进制流缓存分配内存的大小。</param>
         public void EnsureCachedBytesSize(int ensureSize)
         {
-            DataProvider<IConfigManager>.EnsureCachedBytesSize(ensureSize);
+            // DataProvider<IConfigManager>.EnsureCachedBytesSize(ensureSize);
         }
 
         /// <summary>
@@ -174,9 +134,10 @@ namespace GameFrameX.Config
         /// </summary>
         public void FreeCachedBytes()
         {
-            DataProvider<IConfigManager>.FreeCachedBytes();
+            // DataProvider<IConfigManager>.FreeCachedBytes();
         }
 
+        /*
         /// <summary>
         /// 读取全局配置。
         /// </summary>
@@ -282,7 +243,7 @@ namespace GameFrameX.Config
         public bool ParseData(byte[] configBytes, int startIndex, int length, object userData)
         {
             return m_DataProvider.ParseData(configBytes, startIndex, length, userData);
-        }
+        }*/
 
         /// <summary>
         /// 检查是否存在指定全局配置项。
@@ -414,14 +375,11 @@ namespace GameFrameX.Config
         /// <returns>是否增加全局配置项成功。</returns>
         public bool AddConfig(string configName, string configValue)
         {
-            bool boolValue = false;
-            bool.TryParse(configValue, out boolValue);
+            bool.TryParse(configValue, out var boolValue);
 
-            int intValue = 0;
-            int.TryParse(configValue, out intValue);
+            int.TryParse(configValue, out var intValue);
 
-            float floatValue = 0f;
-            float.TryParse(configValue, out floatValue);
+            float.TryParse(configValue, out var floatValue);
 
             return AddConfig(configName, boolValue, intValue, floatValue, configValue);
         }
@@ -475,8 +433,7 @@ namespace GameFrameX.Config
                 throw new GameFrameworkException("Config name is invalid.");
             }
 
-            ConfigData configData = default(ConfigData);
-            if (m_ConfigDatas.TryGetValue(configName, out configData))
+            if (m_ConfigDatas.TryGetValue(configName, out var configData))
             {
                 return configData;
             }

@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using GameFrameX.Resource;
+using GameFrameX.Asset;
 
 namespace GameFrameX.Localization
 {
@@ -16,20 +16,18 @@ namespace GameFrameX.Localization
     /// </summary>
     public sealed partial class LocalizationManager : GameFrameworkModule, ILocalizationManager
     {
-        private readonly Dictionary<string, string> m_Dictionary;
-        private readonly DataProvider<ILocalizationManager> m_DataProvider;
-        private ILocalizationHelper m_LocalizationHelper;
-        private Language m_Language;
+        private readonly Dictionary<string, string> _dictionary;
+        private ILocalizationHelper _localizationHelper;
+        private Language _language;
 
         /// <summary>
         /// 初始化本地化管理器的新实例。
         /// </summary>
         public LocalizationManager()
         {
-            m_Dictionary = new Dictionary<string, string>(StringComparer.Ordinal);
-            m_DataProvider = new DataProvider<ILocalizationManager>(this);
-            m_LocalizationHelper = null;
-            m_Language = Language.Unspecified;
+            _dictionary = new Dictionary<string, string>(StringComparer.Ordinal);
+            _localizationHelper = null;
+            _language = Language.Unspecified;
         }
 
         /// <summary>
@@ -37,7 +35,7 @@ namespace GameFrameX.Localization
         /// </summary>
         public Language Language
         {
-            get { return m_Language; }
+            get { return _language; }
             set
             {
                 if (value == Language.Unspecified)
@@ -45,7 +43,7 @@ namespace GameFrameX.Localization
                     throw new GameFrameworkException("Language is invalid.");
                 }
 
-                m_Language = value;
+                _language = value;
             }
         }
 
@@ -56,12 +54,8 @@ namespace GameFrameX.Localization
         {
             get
             {
-                if (m_LocalizationHelper == null)
-                {
-                    throw new GameFrameworkException("You must set localization helper first.");
-                }
-
-                return m_LocalizationHelper.SystemLanguage;
+                GameFrameworkGuard.NotNull(_localizationHelper, nameof(_localizationHelper));
+                return _localizationHelper.SystemLanguage;
             }
         }
 
@@ -70,9 +64,10 @@ namespace GameFrameX.Localization
         /// </summary>
         public int DictionaryCount
         {
-            get { return m_Dictionary.Count; }
+            get { return _dictionary.Count; }
         }
 
+        /*
         /// <summary>
         /// 获取缓冲二进制流的大小。
         /// </summary>
@@ -116,6 +111,7 @@ namespace GameFrameX.Localization
             add { m_DataProvider.ReadDataDependencyAsset += value; }
             remove { m_DataProvider.ReadDataDependencyAsset -= value; }
         }
+        */
 
         /// <summary>
         /// 本地化管理器轮询。
@@ -137,18 +133,9 @@ namespace GameFrameX.Localization
         /// 设置资源管理器。
         /// </summary>
         /// <param name="resourceManager">资源管理器。</param>
-        public void SetResourceManager(IResourceManager resourceManager)
+        public void SetAssetManager(IAssetManager resourceManager)
         {
-            m_DataProvider.SetResourceManager(resourceManager);
-        }
-
-        /// <summary>
-        /// 设置本地化数据提供者辅助器。
-        /// </summary>
-        /// <param name="dataProviderHelper">本地化数据提供者辅助器。</param>
-        public void SetDataProviderHelper(IDataProviderHelper<ILocalizationManager> dataProviderHelper)
-        {
-            m_DataProvider.SetDataProviderHelper(dataProviderHelper);
+            // m_DataProvider.SetResourceManager(resourceManager);
         }
 
         /// <summary>
@@ -157,31 +144,11 @@ namespace GameFrameX.Localization
         /// <param name="localizationHelper">本地化辅助器。</param>
         public void SetLocalizationHelper(ILocalizationHelper localizationHelper)
         {
-            if (localizationHelper == null)
-            {
-                throw new GameFrameworkException("Localization helper is invalid.");
-            }
-
-            m_LocalizationHelper = localizationHelper;
+            GameFrameworkGuard.NotNull(localizationHelper, nameof(localizationHelper));
+            _localizationHelper = localizationHelper;
         }
 
-        /// <summary>
-        /// 确保二进制流缓存分配足够大小的内存并缓存。
-        /// </summary>
-        /// <param name="ensureSize">要确保二进制流缓存分配内存的大小。</param>
-        public void EnsureCachedBytesSize(int ensureSize)
-        {
-            DataProvider<ILocalizationManager>.EnsureCachedBytesSize(ensureSize);
-        }
-
-        /// <summary>
-        /// 释放缓存的二进制流。
-        /// </summary>
-        public void FreeCachedBytes()
-        {
-            DataProvider<ILocalizationManager>.FreeCachedBytes();
-        }
-
+        /*
         /// <summary>
         /// 读取字典。
         /// </summary>
@@ -287,7 +254,7 @@ namespace GameFrameX.Localization
         public bool ParseData(byte[] dictionaryBytes, int startIndex, int length, object userData)
         {
             return m_DataProvider.ParseData(dictionaryBytes, startIndex, length, userData);
-        }
+        }*/
 
         /// <summary>
         /// 根据字典主键获取字典内容字符串。
@@ -296,7 +263,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString(string key)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -313,7 +280,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString(string key, params object[] args)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -331,7 +298,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T>(string key, T arg)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -358,7 +325,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2>(string key, T1 arg1, T2 arg2)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -387,7 +354,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3>(string key, T1 arg1, T2 arg2, T3 arg3)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -418,7 +385,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -451,7 +418,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -486,7 +453,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -523,7 +490,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -562,7 +529,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -603,7 +570,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8, T9>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -646,7 +613,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -691,7 +658,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -738,7 +705,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -787,7 +754,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -838,7 +805,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -850,7 +817,7 @@ namespace GameFrameX.Localization
             }
             catch (Exception exception)
             {
-                string args = Utility.Text.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+                var args = Utility.Text.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
                 return Utility.Text.Format("<Error>{0},{1},{2},{3}", key, value, args, exception);
             }
         }
@@ -892,7 +859,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -904,7 +871,7 @@ namespace GameFrameX.Localization
             }
             catch (Exception exception)
             {
-                string args = Utility.Text.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14}", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
+                var args = Utility.Text.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14}", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
                 return Utility.Text.Format("<Error>{0},{1},{2},{3}", key, value, args, exception);
             }
         }
@@ -948,7 +915,7 @@ namespace GameFrameX.Localization
         /// <returns>要获取的字典内容字符串。</returns>
         public string GetString<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(string key, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15, T16 arg16)
         {
-            string value = GetRawString(key);
+            var value = GetRawString(key);
             if (value == null)
             {
                 return Utility.Text.Format("<NoKey>{0}", key);
@@ -960,7 +927,7 @@ namespace GameFrameX.Localization
             }
             catch (Exception exception)
             {
-                string args = Utility.Text.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16);
+                var args = Utility.Text.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16);
                 return Utility.Text.Format("<Error>{0},{1},{2},{3}", key, value, args, exception);
             }
         }
@@ -972,12 +939,8 @@ namespace GameFrameX.Localization
         /// <returns>是否存在字典。</returns>
         public bool HasRawString(string key)
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new GameFrameworkException("Key is invalid.");
-            }
-
-            return m_Dictionary.ContainsKey(key);
+            GameFrameworkGuard.NotNullOrEmpty(key, nameof(key));
+            return _dictionary.ContainsKey(key);
         }
 
         /// <summary>
@@ -987,13 +950,8 @@ namespace GameFrameX.Localization
         /// <returns>字典值。</returns>
         public string GetRawString(string key)
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new GameFrameworkException("Key is invalid.");
-            }
-
-            string value = null;
-            if (m_Dictionary.TryGetValue(key, out value))
+            GameFrameworkGuard.NotNullOrEmpty(key, nameof(key));
+            if (_dictionary.TryGetValue(key, out var value))
             {
                 return value;
             }
@@ -1009,17 +967,13 @@ namespace GameFrameX.Localization
         /// <returns>是否增加字典成功。</returns>
         public bool AddRawString(string key, string value)
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new GameFrameworkException("Key is invalid.");
-            }
-
-            if (m_Dictionary.ContainsKey(key))
+            GameFrameworkGuard.NotNullOrEmpty(key, nameof(key));
+            if (_dictionary.ContainsKey(key))
             {
                 return false;
             }
 
-            m_Dictionary.Add(key, value ?? string.Empty);
+            _dictionary.Add(key, value ?? string.Empty);
             return true;
         }
 
@@ -1030,12 +984,8 @@ namespace GameFrameX.Localization
         /// <returns>是否移除字典成功。</returns>
         public bool RemoveRawString(string key)
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new GameFrameworkException("Key is invalid.");
-            }
-
-            return m_Dictionary.Remove(key);
+            GameFrameworkGuard.NotNullOrEmpty(key, nameof(key));
+            return _dictionary.Remove(key);
         }
 
         /// <summary>
@@ -1043,7 +993,7 @@ namespace GameFrameX.Localization
         /// </summary>
         public void RemoveAllRawStrings()
         {
-            m_Dictionary.Clear();
+            _dictionary.Clear();
         }
     }
 }

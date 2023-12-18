@@ -5,14 +5,14 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFrameX.Resource;
+using GameFrameX.Asset;
 
 namespace GameFrameX.Localization
 {
     /// <summary>
     /// 本地化管理器接口。
     /// </summary>
-    public interface ILocalizationManager : IDataProvider<ILocalizationManager>
+    public interface ILocalizationManager
     {
         /// <summary>
         /// 获取或设置本地化语言。
@@ -30,21 +30,10 @@ namespace GameFrameX.Localization
         int DictionaryCount { get; }
 
         /// <summary>
-        /// 获取缓冲二进制流的大小。
-        /// </summary>
-        int CachedBytesSize { get; }
-
-        /// <summary>
         /// 设置资源管理器。
         /// </summary>
-        /// <param name="resourceManager">资源管理器。</param>
-        void SetResourceManager(IResourceManager resourceManager);
-
-        /// <summary>
-        /// 设置本地化数据提供者辅助器。
-        /// </summary>
-        /// <param name="dataProviderHelper">本地化数据提供者辅助器。</param>
-        void SetDataProviderHelper(IDataProviderHelper<ILocalizationManager> dataProviderHelper);
+        /// <param name="assetManager">资源管理器。</param>
+        void SetAssetManager(IAssetManager assetManager);
 
         /// <summary>
         /// 设置本地化辅助器。
@@ -52,6 +41,7 @@ namespace GameFrameX.Localization
         /// <param name="localizationHelper">本地化辅助器。</param>
         void SetLocalizationHelper(ILocalizationHelper localizationHelper);
 
+        /*
         /// <summary>
         /// 确保二进制流缓存分配足够大小的内存并缓存。
         /// </summary>
@@ -61,7 +51,7 @@ namespace GameFrameX.Localization
         /// <summary>
         /// 释放缓存的二进制流。
         /// </summary>
-        void FreeCachedBytes();
+        void FreeCachedBytes();*/
 
         /// <summary>
         /// 根据字典主键获取字典内容字符串。

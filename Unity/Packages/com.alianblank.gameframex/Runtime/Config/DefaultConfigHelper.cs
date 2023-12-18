@@ -1,4 +1,5 @@
-﻿//------------------------------------------------------------
+﻿/*
+//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2021 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -23,7 +24,7 @@ namespace GameFrameX.Runtime
         private static readonly string BytesAssetExtension = ".bytes";
         private const int ColumnCount = 4;
 
-        private ResourceComponent m_ResourceComponent = null;
+        private AssetComponent m_ResourceComponent = null;
 
         /// <summary>
         /// 读取全局配置。
@@ -179,3 +180,4 @@ namespace GameFrameX.Runtime
         }
     }
 }
+*/
