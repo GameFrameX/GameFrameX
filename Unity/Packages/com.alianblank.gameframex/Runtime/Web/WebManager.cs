@@ -148,7 +148,7 @@ namespace GameFrameX.Web
         /// <returns></returns>
         public Task<byte[]> GetToBytes(string url, Dictionary<string, string> queryString, Dictionary<string, string> header)
         {
-            TaskCompletionSource<byte[]> uniTaskCompletionSource = new TaskCompletionSource<byte[]>();
+            var uniTaskCompletionSource = new TaskCompletionSource<byte[]>();
             _stringBuilder.Clear();
 
             if (queryString.Count > 0)
@@ -268,7 +268,7 @@ namespace GameFrameX.Web
         /// <returns></returns>
         public Task<string> PostToString(string url, Dictionary<string, string> from, Dictionary<string, string> queryString, Dictionary<string, string> header)
         {
-            TaskCompletionSource<string> uniTaskCompletionSource = new TaskCompletionSource<string>();
+            var uniTaskCompletionSource = new TaskCompletionSource<string>();
 
             _stringBuilder.Clear();
 
@@ -348,7 +348,7 @@ namespace GameFrameX.Web
         /// <returns></returns>
         public Task<byte[]> PostToBytes(string url, Dictionary<string, string> from, Dictionary<string, string> queryString, Dictionary<string, string> header)
         {
-            TaskCompletionSource<byte[]> uniTaskCompletionSource = new TaskCompletionSource<byte[]>();
+            var uniTaskCompletionSource = new TaskCompletionSource<byte[]>();
 
             _stringBuilder.Clear();
 
