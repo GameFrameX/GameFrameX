@@ -8,7 +8,6 @@ namespace Hotfix.UI
 {
     public static partial class FUIPackage {
 		public const string UILoading = "UILoading";
-		public const string UILoading_UILoadingScene = "ui://UILoading/UILoadingScene";
 
     }
 }

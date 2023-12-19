@@ -21,11 +21,11 @@ namespace Hotfix.UI
 		public GRichTextField m_LabelContent { get; private set; }
 
 
-        public static UIAnnouncementContent Create(GObject go, FUI parent = null, object userData = null)
+        public static UIAnnouncementContent Create(GObject go, object userData = null)
         {
-            return new UIAnnouncementContent(go, userData, parent);
+            return new UIAnnouncementContent(go, userData);
         }
-        /*
+
         /// <summary>
         /// 通过此方法获取的FUI，在Dispose时不会释放GObject，需要自行管理（一般在配合FGUI的Pool机制时使用）。
         /// </summary>
@@ -36,10 +36,9 @@ namespace Hotfix.UI
             {
                 fui = Create(go);
             }
-            fui.isFromFGUIPool = true;
+            fui.IsFromPool = true;
             return fui;
         }
-        */
 
         protected override void InitView()
         {
@@ -49,6 +48,7 @@ namespace Hotfix.UI
             }
 
             self = (GComponent)GObject;
+            self.Add(this);
             
             var com = GObject.asCom;
             if(com != null)
@@ -65,11 +65,12 @@ namespace Hotfix.UI
             }
 
             base.Dispose();
+            self.Remove();
 			m_LabelContent = null;
             self = null;            
         }
 
-        private UIAnnouncementContent(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
+        private UIAnnouncementContent(GObject gObject, object userData) : base(gObject, userData)
         {
             // Awake(gObject);
         }

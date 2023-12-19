@@ -47,11 +47,11 @@ namespace {namespaceName}
 __PROPERTY__
 
 __CREATETEMPLATE__
-        public static {className} Create(GObject go, FUI parent = null, object userData = null)
+        public static {className} Create(GObject go, object userData = null)
         {
-            return new {className}(go, userData, parent);
+            return new {className}(go, userData);
         }
-        /*
+
         /// <summary>
         /// 通过此方法获取的FUI，在Dispose时不会释放GObject，需要自行管理（一般在配合FGUI的Pool机制时使用）。
         /// </summary>
@@ -62,10 +62,9 @@ __CREATETEMPLATE__
             {
                 fui = Create(go);
             }
-            fui.isFromFGUIPool = true;
+            fui.IsFromPool = true;
             return fui;
         }
-        */
 
         protected override void InitView()
         {
@@ -75,6 +74,7 @@ __CREATETEMPLATE__
             }
 
             self = ({superClassName})GObject;
+            self.Add(this);
             {comAdd}
             var com = GObject.asCom;
             if(com != null)
@@ -91,11 +91,12 @@ __AWAKE__
             }
 
             base.Dispose();
+            self.Remove();
 __DISPOSE__
             self = null;            
         }
 
-        private {className}(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
+        private {className}(GObject gObject, object userData) : base(gObject, userData)
         {
             // Awake(gObject);
         }

@@ -25,11 +25,10 @@ namespace GameFrameX.Runtime
         /// </summary>
         private bool IsInitVisible { get; }
 
-        public FUI(GObject gObject, FUI parent = null, object userData = null)
+        public FUI(GObject gObject,  object userData = null)
         {
             UserData = userData;
             GObject = gObject;
-            Parent = parent;
             IsInitVisible = GObject.visible;
             InitView();
             // 在初始化的时候先隐藏UI。后续由声明周期控制
@@ -38,7 +37,7 @@ namespace GameFrameX.Runtime
             // SetVisibleWithNoNotify(false);
             // }
 
-            parent?.Add(this);
+            // parent?.Add(this);
 
             if (gObject.name.IsNullOrWhiteSpace())
             {

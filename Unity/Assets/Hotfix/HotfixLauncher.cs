@@ -30,7 +30,7 @@ namespace Hotfix
 
 
             var uiLogin = GameApp.UI.Add<UILogin>(UILogin.CreateInstance, AssetUtility.GetUIPackagePath(FUIPackage.UILogin), UILayer.Floor);
-            uiLogin.m_enter.self.onClick.Add(() =>
+            uiLogin.m_enter.onClick.Add(() =>
             {
                 Log.Info("dhjsakdjkasjdklsjalkdk");
                 NetManager.Singleton.Init();
