@@ -22,7 +22,7 @@ namespace Game.Model
 		public Controller m_IsDownload { get; private set; }
 		public GLoader m_bg { get; private set; }
 		public GTextField m_TipText { get; private set; }
-		public UILoadingMainProgressBar m_ProgressBar { get; private set; }
+		public GProgressBar m_ProgressBar { get; private set; }
 		public UILauncherUpgrade m_upgrade { get; private set; }
 
         private static GObject CreateGObject()
@@ -50,11 +50,11 @@ namespace Game.Model
             return tcs.Task;
         }
 
-        public static UILauncher Create(GObject go, FUI parent = null, object userData = null)
+        public static UILauncher Create(GObject go, object userData = null)
         {
-            return new UILauncher(go, userData, parent);
+            return new UILauncher(go, userData);
         }
-        /*
+
         /// <summary>
         /// 通过此方法获取的FUI，在Dispose时不会释放GObject，需要自行管理（一般在配合FGUI的Pool机制时使用）。
         /// </summary>
@@ -65,10 +65,9 @@ namespace Game.Model
             {
                 fui = Create(go);
             }
-            fui.isFromFGUIPool = true;
+            fui.IsFromPool = true;
             return fui;
         }
-        */
 
         protected override void InitView()
         {
@@ -78,6 +77,7 @@ namespace Game.Model
             }
 
             self = (GComponent)GObject;
+            self.Add(this);
             
             var com = GObject.asCom;
             if(com != null)
@@ -86,7 +86,7 @@ namespace Game.Model
 				m_IsDownload = com.GetController("IsDownload");
 				m_bg = (GLoader)com.GetChild("bg");
 				m_TipText = (GTextField)com.GetChild("TipText");
-				m_ProgressBar = UILoadingMainProgressBar.Create(com.GetChild("ProgressBar"), this);
+				m_ProgressBar = (GProgressBar)com.GetChild("ProgressBar");
 				m_upgrade = UILauncherUpgrade.Create(com.GetChild("upgrade"), this);
             }
         }
@@ -99,6 +99,7 @@ namespace Game.Model
             }
 
             base.Dispose();
+            self.Remove();
 			m_IsUpgrade = null;
 			m_IsDownload = null;
 			m_bg = null;
@@ -108,7 +109,7 @@ namespace Game.Model
             self = null;            
         }
 
-        private UILauncher(GObject gObject, object userData, FUI parent = null) : base(gObject, parent, userData)
+        private UILauncher(GObject gObject, object userData) : base(gObject, userData)
         {
             // Awake(gObject);
         }
