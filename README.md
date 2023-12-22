@@ -1,12 +1,7 @@
-
-
-
-
 ![LOGO](https://picss.sunbangyan.cn/2023/10/12/yrt8ap.png)
-                                                                                      
-
 
 # 介绍：
+
 集成了`客户端`和`服务器`和`客户端后台`和`服务器后台`的内容
 
 > 正在开发中...
@@ -31,27 +26,39 @@
 
 ### 集成功能
 
-| 组件名称 | 介绍 | 来源 |
-| :----:  | :----: | :----: |
-| GameFramework | 客户端框架 | GitHub |
-| YooAsset | 打包(修改后，不支持`Addressable`) | GitHub |
-| UniTask | 异步Await/Async | GitHub |
-| FairyGUI UI | 编辑器 | GitHub |
-| ProtoBuf | 通讯协议 | GitHub |
-| MessagePack | 通讯协议 | GitHub |
-| HybridCLR | 热更新 | GitHub |
-| XLua | 热更新 | GitHub |
-| GameAnalytics | 数据统计和分析 | GitHub |
-| Sentry | 错误上报和处理 | GitHub |
-| LitJson | JSON序列化工具（马三修改版本） | GitHub |
-| logViewer | 日志查看器 | GitHub |
-| DoTween | 动画插件 | GitHub |
-| Animancer | 动画状态机插件（再也不用连线了） | GitHub |
-| BestHTTP | 最强的HTTP协议实现.没有之一 | GitHub |
-| OperationClipBoard | 代码设置和获取粘贴板的值 | GitHub |
-| GetChannel | 渠道获取.集成了基础的渠道获取方式 | GitHub |
-| ReadAssets | 使用File的方式直接读取Android只读目录下的文件.再也不用WWW了 | GitHub |
-| FindReference2 | 最强查找Unity资源引用的插件没有之一 | GitHub |
+|        组件名称        |                  介绍                   |   来源   | 链接地址                                                                 |
+|:------------------:|:-------------------------------------:|:------:|:---------------------------------------------------------------------|
+|   GameFramework    |                 客户端框架                 | GitHub | https://github.com/AlianBlank/GameFrameX                             |
+|      YooAsset      |       打包(修改后，不支持`Addressable`)        | GitHub | https://github.com/AlianBlank/com.tuyoogame.yooasset                 |
+|      UniTask       |             异步Await/Async             | GitHub | https://github.com/AlianBlank/com.cysharp.unitask                    |
+|    FairyGUI UI     |                  编辑器                  | GitHub | https://github.com/AlianBlank/com.fairygui.unity                     |
+|      ProtoBuf      |                 通讯协议                  | GitHub | https://github.com/AlianBlank/com.google.protobuf                    |
+|    MessagePack     |                 通讯协议                  | GitHub | https://github.com/AlianBlank/com.neuecc.messagepack                 |
+|     HybridCLR      |                  热更新                  | GitHub | https://github.com/focus-creative-games/hybridclr                    |
+|        XLua        |                  热更新                  | GitHub | https://github.com/AlianBlank/com.tencent.xlua                       |
+|   GameAnalytics    |                数据统计和分析                | GitHub | 还没上传                                                                 |
+|       Sentry       |                错误上报和处理                | GitHub | https://github.com/AlianBlank/io.sentry.unity                        |
+|      LitJson       |           JSON序列化工具（马三修改版本）           | GitHub | https://github.com/AlianBlank/com.xincger.litjson                    |
+|     logViewer      |                 日志查看器                 | GitHub | https://github.com/AlianBlank/com.sharelib.logviewer                 |
+|      DoTween       |                 动画插件                  | GitHub | https://github.com/AlianBlank/com.demigiant.dotween                  |
+|     Animancer      |           动画状态机插件（再也不用连线了）            | GitHub | 还没上传                                                                 |
+|      BestHTTP      |           最强的HTTP协议实现.没有之一            | GitHub | https://github.com/AlianBlank/com.benedicht.besthttp                 |
+| OperationClipBoard |             代码设置和获取粘贴板的值              | GitHub | https://github.com/AlianBlank/com.alianblank.blankoperationclipboard |
+|     GetChannel     |           渠道获取.集成了基础的渠道获取方式           | GitHub | https://github.com/AlianBlank/com.alianblank.blankgetchannel         |
+|     ReadAssets     | 使用File的方式直接读取Android只读目录下的文件.再也不用WWW了 | GitHub | https://github.com/AlianBlank/com.alianblank.readassets              |
+|   FindReference2   |         最强查找Unity资源引用的插件没有之一          | GitHub | https://github.com/AlianBlank/com.vietlabs.fr2                       |
+
+# 交流方式(建议。需求。BUG)
+
+<div  align="center">    
+
+<img src="images/wechat_group.png" width = "226" height = "290" alt=""/>
+
+<img src="images/qq_group.png" width = "226" height = "290" alt=""/>
+
+</div>
+
+QQ群：467608841
 
 # Doc
 
