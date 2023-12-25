@@ -16,8 +16,6 @@ namespace GameFrameX.Asset
         private ResourcePackage _buildinPackage;
         public string DefaultPackageName { get; set; } = "DefaultPackage";
 
-        private InitializationOperation _initializationOperation;
-
         public string StaticVersion { get; private set; }
 
         public int DownloadingMaxNum { get; set; }
@@ -37,15 +35,30 @@ namespace GameFrameX.Asset
         }
 
 
+        /// <summary>
+        /// 热更链接URL。
+        /// </summary>
         public string HostServerURL { get; private set; }
+
+        /// <summary>
+        /// 备用热更链接URL。
+        /// </summary>
         public string FallbackHostServerURL { get; private set; }
 
+        /// <summary>
+        /// 设置热更链接URL。
+        /// </summary>
+        /// <param name="hostServerURL">热更链接URL。</param>
         public void SetHostServerURL(string hostServerURL)
         {
             GameFrameworkGuard.NotNull(hostServerURL, nameof(hostServerURL));
             HostServerURL = hostServerURL;
         }
 
+        /// <summary>
+        /// 设置备用热更链接URL
+        /// </summary>
+        /// <param name="fallbackHostServerURL"></param>
         public void SetFallbackHostServerURL(string fallbackHostServerURL)
         {
             GameFrameworkGuard.NotNull(fallbackHostServerURL, nameof(fallbackHostServerURL));
@@ -69,6 +82,10 @@ namespace GameFrameX.Asset
             Debug.Log("Asset Init Over");
         }
 
+        /// <summary>
+        /// 初始化操作。
+        /// </summary>
+        /// <returns></returns>
         public InitializationOperation InitPackage()
         {
             // 创建默认的资源包
