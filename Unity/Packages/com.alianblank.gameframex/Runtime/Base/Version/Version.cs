@@ -46,6 +46,7 @@ namespace GameFrameX
         /// <param name="versionHelper">要设置的版本号辅助器。</param>
         public static void SetVersionHelper(IVersionHelper versionHelper)
         {
+            GameFrameworkGuard.NotNull(versionHelper, nameof(versionHelper));
             _versionHelper = versionHelper;
         }
     }
