@@ -10,7 +10,6 @@
         <PackageReference Include="MessagePack" Version="2.5.124" />
         <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="NLog" Version="5.0.0" />
         <PackageReference Include="Standart.Hash.xxHash" Version="4.0.5" />
     </ItemGroup>
 
