@@ -12,7 +12,6 @@ global using Server.Core.Hotfix;
 global using Server.Core.Net.Http;
 global using Server.Core.Net.Tcp.Codecs;
 global using Server.Core.Actors;
-global using Server.Core.Net.Messages;
 global using Server.Core.Timer;
 global using Server.Setting;
 global using Server.Utility;

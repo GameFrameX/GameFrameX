@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Proto.Proto
 {
@@ -9,7 +9,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(1)]
 	[MessagePackageObject]
-	public partial class ReqHeartBeat : Server.Core.Net.Messages.MessageObject, IRequestMessage
+	public partial class ReqHeartBeat : MessageObject, IRequestMessage
 	{
 		/// <summary>
 		///  时间戳
@@ -23,7 +23,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(1)]
 	[MessagePackageObject]
-	public partial class RespHeartBeat : Server.Core.Net.Messages.MessageObject, IResponseMessage
+	public partial class RespHeartBeat : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  时间戳

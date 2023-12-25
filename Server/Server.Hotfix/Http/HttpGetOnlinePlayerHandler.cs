@@ -1,4 +1,5 @@
 using Server.Launcher.Common.Session;
+using Server.NetWork.HTTP;
 
 namespace Server.Hotfix.Http
 {

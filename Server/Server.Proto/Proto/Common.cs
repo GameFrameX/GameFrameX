@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Proto.Proto
 {
@@ -26,7 +26,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	
 	[MessagePackageObject]
-	public partial class UserInfo : Server.Core.Net.Messages.MessageObject
+	public partial class UserInfo : MessageObject
 	{
 		/// <summary>
 		///  角色名
@@ -76,7 +76,7 @@ namespace Server.Proto.Proto
 
 	
 	[MessagePackageObject]
-	public partial class PhoneNumber : Server.Core.Net.Messages.MessageObject
+	public partial class PhoneNumber : MessageObject
 	{
 		/// <summary>
 		/// 
@@ -92,7 +92,7 @@ namespace Server.Proto.Proto
 
 	
 	[MessagePackageObject]
-	public partial class Person : Server.Core.Net.Messages.MessageObject
+	public partial class Person : MessageObject
 	{
 		/// <summary>
 		/// 
@@ -121,7 +121,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	
 	[MessagePackageObject]
-	public partial class AddressBook : Server.Core.Net.Messages.MessageObject
+	public partial class AddressBook : MessageObject
 	{
 		/// <summary>
 		/// 

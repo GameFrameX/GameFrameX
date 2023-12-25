@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using NLog;
-using Server.Core.Net.Messages;
 using Server.Extension;
+using Server.NetWork.Messages;
 
 namespace Server.Proto
 {
@@ -74,7 +74,7 @@ namespace Server.Proto
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var type in types)
             {
-                var attribute = type.GetCustomAttribute(typeof(MessageTypeHandler));
+                var attribute = type.GetCustomAttribute(typeof(MessageTypeHandlerAttribute));
                 if (attribute == null)
                 {
                     continue;
@@ -82,7 +82,7 @@ namespace Server.Proto
 
                 stringBuilder.AppendLine(" 注册消息ID类型: " + type);
 
-                if (attribute is MessageTypeHandler messageIdHandler)
+                if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
                     if (type.IsImplWithInterface(typeof(IRequestMessage)))
                     {

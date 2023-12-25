@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Proto.Proto
 {
@@ -9,7 +9,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(100)]
 	[MessagePackageObject]
-	public partial class ReqBagInfo : Server.Core.Net.Messages.MessageObject, IRequestMessage
+	public partial class ReqBagInfo : MessageObject, IRequestMessage
 	{
 	}
 
@@ -18,7 +18,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(100)]
 	[MessagePackageObject]
-	public partial class ResBagInfo : Server.Core.Net.Messages.MessageObject, IResponseMessage
+	public partial class ResBagInfo : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		/// 
@@ -32,7 +32,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(101)]
 	[MessagePackageObject]
-	public partial class ReqComposePet : Server.Core.Net.Messages.MessageObject, IRequestMessage
+	public partial class ReqComposePet : MessageObject, IRequestMessage
 	{
 		/// <summary>
 		///  碎片id
@@ -46,7 +46,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(101)]
 	[MessagePackageObject]
-	public partial class ResComposePet : Server.Core.Net.Messages.MessageObject, IResponseMessage
+	public partial class ResComposePet : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  合成宠物的Id
@@ -60,7 +60,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(102)]
 	[MessagePackageObject]
-	public partial class ReqUseItem : Server.Core.Net.Messages.MessageObject, IRequestMessage
+	public partial class ReqUseItem : MessageObject, IRequestMessage
 	{
 		/// <summary>
 		///  道具id
@@ -74,7 +74,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(103)]
 	[MessagePackageObject]
-	public partial class ReqSellItem : Server.Core.Net.Messages.MessageObject, IRequestMessage
+	public partial class ReqSellItem : MessageObject, IRequestMessage
 	{
 		/// <summary>
 		///  道具id
@@ -88,7 +88,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(103)]
 	[MessagePackageObject]
-	public partial class ResItemChange : Server.Core.Net.Messages.MessageObject, IResponseMessage
+	public partial class ResItemChange : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  变化的道具

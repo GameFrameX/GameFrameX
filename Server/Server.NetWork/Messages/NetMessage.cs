@@ -1,6 +1,7 @@
 ﻿using System.Buffers;
+using Server.Serialize.Serialize;
 
-namespace Server.Core.Net.Messages
+namespace Server.NetWork.Messages
 {
     /// <summary>
     /// net message
@@ -25,7 +26,7 @@ namespace Server.Core.Net.Messages
 
         public void Serialize(IBufferWriter<byte> writer)
         {
-            Server.Serialize.Serialize.SerializerHelper.Serialize(writer, Msg);
+            SerializerHelper.Serialize(writer, Msg);
         }
 
         public byte[] Serialize()

@@ -1,6 +1,6 @@
 ﻿using System.Net.WebSockets;
 using Server.Core.Hotfix;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Core.Net.Websocket
 {

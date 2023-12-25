@@ -1,3 +1,5 @@
+using Server.NetWork.HTTP;
+
 namespace Server.Hotfix.Http
 {
     public class HttpTestRes : HttpResult

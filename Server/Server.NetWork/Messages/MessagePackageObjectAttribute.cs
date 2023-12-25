@@ -1,4 +1,4 @@
-namespace Server.Core.Net.Messages;
+namespace Server.NetWork.Messages;
 
 /// <summary>
 /// 消息对象标签

@@ -1,4 +1,4 @@
-﻿namespace Server.Core.Net.Http
+﻿namespace Server.NetWork.HTTP
 {
     /// <summary>
     /// Http 消息

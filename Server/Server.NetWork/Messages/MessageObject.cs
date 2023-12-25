@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace Server.Core.Net.Messages
+namespace Server.NetWork.Messages
 {
     public abstract class MessageObject : IMessage
     {

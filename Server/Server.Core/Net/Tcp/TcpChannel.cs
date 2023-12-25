@@ -3,8 +3,8 @@ using System.IO.Pipelines;
 using Microsoft.AspNetCore.Connections;
 using Newtonsoft.Json;
 using Server.Core.Hotfix;
-using Server.Core.Net.Messages;
 using Server.Extension;
+using Server.NetWork.Messages;
 using Server.Serialize.Serialize;
 using Server.Utility;
 

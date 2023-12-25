@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Proto.Proto
 {
@@ -9,7 +9,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(10)]
 	[MessagePackageObject]
-	public partial class ReqLogin : Server.Core.Net.Messages.MessageObject, IRequestMessage
+	public partial class ReqLogin : MessageObject, IRequestMessage
 	{
 		/// <summary>
 		/// 
@@ -48,7 +48,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	[MessageTypeHandler(10)]
 	[MessagePackageObject]
-	public partial class RespLogin : Server.Core.Net.Messages.MessageObject, IResponseMessage
+	public partial class RespLogin : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		/// 
@@ -67,7 +67,7 @@ namespace Server.Proto.Proto
 	/// </summary>
 	
 	[MessagePackageObject]
-	public partial class RespErrorCode : Server.Core.Net.Messages.MessageObject
+	public partial class RespErrorCode : MessageObject
 	{
 		/// <summary>
 		///  0:表示无错误
@@ -83,7 +83,7 @@ namespace Server.Proto.Proto
 
 	[MessageTypeHandler(200)]
 	[MessagePackageObject]
-	public partial class RespPrompt : Server.Core.Net.Messages.MessageObject, IResponseMessage
+	public partial class RespPrompt : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）

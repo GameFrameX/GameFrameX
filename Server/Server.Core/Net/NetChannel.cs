@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Core.Net
 {

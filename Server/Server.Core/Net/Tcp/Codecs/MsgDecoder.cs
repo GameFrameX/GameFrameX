@@ -3,7 +3,7 @@ using System.Text;
 using MessagePack;
 using Microsoft.AspNetCore.Connections;
 using Server.Core.Hotfix;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Core.Net.Tcp.Codecs
 {

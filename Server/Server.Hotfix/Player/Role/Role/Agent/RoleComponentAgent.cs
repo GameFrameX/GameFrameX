@@ -3,6 +3,7 @@ using Server.Launcher.Common;
 using Server.Launcher.Common.Session;
 using Server.Hotfix.Player.Role.Bag.Agent;
 using Server.Hotfix.Server.Server.Agent;
+using Server.NetWork.Messages;
 
 namespace Server.Hotfix.Player.Role.Role.Agent
 {

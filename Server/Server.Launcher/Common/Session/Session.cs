@@ -1,6 +1,6 @@
 ﻿using Server.Core.Net;
-using Server.Core.Net.Messages;
 using Server.Core.Net.Tcp.Codecs;
+using Server.NetWork.Messages;
 
 namespace Server.Launcher.Common.Session
 {

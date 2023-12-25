@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Connections;
 using Newtonsoft.Json;
 using Server.Core.Hotfix;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Core.Net.Tcp
 {

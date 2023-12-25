@@ -1,7 +1,7 @@
 using Server.Core.Net;
 using Server.Launcher.Common;
-using Server.Core.Net.Messages;
 using Server.Core.Net.Tcp.Codecs;
+using Server.NetWork.Messages;
 using Server.Proto;
 using Server.Proto.Proto;
 

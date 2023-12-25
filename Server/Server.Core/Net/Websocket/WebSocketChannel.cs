@@ -2,7 +2,7 @@
 using System.Net.WebSockets;
 using MessagePack;
 using PolymorphicMessagePack;
-using Server.Core.Net.Messages;
+using Server.NetWork.Messages;
 
 namespace Server.Core.Net.Websocket
 {

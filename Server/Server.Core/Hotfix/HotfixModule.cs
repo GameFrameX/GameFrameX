@@ -8,6 +8,8 @@ using Server.Core.Hotfix.Agent;
 using Server.Core.Net.BaseHandler;
 using Server.Core.Net.Http;
 using Server.Extension;
+using Server.NetWork.HTTP;
+using Server.NetWork.Messages;
 using Server.Setting;
 
 namespace Server.Core.Hotfix
@@ -188,7 +190,7 @@ namespace Server.Core.Hotfix
                 return false;
             }
 
-            var msgIdField = (Server.Core.Net.Messages.MessageTypeHandler)attribute.MsgType.GetCustomAttribute(typeof(Server.Core.Net.Messages.MessageTypeHandler), true);
+            var msgIdField = (MessageTypeHandlerAttribute)attribute.MsgType.GetCustomAttribute(typeof(MessageTypeHandlerAttribute), true);
             if (msgIdField == null)
             {
                 return false;
