@@ -1,0 +1,6 @@
+﻿services:
+  server.launcher:
+    image: server.launcher
+    build:
+      context: .
+      dockerfile: Server.Launcher/Dockerfile
