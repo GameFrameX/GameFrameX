@@ -305,7 +305,25 @@ namespace Server.Core.Hotfix
             var type = comp.GetType();
             if (compAgentMap.TryGetValue(type, out var agentType))
             {
-                var agent = (T)Activator.CreateInstance(useAgentWrapper ? agentAgentWrapperMap[agentType] : agentType);
+                T agent = default;
+                if (useAgentWrapper)
+                {
+                    if (agentAgentWrapperMap.TryGetValue(agentType, out var warpType))
+                    {
+                        agent = (T)Activator.CreateInstance(warpType);
+                    }
+                }
+
+                if (agent == null)
+                {
+                    agent = (T)Activator.CreateInstance(agentType);
+                }
+
+                if (agent == null)
+                {
+                    throw new ArgumentNullException(nameof(agent));
+                }
+
                 agent.Owner = comp;
                 return agent;
             }
