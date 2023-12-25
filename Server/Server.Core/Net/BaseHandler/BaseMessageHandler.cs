@@ -1,13 +1,14 @@
-﻿using Server.NetWork.Messages;
+﻿using Server.NetWork;
+using Server.NetWork.Messages;
 
 namespace Server.Core.Net.BaseHandler
 {
-    public abstract class BaseMessageHandler
+    public abstract class BaseMessageHandler : IMessageHandler
     {
         /// <summary>
         /// 网络频道
         /// </summary>
-        public NetChannel Channel { get; set; }
+        public INetChannel Channel { get; set; }
 
         /// <summary>
         /// 消息对象

@@ -70,6 +70,16 @@ public abstract class BaseSetting
     public int HttpsPort { get; init; }
 
     /// <summary>
+    /// WebSocket 端口
+    /// </summary>
+    public int WsPort { get; init; }
+
+    /// <summary>
+    /// WebSocket 加密端口
+    /// </summary>
+    public int WssPort { get; init; }
+
+    /// <summary>
     /// TCP 端口
     /// </summary>
     public int TcpPort { get; init; }

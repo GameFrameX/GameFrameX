@@ -7,6 +7,8 @@
   "TcpPort": 8898,
   "HttpCode": "inner_httpcode",
   "HttpPort": 20001,
+  "WsPort": 25001,
+  "WssPort": 25002,
   "GrpcPort": 30001,
   "SDKType": 0,
   "MongoUrl": "mongodb+srv://gameframex:f9v42aU9DVeFNfAF@gameframex.8taphic.mongodb.net/?retryWrites=true&w=majority",

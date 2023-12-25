@@ -1,6 +1,7 @@
 using Server.Core.Net;
 using Server.Launcher.Common;
 using Server.Core.Net.Tcp.Codecs;
+using Server.NetWork;
 using Server.NetWork.Messages;
 using Server.Proto;
 using Server.Proto.Proto;
@@ -17,7 +18,7 @@ public static class NetChannelExtensions
     /// <param name="uniId">唯一ID。</param>
     /// <param name="code">状态码。</param>
     /// <param name="desc">描述。</param>
-    public static void WriteAsync(this NetChannel channel, MessageObject msg, int uniId, StateCode code = StateCode.Success, string desc = "")
+    public static void WriteAsync(this BaseNetChannel channel, MessageObject msg, int uniId, StateCode code = StateCode.Success, string desc = "")
     {
         if (msg != null)
         {

@@ -4,17 +4,17 @@ using MessagePack;
 using PolymorphicMessagePack;
 using Server.NetWork.Messages;
 
-namespace Server.Core.Net.Websocket
+namespace Server.NetWork.WebSocket
 {
-    public class WebSocketChannel : NetChannel
+    public sealed class WebSocketChannel : BaseNetChannel
     {
-        static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-        WebSocket webSocket;
+        static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        System.Net.WebSockets.WebSocket webSocket;
         readonly Action<MessageObject> onMessage;
         private readonly ConcurrentQueue<MessageObject> _sendQueue = new();
-        private readonly SemaphoreSlim _newSendMsgSemaphore = new(0);
+        private readonly SemaphoreSlim newSendMsgSemaphore = new(0);
 
-        public WebSocketChannel(WebSocket webSocket, string remoteAddress, Action<MessageObject> onMessage = null)
+        public WebSocketChannel(System.Net.WebSockets.WebSocket webSocket, string remoteAddress, Action<MessageObject> onMessage = null)
         {
             this.RemoteAddress = remoteAddress;
             this.webSocket = webSocket;
@@ -49,8 +49,12 @@ namespace Server.Core.Net.Websocket
             }
             catch (Exception e)
             {
-                LOGGER.Error(e.Message);
+                Logger.Error(e.Message);
             }
+        }
+
+        public override void WriteAsync(IMessage msg, int uniId, int code, string desc = "")
+        {
         }
 
         async Task DoSend()
@@ -58,7 +62,7 @@ namespace Server.Core.Net.Websocket
             var array = new object[2];
             while (!IsClose())
             {
-                await _newSendMsgSemaphore.WaitAsync();
+                await newSendMsgSemaphore.WaitAsync();
 
                 if (!_sendQueue.TryDequeue(out var message))
                 {
@@ -70,9 +74,9 @@ namespace Server.Core.Net.Websocket
                 //这里为了应对前端是js等不方便处理多态的情况 
                 var data = MessagePackSerializer.Serialize(array, MessagePackSerializerOptions.Standard);
 #if DEBUG
-                LOGGER.Info("发送消息:" + MessagePackSerializer.ConvertToJson(data));
+                Logger.Info("发送消息:" + MessagePackSerializer.ConvertToJson(data));
 #endif
-                await webSocket.SendAsync(data, WebSocketMessageType.Binary, true, closeSrc.Token);
+                await webSocket.SendAsync(data, WebSocketMessageType.Binary, true, CloseSrc.Token);
             }
         }
 
@@ -127,7 +131,7 @@ namespace Server.Core.Net.Websocket
                 var message = DeserializeMsg(stream); // Serializer.Deserialize<Message>(stream);
 
 #if DEBUG
-                LOGGER.Info("收到消息:" + message.GetType().Name + "  " + MessagePackSerializer.SerializeToJson(message));
+                Logger.Info("收到消息:" + message.GetType().Name + "  " + MessagePackSerializer.SerializeToJson(message));
 #endif
                 onMessage(message);
             }
@@ -135,10 +139,11 @@ namespace Server.Core.Net.Websocket
             stream.Close();
         }
 
-        public override void Write(MessageObject msg)
+        public override void Write(IMessage msg)
         {
-            _sendQueue.Enqueue(msg);
-            _newSendMsgSemaphore.Release();
+            MessageObject messageObject = msg as MessageObject;
+            _sendQueue.Enqueue(messageObject);
+            newSendMsgSemaphore.Release();
         }
     }
 }

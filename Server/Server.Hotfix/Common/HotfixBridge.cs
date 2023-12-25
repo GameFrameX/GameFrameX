@@ -3,6 +3,7 @@ using Server.Launcher.Common.Net;
 using Server.Launcher.Common.Session;
 using Server.Core.Net.Tcp;
 using Server.NetWork.HTTP;
+using Server.NetWork.WebSocket;
 
 namespace Server.Hotfix.Common
 {
@@ -20,6 +21,7 @@ namespace Server.Hotfix.Common
                 return true;
             }
 
+            Log.Info("load config data");
             // PolymorphicTypeMapper.Register(this.GetType().Assembly);
             ProtoMessageIdHandler.Init();
             HotfixMgr.SetMsgGetterByGetId((type) =>
@@ -32,7 +34,8 @@ namespace Server.Hotfix.Common
                 // Log.Debug("MsgID:" + messageId);
                 return ProtoMessageIdHandler.GetReqTypeById(messageId);
             });
-            //await TcpServer.Start(Settings.TcpPort);
+            await WebSocketServer.Start(GlobalSettings.WsPort, GlobalSettings.WssPort, new WebSocketChannelHandler(HotfixMgr.GetTcpHandler));
+            Log.Info("WebSocket 服务启动完成...");
             await TcpServer.Start(GlobalSettings.TcpPort, builder => builder.UseConnectionHandler<AppTcpConnectionHandler>());
             Log.Info("tcp 服务启动完成...");
             await HttpServer.Start(GlobalSettings.HttpPort, GlobalSettings.HttpsPort, HotfixMgr.GetHttpHandler);

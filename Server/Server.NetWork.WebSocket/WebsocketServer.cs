@@ -1,9 +1,11 @@
 using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using NLog.Web;
 
-namespace Server.Core.Net.Websocket
+namespace Server.NetWork.WebSocket
 {
     /// <summary>
     /// TCP server
@@ -13,16 +15,26 @@ namespace Server.Core.Net.Websocket
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication App { get; set; }
 
-        public static Task Start(string url, WebSocketConnectionHandler handler)
+        public static Task Start(int wsPort, int wssPort, WebSocketConnectionHandler handler)
         {
             var builder = WebApplication.CreateBuilder();
-
-            builder.WebHost.UseUrls(url).UseNLog();
+            builder.WebHost
+                .UseKestrel(
+                    options =>
+                    {
+                        options.ListenAnyIP(wsPort);
+                        if (wssPort > 0)
+                        {
+                            options.ListenAnyIP(wssPort, listenOptions => { listenOptions.UseHttps(); });
+                        }
+                    })
+                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
+                .UseNLog();
             App = builder.Build();
-
+            Log.Info("启动websocket服务...");
             App.UseWebSockets();
 
-            App.Map("/ws", async context =>
+            async Task RequestDelegate(HttpContext context)
             {
                 if (context.WebSockets.IsWebSocketRequest)
                 {
@@ -34,8 +46,14 @@ namespace Server.Core.Net.Websocket
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }
-            });
-            Log.Info("启动websocket服务...");
+            }
+
+            App.Map("/ws", RequestDelegate);
+            if (wssPort > 0)
+            {
+                App.Map("/wss", RequestDelegate);
+            }
+
             return App.StartAsync();
         }
 

@@ -1,24 +1,24 @@
 ﻿using System.Collections.Concurrent;
 using Server.NetWork.Messages;
 
-namespace Server.Core.Net
+namespace Server.NetWork
 {
-    public abstract class NetChannel
+    public abstract class BaseNetChannel : INetChannel
     {
-        protected CancellationTokenSource closeSrc = new();
+        protected readonly CancellationTokenSource CloseSrc = new();
 
-        public virtual void Write(MessageObject msg)
+        public virtual void Write(IMessage msg)
         {
         }
 
         public virtual void Close()
         {
-            closeSrc.Cancel();
+            CloseSrc.Cancel();
         }
 
         public virtual bool IsClose()
         {
-            return closeSrc.IsCancellationRequested;
+            return CloseSrc.IsCancellationRequested;
         }
 
         public virtual string RemoteAddress { get; set; } = "";
@@ -50,5 +50,14 @@ namespace Server.Core.Net
         {
             datas[key] = v;
         }
+
+        /// <summary>
+        /// 将消息对象异步写入网络通道。
+        /// </summary>
+        /// <param name="msg">消息对象。</param>
+        /// <param name="uniId">唯一ID。</param>
+        /// <param name="code">状态码。</param>
+        /// <param name="desc">描述。</param>
+        public abstract void WriteAsync(IMessage msg, int uniId, int code, string desc = "");
     }
 }

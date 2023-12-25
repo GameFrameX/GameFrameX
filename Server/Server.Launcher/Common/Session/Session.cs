@@ -1,5 +1,6 @@
 ﻿using Server.Core.Net;
 using Server.Core.Net.Tcp.Codecs;
+using Server.NetWork;
 using Server.NetWork.Messages;
 
 namespace Server.Launcher.Common.Session
@@ -25,7 +26,7 @@ namespace Server.Launcher.Common.Session
         /// <summary>
         /// 连接上下文
         /// </summary>
-        public NetChannel Channel { get; set; }
+        public BaseNetChannel Channel { get; set; }
 
         /// <summary>
         /// 连接标示，避免自己顶自己的号,客户端每次启动游戏生成一次/或者每个设备一个

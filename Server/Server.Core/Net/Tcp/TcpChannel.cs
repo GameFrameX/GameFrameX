@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Connections;
 using Newtonsoft.Json;
 using Server.Core.Hotfix;
 using Server.Extension;
+using Server.NetWork;
 using Server.NetWork.Messages;
 using Server.Serialize.Serialize;
 using Server.Utility;
 
 namespace Server.Core.Net.Tcp
 {
-    public sealed class TcpChannel : NetChannel
+    public sealed class TcpChannel : BaseNetChannel
     {
         static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public ConnectionContext Context { get; protected set; }
@@ -37,7 +38,7 @@ namespace Server.Core.Net.Tcp
         {
             try
             {
-                var cancelToken = closeSrc.Token;
+                var cancelToken = CloseSrc.Token;
                 while (!cancelToken.IsCancellationRequested)
                 {
                     var result = await Reader.ReadAsync(cancelToken);
@@ -178,7 +179,7 @@ namespace Server.Core.Net.Tcp
             return true;
         }
 
-        public override void Write(MessageObject msg)
+        public override void Write(IMessage msg)
         {
             if (IsClose())
                 return;
@@ -195,8 +196,29 @@ namespace Server.Core.Net.Tcp
             span.WriteInt(msgId, ref offset);
             span.WriteBytesWithoutLength(bytes, ref offset);
             Writer.Advance(len);
-            _ = Writer.FlushAsync(closeSrc.Token);
+            _ = Writer.FlushAsync(CloseSrc.Token);
             Logger.Debug($"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(msg)}");
+        }
+
+        public override void WriteAsync(IMessage msg, int uniId, int code, string desc = "")
+        {
+            if (msg is MessageObject messageObject)
+            {
+                messageObject.UniId = uniId;
+                Write(messageObject);
+            }
+
+            if (uniId > 0)
+            {
+                // TODO 这个要想别的办法实现
+                // RespErrorCode res = new RespErrorCode
+                // {
+                //     // UniId = uniId,
+                //     ErrCode = (int)code,
+                //     Desc = desc
+                // };
+                // Write(res);
+            }
         }
     }
 }

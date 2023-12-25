@@ -4,6 +4,7 @@ using Server.Core.Events;
 using Server.Core.Net;
 using Server.Core.Net.Tcp.Codecs;
 using Server.Launcher.Common.Event;
+using Server.NetWork;
 using Server.Proto;
 using Server.Proto.Proto;
 using Server.Setting;
@@ -61,7 +62,7 @@ namespace Server.Launcher.Common.Session
         /// </summary>
         /// <param name="sessionId"></param>
         /// <returns></returns>
-        public static NetChannel GetChannel(long sessionId)
+        public static BaseNetChannel GetChannel(long sessionId)
         {
             sessionMap.TryGetValue(sessionId, out var session);
             return session?.Channel;

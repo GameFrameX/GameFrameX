@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Connections;
 using Newtonsoft.Json;
 using Server.Core.Hotfix;
+using Server.NetWork;
 using Server.NetWork.Messages;
 
 namespace Server.Core.Net.Tcp
@@ -12,18 +13,18 @@ namespace Server.Core.Net.Tcp
         public override async Task OnConnectedAsync(ConnectionContext connection)
         {
             Logger.Debug($"{connection.RemoteEndPoint?.ToString()} 链成功");
-            NetChannel channel = null;
+            BaseNetChannel channel = null;
             channel = new TcpChannel(connection, (msg) => _ = Dispatcher(channel, msg));
             await channel.StartAsync();
             Logger.Debug($"{channel.RemoteAddress} 断开链接");
             OnDisconnection(channel);
         }
 
-        protected virtual void OnDisconnection(NetChannel channel)
+        protected virtual void OnDisconnection(BaseNetChannel channel)
         {
         }
 
-        private async Task Dispatcher(NetChannel channel, MessageObject messageObject)
+        private async Task Dispatcher(BaseNetChannel channel, MessageObject messageObject)
         {
             if (messageObject == null)
             {

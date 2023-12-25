@@ -95,6 +95,17 @@ public static class GlobalSettings
     /// </summary>
     public static int TcpPort => _instance.TcpPort;
 
+
+    /// <summary>
+    /// WebSocket 端口
+    /// </summary>
+    public static int WsPort => _instance.WsPort;
+
+    /// <summary>
+    /// WebSocket 加密端口
+    /// </summary>
+    public static int WssPort => _instance.WssPort;
+
     /// <summary>
     /// GRPC 端口
     /// </summary>

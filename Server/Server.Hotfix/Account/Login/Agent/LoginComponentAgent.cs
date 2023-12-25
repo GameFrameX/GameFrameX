@@ -2,16 +2,17 @@
 using Server.Apps.Account.Login.Entity;
 using Server.Launcher.Common;
 using Server.Core.Net;
+using Server.NetWork;
 
 namespace Server.Hotfix.Account.Login.Agent
 {
     public class LoginComponentAgent : StateComponentAgent<LoginComponent, LoginState>
     {
-        public async Task OnLogin(NetChannel channel, ReqLogin reqLogin)
+        public async Task OnLogin(INetChannel channel, ReqLogin reqLogin)
         {
             if (string.IsNullOrEmpty(reqLogin.UserName))
             {
-                channel.WriteAsync(null, reqLogin.UniId, StateCode.AccountCannotBeNull);
+                channel.WriteAsync(null, reqLogin.UniId, (int)StateCode.AccountCannotBeNull);
                 return;
             }
 
