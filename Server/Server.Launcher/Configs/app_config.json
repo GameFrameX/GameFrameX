@@ -8,11 +8,7 @@
   "HttpCode": "inner_httpcode",
   "HttpPort": 20001,
   "GrpcPort": 30001,
-  "LocalDBPrefix": "gamedb_",
-  "LocalDBPath": "../database/game/",
   "SDKType": 0,
-  "DBModel": 1,
-  //0:内嵌 1:mongodb
-  "MongoUrl": "mongodb://admin:admin@127.0.0.1:27017/database?authSource=admin",
-  "MongoDBName": "gfx_server"
+  "MongoUrl": "mongodb+srv://gameframex:f9v42aU9DVeFNfAF@gameframex.8taphic.mongodb.net/?retryWrites=true&w=majority",
+  "MongoDBName": "gameframex"
 }

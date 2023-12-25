@@ -22,7 +22,7 @@ public static class GlobalSettings
 
     public static T InsAs<T>() where T : BaseSetting
     {
-        return (T) _instance;
+        return (T)_instance;
     }
 
     public static bool IsLocal(int serverId) => _instance.IsLocal(serverId);
@@ -68,7 +68,6 @@ public static class GlobalSettings
     /// <summary>
     /// 本地IP
     /// </summary>
-
     public static string LocalIp => _instance.LocalIp;
 
     /// <summary>
@@ -79,7 +78,6 @@ public static class GlobalSettings
     /// <summary>
     /// Http 地址
     /// </summary>
-
     public static string HttpUrl => _instance.HttpUrl;
 
     /// <summary>
@@ -108,27 +106,13 @@ public static class GlobalSettings
     public static string DataBaseName => _instance.MongoDBName;
 
     /// <summary>
-    /// 本地数据库前缀
-    /// </summary>
-
-    public static string LocalDBPrefix => _instance.LocalDBPrefix;
-
-    /// <summary>
-    /// 本地数据库路径
-    /// </summary>
-
-    public static string LocalDBPath => _instance.LocalDBPath;
-
-    /// <summary>
     /// 语言
     /// </summary>
-
     public static string Language => _instance.Language;
 
     /// <summary>
     /// 数据中心
     /// </summary>
-
     public static string DataCenter => _instance.DataCenter;
 
     /// <summary>
@@ -139,11 +123,5 @@ public static class GlobalSettings
     /// <summary>
     /// SDK 类型
     /// </summary>
-
     public static int SDKType => _instance.SDKType;
-
-    /// <summary>
-    /// 数据库模式
-    /// </summary>
-    public static int DBModel => _instance.DBModel;
 }

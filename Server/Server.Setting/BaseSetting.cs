@@ -85,16 +85,6 @@ public abstract class BaseSetting
     public string MongoDBName { get; init; }
 
     /// <summary>
-    /// 本地数据库前缀
-    /// </summary>
-    public string LocalDBPrefix { get; init; }
-
-    /// <summary>
-    /// 本地数据库路径
-    /// </summary>
-    public string LocalDBPath { get; init; }
-
-    /// <summary>
     /// 语言
     /// </summary>
     public string Language { get; init; }
@@ -113,11 +103,6 @@ public abstract class BaseSetting
     /// SDK 类型
     /// </summary>
     public int SDKType { get; set; }
-
-    /// <summary>
-    /// 数据库模式
-    /// </summary>
-    public int DBModel { get; set; }
 
     #endregion
 }

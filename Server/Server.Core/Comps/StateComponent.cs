@@ -91,10 +91,7 @@ namespace Server.Core.Comps
 
         static StateComponent()
         {
-            if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
-            {
-                StateComponent.AddShutdownSaveFunc(SaveAll);
-            }
+            StateComponent.AddShutdownSaveFunc(SaveAll);
         }
 
         public override async Task Active()
@@ -110,8 +107,8 @@ namespace Server.Core.Comps
 
         public override Task Inactive()
         {
-            if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
-                stateDic.TryRemove(ActorId, out _);
+            // if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
+            stateDic.TryRemove(ActorId, out _);
             return base.Inactive();
         }
 
@@ -133,7 +130,7 @@ namespace Server.Core.Comps
         public async Task ReadStateAsync()
         {
             State = await GameDb.LoadState<TState>(ActorId);
-            if (GlobalSettings.DBModel == (int) DbModel.Mongodb)
+            // if (GlobalSettings.DBModel == (int)DbModel.Mongodb)
             {
                 stateDic.TryRemove(State.Id, out _);
                 stateDic.TryAdd(State.Id, State);
@@ -163,7 +160,7 @@ namespace Server.Core.Comps
                         Timestamp = TimeHelper.CurrentTimeMillisWithUTC()
                     };
                     var filter = Builders<MongoState>.Filter.Eq(CacheState.UniqueId, mongoState.Id);
-                    writeList.Add(new ReplaceOneModel<MongoState>(filter, mongoState) {IsUpsert = true});
+                    writeList.Add(new ReplaceOneModel<MongoState>(filter, mongoState) { IsUpsert = true });
                 }
             }
 
