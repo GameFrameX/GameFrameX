@@ -65,6 +65,11 @@ public abstract class BaseSetting
     public int HttpPort { get; init; }
 
     /// <summary>
+    /// HTTPS 端口
+    /// </summary>
+    public int HttpsPort { get; init; }
+
+    /// <summary>
     /// TCP 端口
     /// </summary>
     public int TcpPort { get; init; }

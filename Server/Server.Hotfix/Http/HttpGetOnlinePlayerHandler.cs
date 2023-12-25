@@ -3,10 +3,13 @@ using Server.NetWork.HTTP;
 
 namespace Server.Hotfix.Http
 {
-    [HttpMsgMapping("online_num_query")]
+    /// <summary>
+    /// 获取在线人数
+    /// </summary>
+    [HttpMsgMapping(typeof(HttpGetOnlinePlayerHandler))]
     public class HttpGetOnlinePlayerHandler : BaseHttpHandler
     {
-        public override bool IsCheckSign => true;
+        public override bool IsCheckSign => false;
 
         /// <summary>
         /// http://192.168.0.163:20000/game/api?command=online_num_query
@@ -17,7 +20,7 @@ namespace Server.Hotfix.Http
         /// <returns></returns>
         public override Task<string> Action(string ip, string url, Dictionary<string, string> parameters)
         {
-            var res = new HttpResult(HttpResult.Stauts.Success, $"当前在线人数:{SessionManager.Count()}").ToString();
+            var res = HttpResult.CreateOk($"当前在线人数:{SessionManager.Count()}").ToString();
             return Task.FromResult(res);
         }
     }

@@ -1,21 +1,22 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 
-namespace Server.Core.Net.Http
+namespace Server.NetWork.HTTP
 {
     public static class HttpServer
     {
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-        static WebApplication app { get; set; }
+        private static WebApplication App { get; set; }
 
         /// <summary>
         /// 启动
         /// </summary>
-        /// <param name="port"></param>
-        public static Task Start(int httpPort, int httpsPort = 0)
+        /// <param name="httpPort">HTTP端口</param>
+        /// <param name="httpsPort">HTTPS端口</param>
+        /// <param name="baseHandler">根据命令Id获得处理器</param>
+        public static Task Start(int httpPort, int httpsPort, Func<string, BaseHttpHandler> baseHandler)
         {
             var builder = WebApplication.CreateBuilder();
             builder.WebHost.UseKestrel(options =>
@@ -29,16 +30,16 @@ namespace Server.Core.Net.Http
                     // HTTPS
                     if (httpsPort > 0)
                     {
-                        options.ListenAnyIP(httpsPort, builder => { builder.UseHttps(); });
+                        options.ListenAnyIP(httpsPort, listenOptions => { listenOptions.UseHttps(); });
                     }
                 })
-                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
+                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Debug); })
                 .UseNLog();
 
-            app = builder.Build();
-            app.MapGet("/game/{text}", (HttpContext context) => HttpHandler.HandleRequest(context));
-            app.MapPost("/game/{text}", (HttpContext context) => HttpHandler.HandleRequest(context));
-            return app.StartAsync();
+            App = builder.Build();
+            App.MapGet("/game/{text}", context => HttpHandler.HandleRequest(context, baseHandler));
+            App.MapPost("/game/{text}", context => HttpHandler.HandleRequest(context, baseHandler));
+            return App.StartAsync();
         }
 
         /// <summary>
@@ -46,11 +47,11 @@ namespace Server.Core.Net.Http
         /// </summary>
         public static Task Stop()
         {
-            if (app != null)
+            if (App != null)
             {
                 Log.Info("停止http服务...");
-                var task = app.StopAsync();
-                app = null;
+                var task = App.StopAsync();
+                App = null;
                 return task;
             }
 

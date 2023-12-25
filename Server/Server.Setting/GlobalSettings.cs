@@ -86,6 +86,11 @@ public static class GlobalSettings
     public static int HttpPort => _instance.HttpPort;
 
     /// <summary>
+    /// HTTPS 端口
+    /// </summary>
+    public static int HttpsPort => _instance.HttpsPort;
+
+    /// <summary>
     /// TCP 端口
     /// </summary>
     public static int TcpPort => _instance.TcpPort;

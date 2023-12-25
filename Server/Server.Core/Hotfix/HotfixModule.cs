@@ -6,7 +6,6 @@ using Server.Core.Comps;
 using Server.Core.Events;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Net.BaseHandler;
-using Server.Core.Net.Http;
 using Server.Extension;
 using Server.NetWork.HTTP;
 using Server.NetWork.Messages;
@@ -166,7 +165,7 @@ namespace Server.Core.Hotfix
                 return false;
             }
 
-            var attr = (HttpMsgMapping)type.GetCustomAttribute(typeof(HttpMsgMapping));
+            var attr = (HttpMsgMappingAttribute)type.GetCustomAttribute(typeof(HttpMsgMappingAttribute));
             if (attr == null)
             {
                 // 不是最终实现类
@@ -174,9 +173,16 @@ namespace Server.Core.Hotfix
             }
 
             var handler = (BaseHttpHandler)Activator.CreateInstance(type);
-            if (!httpHandlerMap.TryAdd(attr.Cmd, handler))
+            // 注册原始命令
+            if (!httpHandlerMap.TryAdd(attr.OriginalCmd, handler))
             {
-                throw new Exception($"http handler cmd重复注册，cmd:{attr.Cmd}");
+                throw new Exception($"http handler cmd重复注册，cmd:{attr.OriginalCmd}");
+            }
+
+            // 注册标准化的命名
+            if (!httpHandlerMap.TryAdd(attr.StandardCmd, handler))
+            {
+                throw new Exception($"http handler cmd重复注册，cmd:{attr.OriginalCmd}");
             }
 
             return true;

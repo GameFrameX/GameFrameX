@@ -1,18 +1,18 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using NLog;
-using Server.Core.Utility;
 using Server.Setting;
-using Server.Utility;
 
-namespace Server.Core.Net.Http
+namespace Server.NetWork.HTTP
 {
     public abstract class BaseHttpHandler
     {
-        static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
+        static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        /// <summary> 是否使用内部验证方式 </summary>
-        public virtual bool IsCheckSign => true;
+        /// <summary>
+        /// 是否使用内部验证方式
+        /// </summary>
+        public virtual bool IsCheckSign => false;
 
         public static string GetStringSign(string str)
         {
@@ -44,8 +44,8 @@ namespace Server.Core.Net.Http
             //内部验证
             if (!paramMap.ContainsKey("token") || !paramMap.ContainsKey("timestamp"))
             {
-                LOGGER.Error("http命令未包含验证参数");
-                return new HttpResult(HttpResult.Stauts.Illegal, "http命令未包含验证参数");
+                Logger.Error("http命令未包含验证参数");
+                return new HttpResult(HttpStatusCode.Illegal, "http命令未包含验证参数");
             }
 
             var sign = paramMap["token"];
@@ -54,8 +54,8 @@ namespace Server.Core.Net.Http
             var span = new TimeSpan(Math.Abs(DateTime.Now.Ticks - timeTick));
             if (span.TotalMinutes > 5) //5分钟内有效
             {
-                LOGGER.Error("http命令已过期");
-                return new HttpResult(HttpResult.Stauts.Illegal, "http命令已过期");
+                Logger.Error("http命令已过期");
+                return new HttpResult(HttpStatusCode.Illegal, "http命令已过期");
             }
 
             var str = GlobalSettings.HttpCode + time;
@@ -65,7 +65,7 @@ namespace Server.Core.Net.Http
             }
             else
             {
-                return new HttpResult(HttpResult.Stauts.Illegal, "命令验证失败");
+                return new HttpResult(HttpStatusCode.Illegal, "命令验证失败");
             }
         }
 

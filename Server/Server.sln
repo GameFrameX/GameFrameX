@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Apps", "Server.Apps\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork", "Server.NetWork\Server.NetWork.csproj", "{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.HTTP", "Server.NetWork.HTTP\Server.NetWork.HTTP.csproj", "{145DF707-F163-42DB-860D-9885259CC1AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{145DF707-F163-42DB-860D-9885259CC1AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{145DF707-F163-42DB-860D-9885259CC1AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{145DF707-F163-42DB-860D-9885259CC1AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{145DF707-F163-42DB-860D-9885259CC1AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

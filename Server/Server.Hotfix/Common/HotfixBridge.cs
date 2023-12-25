@@ -2,6 +2,7 @@
 using Server.Launcher.Common.Net;
 using Server.Launcher.Common.Session;
 using Server.Core.Net.Tcp;
+using Server.NetWork.HTTP;
 
 namespace Server.Hotfix.Common
 {
@@ -34,7 +35,7 @@ namespace Server.Hotfix.Common
             //await TcpServer.Start(Settings.TcpPort);
             await TcpServer.Start(GlobalSettings.TcpPort, builder => builder.UseConnectionHandler<AppTcpConnectionHandler>());
             Log.Info("tcp 服务启动完成...");
-            await HttpServer.Start(GlobalSettings.HttpPort);
+            await HttpServer.Start(GlobalSettings.HttpPort, GlobalSettings.HttpsPort, HotfixMgr.GetHttpHandler);
             Log.Info("load config data");
 
             GlobalTimer.Start();

@@ -17,7 +17,10 @@ namespace Server.Hotfix.Http
     }
 
 
-    [HttpMsgMapping("test")]
+    /// <summary>
+    /// 测试
+    /// </summary>
+    [HttpMsgMapping(typeof(HttpTestHandler))]
     public class HttpTestHandler : BaseHttpHandler
     {
         /// <summary>

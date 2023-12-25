@@ -5,7 +5,7 @@ using Server.Core.Comps;
 using Server.Core.Events;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Net.BaseHandler;
-using Server.Core.Net.Http;
+using Server.NetWork.HTTP;
 
 namespace Server.Core.Hotfix
 {

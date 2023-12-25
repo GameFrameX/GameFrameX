@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="HTTP\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Server.Serialize\Server.Serialize.csproj" />
     </ItemGroup>
 

@@ -24,6 +24,7 @@
         <ProjectReference Include="..\Server.Apps\Server.Apps.csproj" />
         <ProjectReference Include="..\Server.Launcher\Server.Launcher.csproj" />
         <ProjectReference Include="..\Server.Core\Server.Core.csproj" />
+        <ProjectReference Include="..\Server.NetWork.HTTP\Server.NetWork.HTTP.csproj" />
         <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
     </ItemGroup>
 

@@ -2,30 +2,29 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using NLog;
-using Server.Core.Hotfix;
-using Server.Core.Utility;
 using Server.Setting;
-using Server.Utility;
 
-namespace Server.Core.Net.Http
+namespace Server.NetWork.HTTP
 {
-    internal class HttpHandler
+    public static class HttpHandler
     {
-        static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
+        static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static async Task HandleRequest(HttpContext context)
+        public static async Task HandleRequest(HttpContext context, Func<string, BaseHttpHandler> baseHandler)
         {
             try
             {
                 string ip = context.Connection.RemoteIpAddress.ToString();
                 string url = context.Request.PathBase + context.Request.Path;
-                LOGGER.Info("收到来自[{}]的HTTP请求. 请求url:[{}]", ip, url);
+                Logger.Info("收到来自[{}]的HTTP请求. 请求url:[{}]", ip, url);
                 Dictionary<string, string> paramMap = new Dictionary<string, string>();
 
                 foreach (var keyValuePair in context.Request.Query)
-                    paramMap.Add(keyValuePair.Key, keyValuePair.Value[0]);
+                {
+                    paramMap.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                }
 
-                context.Response.Headers.Add("content-type", "text/html;charset=utf-8");
+                context.Response.Headers.Add("content-type", "application/json; charset=utf-8");
                 if (context.Request.Method.Equals("POST"))
                 {
                     var headCType = context.Request.ContentType;
@@ -45,13 +44,13 @@ namespace Server.Core.Net.Http
                         {
                             if (paramMap.ContainsKey(keyValuePair.Name))
                             {
-                                await context.Response.WriteAsync(new HttpResult(HttpResult.Stauts.ParamErr, "参数重复了:" + keyValuePair.Name));
+                                await context.Response.WriteAsync(HttpResult.CreateErrorParam("参数重复了:" + keyValuePair.Name));
                                 return;
                             }
 
                             var key = keyValuePair.Name;
                             var val = keyValuePair.Value.GetString();
-                            paramMap.Add(keyValuePair.Name, keyValuePair.Value.GetString());
+                            paramMap.TryAdd(key, val);
                         }
                     }
                     else if (isForm)
@@ -60,11 +59,11 @@ namespace Server.Core.Net.Http
                         {
                             if (paramMap.ContainsKey(keyValuePair.Key))
                             {
-                                await context.Response.WriteAsync(new HttpResult(HttpResult.Stauts.ParamErr, "参数重复了:" + keyValuePair.Key));
+                                await context.Response.WriteAsync(HttpResult.CreateErrorParam("参数重复了:" + keyValuePair.Key));
                                 return;
                             }
 
-                            paramMap.Add(keyValuePair.Key, keyValuePair.Value[0]);
+                            paramMap.Add(keyValuePair.Key, keyValuePair.Value.ToString());
                         }
                     }
                 }
@@ -78,7 +77,7 @@ namespace Server.Core.Net.Http
                     str.Append("'").Append(parameter.Key).Append("'='").Append(parameter.Value).Append("'  ");
                 }
 
-                LOGGER.Info(str.ToString());
+                Logger.Info(str.ToString());
 
                 if (!paramMap.TryGetValue("command", out var cmd))
                 {
@@ -88,14 +87,14 @@ namespace Server.Core.Net.Http
 
                 if (!GlobalSettings.IsAppRunning)
                 {
-                    await context.Response.WriteAsync(new HttpResult(HttpResult.Stauts.ActionFailed, "服务器状态错误[正在起/关服]"));
+                    await context.Response.WriteAsync(HttpResult.CreateActionFailed("服务器状态错误[正在起/关服]"));
                     return;
                 }
 
-                var handler = HotfixMgr.GetHttpHandler(cmd);
+                var handler = baseHandler(cmd);
                 if (handler == null)
                 {
-                    LOGGER.Warn($"http cmd handler 不存在：{cmd}");
+                    Logger.Warn($"http cmd handler 不存在：{cmd}");
                     await context.Response.WriteAsync(HttpResult.Undefine);
                     return;
                 }
@@ -109,12 +108,12 @@ namespace Server.Core.Net.Http
                 }
 
                 var ret = await Task.Run(() => { return handler.Action(ip, url, paramMap); });
-                LOGGER.Warn("http result:" + ret);
+                Logger.Warn("http result:" + ret);
                 await context.Response.WriteAsync(ret);
             }
             catch (Exception e)
             {
-                LOGGER.Error("执行http异常. {} {}", e.Message, e.StackTrace);
+                Logger.Error("执行http异常. {} {}", e.Message, e.StackTrace);
                 await context.Response.WriteAsync(e.Message);
             }
         }

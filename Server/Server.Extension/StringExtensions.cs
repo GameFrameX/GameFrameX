@@ -1,4 +1,6 @@
-﻿namespace Server.Extension
+﻿using System.Text.RegularExpressions;
+
+namespace Server.Extension
 {
     /// <summary>
     /// 提供对 <see cref="string"/> 类型的扩展方法。
@@ -74,6 +76,23 @@
                 CreateAsDirectory(path, true);
                 Directory.CreateDirectory(path);
             }
+        }
+
+
+        /// <summary>
+        /// 转换字符串为下划线分割的小写形式，用于命名
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string ConvertToSnakeCase(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            var startUnderscores = Regex.Match(input, @"^_+");
+            return startUnderscores + Regex.Replace(input, @"([a-z0-9])([A-Z])", "$1_$2").ToLower();
         }
     }
 }
