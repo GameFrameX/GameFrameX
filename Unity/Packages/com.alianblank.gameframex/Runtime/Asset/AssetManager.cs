@@ -59,6 +59,7 @@ namespace GameFrameX.Asset
         /// <returns></returns>
         public void Initialize()
         {
+            BetterStreamingAssets.Initialize();
             Debug.Log($"资源系统运行模式：{PlayMode}");
             YooAssets.Initialize();
             YooAssets.SetOperationSystemMaxTimeSlice(30);
