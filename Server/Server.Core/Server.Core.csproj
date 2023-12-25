@@ -45,8 +45,4 @@
         <ProjectReference Include="..\Server.Utility\Server.Utility.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Net\Websocket\" />
-    </ItemGroup>
-
 </Project>
