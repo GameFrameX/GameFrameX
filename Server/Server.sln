@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Log", "Server.Log\Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Setting", "Server.Setting\Server.Setting.csproj", "{766F2A06-FFF5-44B4-89D2-99A566293B86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.CodeGenerator", "Server.CodeGenerator\Server.CodeGenerator.csproj", "{B5B2582C-E08B-40CF-872D-E6AA133FD718}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Serialize", "Server.Serialize\Server.Serialize.csproj", "{551705D2-C054-4B86-807D-5F0EF6EF6579}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Google.ProtoBuf", "Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj", "{8B3C26ED-D193-4345-8C9A-82174579FBA2}"
@@ -77,10 +75,6 @@ Global
 		{766F2A06-FFF5-44B4-89D2-99A566293B86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{766F2A06-FFF5-44B4-89D2-99A566293B86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{766F2A06-FFF5-44B4-89D2-99A566293B86}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B5B2582C-E08B-40CF-872D-E6AA133FD718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B5B2582C-E08B-40CF-872D-E6AA133FD718}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B5B2582C-E08B-40CF-872D-E6AA133FD718}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B5B2582C-E08B-40CF-872D-E6AA133FD718}.Release|Any CPU.Build.0 = Release|Any CPU
 		{551705D2-C054-4B86-807D-5F0EF6EF6579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{551705D2-C054-4B86-807D-5F0EF6EF6579}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{551705D2-C054-4B86-807D-5F0EF6EF6579}.Release|Any CPU.ActiveCfg = Release|Any CPU
