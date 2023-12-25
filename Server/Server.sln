@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Google.ProtoBuf", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Apps", "Server.Apps\Server.Apps.csproj", "{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork", "Server.NetWork\Server.NetWork.csproj", "{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D37EF2BA-A3A3-4D5F-897B-508735FF3E7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
