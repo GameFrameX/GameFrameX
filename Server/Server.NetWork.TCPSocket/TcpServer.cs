@@ -1,9 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
+using Server.Utility;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Server.NetWork.TCPSocket
 {
@@ -16,29 +19,23 @@ namespace Server.NetWork.TCPSocket
         private static WebApplication App { get; set; }
         public static IMessageHelper MessageHelper { get; private set; }
 
-        /// <summary>
-        /// 启动
-        /// </summary>
-        /// <param name="port"></param>
-        /// <param name="messageHelper"></param>
-        public static Task Start(int port, IMessageHelper messageHelper)
+        public static Task Start(int port, IMessageHelper messageHelper, Action<ListenOptions> configure = null)
         {
+            Guard.NotNull(messageHelper, nameof(messageHelper));
             MessageHelper = messageHelper;
             var builder = WebApplication.CreateBuilder();
-            builder.WebHost.UseKestrel(options => { options.ListenAnyIP(port, listenOptions => { listenOptions.UseConnectionHandler<TcpConnectionHandler>(); }); })
-                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
-                .UseNLog();
-
-            var app = builder.Build();
-            return app.StartAsync();
-        }
-
-        public static Task Start(int port, IMessageHelper messageHelper, Action<ListenOptions> configure)
-        {
-            MessageHelper = messageHelper;
-            var builder = WebApplication.CreateBuilder();
-            builder.WebHost.UseKestrel(options => { options.ListenAnyIP(port, configure); })
-                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
+            builder.WebHost.UseKestrel(options =>
+                {
+                    if (configure == null)
+                    {
+                        options.ListenAnyIP(port, listenOptions => { listenOptions.UseConnectionHandler<TcpConnectionHandler>(); });
+                    }
+                    else
+                    {
+                        options.ListenAnyIP(port, configure);
+                    }
+                })
+                .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Debug); })
                 .UseNLog();
 
             App = builder.Build();
