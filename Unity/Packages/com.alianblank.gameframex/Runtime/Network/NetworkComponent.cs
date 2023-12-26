@@ -20,13 +20,13 @@ namespace GameFrameX.Runtime
     [AddComponentMenu("Game Framework/Network")]
     public sealed class NetworkComponent : GameFrameworkComponent
     {
-        private INetworkManager m_NetworkManager = null;
-        private EventComponent m_EventComponent = null;
+        private INetworkManager _networkManager = null;
+        private EventComponent _eventComponent = null;
 
         /// <summary>
         /// 获取网络频道数量。
         /// </summary>
-        public int NetworkChannelCount => m_NetworkManager.NetworkChannelCount;
+        public int NetworkChannelCount => _networkManager.NetworkChannelCount;
 
         /// <summary>
         /// 游戏框架组件初始化。
@@ -35,23 +35,24 @@ namespace GameFrameX.Runtime
         {
             base.Awake();
             new NetworkManager();
-            m_NetworkManager = GameFrameworkEntry.GetModule<INetworkManager>();
-            if (m_NetworkManager == null)
+            _networkManager = GameFrameworkEntry.GetModule<INetworkManager>();
+            if (_networkManager == null)
             {
                 Log.Fatal("Network manager is invalid.");
                 return;
             }
-            m_NetworkManager.NetworkConnected += OnNetworkConnected;
-            m_NetworkManager.NetworkClosed += OnNetworkClosed;
-            m_NetworkManager.NetworkMissHeartBeat += OnNetworkMissHeartBeat;
-            m_NetworkManager.NetworkError += OnNetworkError;
-            m_NetworkManager.NetworkCustomError += OnNetworkCustomError;
+
+            _networkManager.NetworkConnected += OnNetworkConnected;
+            _networkManager.NetworkClosed += OnNetworkClosed;
+            _networkManager.NetworkMissHeartBeat += OnNetworkMissHeartBeat;
+            _networkManager.NetworkError += OnNetworkError;
+            _networkManager.NetworkCustomError += OnNetworkCustomError;
         }
 
         private void Start()
         {
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
@@ -65,7 +66,7 @@ namespace GameFrameX.Runtime
         /// <returns>是否存在网络频道。</returns>
         public bool HasNetworkChannel(string channelName)
         {
-            return m_NetworkManager.HasNetworkChannel(channelName);
+            return _networkManager.HasNetworkChannel(channelName);
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace GameFrameX.Runtime
         /// <returns>要获取的网络频道。</returns>
         public INetworkChannel GetNetworkChannel(string channelName)
         {
-            return m_NetworkManager.GetNetworkChannel(channelName);
+            return _networkManager.GetNetworkChannel(channelName);
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace GameFrameX.Runtime
         /// <returns>所有网络频道。</returns>
         public INetworkChannel[] GetAllNetworkChannels()
         {
-            return m_NetworkManager.GetAllNetworkChannels();
+            return _networkManager.GetAllNetworkChannels();
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace GameFrameX.Runtime
         /// <param name="results">所有网络频道。</param>
         public void GetAllNetworkChannels(List<INetworkChannel> results)
         {
-            m_NetworkManager.GetAllNetworkChannels(results);
+            _networkManager.GetAllNetworkChannels(results);
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace GameFrameX.Runtime
         /// <returns>要创建的网络频道。</returns>
         public INetworkChannel CreateNetworkChannel(string channelName, INetworkChannelHelper networkChannelHelper)
         {
-            return m_NetworkManager.CreateNetworkChannel(channelName, networkChannelHelper);
+            return _networkManager.CreateNetworkChannel(channelName, networkChannelHelper);
         }
 
         /// <summary>
@@ -114,32 +115,32 @@ namespace GameFrameX.Runtime
         /// <returns>是否销毁网络频道成功。</returns>
         public bool DestroyNetworkChannel(string channelName)
         {
-            return m_NetworkManager.DestroyNetworkChannel(channelName);
+            return _networkManager.DestroyNetworkChannel(channelName);
         }
 
-        private void OnNetworkConnected(object sender, GameFrameX.Network.NetworkConnectedEventArgs e)
+        private void OnNetworkConnected(object sender, NetworkConnectedEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, e);
+            _eventComponent.Fire(this, eventArgs);
         }
 
-        private void OnNetworkClosed(object sender, GameFrameX.Network.NetworkClosedEventArgs e)
+        private void OnNetworkClosed(object sender, NetworkClosedEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, e);
+            _eventComponent.Fire(this, eventArgs);
         }
 
-        private void OnNetworkMissHeartBeat(object sender, GameFrameX.Network.NetworkMissHeartBeatEventArgs e)
+        private void OnNetworkMissHeartBeat(object sender, NetworkMissHeartBeatEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, e);
+            _eventComponent.Fire(this, eventArgs);
         }
 
-        private void OnNetworkError(object sender, GameFrameX.Network.NetworkErrorEventArgs e)
+        private void OnNetworkError(object sender, NetworkErrorEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, e);
+            _eventComponent.Fire(this, eventArgs);
         }
 
-        private void OnNetworkCustomError(object sender, GameFrameX.Network.NetworkCustomErrorEventArgs e)
+        private void OnNetworkCustomError(object sender, NetworkCustomErrorEventArgs eventArgs)
         {
-            m_EventComponent.Fire(this, e);
+            _eventComponent.Fire(this, eventArgs);
         }
     }
 }
