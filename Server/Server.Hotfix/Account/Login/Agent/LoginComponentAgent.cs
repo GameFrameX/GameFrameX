@@ -28,7 +28,11 @@ namespace Server.Hotfix.Account.Login.Agent
             respLogin.Code = loginState.State;
             respLogin.UserInfo = new UserInfo
             {
-                CreateTime = loginState.CreateTime
+                CreateTime = loginState.CreateTime,
+                Level = Utility.Random.GetRandom(1, 100),
+                RoleId = loginState.Id,
+                RoleName = Utility.Random.GetRandom(1, 100).ToString(),
+                VipLevel = Utility.Random.GetRandom(1, 100),
             };
             channel.WriteAsync(respLogin, reqLogin.UniId);
             //查询角色账号，这里设定每个服务器只能有一个角色
