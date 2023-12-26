@@ -9,25 +9,24 @@ public class HeartBeatComponentAgent : StateComponentAgent<HeartBeatComponent, H
     /// <summary>
     /// 心跳 定时器
     /// </summary>
-    class HeartBeatScheduleTimer : TimerHandler<HeartBeatComponentAgent>
-    {
-        protected override Task HandleTimer(HeartBeatComponentAgent agent, Param param)
-        {
-            agent.Log.Debug($"心跳 时间:{TimeHelper.CurrentTimeWithFullString()}");
-            return Task.CompletedTask;
-        }
-    }
+    // class HeartBeatScheduleTimer : TimerHandler<HeartBeatComponentAgent>
+    // {
+    //     protected override Task HandleTimer(HeartBeatComponentAgent agent, Param param)
+    //     {
+    //         agent.Log.Debug($"心跳 时间:{TimeHelper.CurrentTimeWithFullString()}");
+    //         return Task.CompletedTask;
+    //     }
+    // }
 
-    private long _heartBeatScheduleTimerId;
-
+    // private long _heartBeatScheduleTimerId;
     public override void Active()
     {
-        _heartBeatScheduleTimerId = Schedule<HeartBeatScheduleTimer>(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+        // _heartBeatScheduleTimerId = Schedule<HeartBeatScheduleTimer>(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
     }
 
     public override Task Inactive()
     {
-        Unscheduled(_heartBeatScheduleTimerId);
+        // Unscheduled(_heartBeatScheduleTimerId);
         return Task.CompletedTask;
     }
 }
