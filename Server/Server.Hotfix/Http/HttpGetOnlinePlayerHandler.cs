@@ -3,8 +3,14 @@ using Server.NetWork.HTTP;
 
 namespace Server.Hotfix.Http
 {
+    class GetOnlinePlayerResponse
+    {
+        public int Count { get; set; }
+    }
+
     /// <summary>
     /// 获取在线人数
+    /// http://localhost:20001/game/api?command=GetOnlinePlayer
     /// </summary>
     [HttpMsgMapping(typeof(HttpGetOnlinePlayerHandler))]
     public class HttpGetOnlinePlayerHandler : BaseHttpHandler
@@ -12,7 +18,7 @@ namespace Server.Hotfix.Http
         public override bool IsCheckSign => false;
 
         /// <summary>
-        /// http://192.168.0.163:20000/game/api?command=online_num_query
+        /// 
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="url"></param>
@@ -20,7 +26,9 @@ namespace Server.Hotfix.Http
         /// <returns></returns>
         public override Task<string> Action(string ip, string url, Dictionary<string, string> parameters)
         {
-            var res = HttpResult.CreateOk($"当前在线人数:{SessionManager.Count()}").ToString();
+            GetOnlinePlayerResponse response = new GetOnlinePlayerResponse();
+            response.Count = SessionManager.Count();
+            var res = HttpResult.CreateOk($"当前在线人数:{response.Count}", response);
             return Task.FromResult(res);
         }
     }
