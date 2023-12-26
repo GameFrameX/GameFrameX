@@ -78,6 +78,7 @@ namespace Server.Launcher.Common
         private static void RegisterMessagePack()
         {
             // PolymorphicTypeMapper.Register(typeof(AppStartUp).Assembly); //app
+            PolymorphicTypeMapper.Register<IMessage>();
             PolymorphicTypeMapper.Register<MessageObject>();
             PolymorphicRegister.Load();
             PolymorphicResolver.Instance.Init();
