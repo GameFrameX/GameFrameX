@@ -5,6 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using System.Buffers;
 using System.IO;
 
 namespace GameFrameX.Network
@@ -14,14 +15,6 @@ namespace GameFrameX.Network
     /// </summary>
     public interface INetworkChannelHelper
     {
-        /// <summary>
-        /// 获取消息包头长度。
-        /// </summary>
-        int PacketHeaderLength
-        {
-            get;
-        }
-
         /// <summary>
         /// 初始化网络频道辅助器。
         /// </summary>
@@ -45,29 +38,37 @@ namespace GameFrameX.Network
         bool SendHeartBeat();
 
         /// <summary>
+        /// 序列化消息头
+        /// </summary>
+        /// <param name="messageObject"></param>
+        /// <param name="destination"></param>
+        /// <param name="messageBodyBuffer"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        bool SerializePacketHeader<T>(T messageObject, Stream destination, out byte[] messageBodyBuffer) where T : MessageObject;
+
+        /// <summary>
         /// 序列化消息包。
         /// </summary>
-        /// <typeparam name="T">消息包类型。</typeparam>
-        /// <param name="packet">要序列化的消息包。</param>
+        /// <param name="messageBodyBuffer">要序列化的消息包。</param>
         /// <param name="destination">要序列化的目标流。</param>
         /// <returns>是否序列化成功。</returns>
-        bool Serialize<T>(T packet, Stream destination) where T : Packet;
+        bool SerializePacketBody(byte[] messageBodyBuffer, Stream destination);
 
         /// <summary>
         /// 反序列化消息包头。
         /// </summary>
         /// <param name="source">要反序列化的来源流。</param>
-        /// <param name="customErrorData">用户自定义错误数据。</param>
         /// <returns>反序列化后的消息包头。</returns>
-        IPacketHeader DeserializePacketHeader(Stream source, out object customErrorData);
+        bool DeserializePacketHeader(object source);
+
 
         /// <summary>
         /// 反序列化消息包。
         /// </summary>
-        /// <param name="packetHeader">消息包头。</param>
         /// <param name="source">要反序列化的来源流。</param>
-        /// <param name="customErrorData">用户自定义错误数据。</param>
+        /// <param name="messageObject"></param>
         /// <returns>反序列化后的消息包。</returns>
-        Packet DeserializePacket(IPacketHeader packetHeader, Stream source, out object customErrorData);
+        bool DeserializePacketBody(object source, out MessageObject messageObject);
     }
 }

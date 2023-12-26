@@ -1,6 +1,4 @@
-﻿using MessagePack;
-
-namespace GameFrameX.Network
+﻿namespace GameFrameX.Network
 {
     /// <summary>
     /// 消息基类

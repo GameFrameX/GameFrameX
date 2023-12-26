@@ -5,13 +5,28 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Event;
+
 namespace GameFrameX.Network
 {
     /// <summary>
     /// 网络连接成功事件。
     /// </summary>
-    public sealed class NetworkConnectedEventArgs : GameFrameworkEventArgs
+    public sealed class NetworkConnectedEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 网络连接成功事件编号。
+        /// </summary>
+        public static readonly string EventId = typeof(NetworkConnectedEventArgs).FullName;
+
+        /// <summary>
+        /// 获取网络连接成功事件编号。
+        /// </summary>
+        public override string Id
+        {
+            get { return EventId; }
+        }
+
         /// <summary>
         /// 初始化网络连接成功事件的新实例。
         /// </summary>
@@ -24,20 +39,12 @@ namespace GameFrameX.Network
         /// <summary>
         /// 获取网络频道。
         /// </summary>
-        public INetworkChannel NetworkChannel
-        {
-            get;
-            private set;
-        }
+        public INetworkChannel NetworkChannel { get; private set; }
 
         /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
-        public object UserData
-        {
-            get;
-            private set;
-        }
+        public object UserData { get; private set; }
 
         /// <summary>
         /// 创建网络连接成功事件。

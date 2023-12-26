@@ -5,13 +5,28 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Event;
+
 namespace GameFrameX.Network
 {
     /// <summary>
     /// 网络心跳包丢失事件。
     /// </summary>
-    public sealed class NetworkMissHeartBeatEventArgs : GameFrameworkEventArgs
+    public sealed class NetworkMissHeartBeatEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 网络心跳包丢失事件编号。
+        /// </summary>
+        public static readonly string EventId = typeof(NetworkMissHeartBeatEventArgs).FullName;
+
+        /// <summary>
+        /// 获取网络心跳包丢失事件编号。
+        /// </summary>
+        public override string Id
+        {
+            get { return EventId; }
+        }
+
         /// <summary>
         /// 初始化网络心跳包丢失事件的新实例。
         /// </summary>
@@ -24,20 +39,12 @@ namespace GameFrameX.Network
         /// <summary>
         /// 获取网络频道。
         /// </summary>
-        public INetworkChannel NetworkChannel
-        {
-            get;
-            private set;
-        }
+        public INetworkChannel NetworkChannel { get; private set; }
 
         /// <summary>
         /// 获取心跳包已丢失次数。
         /// </summary>
-        public int MissCount
-        {
-            get;
-            private set;
-        }
+        public int MissCount { get; private set; }
 
         /// <summary>
         /// 创建网络心跳包丢失事件。

@@ -166,10 +166,7 @@ namespace GameFrameX.Network
         /// <param name="results">所有网络频道。</param>
         public void GetAllNetworkChannels(List<INetworkChannel> results)
         {
-            if (results == null)
-            {
-                throw new GameFrameworkException("Results is invalid.");
-            }
+            GameFrameworkGuard.NotNull(results, nameof(results));
 
             results.Clear();
             foreach (var networkChannel in m_NetworkChannels)
@@ -186,22 +183,14 @@ namespace GameFrameX.Network
         /// <returns>要创建的网络频道。</returns>
         public INetworkChannel CreateNetworkChannel(string channelName, INetworkChannelHelper networkChannelHelper)
         {
-            if (networkChannelHelper == null)
-            {
-                throw new GameFrameworkException("Network channel helper is invalid.");
-            }
-
-            if (networkChannelHelper.PacketHeaderLength < 0)
-            {
-                throw new GameFrameworkException("Packet header length is invalid.");
-            }
+            GameFrameworkGuard.NotNull(networkChannelHelper, nameof(networkChannelHelper));
 
             if (HasNetworkChannel(channelName))
             {
                 throw new GameFrameworkException(Utility.Text.Format("Already exist network channel '{0}'.", channelName ?? string.Empty));
             }
 
-            NetworkChannelBase networkChannel = new TcpNetworkChannel(channelName, networkChannelHelper);
+            NetworkChannelBase networkChannel = new IOPipeNetworkChannel(channelName, networkChannelHelper);
 
             networkChannel.NetworkChannelConnected += OnNetworkChannelConnected;
             networkChannel.NetworkChannelClosed += OnNetworkChannelClosed;

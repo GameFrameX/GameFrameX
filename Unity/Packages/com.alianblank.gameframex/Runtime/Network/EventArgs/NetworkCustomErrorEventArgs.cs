@@ -5,13 +5,28 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFrameX.Event;
+
 namespace GameFrameX.Network
 {
     /// <summary>
     /// 用户自定义网络错误事件。
     /// </summary>
-    public sealed class NetworkCustomErrorEventArgs : GameFrameworkEventArgs
+    public sealed class NetworkCustomErrorEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 用户自定义网络错误事件编号。
+        /// </summary>
+        public static readonly string EventId = typeof(NetworkCustomErrorEventArgs).FullName;
+
+        /// <summary>
+        /// 获取用户自定义网络错误事件编号。
+        /// </summary>
+        public override string Id
+        {
+            get { return EventId; }
+        }
+
         /// <summary>
         /// 初始化用户自定义网络错误事件的新实例。
         /// </summary>
@@ -24,20 +39,12 @@ namespace GameFrameX.Network
         /// <summary>
         /// 获取网络频道。
         /// </summary>
-        public INetworkChannel NetworkChannel
-        {
-            get;
-            private set;
-        }
+        public INetworkChannel NetworkChannel { get; private set; }
 
         /// <summary>
         /// 获取用户自定义错误数据。
         /// </summary>
-        public object CustomErrorData
-        {
-            get;
-            private set;
-        }
+        public object CustomErrorData { get; private set; }
 
         /// <summary>
         /// 创建用户自定义网络错误事件。

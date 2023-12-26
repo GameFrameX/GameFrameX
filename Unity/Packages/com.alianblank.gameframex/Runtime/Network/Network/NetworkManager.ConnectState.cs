@@ -5,37 +5,35 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using System.Net.Sockets;
-
 namespace GameFrameX.Network
 {
     public sealed partial class NetworkManager
     {
         public sealed class ConnectState
         {
-            private readonly Socket m_Socket;
-            private readonly object m_UserData;
+            private readonly INetworkSocket _socket;
+            private readonly object _userData;
 
-            public ConnectState(Socket socket, object userData)
+            public ConnectState(INetworkSocket socket, object userData)
             {
-                m_Socket = socket;
-                m_UserData = userData;
+                _socket = socket;
+                _userData = userData;
             }
 
-            public Socket Socket
+            /// <summary>
+            /// Socket
+            /// </summary>
+            public INetworkSocket Socket
             {
-                get
-                {
-                    return m_Socket;
-                }
+                get { return _socket; }
             }
 
+            /// <summary>
+            /// 用户自定义数据
+            /// </summary>
             public object UserData
             {
-                get
-                {
-                    return m_UserData;
-                }
+                get { return _userData; }
             }
         }
     }

@@ -5,19 +5,30 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using System.Buffers;
+
 namespace GameFrameX.Network
 {
     /// <summary>
     /// 网络消息包头接口。
     /// </summary>
-    public interface IPacketHeader
+    public interface IPacketReceiveHeaderHandler
     {
+        /// <summary>
+        /// 消息包头长度
+        /// </summary>
+        int PacketHeaderLength { get; }
+
         /// <summary>
         /// 获取网络消息包长度。
         /// </summary>
-        int PacketLength
-        {
-            get;
-        }
+        int PacketLength { get; }
+
+        /// <summary>
+        /// 获取网络消息包协议编号。
+        /// </summary>
+        int Id { get; }
+
+        bool Handler(object source);
     }
 }

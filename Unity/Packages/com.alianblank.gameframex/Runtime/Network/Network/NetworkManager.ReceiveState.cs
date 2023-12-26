@@ -15,46 +15,52 @@ namespace GameFrameX.Network
         public sealed class ReceiveState : IDisposable
         {
             private const int DefaultBufferLength = 1024 * 64;
-            private MemoryStream m_Stream;
-            private IPacketHeader m_PacketHeader;
-            private bool m_Disposed;
+            private MemoryStream _mStream;
+            private IPacketReceiveHeaderHandler _packetReceiveHeaderHandler;
+            private IPacketReceiveBodyHandler _packetReceiveBodyHandler;
+            private bool _disposed;
 
             public ReceiveState()
             {
-                m_Stream = new MemoryStream(DefaultBufferLength);
-                m_PacketHeader = null;
-                m_Disposed = false;
+                _mStream = new MemoryStream(DefaultBufferLength);
+                _packetReceiveHeaderHandler = null;
+                _packetReceiveBodyHandler = null;
+                _disposed = false;
             }
 
             public MemoryStream Stream
             {
-                get
-                {
-                    return m_Stream;
-                }
+                get { return _mStream; }
             }
 
-            public IPacketHeader PacketHeader
+            public IPacketReceiveHeaderHandler PacketHeaderHandler
             {
-                get
-                {
-                    return m_PacketHeader;
-                }
+                get { return _packetReceiveHeaderHandler; }
+            }
+
+            public IPacketReceiveBodyHandler PacketBodyHandler
+            {
+                get { return _packetReceiveBodyHandler; }
             }
 
             public void PrepareForPacketHeader(int packetHeaderLength)
             {
-                Reset(packetHeaderLength, null);
+                Reset(packetHeaderLength, null, null);
             }
 
-            public void PrepareForPacket(IPacketHeader packetHeader)
+            public void PrepareForPacket(IPacketReceiveHeaderHandler packetHeader, IPacketReceiveBodyHandler packetBody)
             {
                 if (packetHeader == null)
                 {
-                    throw new GameFrameworkException("Packet header is invalid.");
+                    throw new ArgumentNullException(nameof(packetHeader), "Packet header is invalid.");
                 }
 
-                Reset(packetHeader.PacketLength, packetHeader);
+                if (packetBody == null)
+                {
+                    throw new ArgumentNullException(nameof(packetBody), "Packet body is invalid.");
+                }
+
+                Reset(packetHeader.PacketLength, packetHeader, packetBody);
             }
 
             public void Dispose()
@@ -65,33 +71,34 @@ namespace GameFrameX.Network
 
             private void Dispose(bool disposing)
             {
-                if (m_Disposed)
+                if (_disposed)
                 {
                     return;
                 }
 
                 if (disposing)
                 {
-                    if (m_Stream != null)
+                    if (_mStream != null)
                     {
-                        m_Stream.Dispose();
-                        m_Stream = null;
+                        _mStream.Dispose();
+                        _mStream = null;
                     }
                 }
 
-                m_Disposed = true;
+                _disposed = true;
             }
 
-            private void Reset(int targetLength, IPacketHeader packetHeader)
+            private void Reset(int targetLength, IPacketReceiveHeaderHandler packetReceiveHeaderHandler, IPacketReceiveBodyHandler packetReceiveBodyHandler)
             {
                 if (targetLength < 0)
                 {
                     throw new GameFrameworkException("Target length is invalid.");
                 }
 
-                m_Stream.Position = 0L;
-                m_Stream.SetLength(targetLength);
-                m_PacketHeader = packetHeader;
+                _mStream.Position = 0L;
+                _mStream.SetLength(targetLength);
+                _packetReceiveHeaderHandler = packetReceiveHeaderHandler;
+                _packetReceiveBodyHandler = packetReceiveBodyHandler;
             }
         }
     }

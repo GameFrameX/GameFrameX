@@ -8,6 +8,7 @@
 using GameFrameX;
 using GameFrameX.Network;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 namespace GameFrameX.Runtime
@@ -33,14 +34,13 @@ namespace GameFrameX.Runtime
         protected override void Awake()
         {
             base.Awake();
-            // new NetworkManager();
+            new NetworkManager();
             m_NetworkManager = GameFrameworkEntry.GetModule<INetworkManager>();
             if (m_NetworkManager == null)
             {
                 Log.Fatal("Network manager is invalid.");
                 return;
             }
-
             m_NetworkManager.NetworkConnected += OnNetworkConnected;
             m_NetworkManager.NetworkClosed += OnNetworkClosed;
             m_NetworkManager.NetworkMissHeartBeat += OnNetworkMissHeartBeat;
@@ -119,27 +119,27 @@ namespace GameFrameX.Runtime
 
         private void OnNetworkConnected(object sender, GameFrameX.Network.NetworkConnectedEventArgs e)
         {
-            m_EventComponent.Fire(this, NetworkConnectedEventArgs.Create(e));
+            m_EventComponent.Fire(this, e);
         }
 
         private void OnNetworkClosed(object sender, GameFrameX.Network.NetworkClosedEventArgs e)
         {
-            m_EventComponent.Fire(this, NetworkClosedEventArgs.Create(e));
+            m_EventComponent.Fire(this, e);
         }
 
         private void OnNetworkMissHeartBeat(object sender, GameFrameX.Network.NetworkMissHeartBeatEventArgs e)
         {
-            m_EventComponent.Fire(this, NetworkMissHeartBeatEventArgs.Create(e));
+            m_EventComponent.Fire(this, e);
         }
 
         private void OnNetworkError(object sender, GameFrameX.Network.NetworkErrorEventArgs e)
         {
-            m_EventComponent.Fire(this, NetworkErrorEventArgs.Create(e));
+            m_EventComponent.Fire(this, e);
         }
 
         private void OnNetworkCustomError(object sender, GameFrameX.Network.NetworkCustomErrorEventArgs e)
         {
-            m_EventComponent.Fire(this, NetworkCustomErrorEventArgs.Create(e));
+            m_EventComponent.Fire(this, e);
         }
     }
 }

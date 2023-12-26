@@ -1,13 +1,15 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Net;
+using Cysharp.Threading.Tasks;
 using Framework.Asset;
 using GameFrameX;
+using GameFrameX.Event;
 using GameFrameX.Network;
 using Hotfix.Proto.Proto;
 using Resolvers;
 using SimpleJSON;
 using UnityEngine;
-using GameFrameX.Network.Pipelines;
 using GameFrameX.Runtime;
+using GameMain;
 using Hotfix.UI;
 
 namespace Hotfix
@@ -16,6 +18,7 @@ namespace Hotfix
     {
         public static string serverIp = "127.0.0.1";
         public static int serverPort = 8898;
+        private static INetworkChannel networkChannel;
 
         public static void Main()
         {
@@ -33,11 +36,29 @@ namespace Hotfix
             uiLogin.m_enter.onClick.Add(() =>
             {
                 Log.Info("dhjsakdjkasjdklsjalkdk");
-                NetManager.Singleton.Init();
-                NetManager.Singleton.Connect(serverIp, serverPort);
+                if (networkChannel != null && networkChannel.Connected)
+                {
+                    NetTest();
+                    return;
+                }
 
-                NetTest();
+                networkChannel = GameApp.Network.CreateNetworkChannel("network", new DefaultNetworkChannelHelper());
+                // NetManager.Singleton.Init();
+                networkChannel.Connect(IPAddress.Parse(serverIp), serverPort);
+                GameApp.Event.Subscribe(NetworkConnectedEventArgs.EventId, OnNetworkConnected);
+                GameApp.Event.Subscribe(NetworkClosedEventArgs.EventId, OnNetworkClosed);
             });
+        }
+
+        private static void OnNetworkClosed(object sender, GameEventArgs e)
+        {
+            Log.Info(nameof(OnNetworkClosed));
+        }
+
+        private static void OnNetworkConnected(object sender, GameEventArgs e)
+        {
+            Log.Info(nameof(OnNetworkConnected));
+            NetTest();
         }
 
         static void RegisterMessagePack()
@@ -51,7 +72,7 @@ namespace Hotfix
 
         private static async void NetTest()
         {
-            await UniTask.Delay(3000);
+            await UniTask.Delay(1);
 
 
             var req = new ReqLogin
@@ -63,7 +84,7 @@ namespace Hotfix
                 Device = SystemInfo.deviceUniqueIdentifier
             };
             req.Platform = PathHelper.GetPlatformName;
-            NetManager.Singleton.Send(req);
+            networkChannel.Send(req);
 
             // NetManager.Singleton.Send(new ReqHeartBeat() {Timestamp = 2222});
         }
