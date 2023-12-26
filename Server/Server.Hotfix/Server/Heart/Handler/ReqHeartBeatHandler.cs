@@ -4,6 +4,9 @@ using Server.NetWork.Messages;
 
 namespace Server.Hotfix.Server.Heart.Handler;
 
+/// <summary>
+/// 心跳消息处理器
+/// </summary>
 [MessageMapping(typeof(ReqHeartBeat))]
 internal class ReqHeartBeatHandler : GlobalComponentHandler<HeartBeatComponentAgent>
 {
@@ -12,12 +15,9 @@ internal class ReqHeartBeatHandler : GlobalComponentHandler<HeartBeatComponentAg
         ReqHeartBeat req = this.Message as ReqHeartBeat;
         RespHeartBeat resp = new RespHeartBeat
         {
-            Timestamp = TimeHelper.UnixTimeSeconds()
+            Timestamp = TimeHelper.UnixTimeMilliseconds()
         };
-        // Channel.HeartBeatStatus.Reset();
-        this.Channel.Write(resp);
-        Console.WriteLine(resp);
+        Channel.Write(resp);
         await Task.CompletedTask;
-        // await Comp.OnLogin(Channel, Msg as ReqHeartBeat);
     }
 }
