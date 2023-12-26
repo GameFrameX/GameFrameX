@@ -15,6 +15,7 @@ COPY ["Server.Google.ProtoBuf/Server.Google.ProtoBuf.csproj", "Server.Google.Pro
 COPY ["Server.NetWork/Server.NetWork.csproj", "Server.NetWork/"]
 COPY ["Server.NetWork.HTTP/Server.NetWork.HTTP.csproj", "Server.NetWork.HTTP/"]
 COPY ["Server.NetWork.WebSocket/Server.NetWork.WebSocket.csproj", "Server.NetWork.WebSocket/"]
+COPY ["Server.NetWork.TCPSocket/Server.NetWork.TCPSocket.csproj", "Server.NetWork.TCPSocket/"]
 COPY ["Server.Proto/Server.Proto.csproj", "Server.Proto/"]
 COPY ["Server.Config/Server.Config.csproj", "Server.Config/"]
 COPY ["Server.Log/Server.Log.csproj", "Server.Log/"]
