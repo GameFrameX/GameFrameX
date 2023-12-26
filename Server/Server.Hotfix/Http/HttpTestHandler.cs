@@ -2,7 +2,7 @@ using Server.NetWork.HTTP;
 
 namespace Server.Hotfix.Http
 {
-    public class HttpTestRes : HttpResult
+    public class HttpTestRes
     {
         public class Info
         {
@@ -19,6 +19,7 @@ namespace Server.Hotfix.Http
 
     /// <summary>
     /// 测试
+    /// http://localhost:20001/game/api?command=test
     /// </summary>
     [HttpMsgMapping(typeof(HttpTestHandler))]
     public class HttpTestHandler : BaseHttpHandler
@@ -29,7 +30,7 @@ namespace Server.Hotfix.Http
         public override bool IsCheckSign => false;
 
         /// <summary>
-        /// http://127.0.0.1:20000/game/api?command=test
+        /// 
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="url"></param>
@@ -37,15 +38,15 @@ namespace Server.Hotfix.Http
         /// <returns></returns>
         public override Task<string> Action(string ip, string url, Dictionary<string, string> parameters)
         {
-            var res = new HttpTestRes
+            var response = new HttpTestRes
             {
                 A = 100,
                 B = "hello",
                 TestInfo = new HttpTestRes.Info()
             };
-            res.TestInfo.Age = 18;
-            res.TestInfo.Name = "leeveel";
-            return Task.FromResult(res.ToString());
+            response.TestInfo.Age = 18;
+            response.TestInfo.Name = "leeveel";
+            return Task.FromResult(HttpResult.Create(response));
         }
     }
 }
