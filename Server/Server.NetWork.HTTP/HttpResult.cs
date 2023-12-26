@@ -1,6 +1,7 @@
 ﻿using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Text.Unicode;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Server.NetWork.HTTP
 {
@@ -9,15 +10,22 @@ namespace Server.NetWork.HTTP
         public static readonly HttpResult Success = new HttpResult(HttpStatusCode.Success, "ok");
         public static readonly HttpResult Undefine = new HttpResult(HttpStatusCode.Undefine, "undefine command");
 
-        private readonly JsonSerializerOptions options = new JsonSerializerOptions
+        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-            //WriteIndented = true
+            ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            }
         };
 
-        public static HttpResult CreateOk(string retMsg = "")
+        public static string Create(HttpStatusCode statusCode = HttpStatusCode.Success, string retMsg = "", object extraMap = null)
         {
-            return new HttpResult(HttpStatusCode.Success, retMsg);
+            return new HttpResult(statusCode, retMsg, extraMap).ToString();
+        }
+
+        public static string CreateOk(string retMsg = "", object extraMap = null)
+        {
+            return new HttpResult(HttpStatusCode.Success, retMsg, extraMap).ToString();
         }
 
         public static HttpResult CreateErrorParam(string retMsg = "")
@@ -30,39 +38,45 @@ namespace Server.NetWork.HTTP
             return new HttpResult(HttpStatusCode.ActionFailed, retMsg);
         }
 
-        public string Code { get; set; }
-        public string Msg { get; set; }
-        public Dictionary<string, string> ExtraMap { get; set; }
+        /// <summary>
+        /// 消息码
+        /// </summary>
+        [JsonProperty(PropertyName = "code")]
+        public HttpStatusCode Code { get; set; }
 
-        public HttpResult(HttpStatusCode retCode = HttpStatusCode.Success, string retMsg = "ok")
+        /// <summary>
+        /// 消息描述
+        /// </summary>
+        [JsonProperty(PropertyName = "message")]
+        public string Message { get; set; }
+
+        /// <summary>
+        /// 数据体
+        /// </summary>
+        [JsonProperty(PropertyName = "data")]
+        public object Data { get; set; }
+
+        private HttpResult(HttpStatusCode retCode = HttpStatusCode.Success, string retMessage = "ok", object data = null)
         {
-            Code = retCode.ToString();
-            Msg = retMsg;
+            Code = retCode;
+            Message = retMessage;
+            Data = data;
         }
 
-        public string Get(string key)
-        {
-            if (ExtraMap == null)
-                return null;
-            ExtraMap.TryGetValue(key, out var res);
-            return res;
-        }
-
-        public void Set(string key, string value)
-        {
-            if (ExtraMap == null)
-                ExtraMap = new Dictionary<string, string>();
-            ExtraMap[key] = value;
-        }
 
         public override string ToString()
         {
-            return JsonSerializer.Serialize(this, GetType(), options);
+            return JsonConvert.SerializeObject(this);
         }
 
         public static implicit operator string(HttpResult value)
         {
             return value.ToString();
+        }
+
+        public static string Create(object data)
+        {
+            return new HttpResult(HttpStatusCode.Success, HttpStatusMessage.Success, data).ToString();
         }
     }
 }

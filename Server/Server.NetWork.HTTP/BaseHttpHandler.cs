@@ -45,7 +45,7 @@ namespace Server.NetWork.HTTP
             if (!paramMap.ContainsKey("token") || !paramMap.ContainsKey("timestamp"))
             {
                 Logger.Error("http命令未包含验证参数");
-                return new HttpResult(HttpStatusCode.Illegal, "http命令未包含验证参数");
+                return HttpResult.Create(HttpStatusCode.Illegal, "http命令未包含验证参数");
             }
 
             var sign = paramMap["token"];
@@ -55,7 +55,7 @@ namespace Server.NetWork.HTTP
             if (span.TotalMinutes > 5) //5分钟内有效
             {
                 Logger.Error("http命令已过期");
-                return new HttpResult(HttpStatusCode.Illegal, "http命令已过期");
+                return HttpResult.Create(HttpStatusCode.Illegal, "http命令已过期");
             }
 
             var str = GlobalSettings.HttpCode + time;
@@ -65,7 +65,7 @@ namespace Server.NetWork.HTTP
             }
             else
             {
-                return new HttpResult(HttpStatusCode.Illegal, "命令验证失败");
+                return HttpResult.Create(HttpStatusCode.Illegal, "命令验证失败");
             }
         }
 
