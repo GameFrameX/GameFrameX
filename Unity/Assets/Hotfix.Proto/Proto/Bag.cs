@@ -1,5 +1,4 @@
 ﻿using System;
-using MessagePack;
 using System.Collections.Generic;
 using GameFrameX.Network;
 
@@ -9,7 +8,7 @@ namespace Hotfix.Proto.Proto
 	/// 请求背包数据
 	/// </summary>
 	[MessageTypeHandler(100)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ReqBagInfo : MessageObject, IRequestMessage
 	{
 	}
@@ -18,7 +17,7 @@ namespace Hotfix.Proto.Proto
 	/// 返回背包数据
 	/// </summary>
 	[MessageTypeHandler(100)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ResBagInfo : MessageObject, IResponseMessage
 	{
 		/// <summary>
@@ -32,7 +31,7 @@ namespace Hotfix.Proto.Proto
 	/// 请求背包数据
 	/// </summary>
 	[MessageTypeHandler(101)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ReqComposePet : MessageObject, IRequestMessage
 	{
 		/// <summary>
@@ -46,7 +45,7 @@ namespace Hotfix.Proto.Proto
 	/// 返回背包数据
 	/// </summary>
 	[MessageTypeHandler(101)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ResComposePet : MessageObject, IResponseMessage
 	{
 		/// <summary>
@@ -60,7 +59,7 @@ namespace Hotfix.Proto.Proto
 	/// 请求背包数据
 	/// </summary>
 	[MessageTypeHandler(102)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ReqUseItem : MessageObject, IRequestMessage
 	{
 		/// <summary>
@@ -74,7 +73,7 @@ namespace Hotfix.Proto.Proto
 	/// 出售道具
 	/// </summary>
 	[MessageTypeHandler(103)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ReqSellItem : MessageObject, IRequestMessage
 	{
 		/// <summary>
@@ -88,7 +87,7 @@ namespace Hotfix.Proto.Proto
 	/// 出售道具
 	/// </summary>
 	[MessageTypeHandler(103)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ResItemChange : MessageObject, IResponseMessage
 	{
 		/// <summary>

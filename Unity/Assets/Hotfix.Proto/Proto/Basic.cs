@@ -1,5 +1,4 @@
 ﻿using System;
-using MessagePack;
 using System.Collections.Generic;
 using GameFrameX.Network;
 
@@ -9,7 +8,7 @@ namespace Hotfix.Proto.Proto
 	/// 请求心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class ReqHeartBeat : MessageObject, IRequestMessage
 	{
 		/// <summary>
@@ -23,7 +22,7 @@ namespace Hotfix.Proto.Proto
 	/// 返回心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[MessagePackObject(true)]
+	[MessagePackageObject]
 	public partial class RespHeartBeat : MessageObject, IResponseMessage
 	{
 		/// <summary>
