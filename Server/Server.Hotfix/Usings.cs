@@ -12,7 +12,6 @@ global using Server.Core.Comps;
 global using Server.Core.Events;
 global using Server.Core.Hotfix.Agent;
 global using Server.Core.Hotfix;
-global using Server.Core.Net.Tcp.Codecs;
 global using Server.Core.Actors;
 global using Server.Core.Timer;
 global using Server.Hotfix.Common.Handler;

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Connections;
 using Server.Launcher.Common.Net;
 using Server.Launcher.Common.Session;
-using Server.Core.Net.Tcp;
 using Server.NetWork.HTTP;
+using Server.NetWork.TCPSocket;
 using Server.NetWork.WebSocket;
 
 namespace Server.Hotfix.Common
@@ -34,9 +34,13 @@ namespace Server.Hotfix.Common
                 // Log.Debug("MsgID:" + messageId);
                 return ProtoMessageIdHandler.GetReqTypeById(messageId);
             });
-            await WebSocketServer.Start(GlobalSettings.WsPort, GlobalSettings.WssPort, new WebSocketChannelHandler(HotfixMgr.GetTcpHandler));
+
+            var webSocketMessageHelper = new WebSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
+            await WebSocketServer.Start(GlobalSettings.WsPort, GlobalSettings.WssPort, webSocketMessageHelper, new WebSocketChannelHandler());
             Log.Info("WebSocket 服务启动完成...");
-            await TcpServer.Start(GlobalSettings.TcpPort, builder => builder.UseConnectionHandler<AppTcpConnectionHandler>());
+
+            var tcpSocketMessageHelper = new TcpSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
+            await TcpServer.Start(GlobalSettings.TcpPort, tcpSocketMessageHelper, builder => { builder.UseConnectionHandler<AppTcpConnectionHandler>(); });
             Log.Info("tcp 服务启动完成...");
             await HttpServer.Start(GlobalSettings.HttpPort, GlobalSettings.HttpsPort, HotfixMgr.GetHttpHandler);
             Log.Info("load config data");

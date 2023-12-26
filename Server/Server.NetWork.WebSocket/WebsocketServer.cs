@@ -15,8 +15,11 @@ namespace Server.NetWork.WebSocket
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication App { get; set; }
 
-        public static Task Start(int wsPort, int wssPort, WebSocketConnectionHandler handler)
+        public static IMessageHelper MessageHelper { get; private set; }
+
+        public static Task Start(int wsPort, int wssPort, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
         {
+            MessageHelper = messageHelper;
             var builder = WebApplication.CreateBuilder();
             builder.WebHost
                 .UseKestrel(

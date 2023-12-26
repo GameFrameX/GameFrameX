@@ -14,7 +14,7 @@ namespace Server.NetWork.WebSocket
         private readonly ConcurrentQueue<MessageObject> _sendQueue = new();
         private readonly SemaphoreSlim newSendMsgSemaphore = new(0);
 
-        public WebSocketChannel(System.Net.WebSockets.WebSocket webSocket, string remoteAddress, Action<MessageObject> onMessage = null)
+        public WebSocketChannel(System.Net.WebSockets.WebSocket webSocket, string remoteAddress, IMessageHelper messageHelper, Action<MessageObject> onMessage = null) : base(messageHelper)
         {
             this.RemoteAddress = remoteAddress;
             this.webSocket = webSocket;
@@ -141,7 +141,7 @@ namespace Server.NetWork.WebSocket
 
         public override void Write(IMessage msg)
         {
-            MessageObject messageObject = msg as MessageObject;
+            MessageObject messageObject = (MessageObject)msg;
             _sendQueue.Enqueue(messageObject);
             newSendMsgSemaphore.Release();
         }

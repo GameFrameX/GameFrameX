@@ -1,20 +1,25 @@
 ﻿using Microsoft.AspNetCore.Connections;
 using Newtonsoft.Json;
-using Server.Core.Hotfix;
-using Server.NetWork;
 using Server.NetWork.Messages;
 
-namespace Server.Core.Net.Tcp
+namespace Server.NetWork.TCPSocket
 {
     public class TcpConnectionHandler : ConnectionHandler
     {
+        // public TcpConnectionHandler(Func<int, IMessageHandler> messageHandler, Func<int, Type> typeGetter, Func<Type, int> idGetter)
+        // {
+        //     MessageHandler = messageHandler;
+        //     TypeGetter = typeGetter;
+        //     IdGetter = idGetter;
+        // }
+
         static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public override async Task OnConnectedAsync(ConnectionContext connection)
         {
             Logger.Debug($"{connection.RemoteEndPoint?.ToString()} 链成功");
             BaseNetChannel channel = null;
-            channel = new TcpChannel(connection, (msg) => _ = Dispatcher(channel, msg));
+            channel = new TcpChannel(connection, TcpServer.MessageHelper, (msg) => _ = Dispatcher(channel, msg));
             await channel.StartAsync();
             Logger.Debug($"{channel.RemoteAddress} 断开链接");
             OnDisconnection(channel);
@@ -33,7 +38,7 @@ namespace Server.Core.Net.Tcp
 
             var messageType = messageObject.GetType();
             Logger.Debug($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}");
-            var handler = HotfixMgr.GetTcpHandler(messageObject.MsgId);
+            var handler = TcpServer.MessageHelper.MessageHandler(messageObject.MsgId);
             if (handler == null)
             {
                 Logger.Error($"找不到[{messageObject.MsgId}][{messageObject.GetType()}]对应的handler");

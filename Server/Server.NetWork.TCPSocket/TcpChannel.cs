@@ -2,14 +2,12 @@
 using System.IO.Pipelines;
 using Microsoft.AspNetCore.Connections;
 using Newtonsoft.Json;
-using Server.Core.Hotfix;
 using Server.Extension;
-using Server.NetWork;
 using Server.NetWork.Messages;
 using Server.Serialize.Serialize;
 using Server.Utility;
 
-namespace Server.Core.Net.Tcp
+namespace Server.NetWork.TCPSocket
 {
     public sealed class TcpChannel : BaseNetChannel
     {
@@ -24,9 +22,12 @@ namespace Server.Core.Net.Tcp
         private int lastOrder = 0;
         const int MAX_RECV_SIZE = 1024 * 1024 * 5;
 
+        IMessageHelper TypeGetter { get; set; }
+
         /// 从客户端接收的包大小最大值（单位：字节 5M）
-        public TcpChannel(ConnectionContext context, Action<MessageObject> onMessage = null)
+        public TcpChannel(ConnectionContext context, IMessageHelper messageHandler, Action<MessageObject> onMessage = null) : base(messageHandler)
         {
+            TypeGetter = messageHandler;
             this.onMessage = onMessage;
             Context = context;
             Reader = context.Transport.Input;
@@ -103,7 +104,7 @@ namespace Server.Core.Net.Tcp
 
             reader.TryReadBigEndian(out int msgId);
 
-            var msgType = HotfixMgr.GetMsgType(msgId);
+            var msgType = TypeGetter.MessageTypeByIdGetter(msgId);
             if (msgType == null)
             {
                 Logger.Error("消息ID:{} 找不到对应的Msg.", msgId);
@@ -192,7 +193,7 @@ namespace Server.Core.Net.Tcp
             span.WriteInt(len, ref offset);
             span.WriteLong(TimeHelper.UnixTimeSeconds(), ref offset);
             var messageType = msg.GetType();
-            var msgId = HotfixMgr.GetMsgType(messageType);
+            var msgId = TypeGetter.MessageIdByTypeGetter(messageType);
             span.WriteInt(msgId, ref offset);
             span.WriteBytesWithoutLength(bytes, ref offset);
             Writer.Advance(len);

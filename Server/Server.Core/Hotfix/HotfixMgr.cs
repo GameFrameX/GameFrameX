@@ -114,7 +114,7 @@ namespace Server.Core.Hotfix
             _msgGetterByGetId = msgGetter;
         }
 
-        public static int GetMsgType(Type type)
+        public static int GetMsgIdByType(Type type)
         {
             return _msgGetterByGetId(type);
         }
@@ -127,7 +127,7 @@ namespace Server.Core.Hotfix
         }
 
 
-        public static Type GetMsgType(int msgId)
+        public static Type GetMsgTypeById(int msgId)
         {
             return _msgGetterByGetType(msgId);
         }

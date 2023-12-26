@@ -4,20 +4,13 @@ namespace Server.NetWork.WebSocket
 {
     public abstract class WebSocketConnectionHandler
     {
-        private readonly Func<int, IMessageHandler> messageHandler;
-
-        public WebSocketConnectionHandler(Func<int, IMessageHandler> messageHandler)
-        {
-            this.messageHandler = messageHandler;
-        }
-
         static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public virtual async Task OnConnectedAsync(System.Net.WebSockets.WebSocket socket, string clientAddress)
         {
             Logger.Info($"new websocket {clientAddress} connect...");
             WebSocketChannel channel = null;
-            channel = new WebSocketChannel(socket, clientAddress, (msg) => _ = Dispatcher(channel, msg));
+            channel = new WebSocketChannel(socket, clientAddress, WebSocketServer.MessageHelper, (msg) => _ = Dispatcher(channel, msg));
             await channel.StartAsync();
             OnDisconnection(channel);
         }
@@ -35,7 +28,7 @@ namespace Server.NetWork.WebSocket
             }
 
             //LOGGER.Debug($"-------------收到消息{msg.MsgId} {msg.GetType()}");
-            var handler = messageHandler(msg.MsgId);
+            var handler = WebSocketServer.MessageHelper.MessageHandler(msg.MsgId);
             if (handler == null)
             {
                 Logger.Error($"找不到[{msg.MsgId}][{msg.GetType()}]对应的handler");

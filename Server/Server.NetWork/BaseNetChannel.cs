@@ -5,6 +5,11 @@ namespace Server.NetWork
 {
     public abstract class BaseNetChannel : INetChannel
     {
+        public BaseNetChannel(IMessageHelper messageHelper)
+        {
+            MessageHelper = messageHelper;
+        }
+
         protected readonly CancellationTokenSource CloseSrc = new();
 
         public virtual void Write(IMessage msg)
@@ -21,6 +26,7 @@ namespace Server.NetWork
             return CloseSrc.IsCancellationRequested;
         }
 
+        public IMessageHelper MessageHelper { get; }
         public virtual string RemoteAddress { get; set; } = "";
 
         public virtual Task StartAsync()

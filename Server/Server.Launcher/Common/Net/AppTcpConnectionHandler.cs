@@ -1,7 +1,6 @@
-﻿using Server.Core.Net;
-using Server.Core.Net.Tcp;
-using Server.Launcher.Common.Session;
+﻿using Server.Launcher.Common.Session;
 using Server.NetWork;
+using Server.NetWork.TCPSocket;
 using Server.Setting;
 
 namespace Server.Launcher.Common.Net
@@ -17,5 +16,9 @@ namespace Server.Launcher.Common.Net
                 SessionManager.Remove(sessionId);
             }
         }
+
+        // public AppTcpConnectionHandler(Func<int, IMessageHandler> messageHandler, Func<int, Type> typeGetter, Func<Type, int> idGetter) : base(messageHandler, typeGetter, idGetter)
+        // {
+        // }
     }
 }
