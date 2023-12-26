@@ -190,13 +190,13 @@ namespace Server.Core.Hotfix
 
         private bool AddTcpHandler(Type type)
         {
-            var attribute = (MsgMapping)type.GetCustomAttribute(typeof(MsgMapping), true);
+            var attribute = (MessageMappingAttribute)type.GetCustomAttribute(typeof(MessageMappingAttribute), true);
             if (attribute == null)
             {
                 return false;
             }
 
-            var msgIdField = (MessageTypeHandlerAttribute)attribute.MsgType.GetCustomAttribute(typeof(MessageTypeHandlerAttribute), true);
+            var msgIdField = (MessageTypeHandlerAttribute)attribute.MessageType.GetCustomAttribute(typeof(MessageTypeHandlerAttribute), true);
             if (msgIdField == null)
             {
                 return false;

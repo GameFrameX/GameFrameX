@@ -1,9 +1,10 @@
 ﻿using Server.Core.Net.BaseHandler;
 using Server.Hotfix.Account.Login.Agent;
+using Server.NetWork.Messages;
 
 namespace Server.Hotfix.Account.Login.Handler
 {
-    [MsgMapping(typeof(ReqLogin))]
+    [MessageMapping(typeof(ReqLogin))]
     internal class ReqLoginHandler : GlobalComponentHandler<LoginComponentAgent>
     {
         protected override async Task ActionAsync()

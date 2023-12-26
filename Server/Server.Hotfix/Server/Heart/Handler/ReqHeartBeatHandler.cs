@@ -1,9 +1,10 @@
 ﻿using Server.Core.Net.BaseHandler;
 using Server.Hotfix.Server.Heart.Agent;
+using Server.NetWork.Messages;
 
 namespace Server.Hotfix.Server.Heart.Handler;
 
-[MsgMapping(typeof(ReqHeartBeat))]
+[MessageMapping(typeof(ReqHeartBeat))]
 internal class ReqHeartBeatHandler : GlobalComponentHandler<HeartBeatComponentAgent>
 {
     protected override async Task ActionAsync()
