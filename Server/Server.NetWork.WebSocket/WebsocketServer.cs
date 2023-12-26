@@ -14,11 +14,12 @@ namespace Server.NetWork.WebSocket
     {
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication App { get; set; }
-
         public static IMessageHelper MessageHelper { get; private set; }
 
         public static Task Start(int wsPort, int wssPort, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
         {
+            Guard.NotNull(messageHelper, nameof(messageHelper));
+            Guard.NotNull(handler, nameof(handler));
             MessageHelper = messageHelper;
             var builder = WebApplication.CreateBuilder();
             builder.WebHost
