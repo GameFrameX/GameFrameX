@@ -44,6 +44,9 @@ namespace Hotfix
 
                 networkChannel = GameApp.Network.CreateNetworkChannel("network", new DefaultNetworkChannelHelper());
                 // NetManager.Singleton.Init();
+                // 注册心跳消息
+                DefaultPacketHeartBeatHandler packetSendHeaderHandler = new DefaultPacketHeartBeatHandler();
+                networkChannel.RegisterHandler(packetSendHeaderHandler);
                 networkChannel.Connect(IPAddress.Parse(serverIp), serverPort);
                 networkChannel.SetDefaultHandler((sender, e) =>
                 {

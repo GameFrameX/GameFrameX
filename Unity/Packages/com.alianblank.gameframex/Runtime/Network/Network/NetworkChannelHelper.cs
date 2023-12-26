@@ -31,6 +31,7 @@ namespace GameMain
             var packetReceiveBodyHandlerBaseType = typeof(IPacketReceiveBodyHandler);
             var packetSendHeaderHandlerBaseType = typeof(IPacketSendHeaderHandler);
             var packetSendBodyHandlerBaseType = typeof(IPacketSendBodyHandler);
+            var packetHeartBeatHandlerBaseType = typeof(IPacketHeartBeatHandler);
             var packetHandlerBaseType = typeof(IPacketHandler);
             var assembly = Assembly.GetExecutingAssembly();
             var types = assembly.GetTypes();
@@ -66,6 +67,11 @@ namespace GameMain
                     var packetHandler = (IPacketSendBodyHandler)Activator.CreateInstance(type);
                     _netChannel.RegisterHandler(packetHandler);
                 }
+                else if (type.IsImplWithInterface(packetHeartBeatHandlerBaseType))
+                {
+                    var packetHandler = (IPacketHeartBeatHandler)Activator.CreateInstance(type);
+                    _netChannel.RegisterHandler(packetHandler);
+                }
             }
 
             GameApp.Event.Subscribe(NetworkConnectedEventArgs.EventId, OnNetConnected);
@@ -93,8 +99,8 @@ namespace GameMain
 
         public bool SendHeartBeat()
         {
-            //TODO
-            Log.Info("SendHeartBeat");
+            var message = _netChannel.PacketHeartBeatHandler.Handler();
+            _netChannel.Send(message);
             return true;
         }
 

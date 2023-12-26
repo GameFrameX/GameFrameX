@@ -87,6 +87,11 @@ namespace GameFrameX.Network
         IPacketSendBodyHandler PacketSendBodyHandler { get; }
 
         /// <summary>
+        /// 心跳消息处理器
+        /// </summary>
+        IPacketHeartBeatHandler PacketHeartBeatHandler { get; }
+
+        /// <summary>
         /// 消息接收包头处理器
         /// </summary>
         IPacketReceiveHeaderHandler PacketReceiveHeaderHandler { get; }
@@ -119,6 +124,12 @@ namespace GameFrameX.Network
         /// </summary>
         /// <param name="handler">要注册的网络消息包处理函数。</param>
         void RegisterHandler(IPacketReceiveBodyHandler handler);
+
+        /// <summary>
+        /// 注册网络消息心跳处理函数，用于处理心跳消息
+        /// </summary>
+        /// <param name="handler">要注册的网络消息包处理函数</param>
+        void RegisterHandler(IPacketHeartBeatHandler handler);
 
         /// <summary>
         /// 设置默认事件处理函数。

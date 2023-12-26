@@ -1,6 +1,6 @@
 namespace GameFrameX.Network
 {
-    interface IPacketHandler
+    public interface IPacketHandler
     {
     }
 }

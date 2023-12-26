@@ -21,6 +21,7 @@ namespace GameFrameX.Network
         public abstract class NetworkChannelBase : INetworkChannel, IDisposable
         {
             private const float DefaultHeartBeatInterval = 30f;
+            private const int DefaultMissHeartBeatCountByClose = 10;
 
             private readonly string _name;
             protected readonly Queue<MessageObject> PSendPacketPool;
@@ -29,6 +30,7 @@ namespace GameFrameX.Network
             protected AddressFamily PAddressFamily;
             protected bool PResetHeartBeatElapseSecondsWhenReceivePacket;
             protected float PHeartBeatInterval;
+            protected int MissHeartBeatCountByClose;
             protected INetworkSocket PSocket;
             protected readonly SendState PSendState;
             protected readonly ReceiveState PReceiveState;
@@ -53,6 +55,7 @@ namespace GameFrameX.Network
             private IPacketSendBodyHandler _packetSendBodyHandler;
             private IPacketReceiveHeaderHandler _packetReceiveHeaderHandler;
             private IPacketReceiveBodyHandler _packetReceiveBodyHandler;
+            private IPacketHeartBeatHandler _packetHeartBeatHandler;
 
             public Action<NetworkChannelBase, object> NetworkChannelConnected;
             public Action<NetworkChannelBase> NetworkChannelClosed;
@@ -75,6 +78,7 @@ namespace GameFrameX.Network
                 PAddressFamily = AddressFamily.Unknown;
                 PResetHeartBeatElapseSecondsWhenReceivePacket = false;
                 PHeartBeatInterval = DefaultHeartBeatInterval;
+                MissHeartBeatCountByClose = DefaultMissHeartBeatCountByClose;
                 PSocket = null;
                 PSendState = new SendState();
                 PReceiveState = new ReceiveState();
@@ -244,6 +248,14 @@ namespace GameFrameX.Network
             }
 
             /// <summary>
+            /// 心跳消息处理器
+            /// </summary>
+            public IPacketHeartBeatHandler PacketHeartBeatHandler
+            {
+                get { return _packetHeartBeatHandler; }
+            }
+
+            /// <summary>
             /// 消息接收内容处理器
             /// </summary>
             public IPacketReceiveBodyHandler PacketReceiveBodyHandler
@@ -302,13 +314,22 @@ namespace GameFrameX.Network
                             PHeartBeatState.HeartBeatElapseSeconds = 0f;
                             PHeartBeatState.MissHeartBeatCount++;
                         }
-                    }
 
-                    if (sendHeartBeat && PNetworkChannelHelper.SendHeartBeat())
-                    {
-                        if (missHeartBeatCount > 0 && NetworkChannelMissHeartBeat != null)
+                        if (sendHeartBeat && PNetworkChannelHelper.SendHeartBeat())
                         {
-                            NetworkChannelMissHeartBeat(this, missHeartBeatCount);
+                            if (missHeartBeatCount > 0 && NetworkChannelMissHeartBeat != null)
+                            {
+                                NetworkChannelMissHeartBeat(this, missHeartBeatCount);
+                            }
+
+                            // PHeartBeatState.Reset(this.ResetHeartBeatElapseSecondsWhenReceivePacket);
+                            return;
+                        }
+
+                        if (PHeartBeatState.MissHeartBeatCount > MissHeartBeatCountByClose)
+                        {
+                            // 心跳丢失达到上线。触发断开
+                            Close();
                         }
                     }
                 }
@@ -365,6 +386,25 @@ namespace GameFrameX.Network
             {
                 GameFrameworkGuard.NotNull(handler, nameof(handler));
                 _packetReceiveBodyHandler = handler;
+            }
+
+            /// <summary>
+            /// 注册网络消息心跳处理函数，用于处理心跳消息
+            /// </summary>
+            /// <param name="handler">要注册的网络消息包处理函数</param>
+            public void RegisterHandler(IPacketHeartBeatHandler handler)
+            {
+                GameFrameworkGuard.NotNull(handler, nameof(handler));
+                _packetHeartBeatHandler = handler;
+                if (handler.HeartBeatInterval > 0)
+                {
+                    PHeartBeatInterval = handler.HeartBeatInterval;
+                }
+
+                if (handler.MissHeartBeatCountByClose > 0)
+                {
+                    MissHeartBeatCountByClose = handler.MissHeartBeatCountByClose;
+                }
             }
 
             /// <summary>
@@ -562,6 +602,7 @@ namespace GameFrameX.Network
                     const string errorMessage = "Serialized packet failure.";
                     throw new InvalidOperationException(errorMessage);
                 }
+
                 return serializeResult;
             }
 
