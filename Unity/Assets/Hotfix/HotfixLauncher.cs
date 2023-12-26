@@ -11,6 +11,7 @@ using SimpleJSON;
 using UnityEngine;
 using GameFrameX.Runtime;
 using GameMain;
+using Hotfix.Network;
 using Hotfix.UI;
 
 namespace Hotfix
@@ -40,6 +41,11 @@ namespace Hotfix
                 {
                     NetTest();
                     return;
+                }
+
+                if (networkChannel != null && GameApp.Network.HasNetworkChannel("network") && !networkChannel.Connected)
+                {
+                    GameApp.Network.DestroyNetworkChannel("network");
                 }
 
                 networkChannel = GameApp.Network.CreateNetworkChannel("network", new DefaultNetworkChannelHelper());
