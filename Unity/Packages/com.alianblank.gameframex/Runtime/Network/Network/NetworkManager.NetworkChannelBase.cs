@@ -562,7 +562,6 @@ namespace GameFrameX.Network
                     const string errorMessage = "Serialized packet failure.";
                     throw new InvalidOperationException(errorMessage);
                 }
-
                 return serializeResult;
             }
 

@@ -335,6 +335,11 @@ namespace GameFrameX.Network
                                 return false;
                             }
                         }
+
+                        PacketBase packetBase = ReferencePool.Acquire<PacketBase>();
+                        packetBase.MessageObject = messageObject;
+                        packetBase.MessageId = PacketReceiveHeaderHandler.Id;
+                        PReceivePacketPool.Fire(this, packetBase);
                     }
                     else
                     {
