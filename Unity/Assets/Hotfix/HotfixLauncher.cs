@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Cysharp.Threading.Tasks;
 using Framework.Asset;
 using GameFrameX;
@@ -35,7 +36,6 @@ namespace Hotfix
             var uiLogin = GameApp.UI.Add<UILogin>(UILogin.CreateInstance, AssetUtility.GetUIPackagePath(FUIPackage.UILogin), UILayer.Floor);
             uiLogin.m_enter.onClick.Add(() =>
             {
-                Log.Info("dhjsakdjkasjdklsjalkdk");
                 if (networkChannel != null && networkChannel.Connected)
                 {
                     NetTest();
@@ -45,6 +45,10 @@ namespace Hotfix
                 networkChannel = GameApp.Network.CreateNetworkChannel("network", new DefaultNetworkChannelHelper());
                 // NetManager.Singleton.Init();
                 networkChannel.Connect(IPAddress.Parse(serverIp), serverPort);
+                networkChannel.SetDefaultHandler((sender, e) =>
+                {
+                    Log.Info("Receive: " + e);
+                });
                 GameApp.Event.Subscribe(NetworkConnectedEventArgs.EventId, OnNetworkConnected);
                 GameApp.Event.Subscribe(NetworkClosedEventArgs.EventId, OnNetworkClosed);
             });
