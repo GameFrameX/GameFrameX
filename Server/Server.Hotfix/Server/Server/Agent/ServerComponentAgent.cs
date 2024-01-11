@@ -32,7 +32,7 @@ namespace Server.Hotfix.Server.Server.Agent
         {
             protected override async Task HandleTimer(ServerComponentAgent agent, Param param)
             {
-                Logger.Debug("ServerCompAgent.CrossDayTimeHandler.跨天定时器执行"+ TimeHelper.CurrentTimeWithFullString());
+                Logger.Debug($"ServerCompAgent.CrossDayTimeHandler.跨天定时器执行{TimeHelper.CurrentTimeWithFullString()}");
                 await ActorMgr.RoleCrossDay(1);
                 await ActorMgr.CrossDay(1, ActorType.Server);
             }
