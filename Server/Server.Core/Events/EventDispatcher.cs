@@ -9,7 +9,7 @@ namespace Server.Core.Events
     {
         public static void Dispatch(long id, int evtId, Param args = null)
         {
-            var actor = ActorMgr.GetActor(id);
+            var actor = ActorManager.GetActor(id);
             if (actor != null)
             {
                 var evt = new Event

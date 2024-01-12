@@ -26,7 +26,7 @@ namespace Server.Hotfix.Player.Role.Pet.Agent
 
         private async Task OnGotNewPet(OneParam<int> param)
         {
-            var serverComp = await ActorMgr.GetCompAgent<ServerComponentAgent>();
+            var serverComp = await ActorManager.GetComponentAgent<ServerComponentAgent>();
             //var level = await serverComp.SendAsync(() => serverComp.GetWorldLevel()); //手动入队的写法
             var level = await serverComp.GetWorldLevel();
             LOGGER.Debug($"PetCompAgent.OnGotNewPet监听到了获得宠物的事件,宠物ID:{param.Value}当前世界等级:{level}");

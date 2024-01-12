@@ -27,7 +27,7 @@ namespace Server.Core.Net.BaseHandler
             await InitActor();
             if (CacheComponent == null)
             {
-                CacheComponent = await ActorMgr.GetCompAgent(ActorId, ComponentAgentType);
+                CacheComponent = await ActorManager.GetComponentAgent(ActorId, ComponentAgentType);
                 // Console.WriteLine(CacheComp);
             }
         }

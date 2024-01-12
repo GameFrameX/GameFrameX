@@ -112,7 +112,7 @@ namespace Server.Core.Comps
                     if (actorType > ActorType.Separator)
                     {
                         Log.Info($"激活全局Actor: {actorType}");
-                        await ActorMgr.GetOrNew(IdGenerator.GetActorID(actorType));
+                        await ActorManager.GetOrNew(IdGenerator.GetActorID(actorType));
                     }
                 }
 

@@ -169,7 +169,7 @@ namespace Server.Core.Comps
 
             foreach (var state in stateDic.Values)
             {
-                var actor = ActorMgr.GetActor(state.Id);
+                var actor = ActorManager.GetActor(state.Id);
                 if (actor != null)
                 {
                     if (force)

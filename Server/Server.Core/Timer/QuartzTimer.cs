@@ -366,7 +366,7 @@ namespace Server.Core.Timer
                     {
                         var actorId = context.JobDetail.JobDataMap.GetLong(ACTOR_ID_KEY);
                         var agentType = handler.GetType().BaseType.GenericTypeArguments[0];
-                        var comp = await ActorMgr.GetCompAgent(actorId, agentType);
+                        var comp = await ActorManager.GetComponentAgent(actorId, agentType);
                         comp.Tell(() => handler.InnerHandleTimer(comp, param));
                     }
                     else

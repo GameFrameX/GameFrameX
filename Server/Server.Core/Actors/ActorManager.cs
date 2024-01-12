@@ -8,43 +8,78 @@ using Server.Core.Utility;
 
 namespace Server.Core.Actors
 {
-    public class ActorMgr
+    /// <summary>
+    /// Actor管理器
+    /// </summary>
+    public static class ActorManager
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private static readonly ConcurrentDictionary<long, Actor> actorDic = new();
+        private static readonly ConcurrentDictionary<long, Actor> ActorMap = new ConcurrentDictionary<long, Actor>();
 
-        public static async Task<T> GetCompAgent<T>(long actorId) where T : IComponentAgent
+        /// <summary>
+        /// 根据ActorId获取对应的IComponentAgent对象
+        /// </summary>
+        /// <param name="actorId">ActorId</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static async Task<T> GetComponentAgent<T>(long actorId) where T : IComponentAgent
         {
             var actor = await GetOrNew(actorId);
             return await actor.GetCompAgent<T>();
         }
 
-        public static bool HasActor(long id)
+        /// <summary>
+        /// 是否存在指定的Actor
+        /// </summary>
+        /// <param name="actorId">ActorId</param>
+        /// <returns></returns>
+        public static bool HasActor(long actorId)
         {
-            return actorDic.ContainsKey(id);
+            return ActorMap.ContainsKey(actorId);
         }
 
+        /// <summary>
+        /// 根据ActorId获取对应的Actor
+        /// </summary>
+        /// <param name="actorId">ActorId</param>
+        /// <returns></returns>
         internal static Actor GetActor(long actorId)
         {
-            actorDic.TryGetValue(actorId, out var actor);
+            ActorMap.TryGetValue(actorId, out var actor);
             return actor;
         }
 
-        internal static async Task<IComponentAgent> GetCompAgent(long actorId, Type agentType)
+        /// <summary>
+        /// 根据ActorId和组件类型获取对应的IComponentAgent数据
+        /// </summary>
+        /// <param name="actorId">ActorId</param>
+        /// <param name="agentType">组件类型</param>
+        /// <returns></returns>
+        internal static async Task<IComponentAgent> GetComponentAgent(long actorId, Type agentType)
         {
             var actor = await GetOrNew(actorId);
             return await actor.GetCompAgent(agentType);
         }
 
-        public static Task<T> GetCompAgent<T>() where T : IComponentAgent
+        /// <summary>
+        /// 根据组件类型获取对应的IComponentAgent数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static Task<T> GetComponentAgent<T>() where T : IComponentAgent
         {
             var compType = HotfixMgr.GetCompType(typeof(T));
             var actorType = ComponentRegister.GetActorType(compType);
             var actorId = IdGenerator.GetActorID(actorType);
-            return GetCompAgent<T>(actorId);
+            return GetComponentAgent<T>(actorId);
         }
 
+        /// <summary>
+        /// 根据actorId获取对应的actor实例，不存在则新生成一个Actor对象
+        /// </summary>
+        /// <param name="actorId">actorId</param>
+        /// <returns></returns>
         internal static async Task<Actor> GetOrNew(long actorId)
         {
             var actorType = IdGenerator.GetActorType(actorId);
@@ -53,7 +88,7 @@ namespace Server.Core.Actors
                 var now = DateTime.Now;
                 if (activeTimeDic.TryGetValue(actorId, out var activeTime)
                     && (now - activeTime).TotalMinutes < 10
-                    && actorDic.TryGetValue(actorId, out var actor))
+                    && ActorMap.TryGetValue(actorId, out var actor))
                 {
                     activeTimeDic[actorId] = now;
                     return actor;
@@ -63,20 +98,24 @@ namespace Server.Core.Actors
                     return await GetLifeActor(actorId).SendAsync(() =>
                     {
                         activeTimeDic[actorId] = now;
-                        return actorDic.GetOrAdd(actorId, k => new Actor(k, IdGenerator.GetActorType(k)));
+                        return ActorMap.GetOrAdd(actorId, k => new Actor(k, IdGenerator.GetActorType(k)));
                     });
                 }
             }
             else
             {
-                return actorDic.GetOrAdd(actorId, k => new Actor(k, IdGenerator.GetActorType(k)));
+                return ActorMap.GetOrAdd(actorId, k => new Actor(k, IdGenerator.GetActorType(k)));
             }
         }
 
+        /// <summary>
+        /// 全部完成
+        /// </summary>
+        /// <returns></returns>
         public static Task AllFinish()
         {
             var tasks = new List<Task>();
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 tasks.Add(actor.SendAsync(() => true));
             }
@@ -89,7 +128,7 @@ namespace Server.Core.Actors
         private static readonly List<WorkerActor> workerActors = new();
         private const int workerCount = 10;
 
-        static ActorMgr()
+        static ActorManager()
         {
             for (int i = 0; i < workerCount; i++)
             {
@@ -97,9 +136,14 @@ namespace Server.Core.Actors
             }
         }
 
+        /// <summary>
+        /// 根据ActorId 获取玩家
+        /// </summary>
+        /// <param name="actorId"></param>
+        /// <returns></returns>
         private static WorkerActor GetLifeActor(long actorId)
         {
-            return workerActors[(int) (actorId % workerCount)];
+            return workerActors[(int)(actorId % workerCount)];
         }
 
         /// <summary>
@@ -107,7 +151,7 @@ namespace Server.Core.Actors
         /// </summary>
         public static Task CheckIdle()
         {
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 if (actor.AutoRecycle)
                 {
@@ -125,7 +169,7 @@ namespace Server.Core.Actors
                                     if (actor.ReadyToDeactive)
                                     {
                                         await actor.DeActive();
-                                        actorDic.TryRemove(actor.Id, out var _);
+                                        ActorMap.TryRemove(actor.Id, out var _);
                                         Log.Debug($"actor回收 id:{actor.Id} type:{actor.Type}");
                                     }
                                     else
@@ -146,13 +190,16 @@ namespace Server.Core.Actors
         }
 
 
+        /// <summary>
+        /// 保存所有数据
+        /// </summary>
         public static async Task SaveAll()
         {
             try
             {
                 var begin = DateTime.Now;
                 var taskList = new List<Task>();
-                foreach (var actor in actorDic.Values)
+                foreach (var actor in ActorMap.Values)
                 {
                     taskList.Add(actor.SendAsync(async () => await actor.SaveAllState()));
                 }
@@ -180,7 +227,7 @@ namespace Server.Core.Actors
             {
                 int count = 0;
                 var taskList = new List<Task>();
-                foreach (var actor in actorDic.Values)
+                foreach (var actor in ActorMap.Values)
                 {
                     //如果定时回存的过程中关服了，直接终止定时回存，因为关服时会调用SaveAll以保证数据回存
                     if (!GlobalTimer.working)
@@ -207,9 +254,14 @@ namespace Server.Core.Actors
         }
 
 
+        /// <summary>
+        /// 角色跨天
+        /// </summary>
+        /// <param name="openServerDay">开服天数</param>
+        /// <returns></returns>
         public static Task RoleCrossDay(int openServerDay)
         {
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 if (actor.Type == ActorType.Player)
                 {
@@ -223,17 +275,22 @@ namespace Server.Core.Actors
         const int CROSS_DAY_GLOBAL_WAIT_SECONDS = 60;
         const int CROSS_DAY_NOT_ROLE_WAIT_SECONDS = 120;
 
+        /// <summary>
+        /// 跨天
+        /// </summary>
+        /// <param name="openServerDay">开服天数</param>
+        /// <param name="driverActorType">driverActorType</param>
         public static async Task CrossDay(int openServerDay, ActorType driverActorType)
         {
             // 驱动actor优先执行跨天
             var id = IdGenerator.GetActorID(driverActorType);
-            var driverActor = actorDic[id];
+            var driverActor = ActorMap[id];
             await driverActor.CrossDay(openServerDay);
 
             var begin = DateTime.Now;
             int a = 0;
             int b = 0;
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 if (actor.Type > ActorType.Separator && actor.Type != driverActorType)
                 {
@@ -262,7 +319,7 @@ namespace Server.Core.Actors
             Log.Info($"全局comp跨天完成 耗时：{globalCost:f4}ms");
             a = 0;
             b = 0;
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 if (actor.Type < ActorType.Separator && actor.Type != ActorType.Player)
                 {
@@ -290,10 +347,13 @@ namespace Server.Core.Actors
             Log.Info($"非玩家comp跨天完成 耗时：{otherCost:f4}ms");
         }
 
+        /// <summary>
+        /// 删除所有actor
+        /// </summary>
         public static async Task RemoveAll()
         {
             var tasks = new List<Task>();
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 tasks.Add(actor.DeActive());
             }
@@ -301,9 +361,14 @@ namespace Server.Core.Actors
             await Task.WhenAll(tasks);
         }
 
+        /// <summary>
+        /// 删除actor
+        /// </summary>
+        /// <param name="actorId">actorId</param>
+        /// <returns></returns>
         public static Task Remove(long actorId)
         {
-            if (actorDic.Remove(actorId, out var actor))
+            if (ActorMap.Remove(actorId, out var actor))
             {
                 actor.Tell(actor.DeActive);
             }
@@ -311,12 +376,17 @@ namespace Server.Core.Actors
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// 遍历所有actor
+        /// </summary>
+        /// <param name="func">遍历actor回调</param>
+        /// <typeparam name="T"></typeparam>
         public static void ActorForEach<T>(Func<T, Task> func) where T : IComponentAgent
         {
             var agentType = typeof(T);
             var compType = HotfixMgr.GetCompType(agentType);
             var actorType = ComponentRegister.GetActorType(compType);
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 if (actor.Type == actorType)
                 {
@@ -329,12 +399,17 @@ namespace Server.Core.Actors
             }
         }
 
+        /// <summary>
+        /// 遍历所有actor
+        /// </summary>
+        /// <param name="action">遍历actor回调</param>
+        /// <typeparam name="T"></typeparam>
         public static void ActorForEach<T>(Action<T> action) where T : IComponentAgent
         {
             var agentType = typeof(T);
             var compType = HotfixMgr.GetCompType(agentType);
             var actorType = ComponentRegister.GetActorType(compType);
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 if (actor.Type == actorType)
                 {
@@ -347,9 +422,12 @@ namespace Server.Core.Actors
             }
         }
 
+        /// <summary>
+        /// 清除所有agent
+        /// </summary>
         public static void ClearAgent()
         {
-            foreach (var actor in actorDic.Values)
+            foreach (var actor in ActorMap.Values)
             {
                 actor.Tell(actor.ClearAgent);
             }

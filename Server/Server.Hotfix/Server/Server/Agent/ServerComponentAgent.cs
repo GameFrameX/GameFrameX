@@ -33,8 +33,8 @@ namespace Server.Hotfix.Server.Server.Agent
             protected override async Task HandleTimer(ServerComponentAgent agent, Param param)
             {
                 Logger.Debug($"ServerCompAgent.CrossDayTimeHandler.跨天定时器执行{TimeHelper.CurrentTimeWithFullString()}");
-                await ActorMgr.RoleCrossDay(1);
-                await ActorMgr.CrossDay(1, ActorType.Server);
+                await ActorManager.RoleCrossDay(1);
+                await ActorManager.CrossDay(1, ActorType.Server);
             }
         }
 
@@ -63,12 +63,12 @@ namespace Server.Hotfix.Server.Server.Agent
 
         public static async Task OnlineRoleForeach(Action<RoleComponentAgent> func)
         {
-            var serverComp = await ActorMgr.GetCompAgent<ServerComponentAgent>();
+            var serverComp = await ActorManager.GetComponentAgent<ServerComponentAgent>();
             serverComp.Tell(async () =>
             {
                 foreach (var roleId in serverComp.Comp.OnlineSet)
                 {
-                    var roleComp = await ActorMgr.GetCompAgent<RoleComponentAgent>(roleId);
+                    var roleComp = await ActorManager.GetComponentAgent<RoleComponentAgent>(roleId);
                     roleComp.Tell(() => func(roleComp));
                 }
             });

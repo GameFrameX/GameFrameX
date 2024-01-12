@@ -30,7 +30,7 @@ namespace Server.Launcher.Common.Session
         /// <param name="sessionId">链接ID</param>
         public static void Remove(long sessionId)
         {
-            if (sessionMap.TryRemove(sessionId, out var _) && ActorMgr.HasActor(sessionId))
+            if (sessionMap.TryRemove(sessionId, out var _) && ActorManager.HasActor(sessionId))
             {
                 EventDispatcher.Dispatch(sessionId, (int)EventId.SessionRemove);
             }
@@ -44,7 +44,7 @@ namespace Server.Launcher.Common.Session
         {
             foreach (var session in sessionMap.Values)
             {
-                if (ActorMgr.HasActor(session.Id))
+                if (ActorManager.HasActor(session.Id))
                 {
                     EventDispatcher.Dispatch(session.Id, (int)EventId.SessionRemove);
                 }

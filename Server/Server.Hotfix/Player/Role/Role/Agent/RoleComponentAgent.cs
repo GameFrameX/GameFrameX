@@ -52,7 +52,7 @@ namespace Server.Hotfix.Player.Role.Role.Agent
         public async Task OnLogout()
         {
             //移除在线玩家
-            var serverComp = await ActorMgr.GetCompAgent<ServerComponentAgent>();
+            var serverComp = await ActorManager.GetComponentAgent<ServerComponentAgent>();
             await serverComp.RemoveOnlineRole(ActorId);
             //下线后会被自动回收
             SetAutoRecycle(true);

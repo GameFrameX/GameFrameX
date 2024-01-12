@@ -16,7 +16,7 @@ namespace Server.Hotfix.Account.Login.Agent
                 return;
             }
 
-            var loginCompAgent = await ActorMgr.GetCompAgent<LoginComponentAgent>();
+            var loginCompAgent = await ActorManager.GetComponentAgent<LoginComponentAgent>();
             var loginState = await loginCompAgent.Comp.OnLogin(reqLogin);
             if (loginState == null)
             {

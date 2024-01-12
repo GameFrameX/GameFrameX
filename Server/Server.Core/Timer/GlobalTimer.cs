@@ -60,7 +60,7 @@ namespace Server.Core.Timer
                 var cost = (DateTime.Now - startTime).TotalMilliseconds;
                 Log.Info($"定时回存完成 耗时: {cost:f4}ms");
 
-                await ActorMgr.CheckIdle();
+                await ActorManager.CheckIdle();
 
                 do
                 {

@@ -17,7 +17,7 @@ namespace Server.Hotfix.Common
         {
             if (reload)
             {
-                ActorMgr.ClearAgent();
+                ActorManager.ClearAgent();
                 return true;
             }
 
@@ -57,13 +57,13 @@ namespace Server.Hotfix.Common
             // 取消所有未执行定时器
             await QuartzTimer.Stop();
             // 保证actor之前的任务都执行完毕
-            await ActorMgr.AllFinish();
+            await ActorManager.AllFinish();
             // 关闭网络服务
             await HttpServer.Stop();
             await TcpServer.Stop();
             // 存储所有数据
             await GlobalTimer.Stop();
-            await ActorMgr.RemoveAll();
+            await ActorManager.RemoveAll();
         }
     }
 }
