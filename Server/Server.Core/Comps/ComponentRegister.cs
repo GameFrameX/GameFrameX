@@ -72,9 +72,9 @@ namespace Server.Core.Comps
                     {
                         if (type.GetCustomAttribute(typeof(FuncAttribute)) is FuncAttribute funcAttr)
                         {
-                            var set = FuncCompDic.GetOrAdd(funcAttr.func);
+                            var set = FuncCompDic.GetOrAdd(funcAttr.Func);
                             set.Add(type);
-                            CompFuncDic[type] = funcAttr.func;
+                            CompFuncDic[type] = funcAttr.Func;
                         }
                     }
                 }
