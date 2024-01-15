@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using NLog;
+using Server.Extension;
 using Server.Setting;
 
 namespace Server.NetWork.HTTP
@@ -16,6 +17,8 @@ namespace Server.NetWork.HTTP
             {
                 string ip = context.Connection.RemoteIpAddress.ToString();
                 string url = context.Request.PathBase + context.Request.Path;
+
+                string command = context.Request.Path.ToString().Substring(HttpServer.GameApiPath.Length);
                 Logger.Info("收到来自[{}]的HTTP请求. 请求url:[{}]", ip, url);
                 Dictionary<string, string> paramMap = new Dictionary<string, string>();
 
@@ -79,7 +82,7 @@ namespace Server.NetWork.HTTP
 
                 Logger.Info(str.ToString());
 
-                if (!paramMap.TryGetValue("command", out var cmd))
+                if (command.IsNullOrEmpty())
                 {
                     await context.Response.WriteAsync(HttpResult.Undefine);
                     return;
@@ -91,10 +94,10 @@ namespace Server.NetWork.HTTP
                     return;
                 }
 
-                var handler = baseHandler(cmd);
+                var handler = baseHandler(command);
                 if (handler == null)
                 {
-                    Logger.Warn($"http cmd handler 不存在：{cmd}");
+                    Logger.Warn($"http cmd handler 不存在：{command}");
                     await context.Response.WriteAsync(HttpResult.Undefine);
                     return;
                 }

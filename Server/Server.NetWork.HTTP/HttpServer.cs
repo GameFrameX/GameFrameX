@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 
@@ -9,6 +11,8 @@ namespace Server.NetWork.HTTP
     {
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication App { get; set; }
+
+        public const string GameApiPath = "/game/api/";
 
         /// <summary>
         /// 启动
@@ -37,8 +41,19 @@ namespace Server.NetWork.HTTP
                 .UseNLog();
 
             App = builder.Build();
-            App.MapGet("/game/{text}", context => HttpHandler.HandleRequest(context, baseHandler));
-            App.MapPost("/game/{text}", context => HttpHandler.HandleRequest(context, baseHandler));
+            App.UseExceptionHandler((errorContext) =>
+            {
+                errorContext.Run(async (context) =>
+                {
+                    // 获取异常信息
+                    var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+                    // 自定义返回Json信息；
+                    await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+                });
+            });
+            App.MapGet(GameApiPath + "{text}", context => HttpHandler.HandleRequest(context, baseHandler));
+            App.MapPost(GameApiPath + "{text}", context => HttpHandler.HandleRequest(context, baseHandler));
             return App.StartAsync();
         }
 

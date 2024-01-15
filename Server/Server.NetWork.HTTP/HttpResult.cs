@@ -28,14 +28,14 @@ namespace Server.NetWork.HTTP
             return new HttpResult(HttpStatusCode.Success, retMsg, extraMap).ToString();
         }
 
-        public static HttpResult CreateErrorParam(string retMsg = "")
+        public static string CreateErrorParam(string retMsg = "")
         {
-            return new HttpResult(HttpStatusCode.ParamErr, retMsg);
+            return new HttpResult(HttpStatusCode.ParamErr, retMsg).ToString();
         }
 
-        public static HttpResult CreateActionFailed(string retMsg = "")
+        public static string CreateActionFailed(string retMsg = "")
         {
-            return new HttpResult(HttpStatusCode.ActionFailed, retMsg);
+            return new HttpResult(HttpStatusCode.ActionFailed, retMsg).ToString();
         }
 
         /// <summary>
