@@ -59,8 +59,9 @@ namespace Server.Hotfix.Common
             // 保证actor之前的任务都执行完毕
             await ActorManager.AllFinish();
             // 关闭网络服务
-            await HttpServer.Stop();
             await TcpServer.Stop();
+            await WebSocketServer.Stop();
+            await HttpServer.Stop();
             // 存储所有数据
             await GlobalTimer.Stop();
             await ActorManager.RemoveAll();
