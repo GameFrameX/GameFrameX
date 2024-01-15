@@ -26,8 +26,11 @@ public class HttpReloadHandler : BaseHttpHandler
         if (parameters.TryGetValue("version", out var version))
         {
             await HotfixMgr.LoadHotfixModule(version);
+            return Task.FromResult(HttpResult.CreateOk()).Result;
         }
 
-        return Task.FromResult("ok").Result;
+        var result = HttpResult.CreateErrorParam($"参数错误 {nameof(version)}");
+
+        return Task.FromResult(result).Result;
     }
 }
