@@ -23,7 +23,7 @@
 
     public class ActionWrapper : WorkWrapper
     {
-        static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
+        static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Action Work { private set; get; }
         public TaskCompletionSource<bool> Tcs { private set; get; }
@@ -43,7 +43,7 @@
             }
             catch (Exception e)
             {
-                LOGGER.Error(e.ToString());
+                Logger.Error(e.ToString());
             }
             finally
             {

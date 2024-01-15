@@ -26,7 +26,7 @@ namespace Server.Core.Actors
         public static async Task<T> GetComponentAgent<T>(long actorId) where T : IComponentAgent
         {
             var actor = await GetOrNew(actorId);
-            return await actor.GetCompAgent<T>();
+            return await actor.GetComponentAgent<T>();
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Server.Core.Actors
         internal static async Task<IComponentAgent> GetComponentAgent(long actorId, Type agentType)
         {
             var actor = await GetOrNew(actorId);
-            return await actor.GetCompAgent(agentType);
+            return await actor.GetComponentAgent(agentType);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Server.Core.Actors
                                     && (DateTime.Now - activeTimeDic[actor.Id]).TotalMinutes > 15)
                                 {
                                     // 防止定时回存失败时State被直接移除
-                                    if (actor.ReadyToDeactive)
+                                    if (actor.ReadyToDeActive)
                                     {
                                         await actor.DeActive();
                                         ActorMap.TryRemove(actor.Id, out var _);
@@ -392,7 +392,7 @@ namespace Server.Core.Actors
                 {
                     actor.Tell(async () =>
                     {
-                        var comp = await actor.GetCompAgent<T>();
+                        var comp = await actor.GetComponentAgent<T>();
                         await func(comp);
                     });
                 }
@@ -415,7 +415,7 @@ namespace Server.Core.Actors
                 {
                     actor.Tell(async () =>
                     {
-                        var comp = await actor.GetCompAgent<T>();
+                        var comp = await actor.GetComponentAgent<T>();
                         action(comp);
                     });
                 }

@@ -20,19 +20,33 @@ namespace Server.Core.Actors
 
         public bool AutoRecycle { get; private set; } = false;
 
-        public HashSet<long> ScheduleIdSet = new HashSet<long>();
+        public readonly HashSet<long> ScheduleIdSet = new HashSet<long>();
 
+        /// <summary>
+        /// 设置自动回收标记
+        /// </summary>
+        /// <param name="autoRecycle">是否自动回收</param>
         public void SetAutoRecycle(bool autoRecycle)
         {
             Tell(() => { AutoRecycle = autoRecycle; });
         }
 
-        public async Task<T> GetCompAgent<T>() where T : IComponentAgent
+        /// <summary>
+        /// 根据组件类型获取对应的IComponentAgent
+        /// </summary>
+        /// <typeparam name="T">组件类型</typeparam>
+        /// <returns></returns>
+        public async Task<T> GetComponentAgent<T>() where T : IComponentAgent
         {
-            return (T) await GetCompAgent(typeof(T));
+            return (T)await GetComponentAgent(typeof(T));
         }
 
-        public async Task<IComponentAgent> GetCompAgent(Type agentType)
+        /// <summary>
+        /// 根据组件类型获取对应的IComponentAgent
+        /// </summary>
+        /// <param name="agentType">代理类型</param>
+        /// <returns></returns>
+        public async Task<IComponentAgent> GetComponentAgent(Type agentType)
         {
             var compType = agentType.BaseType.GetGenericArguments()[0];
             var comp = compDic.GetOrAdd(compType, GetOrAddFactory);
@@ -51,9 +65,14 @@ namespace Server.Core.Actors
             return agent;
         }
 
-        private BaseComp GetOrAddFactory(Type k)
+        /// <summary>
+        /// 获取或添加组件类型
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns></returns>
+        private BaseComp GetOrAddFactory(Type type)
         {
-            return ComponentRegister.NewComp(this, k);
+            return ComponentRegister.NewComp(this, type);
         }
 
         public const int TIME_OUT = int.MaxValue;
@@ -74,6 +93,10 @@ namespace Server.Core.Actors
             }
         }
 
+        /// <summary>
+        /// 跨天
+        /// </summary>
+        /// <param name="openServerDay">开服天数</param>
         public async Task CrossDay(int openServerDay)
         {
             Log.Debug($"actor跨天 id:{Id} type:{Type}");
@@ -95,8 +118,14 @@ namespace Server.Core.Actors
             }
         }
 
-        internal bool ReadyToDeactive => compDic.Values.All(item => item.ReadyToInactive);
+        internal bool ReadyToDeActive
+        {
+            get { return compDic.Values.All(item => item.ReadyToInactive); }
+        }
 
+        /// <summary>
+        /// 保存全部数据
+        /// </summary>
         internal async Task SaveAllState()
         {
             foreach (var item in compDic)
@@ -105,6 +134,9 @@ namespace Server.Core.Actors
             }
         }
 
+        /// <summary>
+        /// 反激活所有组件
+        /// </summary>
         public async Task DeActive()
         {
             foreach (var item in compDic.Values)
@@ -125,26 +157,58 @@ namespace Server.Core.Actors
             WorkerActor.Tell(work, timeout);
         }
 
+        /// <summary>
+        /// 发送异步消息
+        /// </summary>
+        /// <param name="work"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
         public Task SendAsync(Action work, int timeout = TIME_OUT)
         {
             return WorkerActor.SendAsync(work, timeout);
         }
 
+        /// <summary>
+        /// 发送异步消息
+        /// </summary>
+        /// <param name="work"></param>
+        /// <param name="timeout"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public Task<T> SendAsync<T>(Func<T> work, int timeout = TIME_OUT)
         {
             return WorkerActor.SendAsync(work, timeout);
         }
 
+        /// <summary>
+        /// 发送异步消息
+        /// </summary>
+        /// <param name="work"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
         public Task SendAsync(Func<Task> work, int timeout = TIME_OUT)
         {
             return WorkerActor.SendAsync(work, timeout);
         }
 
+        /// <summary>
+        /// 发送异步消息
+        /// </summary>
+        /// <param name="work"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
         public Task SendAsyncWithoutCheck(Func<Task> work, int timeout = TIME_OUT)
         {
             return WorkerActor.SendAsync(work, timeout, false);
         }
 
+        /// <summary>
+        /// 发送异步消息
+        /// </summary>
+        /// <param name="work">工作对象</param>
+        /// <param name="timeout">超时时间</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public Task<T> SendAsync<T>(Func<Task<T>> work, int timeout = TIME_OUT)
         {
             return WorkerActor.SendAsync(work, timeout);
@@ -157,6 +221,9 @@ namespace Server.Core.Actors
             return $"{base.ToString()}_{Type}_{Id}";
         }
 
+        /// <summary>
+        /// 清理全部代理
+        /// </summary>
         public void ClearAgent()
         {
             foreach (var comp in compDic.Values)

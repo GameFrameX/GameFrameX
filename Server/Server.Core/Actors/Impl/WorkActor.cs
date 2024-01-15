@@ -17,9 +17,12 @@ namespace Server.Core.Actors.Impl
         public WorkerActor(long id = 0)
         {
             if (id == 0)
+            {
                 id = IdGenerator.GetUniqueId(IDModule.WorkerActor);
+            }
+
             Id = id;
-            ActionBlock = new ActionBlock<WorkWrapper>(InnerRun, new ExecutionDataflowBlockOptions() {MaxDegreeOfParallelism = 1});
+            ActionBlock = new ActionBlock<WorkWrapper>(InnerRun, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1 });
         }
 
         private static async Task InnerRun(WorkWrapper wrapper)

@@ -53,12 +53,12 @@ namespace Server.Core.Hotfix.Agent
 
         public Task<IComponentAgent> GetComponentAgent(Type agentType)
         {
-            return Actor.GetCompAgent(agentType);
+            return Actor.GetComponentAgent(agentType);
         }
 
         public Task<T> GetComponentAgent<T>() where T : IComponentAgent
         {
-            return Actor.GetCompAgent<T>();
+            return Actor.GetComponentAgent<T>();
         }
 
         public void Tell(Action work, int timeout = Actor.TIME_OUT)

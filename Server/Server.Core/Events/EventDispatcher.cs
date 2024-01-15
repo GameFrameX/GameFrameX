@@ -30,7 +30,7 @@ namespace Server.Core.Events
 
                     foreach (var listener in listeners)
                     {
-                        var comp = await actor.GetCompAgent(listener.AgentType);
+                        var comp = await actor.GetComponentAgent(listener.AgentType);
                         await listener.HandleEvent(comp, evt);
                     }
                 });

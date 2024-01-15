@@ -160,7 +160,7 @@ namespace Server.Core.Comps
                     var agentType = HotfixMgr.GetAgentType(compType);
                     try
                     {
-                        await actor.GetCompAgent(agentType);
+                        await actor.GetComponentAgent(agentType);
                     }
                     catch (Exception e)
                     {
