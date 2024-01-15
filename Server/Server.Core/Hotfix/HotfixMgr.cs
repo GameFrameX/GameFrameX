@@ -80,7 +80,7 @@ namespace Server.Core.Hotfix
             return module.GetCompType(agentType);
         }
 
-        public static T GetAgent<T>(BaseComp comp, Type refAssemblyType) where T : IComponentAgent
+        public static T GetAgent<T>(BaseComponent component, Type refAssemblyType) where T : IComponentAgent
         {
             if (!oldModuleMap.IsEmpty)
             {
@@ -90,11 +90,11 @@ namespace Server.Core.Hotfix
                 {
                     var old = kv.Value;
                     if (asb == old.HotfixAssembly || asb2 == old.HotfixAssembly)
-                        return old.GetAgent<T>(comp);
+                        return old.GetAgent<T>(component);
                 }
             }
 
-            return module.GetAgent<T>(comp);
+            return module.GetAgent<T>(component);
         }
 
         public static BaseMessageHandler GetTcpHandler(int msgId)

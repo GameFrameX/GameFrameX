@@ -7,7 +7,7 @@ using Server.Utility;
 
 namespace Server.Core.Hotfix.Agent
 {
-    public abstract class BaseComponentAgent<TComponent> : IComponentAgent where TComponent : BaseComp
+    public abstract class BaseComponentAgent<TComponent> : IComponentAgent where TComponent : BaseComponent
     {
         private Logger _logger;
 
@@ -24,7 +24,7 @@ namespace Server.Core.Hotfix.Agent
             }
         }
 
-        public BaseComp Owner { get; set; }
+        public BaseComponent Owner { get; set; }
         public TComponent Comp => (TComponent)Owner;
         public Actor Actor => Owner.Actor;
         public long ActorId => Actor.Id;

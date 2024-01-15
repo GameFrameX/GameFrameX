@@ -308,9 +308,9 @@ namespace Server.Core.Hotfix
             // throw new HttpHandlerNotFoundException($"未注册的http命令:{cmd}");
         }
 
-        internal T GetAgent<T>(BaseComp comp) where T : IComponentAgent
+        internal T GetAgent<T>(BaseComponent component) where T : IComponentAgent
         {
-            var type = comp.GetType();
+            var type = component.GetType();
             if (compAgentMap.TryGetValue(type, out var agentType))
             {
                 T agent = default;
@@ -332,7 +332,7 @@ namespace Server.Core.Hotfix
                     throw new ArgumentNullException(nameof(agent));
                 }
 
-                agent.Owner = comp;
+                agent.Owner = component;
                 return agent;
             }
 

@@ -81,7 +81,7 @@ namespace Server.Core.Comps
         #endregion
     }
 
-    public abstract class StateComponent<TState> : BaseComp, IState where TState : CacheState, new()
+    public abstract class StateComponent<TState> : BaseComponent, IState where TState : CacheState, new()
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
 

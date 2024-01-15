@@ -16,7 +16,7 @@ namespace Server.Core.Hotfix.Agent
         /// <summary>
         /// 拥有者
         /// </summary>
-        BaseComp Owner { get; set; }
+        BaseComponent Owner { get; set; }
 
         /// <summary>
         /// 激活

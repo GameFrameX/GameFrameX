@@ -51,7 +51,7 @@ namespace Server.Core.Comps
                 assembly = Assembly.GetEntryAssembly();
             }
 
-            Type baseCompName = typeof(BaseComp);
+            Type baseCompName = typeof(BaseComponent);
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
@@ -171,7 +171,7 @@ namespace Server.Core.Comps
             }
         }
 
-        internal static BaseComp NewComp(Actor actor, Type compType)
+        internal static BaseComponent NewComp(Actor actor, Type compType)
         {
             if (!ActorCompDic.TryGetValue(actor.Type, out var compTypes))
             {
@@ -183,7 +183,7 @@ namespace Server.Core.Comps
                 throw new Exception($"获取不属于此actor：{actor.Type}的comp:{compType.FullName}");
             }
 
-            var comp = (BaseComp) Activator.CreateInstance(compType);
+            var comp = (BaseComponent) Activator.CreateInstance(compType);
             if (comp != null)
             {
                 comp.Actor = actor;

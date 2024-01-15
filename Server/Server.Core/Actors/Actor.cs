@@ -10,7 +10,7 @@ namespace Server.Core.Actors
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private readonly ConcurrentDictionary<Type, BaseComp> compDic = new ConcurrentDictionary<Type, BaseComp>();
+        private readonly ConcurrentDictionary<Type, BaseComponent> compDic = new ConcurrentDictionary<Type, BaseComponent>();
 
         public long Id { get; init; }
 
@@ -70,7 +70,7 @@ namespace Server.Core.Actors
         /// </summary>
         /// <param name="type">类型</param>
         /// <returns></returns>
-        private BaseComp GetOrAddFactory(Type type)
+        private BaseComponent GetOrAddFactory(Type type)
         {
             return ComponentRegister.NewComp(this, type);
         }
