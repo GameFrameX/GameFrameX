@@ -15,8 +15,6 @@ namespace Server.Hotfix.Http
     [HttpMsgMapping(typeof(HttpGetOnlinePlayerHandler))]
     public class HttpGetOnlinePlayerHandler : BaseHttpHandler
     {
-        public override bool IsCheckSign => false;
-
         /// <summary>
         /// 
         /// </summary>

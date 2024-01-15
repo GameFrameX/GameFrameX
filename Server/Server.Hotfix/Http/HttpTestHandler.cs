@@ -25,11 +25,6 @@ namespace Server.Hotfix.Http
     public class HttpTestHandler : BaseHttpHandler
     {
         /// <summary>
-        /// ***正式的HttpHandler请一定设置CheckSign为True***
-        /// </summary>
-        public override bool IsCheckSign => false;
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="ip"></param>
