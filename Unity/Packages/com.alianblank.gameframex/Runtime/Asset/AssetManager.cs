@@ -364,11 +364,10 @@ namespace GameFrameX.Asset
         /// <param name="sceneMode">场景模式</param>
         /// <param name="activateOnLoad">是否加载完成自动激活</param>
         /// <returns></returns>
-        public UniTask<SceneHandle> LoadSceneAsync(string path, LoadSceneMode sceneMode,
-            bool activateOnLoad = true)
+        public UniTask<SceneHandle> LoadSceneAsync(string path, LoadSceneMode sceneMode, bool activateOnLoad = true)
         {
             var taskCompletionSource = new UniTaskCompletionSource<SceneHandle>();
-            var sceneHandle = YooAssets.LoadSceneAsync(path, sceneMode, activateOnLoad);
+            var sceneHandle = YooAssets.LoadSceneAsync(path, sceneMode, !activateOnLoad);
             sceneHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
@@ -380,11 +379,10 @@ namespace GameFrameX.Asset
         /// <param name="sceneMode">场景模式</param>
         /// <param name="activateOnLoad">是否加载完成自动激活</param>
         /// <returns></returns>
-        public UniTask<SceneHandle> LoadSceneAsync(AssetInfo assetInfo, LoadSceneMode sceneMode,
-            bool activateOnLoad = true)
+        public UniTask<SceneHandle> LoadSceneAsync(AssetInfo assetInfo, LoadSceneMode sceneMode, bool activateOnLoad = true)
         {
             var taskCompletionSource = new UniTaskCompletionSource<SceneHandle>();
-            var sceneHandle = YooAssets.LoadSceneAsync(assetInfo, sceneMode, activateOnLoad);
+            var sceneHandle = YooAssets.LoadSceneAsync(assetInfo, sceneMode, !activateOnLoad);
             sceneHandle.Completed += handle => { taskCompletionSource.TrySetResult(handle); };
             return taskCompletionSource.Task;
         }
