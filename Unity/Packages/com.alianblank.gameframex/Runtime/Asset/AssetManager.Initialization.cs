@@ -17,25 +17,21 @@ namespace GameFrameX.Asset
                     // 编辑器下的模拟模式
                     return InitializeYooAssetEditorSimulateMode();
                 }
-                    break;
                 case EPlayMode.OfflinePlayMode:
                 {
                     // 单机运行模式
                     return InitializeYooAssetOfflinePlayMode();
                 }
-                    break;
                 case EPlayMode.HostPlayMode:
                 {
                     // 联机运行模式
                     return InitializeYooAssetHostPlayMode();
                 }
-                    break;
                 case EPlayMode.WebPlayMode:
                 {
                     // WebGL运行模式
                     return InitializeYooAssetWebPlayMode();
                 }
-                    break;
                 default:
                 {
                     return null;
