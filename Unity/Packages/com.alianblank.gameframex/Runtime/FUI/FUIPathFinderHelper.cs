@@ -63,9 +63,9 @@ namespace GameFrameX.Runtime
                 GObject child = SearchChild(GRoot.inst, q);
                 return child;
             }
-            catch (Exception err)
+            catch (Exception exception)
             {
-                // Log.Error("eror uipath : can not found ui by this path :" + path);
+                Log.Error("error uiPath : can not found ui by this path :" + path + ", error : " + exception);
             }
 
             return null;
