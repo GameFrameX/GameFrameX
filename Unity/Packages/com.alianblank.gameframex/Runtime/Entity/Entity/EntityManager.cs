@@ -619,13 +619,14 @@ namespace GameFrameX.Entity
                     var newUserData = ShowEntityInfo.Create(serialId, entityId, entityGroup, userData);
                     if (handle.IsSucceed)
                     {
-                        LoadAssetSuccessCallback(entityAssetName, handle.AssetObject, handle.Progress, newUserData);
+                        LoadAssetSuccessCallback(entityAssetName, handle, handle.Progress, newUserData);
                     }
                     else
                     {
                         LoadAssetFailureCallback(entityAssetName, handle.Status, handle.LastError, newUserData);
                     }
                 };
+                return;
             }
 
             InternalShowEntity(entityId, entityAssetName, entityGroup, entityInstanceObject.Target, false, 0f, userData);
@@ -1159,7 +1160,7 @@ namespace GameFrameX.Entity
                 {
                     ShowEntitySuccessEventArgs showEntitySuccessEventArgs = ShowEntitySuccessEventArgs.Create(entity, duration, userData);
                     m_ShowEntitySuccessEventHandler(this, showEntitySuccessEventArgs);
-                    ReferencePool.Release(showEntitySuccessEventArgs);
+                    // ReferencePool.Release(showEntitySuccessEventArgs);
                 }
             }
             catch (Exception exception)
@@ -1168,7 +1169,7 @@ namespace GameFrameX.Entity
                 {
                     ShowEntityFailureEventArgs showEntityFailureEventArgs = ShowEntityFailureEventArgs.Create(entityId, entityAssetName, entityGroup.Name, exception.ToString(), userData);
                     m_ShowEntityFailureEventHandler(this, showEntityFailureEventArgs);
-                    ReferencePool.Release(showEntityFailureEventArgs);
+                    // ReferencePool.Release(showEntityFailureEventArgs);
                     return;
                 }
 
@@ -1211,7 +1212,7 @@ namespace GameFrameX.Entity
             {
                 HideEntityCompleteEventArgs hideEntityCompleteEventArgs = HideEntityCompleteEventArgs.Create(entity.Id, entity.EntityAssetName, entityGroup, userData);
                 m_HideEntityCompleteEventHandler(this, hideEntityCompleteEventArgs);
-                ReferencePool.Release(hideEntityCompleteEventArgs);
+                // ReferencePool.Release(hideEntityCompleteEventArgs);
             }
 
             m_RecycleQueue.Enqueue(entityInfo);
@@ -1261,7 +1262,7 @@ namespace GameFrameX.Entity
             {
                 ShowEntityFailureEventArgs showEntityFailureEventArgs = ShowEntityFailureEventArgs.Create(showEntityInfo.EntityId, entityAssetName, showEntityInfo.EntityGroup.Name, appendErrorMessage, showEntityInfo.UserData);
                 m_ShowEntityFailureEventHandler(this, showEntityFailureEventArgs);
-                ReferencePool.Release(showEntityFailureEventArgs);
+                // ReferencePool.Release(showEntityFailureEventArgs);
                 return;
             }
 
@@ -1280,7 +1281,7 @@ namespace GameFrameX.Entity
             {
                 ShowEntityUpdateEventArgs showEntityUpdateEventArgs = ShowEntityUpdateEventArgs.Create(showEntityInfo.EntityId, entityAssetName, showEntityInfo.EntityGroup.Name, progress, showEntityInfo.UserData);
                 m_ShowEntityUpdateEventHandler(this, showEntityUpdateEventArgs);
-                ReferencePool.Release(showEntityUpdateEventArgs);
+                // ReferencePool.Release(showEntityUpdateEventArgs);
             }
         }
 
@@ -1296,7 +1297,7 @@ namespace GameFrameX.Entity
             {
                 ShowEntityDependencyAssetEventArgs showEntityDependencyAssetEventArgs = ShowEntityDependencyAssetEventArgs.Create(showEntityInfo.EntityId, entityAssetName, showEntityInfo.EntityGroup.Name, dependencyAssetName, loadedCount, totalCount, showEntityInfo.UserData);
                 m_ShowEntityDependencyAssetEventHandler(this, showEntityDependencyAssetEventArgs);
-                ReferencePool.Release(showEntityDependencyAssetEventArgs);
+                // ReferencePool.Release(showEntityDependencyAssetEventArgs);
             }
         }
     }
