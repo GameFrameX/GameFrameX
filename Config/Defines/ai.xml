@@ -33,7 +33,7 @@
 <bean name="Blackboard">
 	<var name="name" type="string"/>
 	<var name="desc" type="string"/>
-	<var name="parent_name" type="string" ref="ai.TbBlackboard?"/>
+	<var name="parent_name" type="string#ref=ai.TbBlackboard?"/>
 	<var name="keys" type="list,BlackboardKey"/>
 </bean>
 
@@ -206,7 +206,6 @@
 				<var name="radius" type="float"/>
 			</bean>
 			<bean name="MoveToLocation">
-				<var name="location" type="vector3"/> vector3
 				<var name="acceptable_radius" type="float"/>
 			</bean>
 			<bean name="DebugPrint">
@@ -221,7 +220,7 @@
 	<var name="id" type="int"/>
 	<var name="name" type="string"/>
 	<var name="desc" type="string"/>
-	<var name="blackboard_id" type="string" ref="ai.TbBlackboard"/>
+	<var name="blackboard_id" type="string#ref=ai.TbBlackboard"/>
 
 	<var name="root" type="ComposeNode"/>
 </bean>

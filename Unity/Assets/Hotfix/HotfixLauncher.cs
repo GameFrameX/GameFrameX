@@ -109,7 +109,7 @@ namespace Hotfix
             //     ));
 
 
-            var tables = new cfg.Tables(Loader, null);
+            var tables = new cfg.Tables(Loader);
             var item = tables.TbItem.Get(1);
             Log.Info(item);
         }

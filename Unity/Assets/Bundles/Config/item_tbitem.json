@@ -9,15 +9,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "rmb兑换的主要货币",
-    "show_order": 1,
-    "quantifier": "个",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 1
   },
   {
     "id": 2,
@@ -29,15 +21,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "主要的高级流通代币",
-    "show_order": 2,
-    "quantifier": "个",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 2
   },
   {
     "id": 3,
@@ -49,15 +33,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "主要的流通代币",
-    "show_order": 3,
-    "quantifier": "个",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 3
   },
   {
     "id": 4,
@@ -69,15 +45,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "人物升级需要的经验",
-    "show_order": 4,
-    "quantifier": "点",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 4
   },
   {
     "id": 5,
@@ -89,15 +57,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "人物变身需要的能量点",
-    "show_order": 5,
-    "quantifier": "点",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 5
   },
   {
     "id": 1020100001,
@@ -109,15 +69,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始发型",
-    "show_order": 6,
-    "quantifier": "套",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 6
   },
   {
     "id": 1020200001,
@@ -129,15 +81,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始外套",
-    "show_order": 7,
-    "quantifier": "件",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 7
   },
   {
     "id": 1020300001,
@@ -149,15 +93,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始上衣",
-    "show_order": 8,
-    "quantifier": "件",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 8
   },
   {
     "id": 1020400001,
@@ -169,15 +105,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始下装",
-    "show_order": 9,
-    "quantifier": "件",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 9
   },
   {
     "id": 1020500001,
@@ -189,15 +117,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始袜子",
-    "show_order": 10,
-    "quantifier": "双",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 10
   },
   {
     "id": 1020600001,
@@ -209,15 +129,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始鞋子",
-    "show_order": 11,
-    "quantifier": "双",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 11
   },
   {
     "id": 1020700001,
@@ -229,15 +141,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始发饰",
-    "show_order": 12,
-    "quantifier": "套",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 12
   },
   {
     "id": 1022490000,
@@ -249,15 +153,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "包子",
-    "show_order": 29,
-    "quantifier": "个",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": true,
-    "use_type": 1
+    "show_order": 29
   },
   {
     "id": 1022490001,
@@ -269,16 +165,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "一把铲子",
-    "show_order": 30,
-    "quantifier": "把",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "price": 100,
-    "use_type": 0
+    "show_order": 30
   },
   {
     "id": 1021490001,
@@ -290,15 +177,7 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始手持物",
-    "show_order": 19,
-    "quantifier": "件",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "use_type": 0
+    "show_order": 19
   },
   {
     "id": 1022490002,
@@ -310,15 +189,6 @@
     "icon_backgroud": "",
     "icon_mask": "",
     "desc": "初始套装",
-    "show_order": 26,
-    "quantifier": "个",
-    "show_in_bag": true,
-    "min_show_level": 5,
-    "batch_usable": true,
-    "progress_time_when_use": 1,
-    "show_hint_when_use": false,
-    "droppable": false,
-    "price": 8,
-    "use_type": 0
+    "show_order": 26
   }
 ]

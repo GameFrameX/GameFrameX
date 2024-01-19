@@ -1,10 +1,7 @@
 [
   {
     "id": 5,
-    "name": {
-      "key": "key_name",
-      "text": "aabbcc"
-    },
+    "name": "key_name",
     "date": {
       "$type": "DemoD5",
       "x1": 1,

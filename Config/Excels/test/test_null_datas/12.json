@@ -5,5 +5,5 @@
 	"x3":{"x1":1},
 	"x4":{"__type__":"DemoD2", "x1":2, "x2":3},
 	"s1":"asf",
-	"s2":{"key":"key1", "text":"abcdef"}
+	"s2":"/abc"
 }

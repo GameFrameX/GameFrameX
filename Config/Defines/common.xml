@@ -33,34 +33,14 @@
 	<bean name="GlobalConfig">
 
 		<!-- 背包相关 -->
-	    <var name="bag_capacity" type="int" comment="背包容量"/>
-        <var name="bag_capacity_special" type="int"/>
-        <var name="bag_temp_expendable_capacity" type="int"/>
-        <var name="bag_temp_tool_capacity" type="int"/>
-		<var name="bag_init_capacity" type="int"/>
-		<var name="quick_bag_capacity" type="int"/>
-		<var name="cloth_bag_capacity" type="int"/>
-		<var name="cloth_bag_init_capacity" type="int"/>
-		<var name="cloth_bag_capacity_special" type="int"/>
-		<var name="bag_init_items_drop_id" type="int?" ref="bonus.TbDrop"/>
-		
-		
-		<!-- 邮箱 -->
-		<var name="mail_box_capacity" type="int"/>
-		
-		<!-- 技能与战斗 -->
-		<var name="damage_param_c" type="float"/>
-		<var name="damage_param_e" type="float"/>
-		<var name="damage_param_f" type="float"/>
-		<var name="damage_param_d" type="float"/>
-		
-		<!-- 场景对象 -->
-		<var name="role_speed" type="float"/>
-		<var name="monster_speed" type="float"/>
-		<var name="init_energy" type="int"/>
-		<var name="init_viality" type="int"/>
-		<var name="max_viality" type="int"/>
-		<var name="per_viality_recovery_time" type="int"/> 多久恢复一点
+	    <var name="x1" type="int" comment="背包容量"/>
+	    <var name="x2" type="int"/>
+	    <var name="x3" type="int"/>
+	    <var name="x4" type="int"/>
+	    <var name="x5" type="int"/>
+	    <var name="x6" type="int"/>
+	    <var name="x7" type="(list#sep=|),int"/>
+
 	</bean>
 	
 	<table name="TbGlobalConfig" value="GlobalConfig" mode="one" input="common/全局常量配置表.xlsx"/>

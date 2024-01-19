@@ -1,58 +1,34 @@
 [
   {
     "id": 11,
-    "text": {
-      "key": "/demo/1",
-      "text": "测试1"
-    }
+    "text": "/apple"
   },
   {
     "id": 12,
-    "text": {
-      "key": "/demo/2",
-      "text": "测试2"
-    }
+    "text": "/apple"
   },
   {
     "id": 13,
-    "text": {
-      "key": "/demo/3",
-      "text": "测试3"
-    }
+    "text": "/apple"
   },
   {
     "id": 14,
-    "text": {
-      "key": "",
-      "text": ""
-    }
+    "text": "/apple"
   },
   {
     "id": 15,
-    "text": {
-      "key": "/demo/5",
-      "text": "测试5"
-    }
+    "text": "/apple"
   },
   {
     "id": 16,
-    "text": {
-      "key": "/demo/6",
-      "text": "测试6"
-    }
+    "text": "/apple"
   },
   {
     "id": 17,
-    "text": {
-      "key": "/demo/7",
-      "text": "测试7"
-    }
+    "text": "/apple"
   },
   {
     "id": 18,
-    "text": {
-      "key": "/demo/8",
-      "text": "测试8"
-    }
+    "text": "/apple"
   }
 ]

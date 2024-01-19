@@ -9,6 +9,8 @@
 	</enum>
 	
 	<enum name="ECurrencyType">
+
+	
 		<var name="DIAMOND" alias="钻石" value="1"/>
 		<var name="GOLD" alias="金币" value="2"/>
 		<var name="SILVER" alias="银币" value="3"/>
@@ -141,80 +143,10 @@
 		<var name="icon_mask" type="string"/>
 		<var name="desc" type="string"/>
 		<var name="show_order" type="int"/>
-		<var name="quantifier" type="string"/>量词
-		<var name="show_in_bag" type="bool"/>
-		<var name="min_show_level" type="int"/>
-		<!--var name="expire" type="condition.TimeExpireCondition"/-->
-		<!--var name="out_date_change" type="bonus.Items" sep="#;"/-->
-		<var name="batch_usable" type="bool"/>
-		<var name="progress_time_when_use" type="float"/> 使用物品的读条时间
-		<var name="show_hint_when_use" type="bool"/>
-		<!--var name="obtain_daily_limit" type="condition.DayLimit"/-->
-		<var name="droppable" type="bool"/> 
-		<var name="price" type="int?"/> 以银币出售价格
-		<var name="use_type" type="EUseType"/>
-		<!--var name="destroy_on_leave_map" type="bool"/-->
-		<var name="level_up_id" type="int?"/>
-		<!--var name="salable" type="bool"/--> 
-		<!--var name="max_own_num" type="condition.Limit" sep=","/-->
+
 	</bean>
 	
 	<table name="TbItem" value="Item" input="通用道具表@item/道具系统表.xlsx" comment="道具表"/>
 	
-	<enum name="EItemFunctionType">
-		<var name="REPLACE_HANDHELD" alias="更换手持物"/>
-		<var name="USE_DESIGN_DRAWING" alias="使用设计图纸"/>
-	</enum>
-	
-	<bean name="ItemFunction">
-		<var name="minor_type" type="EMinorType"/>
-		<var name="func_type" type="EItemFunctionType"/>
-		<var name="method" type="string"/>
-		<var name="close_bag_ui" type="bool"/>
-	</bean>
 
-	<table name="TbItemFunc" value="ItemFunction" input="道具功能表@item/道具系统表.xlsx" group="c"/>
-	
-	<bean name="ClothesProp" sep=",">
-		<var name="prop_enum" type="EClothesPropertyType" />
-		<var name="value" type="int" />
-	</bean>
-	
-	<bean name="ChooseOneBonus">
-		<var name="drop_id" type="int" ref="bonus.TbDrop"/>
-		<var name="is_unique" type="bool"/> 是否唯一
-	</bean>
-	
-	<bean name="ItemExtra">
-		<var name="id" type="int"/>
-		
-		<bean name="TreasureBox" alias="宝箱">
-			<var name="key_item_id" type="int?"/>
-			<var name="open_level" type="condition.MinLevel"/>
-			<var name="use_on_obtain" type="bool"/>
-			<var name="drop_ids" type="list,int" ref="bonus.TbDrop"/>
-			<!--var name="open_daily_limit" type="condition.DayLimit"/-->
-			<var name="choose_list" type="list,ChooseOneBonus"/>
-		</bean>
-
-		<bean name="InteractionItem" alias="交互道具">
-			<var name="attack_num" type="int?"/>
-			<var name="holding_static_mesh" type="string"/>
-			<var name="holding_static_mesh_mat" type="string"/>
-		</bean>
-		<bean name="Clothes" alias="服装">
-			<var name="attack" type="int"/>
-			<var name="hp" type="long"/>
-			<var name="energy_limit" type="int"/>
-			<var name="energy_resume" type="int"/>
-		</bean>
-		<bean name="DesignDrawing" alias="设计图纸">
-			<var name="learn_component_id" type="list,int"/> 习得部件id
-		</bean>
-		<bean name="Dymmy">
-			<var name="cost" type="cost.Cost"/>
-		</bean>
-	</bean>
-	<table name="TbItemExtra" value="ItemExtra" input="item/道具分类子表.xlsx"/>
-	
 </module>

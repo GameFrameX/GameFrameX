@@ -17,9 +17,7 @@ x14:
   $type: DemoD2
   x1: 1
   x2: 2
-s1:
-  key: "/asfa32"
-  text: aabbcc22
+s1: /apple
 v2:
   x: 1
   y: 2

@@ -18,10 +18,7 @@
       "x2": 3
     },
     "s1": "asf",
-    "s2": {
-      "key": "key1",
-      "text": "abcdef"
-    }
+    "s2": "/abc"
   },
   {
     "id": 20
@@ -42,10 +39,7 @@
       "x2": 2
     },
     "s1": "asfs",
-    "s2": {
-      "key": "/asf/asfa",
-      "text": "abcdef"
-    }
+    "s2": "/abc"
   },
   {
     "id": 30,
@@ -59,11 +53,8 @@
       "x1": 1,
       "x2": 22
     },
-    "s1": "abcd",
-    "s2": {
-      "key": "asdfasew",
-      "text": "hahaha"
-    }
+    "s1": "/apple",
+    "s2": "/apple"
   },
   {
     "id": 31
@@ -83,26 +74,17 @@
       "x1": 1,
       "x2": 2
     },
-    "s1": "asfasfasf",
-    "s2": {
-      "key": "/keyasf",
-      "text": "asf"
-    }
+    "s1": "/apple",
+    "s2": "/apple"
   },
   {
     "id": 3,
     "s1": "",
-    "s2": {
-      "key": "",
-      "text": ""
-    }
+    "s2": ""
   },
   {
     "id": 4,
-    "s1": "asfasfasf",
-    "s2": {
-      "key": "/keyasf",
-      "text": "asf"
-    }
+    "s1": "/apple",
+    "s2": "/apple"
   }
 ]
