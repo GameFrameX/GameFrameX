@@ -25,6 +25,22 @@ namespace Server.Launcher.Common.Session
         }
 
         /// <summary>
+        /// 踢掉玩家
+        /// </summary>
+        /// <param name="roleId">链接ID</param>
+        public static void KickOffLineByUserId(long roleId)
+        {
+            var roleSession = sessionMap.Values.FirstOrDefault(m => m.RoleId == roleId);
+            if (roleSession != null)
+            {
+                if (sessionMap.TryRemove(roleSession.Id, out var value) && ActorManager.HasActor(roleSession.Id))
+                {
+                    EventDispatcher.Dispatch(roleSession.Id, (int)EventId.SessionRemove);
+                }
+            }
+        }
+
+        /// <summary>
         /// 移除玩家
         /// </summary>
         /// <param name="sessionId">链接ID</param>
