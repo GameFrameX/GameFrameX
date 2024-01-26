@@ -25,6 +25,17 @@ namespace Server.Launcher.Common.Session
         }
 
         /// <summary>
+        /// 获取分页玩家列表
+        /// </summary>
+        /// <param name="pageSize"></param>
+        /// <param name="pageIndex"></param>
+        public static List<Session> GetPageList(int pageSize, int pageIndex)
+        {
+            var result = sessionMap.Values.OrderBy(m => m.CreateTime).Where(m => ActorManager.HasActor(m.Id)).Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return result;
+        }
+
+        /// <summary>
         /// 踢掉玩家
         /// </summary>
         /// <param name="roleId">链接ID</param>
