@@ -10,8 +10,14 @@ namespace Server.Launcher.Common.Session
         /// </summary>
         public long Id { get; }
 
-        public Session(long id)
+        /// <summary>
+        /// 角色ID
+        /// </summary>
+        public long RoleId { get; set; }
+
+        public Session(long id, long roleId)
         {
+            RoleId = roleId;
             Id = id;
             CreateTime = DateTime.Now;
         }
