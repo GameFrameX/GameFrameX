@@ -49,20 +49,17 @@ namespace GameFrameX.Runtime
             {
 #if UNITY_ANDROID
                 return $"Android";
-#endif
-#if UNITY_STANDALONE_OSX
-                 return $"MacOs";
-#endif
-#if UNITY_IOS || UNITY_IPHONE
-                 return $"iOS";
-#endif
-#if UNITY_WEBGL
-                 return $"WebGL";
-#endif
-#if UNITY_STANDLONE_WIN
-                 return $"Windows";
-#endif
+#elif UNITY_STANDALONE_OSX
+                return $"MacOs";
+#elif UNITY_IOS || UNITY_IPHONE
+                return $"iOS";
+#elif UNITY_WEBGL
+                return $"WebGL";
+#elif UNITY_STANDLONE_WIN
+                return $"Windows";
+#else
                 return string.Empty;
+#endif
             }
         }
 
