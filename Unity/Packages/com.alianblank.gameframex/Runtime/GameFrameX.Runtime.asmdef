@@ -13,6 +13,7 @@
         "SimpleJSON.Runtime",
         "UniTask.Runtime",
         "ProtoBuffer.Runtime"
+        "UnityWebSocket.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

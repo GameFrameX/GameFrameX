@@ -190,7 +190,7 @@ namespace GameFrameX.Network
                 throw new GameFrameworkException(Utility.Text.Format("Already exist network channel '{0}'.", channelName ?? string.Empty));
             }
 
-            NetworkChannelBase networkChannel = new IOPipeNetworkChannel(channelName, networkChannelHelper);
+            NetworkChannelBase networkChannel = new WebSocketNetworkChannel(channelName, networkChannelHelper);
 
             networkChannel.NetworkChannelConnected += OnNetworkChannelConnected;
             networkChannel.NetworkChannelClosed += OnNetworkChannelClosed;

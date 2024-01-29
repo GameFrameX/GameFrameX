@@ -9,10 +9,6 @@ namespace GameFrameX.Network
     public interface INetworkSocket
     {
         /// <summary>
-        /// Socket 链接对象
-        /// </summary>
-        Socket Socket { get; }
-        /// <summary>
         /// 获取是否已连接。
         /// </summary>
         bool IsConnected { get; }
