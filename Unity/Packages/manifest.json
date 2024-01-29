@@ -19,6 +19,7 @@
     "com.neuecc.messagepack": "https://github.com/AlianBlank/com.neuecc.messagepack.git",
     "com.alianblank.readassets": "https://github.com/AlianBlank/com.alianblank.readassets.git",
     "com.code-philosophy.hybridclr": "https://github.com/focus-creative-games/hybridclr_unity.git",
+    "com.alianblank.unitywebsocket": "https://github.com/AlianBlank/com.alianblank.unitywebsocket.git",
     "com.unity.ide.rider": "2.0.7",
     "com.gwiazdorrr.betterstreamingassets": "https://github.com/AlianBlank/com.gwiazdorrr.betterstreamingassets.git",
     "com.unity.nuget.newtonsoft-json": "3.0.2",
