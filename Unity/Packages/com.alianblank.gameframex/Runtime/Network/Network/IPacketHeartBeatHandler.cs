@@ -1,5 +1,3 @@
-using System.Runtime.Remoting.Messaging;
-
 namespace GameFrameX.Network
 {
     /// <summary>
