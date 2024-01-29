@@ -239,7 +239,7 @@ namespace Server.Extension
 
         #region Write
 
-        public static unsafe void WriteInt(int value, byte[] buffer, ref int offset)
+        public static unsafe void WriteInt(this byte[] buffer, int value, ref int offset)
         {
             if (offset + IntSize > buffer.Length)
             {
@@ -269,7 +269,7 @@ namespace Server.Extension
             }
         }
 
-        public static unsafe void WriteLong(long value, byte[] buffer, ref int offset)
+        public static unsafe void WriteLong(this byte[] buffer, long value, ref int offset)
         {
             if (offset + LongSize > buffer.Length)
             {
@@ -335,7 +335,7 @@ namespace Server.Extension
         {
             if (value == null)
             {
-                WriteInt(0, buffer, ref offset);
+                buffer.WriteInt(0, ref offset);
                 return;
             }
 
@@ -345,9 +345,29 @@ namespace Server.Extension
                 return;
             }
 
-            WriteInt(value.Length, buffer, ref offset);
+            buffer.WriteInt(value.Length, ref offset);
             System.Array.Copy(value, 0, buffer, offset, value.Length);
             offset += value.Length;
+        }
+
+        public static unsafe void WriteBytesWithoutLength(this byte[] buffer, byte[] value, ref int offset)
+        {
+            if (value == null)
+            {
+                buffer.WriteInt(0, ref offset);
+                return;
+            }
+
+            if (offset + value.Length + IntSize > buffer.Length)
+            {
+                throw new ArgumentException($"xbuffer write out of index {offset + value.Length + IntSize}, {buffer.Length}");
+            }
+
+            fixed (byte* ptr = buffer, valPtr = value)
+            {
+                Buffer.MemoryCopy(valPtr, ptr + offset, value.Length, value.Length);
+                offset += value.Length;
+            }
         }
 
         public static unsafe void WriteSByte(sbyte value, byte[] buffer, ref int offset)
