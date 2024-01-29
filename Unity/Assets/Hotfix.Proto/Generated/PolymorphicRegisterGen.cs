@@ -4,12 +4,6 @@ namespace Server.Proto.Formatter
 {
 	public partial class PolymorphicRegister
 	{
-	    static PolymorphicRegister()
-        {
-            System.Console.WriteLine("***PolymorphicRegister Init***"); 
-            Register();
-        }
-
 		public static void Register()
         {
 			PolymorphicTypeMapper.Register<Hotfix.Proto.Proto.ReqBagInfo>();
