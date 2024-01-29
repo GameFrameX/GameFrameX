@@ -43,7 +43,7 @@
             "define": "ENABLE_FAIRYGUI"
         },
         {
-            "name": "com.focus-creative-games.hybridclr_unity",
+            "name": "com.code-philosophy.hybridclr",
             "expression": "",
             "define": "ENABLE_HYBIRDCLR"
         },
