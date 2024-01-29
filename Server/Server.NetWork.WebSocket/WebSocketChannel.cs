@@ -1,8 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Buffers;
+using System.Collections.Concurrent;
 using System.Net.WebSockets;
+using System.Text;
 using MessagePack;
-using PolymorphicMessagePack;
+using Server.Extension;
 using Server.NetWork.Messages;
+using Server.Utility;
 
 namespace Server.NetWork.WebSocket
 {
@@ -59,7 +62,7 @@ namespace Server.NetWork.WebSocket
 
         async Task DoSend()
         {
-            var array = new object[2];
+            // var array = new object[2];
             while (!IsClose())
             {
                 await newSendMsgSemaphore.WaitAsync();
@@ -69,40 +72,62 @@ namespace Server.NetWork.WebSocket
                     continue;
                 }
 
-                array[0] = message.MsgId;
-                array[1] = message;
-                //这里为了应对前端是js等不方便处理多态的情况 
-                var data = MessagePackSerializer.Serialize(array, MessagePackSerializerOptions.Standard);
+                var bytes = MessagePackSerializer.Serialize(message);
+
+
+                // len +timestamp + msgId + bytes.length
+                int len = 4 + 4 + 8 + bytes.Length;
+                var sendData = ArrayPool<byte>.Shared.Rent(len);
+                int offset = 0;
+                sendData.WriteInt(len, ref offset);
+                sendData.WriteLong(TimeHelper.UnixTimeSeconds(), ref offset);
+                var messageType = message.GetType();
+                var msgId = MessageHelper.MessageIdByTypeGetter(messageType);
+                sendData.WriteInt(msgId, ref offset);
+                sendData.WriteBytesWithoutLength(bytes, ref offset);
 #if DEBUG
-                Logger.Info("发送消息:" + MessagePackSerializer.ConvertToJson(data));
+
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var b in sendData)
+                {
+                    stringBuilder.Append(b + " ");
+                }
+
+                Logger.Debug($"---发送消息ID:[{message.MsgId}] ==>消息类型:{messageType} 消息内容:{MessagePackSerializer.ConvertToJson(sendData)} \n {stringBuilder}");
 #endif
-                await webSocket.SendAsync(data, WebSocketMessageType.Binary, true, CloseSrc.Token);
+                await webSocket.SendAsync(sendData, WebSocketMessageType.Binary, true, CloseSrc.Token);
+                ArrayPool<byte>.Shared.Return(sendData);
             }
         }
 
         MessageObject DeserializeMsg(MemoryStream stream)
         {
             var data = stream.GetBuffer();
-            var reader = new MessagePackReader(new ReadOnlyMemory<byte>(data, 0, (int)stream.Length));
-            Type type = null;
-            if (reader.NextMessagePackType == MessagePackType.Array)
+
+            // StringBuilder stringBuilder = new StringBuilder();
+            // for (var index = 0; index < stream.Length; index++)
+            // {
+            //     var b = data[index];
+            //     stringBuilder.Append(b + " ");
+            // }
+            //
+            // Console.WriteLine(stringBuilder);
+
+            var input = new ReadOnlySequence<byte>(data, 0, (int)stream.Length);
+            var reader = new SequenceReader<byte>(input);
+            reader.TryReadBigEndian(out int msgLength); //reader.ReadInt32()
+            reader.TryReadBigEndian(out long time); //reader.ReadInt32()
+            reader.TryReadBigEndian(out int magic); //reader.ReadInt32()
+            reader.TryReadBigEndian(out int messageId); //reader.ReadInt32()
+
+            var message = MessagePackSerializer.Deserialize<MessageObject>(reader.UnreadSequence);
+            message.MsgId = messageId;
+            if (message.MsgId != messageId)
             {
-                var count = reader.ReadArrayHeader();
-                if (count != 2)
-                    throw new MessagePackSerializationException("Invalid polymorphic array count");
-                if (reader.NextMessagePackType == MessagePackType.Integer)
-                {
-                    var typeId = reader.ReadInt32();
-                    if (!PolymorphicTypeMapper.TryGet(typeId, out type))
-                        throw new MessagePackSerializationException($"Cannot find Type Id: {typeId} registered in {nameof(PolymorphicTypeMapper)}");
-                }
-            }
-            else
-            {
-                throw new MessagePackSerializationException("不是正确的序列化格式...");
+                throw new Exception($"解析消息错误，注册消息id和消息无法对应.real:{message.MsgId}, register:{messageId}");
             }
 
-            return MessagePackSerializer.Deserialize(type, ref reader, MessagePackSerializerOptions.Standard) as MessageObject;
+            return message;
         }
 
         async Task DoRevice()
@@ -128,12 +153,13 @@ namespace Server.NetWork.WebSocket
 
                 stream.Seek(0, SeekOrigin.Begin);
                 //这里默认用多态类型的反序列方式，里面做了兼容处理 
-                var message = DeserializeMsg(stream); // Serializer.Deserialize<Message>(stream);
+                var messageObject = DeserializeMsg(stream); // Serializer.Deserialize<Message>(stream);
 
 #if DEBUG
-                Logger.Info("收到消息:" + message.GetType().Name + "  " + MessagePackSerializer.SerializeToJson(message));
+                var messageType = messageObject.GetType();
+                Logger.Debug($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{MessagePackSerializer.SerializeToJson(messageObject)}");
 #endif
-                onMessage(message);
+                onMessage(messageObject);
             }
 
             stream.Close();
