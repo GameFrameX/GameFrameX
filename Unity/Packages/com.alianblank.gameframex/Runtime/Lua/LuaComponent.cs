@@ -1,9 +1,11 @@
-﻿using System;
+﻿using UnityEngine;
+#if XLUA
+using System;
 using GameFrameX.Lua;
-using UnityEngine;
 using XLua;
 using XLua.LuaDLL;
 
+#endif
 namespace GameFrameX.Runtime
 {
     /// <summary>
@@ -13,6 +15,8 @@ namespace GameFrameX.Runtime
     [AddComponentMenu("Game Framework/Lua")]
     public sealed class LuaComponent : GameFrameworkComponent
     {
+        
+#if XLUA
         private ILuaManager _luaManager;
 
         protected override void Awake()
@@ -181,5 +185,6 @@ namespace GameFrameX.Runtime
         {
             _luaManager.StopGc();
         }
+#endif
     }
 }

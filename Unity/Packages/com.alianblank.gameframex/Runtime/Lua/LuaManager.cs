@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if XLUA
+using System;
 using XLua;
 using XLua.LuaDLL;
 
@@ -185,3 +186,4 @@ namespace GameFrameX.Lua
         }
     }
 }
+#endif
