@@ -24,10 +24,25 @@ namespace Unity.Editor
         }
 
         /// <summary>
+        /// 发布 WebGL
+        /// </summary>
+        [MenuItem("Tools/Build/WebGL", false, 20)]
+        private static void BuildPlayerToWebGL()
+        {
+            PlayerSettings.SplashScreen.show = false;
+
+            string path =
+                $"{GetProjectPath()}/WEBGL/{Application.version}/{Application.identifier}_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_v_{PlayerSettings.bundleVersion}_code_{PlayerSettings.Android.bundleVersionCode}";
+            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, BuildTarget.WebGL,
+                BuildOptions.None);
+            Debug.LogError("发布目录:" + path);
+        }
+
+        /// <summary>
         /// 发布 APK
         /// </summary>
         [MenuItem("Tools/Build/Apk", false, 20)]
-        private static void BuildAssetBundleForAndroid()
+        private static void BuildPlayerToAndroid()
         {
             PlayerSettings.SplashScreen.show = false;
 
@@ -192,7 +207,7 @@ namespace Unity.Editor
             CopyFileByBuildGradle(apkPath);
             Process.Start(apkPath);
         }
-        
+
         /// <summary>
         /// 发布 AS Release 版本
         /// </summary>
@@ -303,7 +318,6 @@ namespace Unity.Editor
             }
         }
 
-      
 
         /// <summary>
         /// 发布 Xcode Debug 版本
