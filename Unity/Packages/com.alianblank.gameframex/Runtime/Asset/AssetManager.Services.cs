@@ -34,6 +34,10 @@ namespace GameFrameX.Asset
         {
             public bool Query(string packageName, string fileName)
             {
+#if UNITY_WEBGL
+                return false;
+#endif
+                
                 // 注意：使用了BetterStreamingAssets插件，使用前需要初始化该插件！
                 string buildinFolderName = PathHelper.AppResPath;
                 return BetterStreamingAssets.FileExists($"{buildinFolderName}/{fileName}");
