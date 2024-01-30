@@ -26,7 +26,7 @@ namespace Hotfix
         {
             Log.Info("Hello World HybridCLR");
 
-            GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World Lua')");
+            // GameApp.Lua.DoString("CS.UnityEngine.Debug.Log('Hello World Lua')");
 
             RegisterMessagePack();
 
