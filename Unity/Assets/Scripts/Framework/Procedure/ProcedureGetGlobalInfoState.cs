@@ -37,7 +37,7 @@ namespace GameFrameX.Procedure
             www.uploadHandler.contentType = "application/json; charset=utf-8";
             www.timeout = 5;
             var async = www.SendWebRequest();
-            async.completed += (AsyncOperation async2) =>
+            async.completed += async (AsyncOperation async2) =>
             {
                 var json = www.downloadHandler.text;
                 Debug.Log(json);
@@ -58,6 +58,8 @@ namespace GameFrameX.Procedure
                         // GameApp.EventSystem.Run(EventIdType.UILoadingMainSetText, "Server error, retrying...");
                         LauncherUIHandler.SetTipText("Server error, retrying...");
                         Debug.LogError($"获取全局信息返回异常=> Req:{jsonParams} Resp:{json}");
+
+                        await UniTask.Delay(3000);
                         // GAHelper.DesignEvent("GetGlobalInfoServerError");
                         OnEnter(procedureOwner);
                     }

@@ -1,4 +1,5 @@
 using System.Text;
+using Cysharp.Threading.Tasks;
 using Game.Model;
 using GameFrameX.Fsm;
 using GameFrameX.Localization;
@@ -35,7 +36,7 @@ namespace GameFrameX.Procedure
             _www.uploadHandler.contentType = "application/json; charset=utf-8";
             _www.timeout = 3;
             var async = _www.SendWebRequest();
-            async.completed += (AsyncOperation async2) =>
+            async.completed += async (AsyncOperation async2) =>
             {
                 var json = _www.downloadHandler.text;
                 Debug.Log(json);
@@ -55,6 +56,7 @@ namespace GameFrameX.Procedure
                         LauncherUIHandler.SetTipText("Server error, retrying...");
                         Debug.LogError($"获取全局信息返回异常=> Req:{jsonParams} Resp:{json}");
                         // GAHelper.DesignEvent("GetAppVersionInfoServerError");
+                        await UniTask.Delay(3000);
                         OnEnter(procedureOwner);
                     }
                     else
