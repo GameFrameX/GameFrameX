@@ -5,7 +5,9 @@
         "YooAsset.Runtime",
         "UniTask.Runtime",
         "FairyGUI.Runtime",
-        "BlankGetChannel.Runtime"
+        "BlankGetChannel.Runtime",
+        "LuBan.Runtime",
+        "HybridCLR.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

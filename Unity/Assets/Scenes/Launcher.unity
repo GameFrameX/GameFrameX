@@ -211,10 +211,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4933360501954029535, guid: adb3eb1c35fcff14f89fba7b05c9d71c,
+    - target: {fileID: 5873314590692214516, guid: adb3eb1c35fcff14f89fba7b05c9d71c,
         type: 3}
-      propertyPath: m_ConfigHelperTypeName
-      value: 
+      propertyPath: GamePlayMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6212013546616718059, guid: adb3eb1c35fcff14f89fba7b05c9d71c,
         type: 3}
@@ -276,6 +276,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3542424785872422502, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
