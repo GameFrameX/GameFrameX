@@ -6,7 +6,9 @@
         "GameFrameX.Runtime",
         "ProtoBuffer.Runtime"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
