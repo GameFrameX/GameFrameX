@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using FairyGUI;
 using UnityEngine;
 
@@ -49,6 +50,35 @@ namespace GameFrameX.Runtime
         public T AddToFullScreen<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, object userData = null) where T : FUI
         {
             return Add(creator, descFilePath, layer, true, userData);
+        }
+
+        /// <summary>
+        /// 异步创建UI
+        /// </summary>
+        /// <param name="creator"></param>
+        /// <param name="descFilePath"></param>
+        /// <param name="layer"></param>
+        /// <param name="isFullScreen"></param>
+        /// <param name="userData"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public UniTask<T> AddAsync<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
+        {
+            UniTaskCompletionSource<T> ts = new UniTaskCompletionSource<T>();
+
+            UIPackage.AddPackageAsync(descFilePath, (obj) =>
+            {
+                T ui = creator(userData);
+                Add(ui, layer);
+                if (isFullScreen)
+                {
+                    ui.MakeFullScreen();
+                }
+
+                ts.TrySetResult(ui);
+            });
+
+            return ts.Task;
         }
 
         /// <summary>
@@ -298,13 +328,14 @@ namespace GameFrameX.Runtime
             return null;
         }
 
+
         protected override void Awake()
         {
             base.Awake();
             _root = new FUI(GRoot.inst);
             _root.Show();
             _screenOrientation = Screen.orientation;
-
+            UIPackage.SetAsyncLoadResource(new FUILoadAsyncResourceHelper());
             HiddenRoot = CreateNode(GRoot.inst, UILayer.Hidden);
             FloorRoot = CreateNode(GRoot.inst, UILayer.Floor);
             NormalRoot = CreateNode(GRoot.inst, UILayer.Normal);
@@ -371,6 +402,20 @@ namespace GameFrameX.Runtime
                     _screenOrientation = orientation;
                 }
             }
+        }
+    }
+
+    internal class FUILoadAsyncResourceHelper : IAsyncResource
+    {
+        public async void LoadResource(string assetName, Action<bool, object> action)
+        {
+            var textAsset = await GameApp.Asset.LoadAssetAsync<TextAsset>(assetName);
+            Log.Info(assetName);
+            action.Invoke(textAsset != null && textAsset.AssetObject != null, textAsset?.GetAssetObject<TextAsset>());
+        }
+
+        public void ReleaseResource(object obj)
+        {
         }
     }
 }
