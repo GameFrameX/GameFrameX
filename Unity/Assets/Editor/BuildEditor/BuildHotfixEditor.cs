@@ -45,11 +45,11 @@ namespace Unity.Editor
 
             foreach (var hotfix in HotfixDlls)
             {
-                string srcPath = Path.Combine(ScriptAssembliesDir, hotfix);
-                if (!File.Exists(srcPath))
-                {
-                    srcPath = Path.Combine(HotFixAssembliesDir, hotfix);
-                }
+                // string srcPath = Path.Combine(ScriptAssembliesDir, hotfix);
+                // if (!File.Exists(srcPath))
+                // {
+                var srcPath = Path.Combine(HotFixAssembliesDir, hotfix);
+                // }
 
                 File.Copy(srcPath, Path.Combine(CodeDir, hotfix + Utility.Const.FileNameSuffix.Binary), true);
             }
