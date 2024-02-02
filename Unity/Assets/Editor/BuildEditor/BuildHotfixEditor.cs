@@ -57,5 +57,36 @@ namespace Unity.Editor
             Debug.Log($"复制Hotfix DLL, Hotfix pdb到{CodeDir}完成");
             AssetDatabase.Refresh();
         }
+
+        private const string AOTCodeDir = "Assets/Bundles/AOTCode/";
+
+        /// <summary>
+        /// 复制AOT代码
+        /// </summary>
+        [MenuItem("Tools/Build/Copy AOT Code")]
+        static void CopyAOTCode()
+        {
+            if (!Directory.Exists(AOTCodeDir))
+            {
+                Directory.CreateDirectory(AOTCodeDir);
+            }
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(Application.dataPath);
+            string path = Path.Combine(directoryInfo.Parent.FullName, "HybridCLRData", "AssembliesPostIl2CppStrip", EditorUserBuildSettings.activeBuildTarget.ToString());
+            Debug.Log(path);
+
+            DirectoryInfo aotCodeDir = new DirectoryInfo(path);
+            var files = aotCodeDir.GetFiles("*.dll");
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var fileInfo in files)
+            {
+                stringBuilder.AppendLine(fileInfo.Name);
+                fileInfo.CopyTo(AOTCodeDir + "/" + fileInfo.Name + Utility.Const.FileNameSuffix.Binary, true);
+            }
+
+            Debug.Log(stringBuilder);
+            Debug.Log($"复制AOT DLL, Hotfix pdb到{CodeDir}完成");
+            AssetDatabase.Refresh();
+        }
     }
 }
