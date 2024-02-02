@@ -6,6 +6,7 @@
     public static class AssetUtility
     {
         private const string BundlesPath = "Assets/Bundles";
+
         /// <summary>
         /// 获取配置文件路径
         /// </summary>
@@ -15,6 +16,17 @@
         public static string GetConfigPath(string fileName, string extension = ".bytes")
         {
             return $"{BundlesPath}/Config/{fileName}{extension}";
+        }
+
+        /// <summary>
+        /// 获取AOT元数据代码文件路径
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        public static string GetAOTCodePath(string fileName, string extension = ".bytes")
+        {
+            return $"{BundlesPath}/AOTCode/{fileName}{extension}";
         }
 
         /// <summary>
