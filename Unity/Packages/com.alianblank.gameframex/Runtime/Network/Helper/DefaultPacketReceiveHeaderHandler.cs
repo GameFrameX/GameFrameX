@@ -13,7 +13,7 @@ namespace GameFrameX.Network
         public bool Handler(object source)
         {
             ReadOnlySequence<byte> sequence = (ReadOnlySequence<byte>)source;
-            var reader = new SequenceReader<byte>(sequence);
+            var reader = new MessagePack.SequenceReader<byte>(sequence);
 
             // packetLength
             reader.TryReadBigEndian(out int packetLength); //4

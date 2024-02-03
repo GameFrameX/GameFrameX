@@ -8,7 +8,7 @@ namespace GameFrameX.Network
         public bool Handler<T>(object source, out T messageObject) where T : MessageObject
         {
             ReadOnlySequence<byte> sequence = (ReadOnlySequence<byte>)source;
-            var reader = new SequenceReader<byte>(sequence);
+            var reader = new MessagePack.SequenceReader<byte>(sequence);
             var payload = sequence.Slice(reader.Position);
             messageObject = MessagePackSerializer.Deserialize<T>(payload);
             return true;
