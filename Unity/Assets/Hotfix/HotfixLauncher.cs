@@ -12,6 +12,7 @@ using UnityEngine;
 using GameFrameX.Runtime;
 using GameMain;
 using Hotfix.Network;
+using Hotfix.Proto;
 using Hotfix.UI;
 
 namespace Hotfix

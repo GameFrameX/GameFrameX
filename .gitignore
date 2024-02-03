@@ -26,3 +26,4 @@ Unity/Packages/packages-lock.json
 Unity/Unity.sln.DotSettings.user
 Unity/Unity.sln
 docker/redis/apps/datadir
+.DS_Store
