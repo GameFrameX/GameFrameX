@@ -21,7 +21,7 @@ public static class BuildWebGLToolsWithHybridCLR
     private static void Print()
     {
 #if UNITY_EDITOR_OSX
-        string commandLine1 = $"cd /d {EditorApplication.applicationPath}/Contents/il2cpp";
+        string commandLine1 = $"cd {EditorApplication.applicationPath}/Contents/il2cpp";
         string commandLine2 = "mv libil2cpp libil2cpp-origin";
         string commandLine3 = $"ln -s \"{GetProjectPath()}/HybridCLRData/LocalIl2CppData-OSXEditor/il2cpp/libil2cpp\" libil2cpp";
 #else
