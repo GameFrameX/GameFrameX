@@ -27,6 +27,10 @@ namespace GameFrameX.Runtime
 
         protected override void Awake()
         {
+                        
+#if UNITY_WEBGL
+            GamePlayMode = EPlayMode.WebPlayMode;
+#endif
             base.Awake();
             new AssetManager();
             _assetManager = GameFrameworkEntry.GetModule<IAssetManager>();
