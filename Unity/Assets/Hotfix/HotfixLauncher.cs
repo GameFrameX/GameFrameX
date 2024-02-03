@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using Cysharp.Threading.Tasks;
 using Framework.Asset;
 using GameFrameX;
@@ -35,7 +34,12 @@ namespace Hotfix
             LoadConfig();
 
 
-            var uiLogin = GameApp.UI.Add<UILogin>(UILogin.CreateInstance, AssetUtility.GetUIPackagePath(FUIPackage.UILogin), UILayer.Floor);
+            LoadUI();
+        }
+
+        private static async void LoadUI()
+        {
+            var uiLogin = await GameApp.UI.AddAsync<UILogin>(UILogin.CreateInstance, AssetUtility.GetUIPackagePath(FUIPackage.UILogin), UILayer.Floor);
             uiLogin.m_enter.onClick.Add(() =>
             {
                 if (networkChannel != null && networkChannel.Connected)
@@ -55,10 +59,7 @@ namespace Hotfix
                 DefaultPacketHeartBeatHandler packetSendHeaderHandler = new DefaultPacketHeartBeatHandler();
                 networkChannel.RegisterHandler(packetSendHeaderHandler);
                 networkChannel.Connect(IPAddress.Parse(serverIp), serverPort);
-                networkChannel.SetDefaultHandler((sender, e) =>
-                {
-                    Log.Info("Receive: " + e);
-                });
+                networkChannel.SetDefaultHandler((sender, e) => { Log.Info("Receive: " + e); });
                 GameApp.Event.Subscribe(NetworkConnectedEventArgs.EventId, OnNetworkConnected);
                 GameApp.Event.Subscribe(NetworkClosedEventArgs.EventId, OnNetworkClosed);
             });
@@ -110,9 +111,9 @@ namespace Hotfix
             //     ));
 
 
-            var tables = new cfg.Tables(Loader);
-            var item = tables.TbItem.Get(1);
-            Log.Info(item);
+            // var tables = new cfg.Tables(Loader);
+            // var item = tables.TbItem.Get(1);
+            // Log.Info(item);
         }
 
         private static JSONNode Loader(string file)
