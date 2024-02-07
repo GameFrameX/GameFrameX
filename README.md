@@ -50,13 +50,13 @@
 
 # 交流方式(建议。需求。BUG)
 
-<div  align="center">    
+<!-- <div  align="center">    
 
 <img src="images/wechat_group.png" width = "226" height = "290" alt=""/>
 
 <img src="images/qq_group.png" width = "226" height = "290" alt=""/>
 
-</div>
+</div> -->
 
 QQ群：467608841
 
