@@ -244,7 +244,6 @@
             return DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss.fff K");
         }
 
-
         /// <summary>
         /// 按照UTC时间判断两个时间戳是否是同一天
         /// </summary>
@@ -253,9 +252,9 @@
         /// <returns>是否是同一天</returns>
         public static bool IsUnixSameDay(long timestamp1, long timestamp2)
         {
-            DateTime time1 = DateTimeOffset.FromUnixTimeSeconds(timestamp1).UtcDateTime;
-            DateTime time2 = DateTimeOffset.FromUnixTimeSeconds(timestamp2).UtcDateTime;
-            return time1.Date == time2.Date;
+            var time1 = UtcToUtcDateTime(timestamp1);
+            var time2 = UtcToUtcDateTime(timestamp2);
+            return time1.Date.Year == time2.Date.Year && time1.Date.Month == time2.Date.Month && time1.Date.Day == time2.Date.Day;
         }
 
         /// <summary>
@@ -264,12 +263,13 @@
         /// <param name="timestamp1">时间戳1</param>
         /// <param name="timestamp2">时间戳2</param>
         /// <returns>是否是同一天</returns>
-        public static bool IsSameDay(long timestamp1, long timestamp2)
+        public static bool IsLocalSameDay(long timestamp1, long timestamp2)
         {
-            DateTime time1 = DateTimeOffset.FromUnixTimeSeconds(timestamp1).DateTime;
-            DateTime time2 = DateTimeOffset.FromUnixTimeSeconds(timestamp2).DateTime;
-            return time1.Date == time2.Date;
+            var time1 = UtcToLocalDateTime(timestamp1);
+            var time2 = UtcToLocalDateTime(timestamp2);
+            return time1.Date.Year == time2.Date.Year && time1.Date.Month == time2.Date.Month && time1.Date.Day == time2.Date.Day;
         }
+
 
         /// <summary>
         /// UTC 时间戳 转换成UTC时间
@@ -286,9 +286,9 @@
         /// </summary>
         /// <param name="utcTimestamp">UTC时间戳,单位秒</param>
         /// <returns></returns>
-        public static DateTime UtcToDateTime(long utcTimestamp)
+        public static DateTime UtcToLocalDateTime(long utcTimestamp)
         {
-            return DateTimeOffset.FromUnixTimeSeconds(utcTimestamp).DateTime;
+            return DateTimeOffset.FromUnixTimeSeconds(utcTimestamp).LocalDateTime;
         }
 
         /// <summary>
@@ -299,7 +299,7 @@
         /// <returns>是否是同一天</returns>
         public static bool IsSameDay(DateTime time1, DateTime time2)
         {
-            return time1.Date == time2.Date;
+            return time1.Date.Year == time2.Date.Year && time1.Date.Month == time2.Date.Month && time1.Date.Day == time2.Date.Day;
         }
     }
 }
