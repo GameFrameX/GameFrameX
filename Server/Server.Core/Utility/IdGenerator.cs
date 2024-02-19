@@ -25,26 +25,26 @@ namespace Server.Core.Utility
 
         public static int GetServerId(long id)
         {
-            return (int) (id < GlobalConst.MAX_GLOBAL_ID ? id / 1000 : id >> GlobalConst.SERVERID_OR_MODULEID_MASK);
+            return (int) (id < GlobalConst.MaxGlobalId ? id / 1000 : id >> GlobalConst.ServerIdOrModuleIdMask);
         }
 
         public static DateTime GetGenerateTime(long id, bool utc = false)
         {
-            if (id < GlobalConst.MAX_GLOBAL_ID)
+            if (id < GlobalConst.MaxGlobalId)
             {
                 throw new ArgumentException($"input is a global id:{id}");
             }
 
             var serverId = GetServerId(id);
             long seconds;
-            if (serverId < GlobalConst.MIN_SERVER_ID)
+            if (serverId < GlobalConst.MinServerId)
             {
                 // IDModule unique_id
-                seconds = (id >> GlobalConst.MODULEID_TIMESTAMP_MASK) & GlobalConst.SECOND_MASK;
+                seconds = (id >> GlobalConst.ModuleIdTimestampMask) & GlobalConst.SecondMask;
             }
             else
             {
-                seconds = (id >> GlobalConst.TIMESTAMP_MASK) & GlobalConst.SECOND_MASK;
+                seconds = (id >> GlobalConst.TimestampMask) & GlobalConst.SecondMask;
             }
 
             var date = utcTimeStart.AddSeconds(seconds);
@@ -58,13 +58,13 @@ namespace Server.Core.Utility
                 throw new ArgumentException($"input id error:{id}");
             }
 
-            if (id < GlobalConst.MAX_GLOBAL_ID)
+            if (id < GlobalConst.MaxGlobalId)
             {
                 // 全局actor
                 return (ActorType) (id % 1000);
             }
 
-            return (ActorType) ((id >> GlobalConst.ACTORTYPE_MASK) & 0xF);
+            return (ActorType) ((id >> GlobalConst.ActorTypeMask) & 0xF);
         }
 
         public static long GetActorID(int type, int serverId = 0)
@@ -105,8 +105,8 @@ namespace Server.Core.Utility
                 throw new ArgumentException($"input actor type error: {type}");
             }
 
-            var id = (long) GlobalSettings.ServerId << GlobalConst.SERVERID_OR_MODULEID_MASK;
-            id |= (long) type << GlobalConst.ACTORTYPE_MASK;
+            var id = (long) GlobalSettings.ServerId << GlobalConst.ServerIdOrModuleIdMask;
+            id |= (long) type << GlobalConst.ActorTypeMask;
             return id;
         }
 
@@ -126,7 +126,7 @@ namespace Server.Core.Utility
                     genSecond = second;
                     incrNum = 0L;
                 }
-                else if (incrNum >= GlobalConst.MAX_ACTOR_INCREASE)
+                else if (incrNum >= GlobalConst.MaxActorIncrease)
                 {
                     ++genSecond;
                     incrNum = 0L;
@@ -137,9 +137,9 @@ namespace Server.Core.Utility
                 }
             }
 
-            var id = (long) serverId << GlobalConst.SERVERID_OR_MODULEID_MASK; // serverId-14位, 支持1000~9999
-            id |= (long) type << GlobalConst.ACTORTYPE_MASK; // 多actor类型-7位, 支持0~127
-            id |= genSecond << GlobalConst.TIMESTAMP_MASK; // 时间戳-30位, 支持34年
+            var id = (long) serverId << GlobalConst.ServerIdOrModuleIdMask; // serverId-14位, 支持1000~9999
+            id |= (long) type << GlobalConst.ActorTypeMask; // 多actor类型-7位, 支持0~127
+            id |= genSecond << GlobalConst.TimestampMask; // 时间戳-30位, 支持34年
             id |= incrNum; // 自增-12位, 每秒4096个
             return id;
         }
@@ -154,7 +154,7 @@ namespace Server.Core.Utility
                     genSecond = second;
                     incrNum = 0L;
                 }
-                else if (incrNum >= GlobalConst.MAX_UNIQUE_INCREASE)
+                else if (incrNum >= GlobalConst.MaxUniqueIncrease)
                 {
                     ++genSecond;
                     incrNum = 0L;
@@ -165,8 +165,8 @@ namespace Server.Core.Utility
                 }
             }
 
-            var id = (long) module << GlobalConst.SERVERID_OR_MODULEID_MASK; // 模块id 14位 支持 0~9999
-            id |= genSecond << GlobalConst.MODULEID_TIMESTAMP_MASK; // 时间戳 30位
+            var id = (long) module << GlobalConst.ServerIdOrModuleIdMask; // 模块id 14位 支持 0~9999
+            id |= genSecond << GlobalConst.ModuleIdTimestampMask; // 时间戳 30位
             id |= incrNum; // 自增 19位
             return id;
         }

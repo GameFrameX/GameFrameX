@@ -14,9 +14,9 @@ public static class GlobalSettings
         var configJson = File.ReadAllText(path);
         _instance = JsonConvert.DeserializeObject<T>(configJson) ?? throw new InvalidOperationException();
         _instance.ServerType = serverType;
-        if (_instance.ServerId < GlobalConst.MIN_SERVER_ID || _instance.ServerId > GlobalConst.MAX_SERVER_ID)
+        if (_instance.ServerId < GlobalConst.MinServerId || _instance.ServerId > GlobalConst.MaxServerId)
         {
-            throw new Exception($"ServerId不合法{_instance.ServerId},需要在[{GlobalConst.MIN_SERVER_ID},{GlobalConst.MAX_SERVER_ID}]范围之内");
+            throw new Exception($"ServerId不合法{_instance.ServerId},需要在[{GlobalConst.MinServerId},{GlobalConst.MaxServerId}]范围之内");
         }
     }
 

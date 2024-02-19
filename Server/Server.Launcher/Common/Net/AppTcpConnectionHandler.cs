@@ -10,7 +10,7 @@ namespace Server.Launcher.Common.Net
         protected override void OnDisconnection(BaseNetChannel channel)
         {
             base.OnDisconnection(channel);
-            var sessionId = channel.GetData<long>(GlobalConst.SESSION_ID_KEY);
+            var sessionId = channel.GetData<long>(GlobalConst.SessionIdKey);
             if (sessionId > 0)
             {
                 SessionManager.Remove(sessionId);

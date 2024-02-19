@@ -38,7 +38,7 @@ namespace Server.Core.Timer
         private static async Task Loop()
         {
             var nextSaveTime = NextSaveTime();
-            var saveInterval = TimeSpan.FromMilliseconds(GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
+            var saveInterval = TimeSpan.FromMilliseconds(GlobalConst.SaveIntervalInMilliSeconds);
             var ONCE_DELAY = TimeSpan.FromMilliseconds(200);
 
             while (working)
@@ -80,20 +80,20 @@ namespace Server.Core.Timer
 
             while (t < now)
             {
-                t = t.AddMilliseconds(GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
+                t = t.AddMilliseconds(GlobalConst.SaveIntervalInMilliSeconds);
             }
 
             int serverId = GlobalSettings.ServerId;
             int a = serverId % 1000;
             int b = a % GlobalConst.MAGIC;
-            int c = GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS / GlobalConst.MAGIC;
+            int c = GlobalConst.SaveIntervalInMilliSeconds / GlobalConst.MAGIC;
             int r = ThreadLocalRandom.Current.Next(0, c);
             int delay = b * c + r;
             t = t.AddMilliseconds(delay);
 
-            if ((t - now).TotalMilliseconds > GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS)
+            if ((t - now).TotalMilliseconds > GlobalConst.SaveIntervalInMilliSeconds)
             {
-                t = t.AddMilliseconds(-GlobalConst.SAVE_INTERVAL_IN_MilliSECONDS);
+                t = t.AddMilliseconds(-GlobalConst.SaveIntervalInMilliSeconds);
             }
 
             return t;
