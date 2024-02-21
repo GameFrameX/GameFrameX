@@ -27,6 +27,12 @@ namespace Server.Launcher.Common
         {
             try
             {
+                var hotfixPath = Directory.GetCurrentDirectory() + "/hotfix";
+                if (!Directory.Exists(hotfixPath))
+                {
+                    Directory.CreateDirectory(hotfixPath);
+                }
+
                 GlobalSettings.Load<AppSetting>("Configs/app_config.json", ServerType.Game);
                 RegisterMessagePack();
                 var flag = LoggerHandler.Start();
@@ -37,7 +43,7 @@ namespace Server.Launcher.Common
 
                 Log.Info($"Load Config Start...");
                 ConfigManager.Instance.LoadConfig();
-               
+
                 Log.Info($"Load Config End...");
 
                 Log.Info($"launch db service start...");

@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:7.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
@@ -7,20 +7,18 @@ COPY ["Server.Launcher/Server.Launcher.csproj", "Server.Launcher/"]
 COPY ["Server.Apps/Server.Apps.csproj", "Server.Apps/"]
 COPY ["Server.Core/Server.Core.csproj", "Server.Core/"]
 COPY ["Server.DBServer/Server.DBServer.csproj", "Server.DBServer/"]
-COPY ["Server.DBServer.NoSql/Server.DBServer.NoSql.csproj", "Server.DBServer.NoSql/"]
-COPY ["Server.DBServer.NoSql.Redis/Server.DBServer.NoSql.Redis.csproj", "Server.DBServer.NoSql.Redis/"]
 COPY ["Server.Serialize/Server.Serialize.csproj", "Server.Serialize/"]
 COPY ["Server.Utility/Server.Utility.csproj", "Server.Utility/"]
 COPY ["Server.Extension/Server.Extension.csproj", "Server.Extension/"]
 COPY ["Server.Setting/Server.Setting.csproj", "Server.Setting/"]
-COPY ["Server.Google.ProtoBuf/Server.Google.ProtoBuf.csproj", "Server.Google.ProtoBuf/"]
-COPY ["Server.NetWork/Server.NetWork.csproj", "Server.NetWork/"]
 COPY ["Server.NetWork.HTTP/Server.NetWork.HTTP.csproj", "Server.NetWork.HTTP/"]
-COPY ["Server.NetWork.WebSocket/Server.NetWork.WebSocket.csproj", "Server.NetWork.WebSocket/"]
-COPY ["Server.NetWork.TCPSocket/Server.NetWork.TCPSocket.csproj", "Server.NetWork.TCPSocket/"]
+COPY ["Server.NetWork/Server.NetWork.csproj", "Server.NetWork/"]
+COPY ["Server.Google.ProtoBuf/Server.Google.ProtoBuf.csproj", "Server.Google.ProtoBuf/"]
 COPY ["Server.Proto/Server.Proto.csproj", "Server.Proto/"]
 COPY ["Server.Config/Server.Config.csproj", "Server.Config/"]
 COPY ["Server.Log/Server.Log.csproj", "Server.Log/"]
+COPY ["Server.NetWork.TCPSocket/Server.NetWork.TCPSocket.csproj", "Server.NetWork.TCPSocket/"]
+COPY ["Server.NetWork.WebSocket/Server.NetWork.WebSocket.csproj", "Server.NetWork.WebSocket/"]
 RUN dotnet restore "Server.Launcher/Server.Launcher.csproj"
 COPY . .
 WORKDIR "/src/Server.Launcher"

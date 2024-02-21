@@ -80,6 +80,11 @@ public abstract class BaseSetting
     public int WssPort { get; init; }
 
     /// <summary>
+    /// Wss 使用的证书路径
+    /// </summary>
+    public string WssCertFilePath { get; set; }
+
+    /// <summary>
     /// TCP 端口
     /// </summary>
     public int TcpPort { get; init; }

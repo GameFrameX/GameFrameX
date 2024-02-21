@@ -130,7 +130,7 @@
         /// <returns>跨越的天数。</returns>
         public static int GetCrossDays(DateTime begin, DateTime after, int hour = 0)
         {
-            int days = (int)(after.Date - begin.Date).TotalDays + 1;
+            int days = (int)(after.Date - begin.Date).TotalDays;
             if (begin.Hour < hour)
                 days++;
             if (after.Hour < hour)

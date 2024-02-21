@@ -24,10 +24,10 @@
 
     <ItemGroup>
         <None Update="Configs\app_log.config">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="Configs\app_config.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
@@ -42,12 +42,6 @@
         <ProjectReference Include="..\Server.Proto\Server.Proto.csproj" />
         <ProjectReference Include="..\Server.Serialize\Server.Serialize.csproj" />
         <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
     </ItemGroup>
 
 
