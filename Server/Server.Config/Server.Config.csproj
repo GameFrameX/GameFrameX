@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Json\*.json">
+        <None Update="json\*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

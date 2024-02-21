@@ -3,4 +3,4 @@
     image: server.launcher
     build:
       context: .
-      dockerfile: Server.Launcher/Dockerfile
+      dockerfile: Dockerfile

@@ -44,11 +44,5 @@
         <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
 
 </Project>
