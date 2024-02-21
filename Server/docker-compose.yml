@@ -8,3 +8,6 @@
       - 20001:20001
       - 8898:8898
       - 25001:25001
+    volumes:
+      - "./running/hotfix:/app/hotfix"
+      - "./running/json:/app/json"
