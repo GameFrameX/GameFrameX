@@ -140,4 +140,6 @@ public static class GlobalSettings
     /// SDK 类型
     /// </summary>
     public static int SDKType => _instance.SDKType;
+
+    public static string WssCertFilePath => _instance.WssCertFilePath;
 }

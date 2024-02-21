@@ -36,7 +36,7 @@ namespace Server.Hotfix.Common
             });
 
             var webSocketMessageHelper = new WebSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
-            await WebSocketServer.Start(GlobalSettings.WsPort, GlobalSettings.WssPort, webSocketMessageHelper, new WebSocketChannelHandler());
+            await WebSocketServer.Start(GlobalSettings.WsPort, GlobalSettings.WssPort,GlobalSettings.WssCertFilePath, webSocketMessageHelper, new WebSocketChannelHandler());
             Log.Info("WebSocket 服务启动完成...");
 
             var tcpSocketMessageHelper = new TcpSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +20,7 @@ namespace Server.NetWork.WebSocket
         private static WebApplication App { get; set; }
         public static IMessageHelper MessageHelper { get; private set; }
 
-        public static Task Start(int wsPort, int wssPort, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
+        public static Task Start(int wsPort, int wssPort,string wssCertFilePath, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
         {
             Guard.NotNull(messageHelper, nameof(messageHelper));
             Guard.NotNull(handler, nameof(handler));
@@ -32,7 +33,13 @@ namespace Server.NetWork.WebSocket
                         options.ListenAnyIP(wsPort);
                         if (wssPort > 0)
                         {
-                            options.ListenAnyIP(wssPort, listenOptions => { listenOptions.UseHttps(); });
+                            options.ListenAnyIP(wssPort, listenOptions =>
+                            {
+                                listenOptions.UseHttps((httpsConnectionAdapterOptions) =>
+                                {
+                                    httpsConnectionAdapterOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(wssCertFilePath);
+                                });
+                            });
                         }
                     })
                 .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
