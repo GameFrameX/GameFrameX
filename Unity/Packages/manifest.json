@@ -15,6 +15,7 @@
     "com.gwiazdorrr.betterstreamingassets": "https://github.com/AlianBlank/com.gwiazdorrr.betterstreamingassets.git",
     "com.json.simplejson": "https://github.com/AlianBlank/com.json.simplejson.git",
     "com.neuecc.messagepack": "https://github.com/AlianBlank/com.neuecc.messagepack.git",
+    "com.google.protobuf": "https://github.com/AlianBlank/com.google.protobuf.git",
     "com.sharelib.logviewer": "https://github.com/AlianBlank/com.sharelib.logviewer.git",
     "com.tuyoogame.yooasset": "https://github.com/AlianBlank/com.tuyoogame.yooasset.git",
     "com.unity.ide.rider": "2.0.7",
