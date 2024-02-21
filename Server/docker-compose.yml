@@ -1,6 +1,10 @@
 ﻿services:
   server.launcher:
-    image: server.launcher
+    image: registry.cn-shenzhen.aliyuncs.com/gameframex/server.launcher:1.0.0
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - 20001:20001
+      - 8898:8898
+      - 25001:25001
