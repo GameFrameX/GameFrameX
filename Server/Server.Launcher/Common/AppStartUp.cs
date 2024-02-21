@@ -27,9 +27,10 @@ namespace Server.Launcher.Common
         {
             try
             {
-                if (!Directory.Exists("hotfix"))
+                var hotfixPath = Directory.GetCurrentDirectory() + "/hotfix";
+                if (!Directory.Exists(hotfixPath))
                 {
-                    Directory.CreateDirectory("hotfix");
+                    Directory.CreateDirectory(hotfixPath);
                 }
 
                 GlobalSettings.Load<AppSetting>("Configs/app_config.json", ServerType.Game);
