@@ -1,4 +1,5 @@
 ﻿using System;
+using ProtoBuf;
 using System.Collections.Generic;
 using Server.NetWork.Messages;
 
@@ -8,12 +9,13 @@ namespace Server.Proto.Proto
 	/// 请求心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[MessagePackageObject]
+	[ProtoContract]
 	public partial class ReqHeartBeat : MessageObject, IRequestMessage
 	{
 		/// <summary>
 		///  时间戳
 		/// </summary>
+		[ProtoMember(1)]
 		public long Timestamp { get; set; }
 
 	}
@@ -22,12 +24,13 @@ namespace Server.Proto.Proto
 	/// 返回心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[MessagePackageObject]
+	[ProtoContract]
 	public partial class RespHeartBeat : MessageObject, IResponseMessage
 	{
 		/// <summary>
 		///  时间戳
 		/// </summary>
+		[ProtoMember(1)]
 		public long Timestamp { get; set; }
 
 	}
