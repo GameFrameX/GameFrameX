@@ -12,19 +12,38 @@ namespace ProtoBuf.Internal.Serializers
         {
             ExpectedType = enumType ?? throw new ArgumentNullException(nameof(enumType));
             if (!enumType.IsEnum) ThrowHelper.ThrowInvalidOperationException("Expected an enum type; got " + enumType.NormalizeName());
-            
-            _tail = Type.GetTypeCode(enumType) switch
+
+            switch (Type.GetTypeCode(enumType))
             {
-                TypeCode.SByte => SByteSerializer.Instance,
-                TypeCode.Int16 => Int16Serializer.Instance,
-                TypeCode.Int32 => Int32Serializer.Instance,
-                TypeCode.Int64 => Int64Serializer.Instance,
-                TypeCode.Byte => ByteSerializer.Instance,
-                TypeCode.UInt16 => UInt16Serializer.Instance,
-                TypeCode.UInt32 => UInt32Serializer.Instance,
-                TypeCode.UInt64 => UInt64Serializer.Instance,
-                _ => default,
-            };
+                case TypeCode.SByte:
+                    _tail = SByteSerializer.Instance;
+                    break;
+                case TypeCode.Int16:
+                    _tail = Int16Serializer.Instance;
+                    break;
+                case TypeCode.Int32:
+                    _tail = Int32Serializer.Instance;
+                    break;
+                case TypeCode.Int64:
+                    _tail = Int64Serializer.Instance;
+                    break;
+                case TypeCode.Byte:
+                    _tail = ByteSerializer.Instance;
+                    break;
+                case TypeCode.UInt16:
+                    _tail = UInt16Serializer.Instance;
+                    break;
+                case TypeCode.UInt32:
+                    _tail = UInt32Serializer.Instance;
+                    break;
+                case TypeCode.UInt64:
+                    _tail = UInt64Serializer.Instance;
+                    break;
+                default:
+                    _tail = default;
+                    break;
+            }
+
             if (_tail is null) ThrowHelper.ThrowInvalidOperationException("Unable to resolve underlying enum type for " + enumType.NormalizeName());
 
         }
@@ -39,18 +58,28 @@ namespace ProtoBuf.Internal.Serializers
         {
             unchecked
             {
-                return Type.GetTypeCode(type) switch
-                { // unbox as the intended type
-                    TypeCode.Byte => (byte)value,
-                    TypeCode.SByte => (sbyte)value,
-                    TypeCode.Int16 => (short)value,
-                    TypeCode.Int32 => (int)value,
-                    TypeCode.Int64 => (long)value,
-                    TypeCode.UInt16 => (ushort)(ushort)value,
-                    TypeCode.UInt32 => (uint)(uint)value,
-                    TypeCode.UInt64 => (ulong)(ulong)value,
-                    _ => throw new InvalidOperationException(),
-                };
+                switch (Type.GetTypeCode(type))
+                {
+                    // unbox as the intended type
+                    case TypeCode.Byte:
+                        return (byte)value;
+                    case TypeCode.SByte:
+                        return (sbyte)value;
+                    case TypeCode.Int16:
+                        return (short)value;
+                    case TypeCode.Int32:
+                        return (int)value;
+                    case TypeCode.Int64:
+                        return (long)value;
+                    case TypeCode.UInt16:
+                        return (ushort)(ushort)value;
+                    case TypeCode.UInt32:
+                        return (uint)(uint)value;
+                    case TypeCode.UInt64:
+                        return (ulong)(ulong)value;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
         }
         private object EnumToWire(object value) => EnumToWire(value, ExpectedType);

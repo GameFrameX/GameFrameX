@@ -31,23 +31,27 @@ namespace ProtoBuf.Internal.Serializers
         public override void EmitWrite(CompilerContext ctx, Local valueFrom)
         {
             // => ProtoWriter.WriteSubType<TChild>(value, writer, ref state, this);
-            using var tmp = ctx.GetLocalWithValue(typeof(TChild), valueFrom);
-            ctx.LoadState();
-            ctx.LoadValue(tmp);
-            ctx.LoadSelfAsService<ISubTypeSerializer<TChild>, TChild>(default, default);
-            ctx.EmitCall(s_WriteSubType[2].MakeGenericMethod(typeof(TChild)));
+            using (var tmp = ctx.GetLocalWithValue(typeof(TChild), valueFrom))
+            {
+                ctx.LoadState();
+                ctx.LoadValue(tmp);
+                ctx.LoadSelfAsService<ISubTypeSerializer<TChild>, TChild>(default, default);
+                ctx.EmitCall(s_WriteSubType[2].MakeGenericMethod(typeof(TChild)));
+            }
         }
 
         bool IDirectWriteNode.CanEmitDirectWrite(WireType wireType) => wireType == WireType.String;
 
         void IDirectWriteNode.EmitDirectWrite(int fieldNumber, WireType wireType, CompilerContext ctx, Local valueFrom)
         {
-            using var tmp = ctx.GetLocalWithValue(typeof(TChild), valueFrom);
-            ctx.LoadState();
-            ctx.LoadValue(fieldNumber);
-            ctx.LoadValue(tmp);
-            ctx.LoadSelfAsService<ISubTypeSerializer<TChild>, TChild>(default, default);
-            ctx.EmitCall(s_WriteSubType[3].MakeGenericMethod(typeof(TChild)));
+            using (var tmp = ctx.GetLocalWithValue(typeof(TChild), valueFrom))
+            {
+                ctx.LoadState();
+                ctx.LoadValue(fieldNumber);
+                ctx.LoadValue(tmp);
+                ctx.LoadSelfAsService<ISubTypeSerializer<TChild>, TChild>(default, default);
+                ctx.EmitCall(s_WriteSubType[3].MakeGenericMethod(typeof(TChild)));
+            }
         }
 
         static readonly Dictionary<int, MethodInfo> s_WriteSubType =
@@ -159,24 +163,25 @@ namespace ProtoBuf.Internal.Serializers
         public override void EmitRead(CompilerContext ctx, Local valueFrom)
         {
             // make sure we have a non-stack-based source
-            using var loc = ctx.GetLocalWithValue(typeof(T), valueFrom);
-            var category = GetCategory();
-            switch (category)
+            using (var loc = ctx.GetLocalWithValue(typeof(T), valueFrom))
             {
-                case SerializerFeatures.CategoryMessage:
-                case SerializerFeatures.CategoryMessageWrappedAtRoot:
-                    SubItemSerializer.EmitReadMessage<T>(ctx, loc, serializerType: MetaType.SerializerType);
-                    break;
-                case SerializerFeatures.CategoryScalar:
-                    EmitLoadCustomSerializer(ctx, MetaType.SerializerType, typeof(T));
-                    ctx.LoadState();
-                    ctx.LoadValue(loc);
-                    ctx.EmitCall(typeof(ISerializer<T>).GetMethod(nameof(ISerializer<T>.Read), BindingFlags.Public | BindingFlags.Instance));
-                    break;
-                default:
-                    category.ThrowInvalidCategory();
-                    break;
-
+                var category = GetCategory();
+                switch (category)
+                {
+                    case SerializerFeatures.CategoryMessage:
+                    case SerializerFeatures.CategoryMessageWrappedAtRoot:
+                        SubItemSerializer.EmitReadMessage<T>(ctx, loc, serializerType: MetaType.SerializerType);
+                        break;
+                    case SerializerFeatures.CategoryScalar:
+                        EmitLoadCustomSerializer(ctx, MetaType.SerializerType, typeof(T));
+                        ctx.LoadState();
+                        ctx.LoadValue(loc);
+                        ctx.EmitCall(typeof(ISerializer<T>).GetMethod(nameof(ISerializer<T>.Read), BindingFlags.Public | BindingFlags.Instance));
+                        break;
+                    default:
+                        category.ThrowInvalidCategory();
+                        break;
+                }
             }
         }
 
@@ -187,12 +192,14 @@ namespace ProtoBuf.Internal.Serializers
             {
                 case SerializerFeatures.CategoryMessage:
                 case SerializerFeatures.CategoryMessageWrappedAtRoot:
-                    return wireType switch
-                       {
-                           WireType.String => true,
-                           WireType.StartGroup => true,
-                           _ => false
-                       };
+                    switch (wireType)
+                    {
+                        case WireType.String:
+                        case WireType.StartGroup:
+                            return true;
+                        default:
+                            return false;
+                    }
                 default:
                     return false;
             }
@@ -275,27 +282,35 @@ namespace ProtoBuf.Internal.Serializers
         public static void EmitWriteMessage<T>(int? fieldNumber, WireType wireType, CompilerContext ctx, Local value = null,
             FieldInfo serializer = null, bool applyRecursionCheck = true, Type serializerType = null)
         {
-            using var tmp = ctx.GetLocalWithValue(typeof(T), value);
-            ctx.LoadState();
-            if (fieldNumber.HasValue) ctx.LoadValue(fieldNumber.Value);
-            ctx.LoadValue((int)(applyRecursionCheck ? default : SerializerFeatures.OptionSkipRecursionCheck));
-            ctx.LoadValue(tmp);
-            LoadSerializer<T>(ctx, serializer, serializerType);
-            var methodFamily = wireType switch
+            using (var tmp = ctx.GetLocalWithValue(typeof(T), value))
             {
-                WireType.StartGroup => s_WriteGroup,
-                _ => s_WriteMessage,
-            };
-            ctx.EmitCall(methodFamily[fieldNumber.HasValue ? 4 : 3].MakeGenericMethod(typeof(T)));
+                ctx.LoadState();
+                if (fieldNumber.HasValue) ctx.LoadValue(fieldNumber.Value);
+                ctx.LoadValue((int)(applyRecursionCheck ? default : SerializerFeatures.OptionSkipRecursionCheck));
+                ctx.LoadValue(tmp);
+                LoadSerializer<T>(ctx, serializer, serializerType);
+                Dictionary<int, MethodInfo> methodFamily;
+                switch (wireType)
+                {
+                    case WireType.StartGroup:
+                        methodFamily = s_WriteGroup;
+                        break;
+                    default:
+                        methodFamily = s_WriteMessage;
+                        break;
+                }
+
+                ctx.EmitCall(methodFamily[fieldNumber.HasValue ? 4 : 3].MakeGenericMethod(typeof(T)));
+            }
         }
 
         private static void LoadSerializer<T>(CompilerContext ctx, FieldInfo serializer, Type serializerType)
         {
-            if (serializerType is not null && (ctx.NonPublic || RuntimeTypeModel.IsFullyPublic(serializerType)))
+            if (serializerType != null && (ctx.NonPublic || RuntimeTypeModel.IsFullyPublic(serializerType)))
             {
                 EmitLoadCustomSerializer(ctx, serializerType, typeof(T));
             }
-            else if (serializer is not null)
+            else if (serializer != null)
             {
                 ctx.LoadValue(serializer, checkAccessibility: false);
             }
@@ -318,9 +333,11 @@ namespace ProtoBuf.Internal.Serializers
                 }
                 else
                 {
-                    using var val = new Local(ctx, typeof(T));
-                    ctx.InitLocal(typeof(T), val);
-                    ctx.LoadValue(val);
+                    using (var val = new Local(ctx, typeof(T)))
+                    {
+                        ctx.InitLocal(typeof(T), val);
+                        ctx.LoadValue(val);
+                    }
                 }
             }
             else

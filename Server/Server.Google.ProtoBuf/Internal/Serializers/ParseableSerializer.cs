@@ -14,7 +14,7 @@ namespace ProtoBuf.Internal.Serializers
             MethodInfo method = type.GetMethod(nameof(int.Parse),
                 BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly,
                 null, new Type[] { typeof(string) }, null);
-            if (method is not null && method.ReturnType == type)
+            if (method != null && method.ReturnType == type)
             {
                 if (type.IsValueType)
                 {
@@ -55,23 +55,27 @@ namespace ProtoBuf.Internal.Serializers
         void IRuntimeProtoSerializerNode.EmitWrite(Compiler.CompilerContext ctx, Compiler.Local valueFrom)
         {
             Type type = ExpectedType;
-            using var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom);
-            ctx.LoadState();
-            ctx.LoadAddress(loc, type);
-            if (type.IsValueType)
-            {   // note that for structs, we've already asserted that a custom ToString
-                // exists; no need to handle the box/callvirt scenario
-
-                // force it to a variable if needed, so we can take the address
-                ctx.EmitCall(GetCustomToString(type));
-            }
-            else
+            using (var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom))
             {
-                ctx.EmitCall(typeof(object).GetMethod(nameof(object.ToString)));
+                ctx.LoadState();
+                ctx.LoadAddress(loc, type);
+                if (type.IsValueType)
+                {
+                    // note that for structs, we've already asserted that a custom ToString
+                    // exists; no need to handle the box/callvirt scenario
+
+                    // force it to a variable if needed, so we can take the address
+                    ctx.EmitCall(GetCustomToString(type));
+                }
+                else
+                {
+                    ctx.EmitCall(typeof(object).GetMethod(nameof(object.ToString)));
+                }
+
+                ctx.LoadNullRef(); // map
+                ctx.EmitCall(typeof(ProtoWriter.State).GetMethod(nameof(ProtoWriter.State.WriteString), BindingFlags.Instance | BindingFlags.Public,
+                    null, new[] { typeof(string), typeof(StringMap) }, null));
             }
-            ctx.LoadNullRef(); // map
-            ctx.EmitCall(typeof(ProtoWriter.State).GetMethod(nameof(ProtoWriter.State.WriteString), BindingFlags.Instance | BindingFlags.Public,
-                null, new[] { typeof(string), typeof(StringMap) }, null));
         }
         void IRuntimeProtoSerializerNode.EmitRead(Compiler.CompilerContext ctx, Compiler.Local entity)
         {

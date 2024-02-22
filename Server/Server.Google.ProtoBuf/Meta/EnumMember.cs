@@ -30,12 +30,12 @@ namespace ProtoBuf.Meta
             Value = value;
         }
 
-        internal bool HasValue => Value is not null && !string.IsNullOrWhiteSpace(Name);
+        internal bool HasValue => Value != null && !string.IsNullOrWhiteSpace(Name);
 
         internal int? TryGetInt32() => TryGetInt32(Value);
         internal static int? TryGetInt32(object value)
         {
-            if (value is not null)
+            if (value != null)
             {
                 var type = value.GetType();
                 if (type.IsEnum) type = Enum.GetUnderlyingType(type);

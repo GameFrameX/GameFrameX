@@ -60,6 +60,7 @@ namespace ProtoBuf.Internal
                         ptr[--write] = ToHex(val & 0b1111);
                         ptr[--write] = ToHex((val >> 4) & 0b1111);
                     }
+
                     available = new Span<byte>(ptr, 32);
                     standardFormat = 'N';
                     break;
@@ -78,8 +79,9 @@ namespace ProtoBuf.Internal
                 ThrowHelper.Format($"Failed to read Guid: '{Encoding.UTF8.GetString(ptr, available.Length)}'");
 
             return guid;
-            static byte ToHex(int value) => (byte)"0123456789abcdef"[value];
         }
+
+        static byte ToHex(int value) => (byte)"0123456789abcdef"[value];
 
         internal static void Write(ref ProtoWriter.State state, in Guid value, bool asBytes)
         {
@@ -101,13 +103,15 @@ namespace ProtoBuf.Internal
                 {
                     // pack down that hex to bytes
                     int read = 0;
-                    Debug.Assert(bytesWritten == 2  * WRITE_BYTES_LENGTH, $"expected {2 * WRITE_BYTES_LENGTH} bytes, got {bytesWritten}");
+                    Debug.Assert(bytesWritten == 2 * WRITE_BYTES_LENGTH, $"expected {2 * WRITE_BYTES_LENGTH} bytes, got {bytesWritten}");
                     for (int i = 0; i < WRITE_BYTES_LENGTH; i++)
                     {
                         arr[i] = (byte)((FromHex(arr[read++]) << 4) | FromHex(arr[read++]));
                     }
+
                     bytesWritten = WRITE_BYTES_LENGTH;
                 }
+
                 state.WriteBytes(new ReadOnlyMemory<byte>(arr, 0, bytesWritten));
             }
             finally
@@ -115,22 +119,25 @@ namespace ProtoBuf.Internal
                 ArrayPool<byte>.Shared.Return(arr);
             }
 
-            static int FromHex(int value)
-            {
-                if (value >= '0' && value <= '9')
-                    return value - '0';
-                if (value >= 'a' && value <= 'f')
-                    return 10 + value - 'a';
-                if (value >= 'A' && value <= 'F')
-                    return 10 + value - 'A';
-                Throw(value);
-                return default;
 
-                static void Throw(int value)
-                {
-                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), $"Unexpected hex character: '{(char)value}'");
-                }
-            };
+            ;
+        }
+
+        static int FromHex(int value)
+        {
+            if (value >= '0' && value <= '9')
+                return value - '0';
+            if (value >= 'a' && value <= 'f')
+                return 10 + value - 'a';
+            if (value >= 'A' && value <= 'F')
+                return 10 + value - 'A';
+            Throw(value);
+            return default;
+        }
+
+        static void Throw(int value)
+        {
+            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), $"Unexpected hex character: '{(char)value}'");
         }
     }
 }

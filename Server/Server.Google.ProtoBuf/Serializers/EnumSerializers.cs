@@ -7,29 +7,55 @@ namespace ProtoBuf.Serializers
     internal static class EnumSerializers
     {
         internal static object GetSerializer(Type type)
-            => RuntimeTypeModel.GetUnderlyingProvider(GetProvider(type), type) switch
+        {
+            switch (RuntimeTypeModel.GetUnderlyingProvider(GetProvider(type), type))
             {
-                FieldInfo field => field.GetValue(null),
-                MethodInfo method => method.Invoke(null, null),
-                _ => null,
-            };
+                case FieldInfo field:
+                    return field.GetValue(null);
+                case MethodInfo method:
+                    return method.Invoke(null, null);
+                default:
+                    return null;
+            }
+        }
+
         internal static MemberInfo GetProvider(Type type)
         {
             if (type is null) return null;
             type = Nullable.GetUnderlyingType(type) ?? type;
             if (!type.IsEnum) return null;
-            string name = Type.GetTypeCode(type) switch
+            string name;
+            switch (Type.GetTypeCode(type))
             {
-                TypeCode.SByte => nameof(EnumSerializer.CreateSByte),
-                TypeCode.Int16 => nameof(EnumSerializer.CreateInt16),
-                TypeCode.Int32 => nameof(EnumSerializer.CreateInt32),
-                TypeCode.Int64 => nameof(EnumSerializer.CreateInt64),
-                TypeCode.Byte => nameof(EnumSerializer.CreateByte),
-                TypeCode.UInt16 => nameof(EnumSerializer.CreateUInt16),
-                TypeCode.UInt32 => nameof(EnumSerializer.CreateUInt32),
-                TypeCode.UInt64 => nameof(EnumSerializer.CreateUInt64),
-                _ => null,
-            };
+                case TypeCode.SByte:
+                    name = nameof(EnumSerializer.CreateSByte);
+                    break;
+                case TypeCode.Int16:
+                    name = nameof(EnumSerializer.CreateInt16);
+                    break;
+                case TypeCode.Int32:
+                    name = nameof(EnumSerializer.CreateInt32);
+                    break;
+                case TypeCode.Int64:
+                    name = nameof(EnumSerializer.CreateInt64);
+                    break;
+                case TypeCode.Byte:
+                    name = nameof(EnumSerializer.CreateByte);
+                    break;
+                case TypeCode.UInt16:
+                    name = nameof(EnumSerializer.CreateUInt16);
+                    break;
+                case TypeCode.UInt32:
+                    name = nameof(EnumSerializer.CreateUInt32);
+                    break;
+                case TypeCode.UInt64:
+                    name = nameof(EnumSerializer.CreateUInt64);
+                    break;
+                default:
+                    name = null;
+                    break;
+            }
+
             if (name is null) return null;
             return typeof(EnumSerializer).GetMethod(name, BindingFlags.Static | BindingFlags.Public)
                 .MakeGenericMethod(type);

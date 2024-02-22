@@ -1,4 +1,5 @@
-﻿using ProtoBuf.Internal;
+﻿/*
+using ProtoBuf.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -514,3 +515,4 @@ namespace ProtoBuf.Serializers
         }
     }
 }
+*/

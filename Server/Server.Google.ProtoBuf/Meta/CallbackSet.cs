@@ -18,14 +18,19 @@ namespace ProtoBuf.Meta
         {
             get
             {
-                return callbackType switch
+                switch (callbackType)
                 {
-                    TypeModel.CallbackType.BeforeSerialize => beforeSerialize,
-                    TypeModel.CallbackType.AfterSerialize => afterSerialize,
-                    TypeModel.CallbackType.BeforeDeserialize => beforeDeserialize,
-                    TypeModel.CallbackType.AfterDeserialize => afterDeserialize,
-                    _ => throw new ArgumentException("Callback type not supported: " + callbackType.ToString(), nameof(callbackType)),
-                };
+                    case TypeModel.CallbackType.BeforeSerialize:
+                        return beforeSerialize;
+                    case TypeModel.CallbackType.AfterSerialize:
+                        return afterSerialize;
+                    case TypeModel.CallbackType.BeforeDeserialize:
+                        return beforeDeserialize;
+                    case TypeModel.CallbackType.AfterDeserialize:
+                        return afterDeserialize;
+                    default:
+                        throw new ArgumentException("Callback type not supported: " + callbackType.ToString(), nameof(callbackType));
+                }
             }
         }
 
@@ -98,8 +103,8 @@ namespace ProtoBuf.Meta
         {
             get
             {
-                return beforeSerialize is not null || beforeDeserialize is not null
-                    || afterSerialize is not null || afterDeserialize is not null;
+                return beforeSerialize != null || beforeDeserialize != null
+                    || afterSerialize != null || afterDeserialize != null;
             }
         }
     }

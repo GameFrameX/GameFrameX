@@ -70,32 +70,36 @@ namespace ProtoBuf.Internal.Serializers
             _ = Serializer; // this is to force a type-check
             var method = typeof(MapSerializer<TCollection, TKey, TValue>).GetMethod(nameof(MapSerializer<TCollection, TKey, TValue>.WriteMap));
 
-            using var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom);
-            _provider.EmitProvider(ctx);
-            ctx.LoadState();
-            ctx.LoadValue(_fieldNumber);
-            ctx.LoadValue((int)_features);
-            ctx.LoadValue(loc);
-            ctx.LoadValue((int)_keyFeatures);
-            ctx.LoadValue((int)_valueFeatures);
-            ctx.LoadSelfAsService<ISerializer<TKey>, TKey>(_keyCompatibilityLevel, _keyDataFormat);
-            ctx.LoadSelfAsService<ISerializer<TValue>, TValue>(_valueCompatibilityLevel, _valueDataFormat);
-            ctx.EmitCall(method);
+            using (var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom))
+            {
+                _provider.EmitProvider(ctx);
+                ctx.LoadState();
+                ctx.LoadValue(_fieldNumber);
+                ctx.LoadValue((int)_features);
+                ctx.LoadValue(loc);
+                ctx.LoadValue((int)_keyFeatures);
+                ctx.LoadValue((int)_valueFeatures);
+                ctx.LoadSelfAsService<ISerializer<TKey>, TKey>(_keyCompatibilityLevel, _keyDataFormat);
+                ctx.LoadSelfAsService<ISerializer<TValue>, TValue>(_valueCompatibilityLevel, _valueDataFormat);
+                ctx.EmitCall(method);
+            }
         }
         public void EmitRead(CompilerContext ctx, Local valueFrom)
         {
             var method = typeof(MapSerializer<TCollection, TKey, TValue>).GetMethod(nameof(MapSerializer<TCollection, TKey, TValue>.ReadMap));
 
-            using var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom);
-            _provider.EmitProvider(ctx);
-            ctx.LoadState();
-            ctx.LoadValue((int)_features);
-            ctx.LoadValue(loc);
-            ctx.LoadValue((int)_keyFeatures);
-            ctx.LoadValue((int)_valueFeatures);
-            ctx.LoadSelfAsService<ISerializer<TKey>, TKey>(_keyCompatibilityLevel, _keyDataFormat);
-            ctx.LoadSelfAsService<ISerializer<TValue>, TValue>(_valueCompatibilityLevel, _valueDataFormat);
-            ctx.EmitCall(method);
+            using (var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom))
+            {
+                _provider.EmitProvider(ctx);
+                ctx.LoadState();
+                ctx.LoadValue((int)_features);
+                ctx.LoadValue(loc);
+                ctx.LoadValue((int)_keyFeatures);
+                ctx.LoadValue((int)_valueFeatures);
+                ctx.LoadSelfAsService<ISerializer<TKey>, TKey>(_keyCompatibilityLevel, _keyDataFormat);
+                ctx.LoadSelfAsService<ISerializer<TValue>, TValue>(_valueCompatibilityLevel, _valueDataFormat);
+                ctx.EmitCall(method);
+            }
         }
     }
 }

@@ -3,8 +3,7 @@
     /// <summary>
     /// 消息基类
     /// </summary>
-    [MessagePackageObject]
-    public class MessageObject
+    public class IMessageObject
     {
     }
 }

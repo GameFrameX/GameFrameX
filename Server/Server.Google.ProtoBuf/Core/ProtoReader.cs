@@ -1,5 +1,4 @@
-﻿
-using ProtoBuf.Internal;
+﻿using ProtoBuf.Internal;
 using ProtoBuf.Meta;
 using System;
 using System.Buffers;
@@ -28,6 +27,7 @@ namespace ProtoBuf
         private protected abstract void ImplSkipBytes(ref State state, long count);
         private protected abstract int ImplTryReadUInt32VarintWithoutMoving(ref State state, Read32VarintMode mode, out uint value);
         private protected abstract void ImplReadBytes(ref State state, Span<byte> target);
+
         private protected virtual void ImplReadBytes(ref State state, ReadOnlySequence<byte> target)
         {
             if (target.IsSingleSegment)
@@ -62,19 +62,13 @@ namespace ProtoBuf
         /// </summary>
         public int FieldNumber
         {
-            [MethodImpl(HotPath)]
-            get => _fieldNumber;
+            [MethodImpl(HotPath)] get => _fieldNumber;
         }
 
         /// <summary>
         /// Indicates the underlying proto serialization format on the wire.
         /// </summary>
-        public WireType WireType
-        {
-            [MethodImpl(HotPath)]
-            get;
-            private protected set;
-        }
+        public WireType WireType { [MethodImpl(HotPath)] get; private protected set; }
 
         internal const long TO_EOF = -1;
 
@@ -86,15 +80,19 @@ namespace ProtoBuf
         /// </summary>
         public bool InternStrings { get; set; }
 
-        private protected ProtoReader() { }
+        private protected ProtoReader()
+        {
+        }
 
 #if DEBUG
         int _usageCount;
+
         partial void OnDispose()
         {
             int count = System.Threading.Interlocked.Decrement(ref _usageCount);
             if (count != 0) ThrowHelper.ThrowInvalidOperationException($"Usage count - expected 0, was {count}");
         }
+
         partial void OnInit()
         {
             int count = System.Threading.Interlocked.Increment(ref _usageCount);
@@ -147,11 +145,12 @@ namespace ProtoBuf
         {
             OnDispose();
             _model = null;
-            if (stringInterner is not null)
+            if (stringInterner != null)
             {
                 stringInterner.Clear();
                 stringInterner = null;
             }
+
             netCache.Clear();
             UserState = null;
         }
@@ -169,8 +168,7 @@ namespace ProtoBuf
         /// </summary>
         public int Position
         {
-            [MethodImpl(HotPath)]
-            get { return checked((int)_longPosition); }
+            [MethodImpl(HotPath)] get { return checked((int)_longPosition); }
         }
 
 
@@ -180,8 +178,7 @@ namespace ProtoBuf
         /// </summary>
         public long LongPosition
         {
-            [MethodImpl(HotPath)]
-            get => _longPosition;
+            [MethodImpl(HotPath)] get => _longPosition;
         }
 
         private long _longPosition;
@@ -233,6 +230,7 @@ namespace ProtoBuf
         public long ReadInt64() => DefaultState().ReadInt64();
 
         private Dictionary<string, string> stringInterner;
+
         private protected string Intern(string value)
         {
             if (value is null) return null;
@@ -252,6 +250,7 @@ namespace ProtoBuf
             {
                 stringInterner.Add(value, value);
             }
+
             return value;
         }
 
@@ -275,7 +274,6 @@ namespace ProtoBuf
         /// </summary>
         [MethodImpl(HotPath)]
         public double ReadDouble() => DefaultState().ReadDouble();
-
 
 
         /// <summary>
@@ -319,10 +317,13 @@ namespace ProtoBuf
                 if (_depth > 0) return 0; // spoof an end, but note we still set the field-number
                 ThrowUnexpectedEndGroup();
             }
+
             return _fieldNumber;
         }
+
         private static void ThrowInvalidField(int fieldNumber)
             => ThrowHelper.ThrowProtoException("Invalid field in source data: " + fieldNumber.ToString());
+
         private static void ThrowUnexpectedEndGroup()
             => ThrowHelper.ThrowProtoException("Unexpected end-group in source data; this usually means the source data is corrupt");
 
@@ -349,9 +350,12 @@ namespace ProtoBuf
         [MethodImpl(HotPath)]
         public void Hint(WireType wireType)
         {
-            if (WireType == wireType) { }  // fine; everything as we expect
+            if (WireType == wireType)
+            {
+            } // fine; everything as we expect
             else if (((int)wireType & 7) == (int)this.WireType)
-            {   // the underling type is a match; we're customising it with an extension
+            {
+                // the underling type is a match; we're customising it with an extension
                 WireType = wireType;
             }
             // note no error here; we're OK about using alternative data
@@ -431,9 +435,9 @@ namespace ProtoBuf
         public static int DirectReadLittleEndianInt32(Stream source)
         {
             return ReadByteOrThrow(source)
-                | (ReadByteOrThrow(source) << 8)
-                | (ReadByteOrThrow(source) << 16)
-                | (ReadByteOrThrow(source) << 24);
+                   | (ReadByteOrThrow(source) << 8)
+                   | (ReadByteOrThrow(source) << 16)
+                   | (ReadByteOrThrow(source) << 24);
         }
 
         /// <summary>
@@ -442,9 +446,9 @@ namespace ProtoBuf
         public static int DirectReadBigEndianInt32(Stream source)
         {
             return (ReadByteOrThrow(source) << 24)
-                 | (ReadByteOrThrow(source) << 16)
-                 | (ReadByteOrThrow(source) << 8)
-                 | ReadByteOrThrow(source);
+                   | (ReadByteOrThrow(source) << 16)
+                   | (ReadByteOrThrow(source) << 8)
+                   | ReadByteOrThrow(source);
         }
 
         /// <summary>
@@ -469,6 +473,7 @@ namespace ProtoBuf
                 count -= read;
                 offset += read;
             }
+
             if (count > 0) ThrowEoF();
         }
 
@@ -503,6 +508,7 @@ namespace ProtoBuf
                 bytesRead = fieldNumber = 0;
                 return int.MaxValue; // avoid the long.maxvalue causing overflow
             }
+
             long len64 = ReadLongLengthPrefix(source, expectHeader, style, out fieldNumber, out bytesRead);
             return checked((int)len64);
         }
@@ -530,9 +536,11 @@ namespace ProtoBuf
                         if (tmpBytesRead > 0)
                         {
                             if ((val & 7) != (uint)WireType.String)
-                            { // got a header, but it isn't a string
+                            {
+                                // got a header, but it isn't a string
                                 ThrowHelper.ThrowInvalidOperationException($"Unexpected wire-type: {(WireType)(val & 7)}, expected {WireType.String})");
                             }
+
                             fieldNumber = (int)(val >> 3);
                             tmpBytesRead = ProtoReader.TryReadUInt64Varint(source, out val);
                             bytesRead += tmpBytesRead;
@@ -540,44 +548,48 @@ namespace ProtoBuf
                             return (long)val;
                         }
                         else
-                        { // no header
+                        {
+                            // no header
                             bytesRead = 0;
                             return -1;
                         }
                     }
+
                     // check for a length
                     tmpBytesRead = ProtoReader.TryReadUInt64Varint(source, out val);
                     bytesRead += tmpBytesRead;
                     return bytesRead < 0 ? -1 : (long)val;
 
                 case PrefixStyle.Fixed32:
+                {
+                    int b = source.ReadByte();
+                    if (b < 0)
                     {
-                        int b = source.ReadByte();
-                        if (b < 0)
-                        {
-                            bytesRead = 0;
-                            return -1;
-                        }
-                        bytesRead = 4;
-                        return b
-                             | (ReadByteOrThrow(source) << 8)
-                             | (ReadByteOrThrow(source) << 16)
-                             | (ReadByteOrThrow(source) << 24);
+                        bytesRead = 0;
+                        return -1;
                     }
+
+                    bytesRead = 4;
+                    return b
+                           | (ReadByteOrThrow(source) << 8)
+                           | (ReadByteOrThrow(source) << 16)
+                           | (ReadByteOrThrow(source) << 24);
+                }
                 case PrefixStyle.Fixed32BigEndian:
+                {
+                    int b = source.ReadByte();
+                    if (b < 0)
                     {
-                        int b = source.ReadByte();
-                        if (b < 0)
-                        {
-                            bytesRead = 0;
-                            return -1;
-                        }
-                        bytesRead = 4;
-                        return (b << 24)
-                            | (ReadByteOrThrow(source) << 16)
-                            | (ReadByteOrThrow(source) << 8)
-                            | ReadByteOrThrow(source);
+                        bytesRead = 0;
+                        return -1;
                     }
+
+                    bytesRead = 4;
+                    return (b << 24)
+                           | (ReadByteOrThrow(source) << 16)
+                           | (ReadByteOrThrow(source) << 8)
+                           | ReadByteOrThrow(source);
+                }
                 default:
                     ThrowHelper.ThrowArgumentOutOfRangeException(nameof(style));
                     bytesRead = default;
@@ -594,9 +606,17 @@ namespace ProtoBuf
         {
             value = 0;
             int b = source.ReadByte();
-            if (b < 0) { return 0; }
+            if (b < 0)
+            {
+                return 0;
+            }
+
             value = (uint)b;
-            if ((value & 0x80) == 0) { return 1; }
+            if ((value & 0x80) == 0)
+            {
+                return 1;
+            }
+
             value &= 0x7F;
             int bytesRead = 1, shift = 7;
             while (bytesRead < 9)
@@ -609,6 +629,7 @@ namespace ProtoBuf
 
                 if ((b & 0x80) == 0) return bytesRead;
             }
+
             b = source.ReadByte();
             if (b < 0) ThrowEoF();
             if ((b & 1) == 0) // only use 1 bit from the last byte
@@ -616,6 +637,7 @@ namespace ProtoBuf
                 value |= ((ulong)b & 0x7F) << shift;
                 return ++bytesRead;
             }
+
             ThrowHelper.ThrowOverflowException();
             return default;
         }
@@ -627,13 +649,14 @@ namespace ProtoBuf
                 source.Seek(count, SeekOrigin.Current);
                 count = 0;
             }
-            else if (buffer is not null)
+            else if (buffer != null)
             {
                 int bytesRead;
                 while (count > buffer.Length && (bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     count -= bytesRead;
                 }
+
                 while (count > 0 && (bytesRead = source.Read(buffer, 0, (int)count)) > 0)
                 {
                     count -= bytesRead;
@@ -649,6 +672,7 @@ namespace ProtoBuf
                     {
                         count -= bytesRead;
                     }
+
                     while (count > 0 && (bytesRead = source.Read(buffer, 0, (int)count)) > 0)
                     {
                         count -= bytesRead;
@@ -659,6 +683,7 @@ namespace ProtoBuf
                     BufferPool.ReleaseBufferToPool(ref buffer);
                 }
             }
+
             if (count > 0) ThrowEoF();
         }
 
@@ -677,7 +702,11 @@ namespace ProtoBuf
         {
             if (source is null) ThrowHelper.ThrowArgumentNullException(nameof(source));
             // check for virtual end of stream
-            if (source.blockEnd64 <= source._longPosition || wireType == WireType.EndGroup) { return false; }
+            if (source.blockEnd64 <= source._longPosition || wireType == WireType.EndGroup)
+            {
+                return false;
+            }
+
             source.WireType = wireType;
             return true;
         }
@@ -748,19 +777,22 @@ namespace ProtoBuf
             TypeModel model = parent.Model;
             var userState = parent.UserState;
             if (model is null) ThrowHelper.ThrowInvalidOperationException("Types cannot be merged unless a type-model has been specified");
-            using var ms = new MemoryStream();
-            var writeState = ProtoWriter.State.Create(ms, model, userState);
-            try
+            using (var ms = new MemoryStream())
             {
-                model.SerializeRootFallback(ref writeState, from);
+                var writeState = ProtoWriter.State.Create(ms, model, userState);
+                try
+                {
+                    model.SerializeRootFallback(ref writeState, from);
+                }
+                finally
+                {
+                    writeState.Dispose();
+                }
+
+                ms.Position = 0;
+                var state = ProtoReader.State.Create(ms, model, userState);
+                return state.DeserializeRootFallback(to, type: null);
             }
-            finally
-            {
-                writeState.Dispose();
-            }
-            ms.Position = 0;
-            using var state = ProtoReader.State.Create(ms, model, userState);
-            return state.DeserializeRootFallback(to, type: null);
         }
     }
 }

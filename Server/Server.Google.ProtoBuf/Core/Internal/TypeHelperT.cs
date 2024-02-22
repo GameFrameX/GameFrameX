@@ -2,7 +2,6 @@
 using ProtoBuf.Serializers;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 
 namespace ProtoBuf.Internal
@@ -76,8 +75,10 @@ namespace ProtoBuf.Internal
                 case TypeCode.Char:
                     return true;
             }
+
             return false;
         }
+
         internal static bool IsBytesLike(Type type)
         {
             if (type == typeof(byte[])) return true;
@@ -87,21 +88,22 @@ namespace ProtoBuf.Internal
             return false;
         }
 
+        static bool IsEnumerableT(Type type, out Type t)
+        {
+            if (type.IsInterface && type.IsGenericType
+                                 && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                t = type.GetGenericArguments()[0];
+                return true;
+            }
+
+            t = null;
+            return false;
+        }
+
         [Obsolete("Prefer list provider")]
         internal static bool ResolveUniqueEnumerableT(Type type, out Type t)
         {
-            static bool IsEnumerableT(Type type, out Type t)
-            {
-                if (type.IsInterface && type.IsGenericType
-                    && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                {
-                    t = type.GetGenericArguments()[0];
-                    return true;
-                }
-                t = null;
-                return false;
-            }
-
             if (type is null
                 || type == typeof(string) || IsBytesLike(type) || type == typeof(object))
             {
@@ -139,7 +141,9 @@ namespace ProtoBuf.Internal
                     }
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
             if (haveMatch) return true;
 
@@ -169,7 +173,7 @@ namespace ProtoBuf.Internal
     {
         public static readonly bool IsReferenceType = !typeof(T).IsValueType;
 
-        public static readonly bool CanBeNull = default(T) is null;
+        public static readonly bool CanBeNull = default(T) == null;
 
         public static readonly IValueChecker<T> ValueChecker =
             SerializerCache<PrimaryTypeProvider>.InstanceField as IValueChecker<T>
@@ -180,7 +184,18 @@ namespace ProtoBuf.Internal
 
         public static readonly T Default = typeof(T) == typeof(string) ? (T)(object)"" : default;
 
-        public static readonly T NonTrivialDefault = Default ?? (T)TypeHelper.CreateNonTrivialDefault(typeof(T));
+        public static T NonTrivialDefault
+        {
+            get
+            {
+                if (Default == null)
+                {
+                    return (T)TypeHelper.CreateNonTrivialDefault(typeof(T));
+                }
+
+                return Default;
+            }
+        }
 
         // make sure we don't cast null value-types to NREs
         [MethodImpl(ProtoReader.HotPath)]
@@ -194,24 +209,33 @@ namespace ProtoBuf.Internal
         bool HasNonTrivialValue(T value);
         bool IsNull(T value);
     }
+
     internal sealed class ReferenceValueChecker : IValueChecker<object>
     {
-        private ReferenceValueChecker() { }
+        private ReferenceValueChecker()
+        {
+        }
+
         public static readonly ReferenceValueChecker Instance = new ReferenceValueChecker();
 
         /// <summary>
         /// Indicates whether a value is non-null and needs serialization (non-zero, not an empty string, etc)
         /// </summary>
-        bool IValueChecker<object>.HasNonTrivialValue(object value) => value is not null;
+        bool IValueChecker<object>.HasNonTrivialValue(object value) => value != null;
+
         /// <summary>
         /// Indicates whether a value is null
         /// </summary>
         bool IValueChecker<object>.IsNull(object value) => value is null;
     }
+
     internal sealed class StructValueChecker<T> : IValueChecker<T?>, IValueChecker<T>
         where T : struct
     {
-        private StructValueChecker() { }
+        private StructValueChecker()
+        {
+        }
+
         public static readonly StructValueChecker<T> Instance = new StructValueChecker<T>();
         bool IValueChecker<T?>.HasNonTrivialValue(T? value) => value.HasValue;
         bool IValueChecker<T?>.IsNull(T? value) => !value.HasValue;

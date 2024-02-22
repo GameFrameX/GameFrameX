@@ -41,12 +41,14 @@ namespace ProtoBuf.Internal.Serializers
 
         void IRuntimeProtoSerializerNode.EmitRead(Compiler.CompilerContext ctx, Compiler.Local entity)
         {
-            using var loc = ctx.GetLocalWithValue(typeof(T), entity);
-            ctx.LoadState();
-            ctx.LoadValue((int)_features);
-            ctx.LoadValue(loc);
-            ctx.LoadSelfAsService<ISerializer<T>, T>(_compatibilityLevel, _dataFormat);
-            ctx.EmitCall(ReadAnyT);
+            using (var loc = ctx.GetLocalWithValue(typeof(T), entity))
+            {
+                ctx.LoadState();
+                ctx.LoadValue((int)_features);
+                ctx.LoadValue(loc);
+                ctx.LoadSelfAsService<ISerializer<T>, T>(_compatibilityLevel, _dataFormat);
+                ctx.EmitCall(ReadAnyT);
+            }
         }
 
         bool IDirectWriteNode.CanEmitDirectWrite(WireType wireType) => true;
@@ -54,13 +56,15 @@ namespace ProtoBuf.Internal.Serializers
 
         void IDirectWriteNode.EmitDirectWrite(int fieldNumber, WireType wireType, Compiler.CompilerContext ctx, Compiler.Local valueFrom)
         {
-            using var loc = ctx.GetLocalWithValue(typeof(T), valueFrom);
-            ctx.LoadState();
-            ctx.LoadValue(fieldNumber);
-            ctx.LoadValue((int)(_features | wireType.AsFeatures()));
-            ctx.LoadValue(loc);
-            ctx.LoadSelfAsService<ISerializer<T>, T>(_compatibilityLevel, _dataFormat);
-            ctx.EmitCall(WriteAnyT);
+            using (var loc = ctx.GetLocalWithValue(typeof(T), valueFrom))
+            {
+                ctx.LoadState();
+                ctx.LoadValue(fieldNumber);
+                ctx.LoadValue((int)(_features | wireType.AsFeatures()));
+                ctx.LoadValue(loc);
+                ctx.LoadSelfAsService<ISerializer<T>, T>(_compatibilityLevel, _dataFormat);
+                ctx.EmitCall(WriteAnyT);
+            }
         }
 
         private static readonly MethodInfo

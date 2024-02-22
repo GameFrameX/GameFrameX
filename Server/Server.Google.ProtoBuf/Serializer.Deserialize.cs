@@ -17,7 +17,7 @@ namespace ProtoBuf
         /// <returns>A new, initialized instance.</returns>
         public static T Deserialize<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(Stream source)
         {
-            using var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default);
+             var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default);
             return state.DeserializeRootImpl<T>();
         }
 
@@ -28,7 +28,7 @@ namespace ProtoBuf
         /// <returns>A new, initialized instance.</returns>
         public static T Deserialize<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(Stream source, T value, SerializationContext context, long length = ProtoReader.TO_EOF)
         {
-            using var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default, context, length);
+            var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default, context, length);
             return state.DeserializeRootImpl<T>(value);
         }
 
@@ -39,7 +39,7 @@ namespace ProtoBuf
         /// <returns>A new, initialized instance.</returns>
         public static T Deserialize<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(Stream source, T value = default, object userState = default, long length = ProtoReader.TO_EOF)
         {
-            using var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default, userState, length);
+            var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default, userState, length);
             return state.DeserializeRootImpl<T>(value);
         }
 
@@ -51,7 +51,7 @@ namespace ProtoBuf
 		/// <returns>A new, initialized instance.</returns>
         public static object Deserialize([DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, Stream source)
         {
-            using var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default, null, ProtoReader.TO_EOF);
+            var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default, null, ProtoReader.TO_EOF);
             return state.DeserializeRootFallback(null, type);
         }
 

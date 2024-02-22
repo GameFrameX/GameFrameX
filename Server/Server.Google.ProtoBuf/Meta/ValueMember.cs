@@ -14,8 +14,8 @@ namespace ProtoBuf.Meta
     /// </summary>
     public class ValueMember
     {
-
         private int _fieldNumber;
+
         /// <summary>
         /// The number that identifies this member in a protobuf stream
         /// </summary>
@@ -34,6 +34,7 @@ namespace ProtoBuf.Meta
         }
 
         private MemberInfo backingMember;
+
         /// <summary>
         /// Gets the member (field/property) which this member relates to.
         /// </summary>
@@ -118,18 +119,20 @@ namespace ProtoBuf.Meta
         {
             if (compatibilityLevel <= CompatibilityLevel.Level200)
             {
-                return dataFormat switch
+                switch (dataFormat)
                 {
-#pragma warning disable CS0618
-                    DataFormat.WellKnown => CompatibilityLevel.Level240,
-#pragma warning restore CS0618
-                    _ => CompatibilityLevel.Level200,
-                };
+                    case DataFormat.WellKnown:
+                        return CompatibilityLevel.Level240;
+                    default:
+                        return CompatibilityLevel.Level200;
+                }
             }
+
             return compatibilityLevel;
         }
 
         private readonly RuntimeTypeModel model;
+
         /// <summary>
         /// Creates a new ValueMember instance
         /// </summary>
@@ -143,10 +146,11 @@ namespace ProtoBuf.Meta
             ParentType = parentType;
             if (fieldNumber < 1 && !parentType.IsEnum) throw new ArgumentOutOfRangeException(nameof(fieldNumber));
 
-            if (defaultValue is not null && (defaultValue.GetType() != memberType))
+            if (defaultValue != null && (defaultValue.GetType() != memberType))
             {
                 defaultValue = ParseDefaultValue(memberType, defaultValue);
             }
+
             _defaultValue = defaultValue;
 
 #if FEAT_DYNAMIC_REF
@@ -161,6 +165,7 @@ namespace ProtoBuf.Meta
             }
 #endif
         }
+
         /// <summary>
         /// Creates a new ValueMember instance
         /// </summary>
@@ -169,24 +174,28 @@ namespace ProtoBuf.Meta
             FieldNumber = fieldNumber;
             MemberType = memberType ?? throw new ArgumentNullException(nameof(memberType));
             ItemType = itemType;
-            if (defaultType is null && itemType is not null)
-            {   // reasonable default
+            if (defaultType is null && itemType != null)
+            {
+                // reasonable default
                 defaultType = memberType;
             }
+
             DefaultType = defaultType;
 
             this.model = model ?? throw new ArgumentNullException(nameof(model));
             this.dataFormat = dataFormat;
         }
+
         internal object GetRawEnumValue()
         {
             return ((FieldInfo)Member).GetRawConstantValue();
         }
+
         private static object ParseDefaultValue(Type type, object value)
         {
             {
                 Type tmp = Nullable.GetUnderlyingType(type);
-                if (tmp is not null) type = tmp;
+                if (tmp != null) type = tmp;
             }
             if (value is string s)
             {
@@ -235,15 +244,14 @@ namespace ProtoBuf.Meta
         }
 
         private IRuntimeProtoSerializerNode serializer;
+
         internal IRuntimeProtoSerializerNode Serializer
         {
-            get
-            {
-                return serializer ??= BuildSerializer();
-            }
+            get { return serializer = serializer ?? BuildSerializer(); }
         }
 
         private DataFormat dataFormat;
+
         /// <summary>
         /// Specifies the rules used to process the field; this is used to determine the most appropriate
         /// wite-type, but also to describe subtypes <i>within</i> that wire-type (such as SignedVariant)
@@ -311,8 +319,11 @@ namespace ProtoBuf.Meta
             set { SetFlag(OPTIONS_AsReference, value, true); }
 #else
             get => false;
-            [Obsolete(ProtoContractAttribute.ReferenceDynamicDisabled, true)]
-            set { if (value != AsReference) ThrowHelper.ThrowNotSupportedException(); }
+            // [Obsolete(ProtoContractAttribute.ReferenceDynamicDisabled, true)]
+            set
+            {
+                if (value != AsReference) ThrowHelper.ThrowNotSupportedException();
+            }
 #endif
         }
 
@@ -326,8 +337,11 @@ namespace ProtoBuf.Meta
             set { SetFlag(OPTIONS_DynamicType, value, true); }
 #else
             get => false;
-            [Obsolete(ProtoContractAttribute.ReferenceDynamicDisabled, true)]
-            set { if (value != DynamicType) ThrowHelper.ThrowNotSupportedException(); }
+            // [Obsolete(ProtoContractAttribute.ReferenceDynamicDisabled, true)]
+            set
+            {
+                if (value != DynamicType) ThrowHelper.ThrowNotSupportedException();
+            }
 #endif
         }
 
@@ -341,6 +355,7 @@ namespace ProtoBuf.Meta
         }
 
         private DataFormat mapKeyFormat, mapValueFormat;
+
         /// <summary>
         /// Specifies the data-format that should be used for the key, when IsMap is enabled
         /// </summary>
@@ -356,6 +371,7 @@ namespace ProtoBuf.Meta
                 }
             }
         }
+
         /// <summary>
         /// Specifies the data-format that should be used for the value, when IsMap is enabled
         /// </summary>
@@ -373,6 +389,7 @@ namespace ProtoBuf.Meta
         }
 
         private MethodInfo getSpecified, setSpecified;
+
         /// <summary>
         /// Specifies methods for working with optional data members.
         /// </summary>
@@ -386,7 +403,7 @@ namespace ProtoBuf.Meta
         {
             if (this.getSpecified != getSpecified || this.setSpecified != setSpecified)
             {
-                if (getSpecified is not null)
+                if (getSpecified != null)
                 {
                     if (getSpecified.ReturnType != typeof(bool)
                         || getSpecified.IsStatic
@@ -395,7 +412,8 @@ namespace ProtoBuf.Meta
                         throw new ArgumentException("Invalid pattern for checking member-specified", nameof(getSpecified));
                     }
                 }
-                if (setSpecified is not null)
+
+                if (setSpecified != null)
                 {
                     ParameterInfo[] args;
                     if (setSpecified.ReturnType != typeof(void)
@@ -418,17 +436,22 @@ namespace ProtoBuf.Meta
             if (serializer is object) throw new InvalidOperationException("The type cannot be changed once a serializer has been generated");
         }
 
+        private static Type FlattenRepeated(RuntimeTypeModel model, Type type)
+        {
+            // for the purposes of choosing features, we want to look inside things like arrays/lists/etc
+            if (type is null)
+            {
+                return type;
+            }
+
+            var repeated = model is null ? RepeatedSerializers.TryGetRepeatedProvider(type) : model.TryGetRepeatedProvider(type);
+            return repeated is null ? type : repeated.ItemType;
+        }
+
         internal static IRuntimeProtoSerializerNode CreateMap(RepeatedSerializerStub repeated, RuntimeTypeModel model, DataFormat dataFormat,
             CompatibilityLevel compatibilityLevel,
             DataFormat keyFormat, DataFormat valueFormat, bool asReference, bool dynamicType, bool isMap, bool overwriteList, int fieldNumber, ValueMember member)
         {
-            static Type FlattenRepeated(RuntimeTypeModel model, Type type)
-            {   // for the purposes of choosing features, we want to look inside things like arrays/lists/etc
-                if (type is null) return type;
-                var repeated = model is null ? RepeatedSerializers.TryGetRepeatedProvider(type) : model.TryGetRepeatedProvider(type);
-                return repeated is null ? type : repeated.ItemType;
-            }
-
             var keyCompatibilityLevel = GetEffectiveCompatibilityLevel(compatibilityLevel, keyFormat);
             var valueCompatibilityLevel = GetEffectiveCompatibilityLevel(compatibilityLevel, valueFormat);
 
@@ -463,6 +486,7 @@ namespace ProtoBuf.Meta
                 {
                     ThrowHelper.ThrowNotSupportedException($"{nameof(SupportNull)} cannot be combined with {nameof(IsPacked)}, {nameof(NullWrappedValue)} or {nameof(NullWrappedCollection)}");
                 }
+
                 listFeatures |= SerializerFeatures.OptionWrappedValue | SerializerFeatures.OptionWrappedValueGroup;
             }
 #pragma warning restore CS0618
@@ -473,6 +497,7 @@ namespace ProtoBuf.Meta
                     listFeatures |= SerializerFeatures.OptionWrappedCollection;
                     if (NullWrappedCollectionGroup) listFeatures |= SerializerFeatures.OptionWrappedCollectionGroup;
                 }
+
                 if (NullWrappedValue)
                 {
                     listFeatures |= SerializerFeatures.OptionWrappedValue | SerializerFeatures.OptionWrappedValueFieldPresence;
@@ -480,18 +505,19 @@ namespace ProtoBuf.Meta
                 }
             }
         }
+
         private IRuntimeProtoSerializerNode BuildSerializer()
         {
             int opaqueToken = 0;
             try
             {
-                model.TakeLock(ref opaqueToken);// check nobody is still adding this type
+                model.TakeLock(ref opaqueToken); // check nobody is still adding this type
                 var member = backingMember ?? Member;
                 IRuntimeProtoSerializerNode ser;
 
                 var repeated = model.TryGetRepeatedProvider(MemberType);
 
-                if (repeated is not null)
+                if (repeated != null)
                 {
                     if (repeated.IsMap)
                     {
@@ -523,7 +549,7 @@ namespace ProtoBuf.Meta
                         var valueFeatures = SerializerFeatures.OptionWrappedValue;
                         if (NullWrappedValueGroup) valueFeatures |= SerializerFeatures.OptionWrappedValueGroup;
                         if (MemberType.IsValueType && Nullable.GetUnderlyingType(MemberType) is null) ThrowHelper.ThrowNotSupportedException($"{nameof(NullWrappedValue)} cannot be used with non-nullable values");
-                        if (_defaultValue is not null) ThrowHelper.ThrowNotSupportedException($"{nameof(NullWrappedValue)} cannot be used with default values");
+                        if (_defaultValue != null) ThrowHelper.ThrowNotSupportedException($"{nameof(NullWrappedValue)} cannot be used with default values");
                         if (IsRequired) ThrowHelper.ThrowNotSupportedException($"{nameof(NullWrappedValue)} cannot be used with required values");
                         if (IsPacked) ThrowHelper.ThrowNotSupportedException($"{nameof(NullWrappedValue)} cannot be used with packed values");
                         if (DataFormat != DataFormat.Default) ThrowHelper.ThrowNotSupportedException($"{nameof(NullWrappedValue)} can only be used with {nameof(DataFormat)}.{nameof(DataFormat.Default)}");
@@ -533,19 +559,23 @@ namespace ProtoBuf.Meta
                         // useful to know that we can at least get a suitable serializer
                         ser = AnyTypeSerializer.Create(MemberType, valueFeatures, CompatibilityLevel, DataFormat);
                     }
+
                     ser = new TagDecorator(FieldNumber, wireType, IsStrict, ser);
 
-                    if (_defaultValue is not null && !IsRequired && getSpecified is null)
-                    {   // note: "ShouldSerialize*" / "*Specified" / etc ^^^^ take precedence over defaultValue,
+                    if (_defaultValue != null && !IsRequired && getSpecified is null)
+                    {
+                        // note: "ShouldSerialize*" / "*Specified" / etc ^^^^ take precedence over defaultValue,
                         // as does "IsRequired"
                         ser = new DefaultValueDecorator(_defaultValue, ser);
                     }
+
                     if (MemberType == typeof(Uri))
                     {
                         ser = new UriDecorator(ser);
                     }
                 }
-                if (member is not null)
+
+                if (member != null)
                 {
                     if (member is PropertyInfo prop)
                     {
@@ -560,11 +590,12 @@ namespace ProtoBuf.Meta
                         throw new InvalidOperationException();
                     }
 
-                    if (getSpecified is not null || setSpecified is not null)
+                    if (getSpecified != null || setSpecified != null)
                     {
                         ser = new MemberSpecifiedDecorator(getSpecified, setSpecified, ser);
                     }
                 }
+
                 return ser;
             }
             finally
@@ -587,6 +618,7 @@ namespace ProtoBuf.Meta
                 default: throw new InvalidOperationException();
             }
         }
+
         private static WireType GetDateTimeWireType(DataFormat format)
         {
             switch (format)
@@ -609,18 +641,20 @@ namespace ProtoBuf.Meta
             type = DynamicStub.GetEffectiveType(type);
             if (type.IsEnum)
             {
-                if (allowComplexTypes && model is not null)
+                if (allowComplexTypes && model != null)
                 {
                     // need to do this before checking the typecode; an int enum will report Int32 etc
                     defaultWireType = WireType.Varint;
                     return new EnumMemberSerializer(type);
                 }
                 else
-                { // enum is fine for adding as a meta-type
+                {
+                    // enum is fine for adding as a meta-type
                     defaultWireType = WireType.None;
                     return null;
                 }
             }
+
             ProtoTypeCode code = Helpers.GetTypeCode(type);
             switch (code)
             {
@@ -647,6 +681,7 @@ namespace ProtoBuf.Meta
                         return default;
 #endif
                     }
+
                     return StringSerializer.Instance;
                 case ProtoTypeCode.Single:
                     defaultWireType = WireType.Fixed32;
@@ -717,13 +752,15 @@ namespace ProtoBuf.Meta
                     return TimeOnlySerializer.Instance;
 #endif
             }
+
             IRuntimeProtoSerializerNode parseable = model.AllowParseableTypes ? ParseableSerializer.TryCreate(type) : null;
             if (parseable is object)
             {
                 defaultWireType = WireType.String;
                 return parseable;
             }
-            if (allowComplexTypes && model is not null)
+
+            if (allowComplexTypes && model != null)
             {
                 MetaType meta = null;
                 if (model.IsDefined(type, compatibilityLevel))
@@ -771,7 +808,8 @@ namespace ProtoBuf.Meta
                     return default;
 #endif
                 }
-                if (meta is not null)
+
+                if (meta != null)
                 {
                     IProtoTypeSerializer serializer;
                     if (meta.HasSurrogate && (serializer = meta.Serializer).Features.GetCategory() == SerializerFeatures.CategoryScalar)
@@ -779,9 +817,11 @@ namespace ProtoBuf.Meta
                         dataFormat = meta.surrogateDataFormat;
                         // this checks for an overriding wire-type/data-format combo
                         if (TryGetCoreSerializer(model, dataFormat, meta.CompatibilityLevel, meta.surrogateType, out defaultWireType, false, false, false, false) is null)
-                        {   // otherwise, defer to the serializer
+                        {
+                            // otherwise, defer to the serializer
                             defaultWireType = serializer.Features.GetWireType();
                         }
+
                         return serializer;
                     }
                     else
@@ -790,11 +830,13 @@ namespace ProtoBuf.Meta
                     }
                 }
             }
+
             defaultWireType = WireType.None;
             return null;
         }
 
         private string name;
+
         internal void SetName(string name)
         {
             if (name != this.name)
@@ -803,6 +845,7 @@ namespace ProtoBuf.Meta
                 this.name = name;
             }
         }
+
         /// <summary>
         /// Gets the logical name for this member in the schema (this is not critical for binary serialization, but may be used
         /// when inferring a schema).
@@ -814,29 +857,35 @@ namespace ProtoBuf.Meta
         }
 
         private const ushort
-           OPTIONS_IsStrict = 1 << 0,
-           OPTIONS_IsPacked = 1 << 1,
-           OPTIONS_IsRequired = 1 << 2,
-           OPTIONS_OverwriteList = 1 << 3,
-           OPTIONS_NullWrappedValue = 1 << 4,
-           OPTIONS_NullWrappedValueGroup = 1 << 5,
+            OPTIONS_IsStrict = 1 << 0,
+            OPTIONS_IsPacked = 1 << 1,
+            OPTIONS_IsRequired = 1 << 2,
+            OPTIONS_OverwriteList = 1 << 3,
+            OPTIONS_NullWrappedValue = 1 << 4,
+            OPTIONS_NullWrappedValueGroup = 1 << 5,
 #if FEAT_DYNAMIC_REF
            OPTIONS_AsReference = ,
            OPTIONS_DynamicType = ,
 #endif
-           OPTIONS_IsMap = 1 << 6,
-           OPTIONS_NullWrappedCollection = 1 << 7,
-           OPTIONS_NullWrappedCollectionGroup = 1 << 8,
-           OPTIONS_SupportNull = 1 << 9;
+            OPTIONS_IsMap = 1 << 6,
+            OPTIONS_NullWrappedCollection = 1 << 7,
+            OPTIONS_NullWrappedCollectionGroup = 1 << 8,
+            OPTIONS_SupportNull = 1 << 9;
 
         private ushort flags;
-        private bool HasFlag(ushort flag) { return (flags & flag) == flag; }
+
+        private bool HasFlag(ushort flag)
+        {
+            return (flags & flag) == flag;
+        }
+
         private void SetFlag(ushort flag, bool value, bool throwIfFrozen = true)
         {
             if (throwIfFrozen && HasFlag(flag) != value)
             {
                 ThrowIfFrozen();
             }
+
             if (value)
                 flags |= flag;
             else
@@ -883,11 +932,14 @@ namespace ProtoBuf.Meta
 
         /// <see href="https://github.com/protobuf-net/protobuf-net/blob/main/docs/nullwrappers.md"/>
         internal bool HasExtendedNullSupport() => SupportNull || NullWrappedValueGroup || NullWrappedValue;
-        
+
         /// <see href="https://github.com/protobuf-net/protobuf-net/blob/main/docs/nullwrappers.md"/>
         /// <remarks>NullWrappers are needed **only** for items of collections</remarks>
-        internal bool RequiresExtraLayerInSchema() => ItemType is not null && HasExtendedNullSupport();
-        
+        internal bool RequiresExtraLayerInSchema()
+        {
+            return ItemType != null && HasExtendedNullSupport();
+        }
+
         /// <summary>
         /// Requires `group` to be placed on original valueMember level
         /// </summary>

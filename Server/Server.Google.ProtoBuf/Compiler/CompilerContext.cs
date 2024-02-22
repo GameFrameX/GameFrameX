@@ -4,13 +4,13 @@ using System.Threading;
 using ProtoBuf.Meta;
 using ProtoBuf.Serializers;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Collections.Generic;
 using System.Diagnostics;
 using ProtoBuf.Internal;
 using System.Collections;
 using System.Linq;
 using System.Globalization;
+using System.Reflection.Emit;
 using ProtoBuf.Internal.Serializers;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
@@ -75,11 +75,13 @@ namespace ProtoBuf.Compiler
             Type type = head.ExpectedType;
             try
             {
-                using CompilerContext ctx = new CompilerContext(scope, type, SignatureType.WriterScope_Input, true, model, typeof(TActual), null);
-                ctx.WriteNullCheckedTail(type, head, ctx.InputValue);
-                ctx.Emit(OpCodes.Ret);
-                return (ProtoSerializer<TActual>)ctx.method.CreateDelegate(
-                    typeof(ProtoSerializer<TActual>));
+                using (CompilerContext ctx = new CompilerContext(scope, type, SignatureType.WriterScope_Input, true, model, typeof(TActual), null))
+                {
+                    ctx.WriteNullCheckedTail(type, head, ctx.InputValue);
+                    ctx.Emit(OpCodes.Ret);
+                    return (ProtoSerializer<TActual>)ctx.method.CreateDelegate(
+                        typeof(ProtoSerializer<TActual>));
+                }
             }
             catch (Exception ex)
             {
@@ -122,34 +124,39 @@ namespace ProtoBuf.Compiler
         public static ProtoSubTypeDeserializer<T> BuildSubTypeDeserializer<T>(CompilerContextScope scope, IRuntimeProtoSerializerNode head, TypeModel model)
             where T : class
         {
-            using CompilerContext ctx = new CompilerContext(scope, head.ExpectedType, SignatureType.ReaderScope_Input, true, model, typeof(SubTypeState<T>), typeof(T));
-            head.EmitRead(ctx, ctx.InputValue);
-            // note that EmitRead will unwrap the T for us on the stack
-            ctx.Return();
+            using (CompilerContext ctx = new CompilerContext(scope, head.ExpectedType, SignatureType.ReaderScope_Input, true, model, typeof(SubTypeState<T>), typeof(T)))
+            {
+                head.EmitRead(ctx, ctx.InputValue);
+                // note that EmitRead will unwrap the T for us on the stack
+                ctx.Return();
 
-            return (ProtoSubTypeDeserializer<T>)ctx.method.CreateDelegate(typeof(ProtoSubTypeDeserializer<T>));
+                return (ProtoSubTypeDeserializer<T>)ctx.method.CreateDelegate(typeof(ProtoSubTypeDeserializer<T>));
+            }
         }
 
         public static ProtoDeserializer<T> BuildDeserializer<T>(CompilerContextScope scope, IRuntimeProtoSerializerNode head, TypeModel model, bool isScalar = false)
         {
-            using CompilerContext ctx = new CompilerContext(scope, head.ExpectedType, SignatureType.ReaderScope_Input, true, model, typeof(T), typeof(T));
+            using (CompilerContext ctx = new CompilerContext(scope, head.ExpectedType, SignatureType.ReaderScope_Input, true, model, typeof(T), typeof(T)))
+            {
+                head.EmitRead(ctx, ctx.InputValue);
+                if (!isScalar) ctx.LoadValue(ctx.InputValue);
+                ctx.Return();
 
-            head.EmitRead(ctx, ctx.InputValue);
-            if (!isScalar) ctx.LoadValue(ctx.InputValue);
-            ctx.Return();
-
-            return (ProtoDeserializer<T>)ctx.method.CreateDelegate(typeof(ProtoDeserializer<T>));
+                return (ProtoDeserializer<T>)ctx.method.CreateDelegate(typeof(ProtoDeserializer<T>));
+            }
         }
 
         public static Func<ISerializationContext, T> BuildFactory<T>(CompilerContextScope scope, IRuntimeProtoSerializerNode head, TypeModel model)
         {
             if (head is IProtoTypeSerializer pts && pts.ShouldEmitCreateInstance)
             {
-                using var ctx = new CompilerContext(scope, head.ExpectedType, SignatureType.Context, true , model, typeof(ISerializationContext), typeof(T));
-                pts.EmitCreateInstance(ctx, false);
-                ctx.Return();
+                using (var ctx = new CompilerContext(scope, head.ExpectedType, SignatureType.Context, true, model, typeof(ISerializationContext), typeof(T)))
+                {
+                    pts.EmitCreateInstance(ctx, false);
+                    ctx.Return();
 
-                return (Func<ISerializationContext, T>)ctx.method.CreateDelegate(typeof(Func<ISerializationContext, T>));
+                    return (Func<ISerializationContext, T>)ctx.method.CreateDelegate(typeof(Func<ISerializationContext, T>));
+                }
             }
             return null;
         }
@@ -225,7 +232,7 @@ namespace ProtoBuf.Compiler
             this.il = il ?? throw new ArgumentNullException(nameof(il));
             // NonPublic = false; <== implicit
             this.Model = model ?? throw new ArgumentNullException(nameof(model));
-            if (inputType is not null) InputValue = new Local(null, inputType);
+            if (inputType != null) InputValue = new Local(null, inputType);
             TraceCompile(">> " + traceName);
             _traceName = traceName;
             IsStatic = isStatic;
@@ -274,17 +281,25 @@ namespace ProtoBuf.Compiler
             NonPublic = true;
             _signature = signature;
             GetOpCodes(signature, isStatic, out _state, out _inputArg);
-            var paramTypes = signature switch
+            Type[] paramTypes;
+            switch (signature)
             {
-                SignatureType.ReaderScope_Input => new Type[] { StateBasedReadMethods.ByRefStateType, inputType },
-                SignatureType.WriterScope_Input => new Type[] { WriterUtil.ByRefStateType, inputType },
-                _ => new Type[] { inputType },
-            };
+                case SignatureType.ReaderScope_Input:
+                    paramTypes = new Type[] { StateBasedReadMethods.ByRefStateType, inputType };
+                    break;
+                case SignatureType.WriterScope_Input:
+                    paramTypes = new Type[] { WriterUtil.ByRefStateType, inputType };
+                    break;
+                default:
+                    paramTypes = new Type[] { inputType };
+                    break;
+            }
+
             int uniqueIdentifier = Interlocked.Increment(ref next);
             method = new DynamicMethod("proto_" + uniqueIdentifier.ToString(CultureInfo.InvariantCulture), returnType ?? typeof(void), paramTypes,
                 associatedType.IsInterface ? typeof(object) : associatedType, true);
             this.il = method.GetILGenerator();
-            if (inputType is not null) InputValue = new Local(null, inputType);
+            if (inputType != null) InputValue = new Local(null, inputType);
             TraceCompile(">> " + method.Name);
             _traceName = method.Name;
             IsStatic = isStatic;
@@ -412,7 +427,7 @@ namespace ProtoBuf.Compiler
             for (int i = 0; i < count; i++)
             {
                 LocalBuilder item = locals[i];
-                if (item is not null && item.LocalType == type)
+                if (item != null && item.LocalType == type)
                 {
                     locals[i] = null; // remove from pool
                     return item;
@@ -506,7 +521,7 @@ namespace ProtoBuf.Compiler
 
         public Local GetLocalWithValue(Type type, Compiler.Local fromValue)
         {
-            if (fromValue is not null)
+            if (fromValue != null)
             {
                 if (fromValue.Type == type) return fromValue.AsCopy();
                 // otherwise, load onto the stack and let the default handling (below) deal with it
@@ -580,7 +595,7 @@ namespace ProtoBuf.Compiler
         internal void EmitStateBasedWrite(string methodName, Local fromValue, Type type = null, Type argType = null)
         {
             if (string.IsNullOrEmpty(methodName)) throw new ArgumentNullException(nameof(methodName));
-            type ??= typeof(ProtoWriter.State);
+            type = type ?? typeof(ProtoWriter.State);
 
             Type foundType;
             MethodInfo foundMethod;
@@ -602,10 +617,13 @@ namespace ProtoBuf.Compiler
             {
                 throw new InvalidOperationException($"Unable to uniquely resolve {type.Name}.{methodName}", ex);
             }
-            using var tmp = GetLocalWithValue(foundType, fromValue);
-            LoadState();
-            LoadValue(tmp);
-            EmitCall(foundMethod);
+
+            using (var tmp = GetLocalWithValue(foundType, fromValue))
+            {
+                LoadState();
+                LoadValue(tmp);
+                EmitCall(foundMethod);
+            }
         }
 
         public void EmitCall(MethodInfo method) { EmitCall(method, null); }
@@ -623,7 +641,7 @@ namespace ProtoBuf.Compiler
             else
             {
                 opcode = OpCodes.Callvirt;
-                if (targetType is not null && targetType.IsValueType && !method.DeclaringType.IsValueType)
+                if (targetType != null && targetType.IsValueType && !method.DeclaringType.IsValueType)
                 {
                     Constrain(targetType);
                 }
@@ -660,15 +678,17 @@ namespace ProtoBuf.Compiler
                 }
                 else
                 { // nullable T; check HasValue
-                    using Compiler.Local valOrNull = GetLocalWithValue(type, valueFrom);
-                    LoadAddress(valOrNull, type);
-                    LoadValue(type.GetProperty("HasValue"));
-                    CodeLabel @end = DefineLabel();
-                    BranchIfFalse(@end, false);
-                    LoadAddress(valOrNull, type);
-                    EmitCall(type.GetMethod("GetValueOrDefault", Type.EmptyTypes));
-                    tail.EmitWrite(this, null);
-                    MarkLabel(@end);
+                    using (Compiler.Local valOrNull = GetLocalWithValue(type, valueFrom))
+                    {
+                        LoadAddress(valOrNull, type);
+                        LoadValue(type.GetProperty("HasValue"));
+                        CodeLabel @end = DefineLabel();
+                        BranchIfFalse(@end, false);
+                        LoadAddress(valOrNull, type);
+                        EmitCall(type.GetMethod("GetValueOrDefault", Type.EmptyTypes));
+                        tail.EmitWrite(this, null);
+                        MarkLabel(@end);
+                    }
                 }
             }
             else
@@ -688,15 +708,17 @@ namespace ProtoBuf.Compiler
         internal void ReadNullCheckedTail(Type type, IRuntimeProtoSerializerNode tail, Compiler.Local valueFrom)
         {
             Type underlyingType;
-            if (type.IsValueType && type != tail.ExpectedType && (underlyingType = Nullable.GetUnderlyingType(type)) is not null
+            if (type.IsValueType && type != tail.ExpectedType && (underlyingType = Nullable.GetUnderlyingType(type)) != null
                 && underlyingType == tail.ExpectedType)
             {
                 if (tail.RequiresOldValue)
                 {
                     // we expect the input value to be in valueFrom; need to unpack it from T?
-                    using Local loc = GetLocalWithValue(type, valueFrom);
-                    LoadAddress(loc, type);
-                    EmitCall(type.GetMethod("GetValueOrDefault", Type.EmptyTypes));
+                    using (Local loc = GetLocalWithValue(type, valueFrom))
+                    {
+                        LoadAddress(loc, type);
+                        EmitCall(type.GetMethod("GetValueOrDefault", Type.EmptyTypes));
+                    }
                 }
                 else
                 {
@@ -742,8 +764,8 @@ namespace ProtoBuf.Compiler
 
         public void EmitCtor(Type type, params Type[] parameterTypes)
         {
-            Debug.Assert(type is not null);
-            Debug.Assert(parameterTypes is not null);
+            Debug.Assert(type != null);
+            Debug.Assert(parameterTypes != null);
             if (type.IsValueType && parameterTypes.Length == 0)
             {
                 il.Emit(OpCodes.Initobj, type);
@@ -761,14 +783,14 @@ namespace ProtoBuf.Compiler
         private bool InternalsVisible(Assembly assembly)
         {
             if (string.IsNullOrEmpty(Scope.AssemblyName)) return false;
-            if (knownTrustedAssemblies is not null)
+            if (knownTrustedAssemblies != null)
             {
                 if (knownTrustedAssemblies.IndexOf(assembly) >= 0)
                 {
                     return true;
                 }
             }
-            if (knownUntrustedAssemblies is not null)
+            if (knownUntrustedAssemblies != null)
             {
                 if (knownUntrustedAssemblies.IndexOf(assembly) >= 0)
                 {
@@ -789,11 +811,11 @@ namespace ProtoBuf.Compiler
 
             if (isTrusted)
             {
-                (knownTrustedAssemblies ??= new List<Assembly>()).Add(assembly);
+                (knownTrustedAssemblies = knownTrustedAssemblies ?? new List<Assembly>()).Add(assembly);
             }
             else
             {
-                (knownUntrustedAssemblies ??= new List<Assembly>()).Add(assembly);
+                (knownUntrustedAssemblies = knownUntrustedAssemblies ?? new List<Assembly>()).Add(assembly);
             }
             return isTrusted;
         }
@@ -811,7 +833,7 @@ namespace ProtoBuf.Compiler
                 {
                     var propName = member.Name.Substring(1, member.Name.Length - 17);
                     var prop = member.DeclaringType.GetProperty(propName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-                    if (prop is not null) member = prop;
+                    if (prop != null) member = prop;
                 }
                 bool isPublic;
                 MemberTypes memberType = member.MemberType;
@@ -827,7 +849,7 @@ namespace ProtoBuf.Compiler
                         do
                         {
                             isPublic = type.IsNestedPublic || type.IsPublic || ((type.DeclaringType is null || type.IsNestedAssembly || type.IsNestedFamORAssem) && InternalsVisible(type.Assembly));
-                        } while (isPublic && (type = type.DeclaringType) is not null); // ^^^ !type.IsNested, but not all runtimes have that
+                        } while (isPublic && (type = type.DeclaringType) != null); // ^^^ !type.IsNested, but not all runtimes have that
                         break;
                     case MemberTypes.Field:
                         FieldInfo field = ((FieldInfo)member);
@@ -859,21 +881,15 @@ namespace ProtoBuf.Compiler
                 }
                 if (!isPublic)
                 {
-                    switch (member)
+                    if (member is FieldBuilder || member is TypeBuilder || member is PropertyBuilder)
                     {
-                        case FieldBuilder:
-                        case TypeBuilder:
-                        case PropertyBuilder:
-                            // we're building them; 'tis fine
-                            break;
-                        default:
-                            throw memberType switch
-                            {
-                                MemberTypes.TypeInfo or MemberTypes.NestedType =>
-                                    new InvalidOperationException("Non-public type cannot be used with full dll compilation: " + ((Type)member).NormalizeName()),
-                                _ =>
-                                    new InvalidOperationException("Non-public member cannot be used with full dll compilation: " + member.DeclaringType.NormalizeName() + "." + member.Name),
-                            };
+                        // we're building them; 'tis fine
+                    }
+                    else
+                    {
+                        throw memberType == MemberTypes.TypeInfo ? new InvalidOperationException("Non-public type cannot be used with full dll compilation: " + ((Type)member).NormalizeName()) :
+                            memberType == MemberTypes.NestedType ? new InvalidOperationException("Non-public type cannot be used with full dll compilation: " + ((Type)member).NormalizeName()) :
+                            new InvalidOperationException("Non-public member cannot be used with full dll compilation: " + member.DeclaringType.NormalizeName() + "." + member.Name);
                     }
                 }
             }
@@ -1068,54 +1084,61 @@ namespace ProtoBuf.Compiler
             else
             {
                 // too many to jump easily (especially on Android) - need to split up (note: uses a local pulled from the stack)
-                using Local val = GetLocalWithValue(typeof(int), null);
-                int count = jumpTable.Length, offset = 0;
-                int blockCount = count / MAX_JUMPS;
-                if ((count % MAX_JUMPS) != 0) blockCount++;
-
-                Label[] blockLabels = new Label[blockCount];
-                for (int i = 0; i < blockCount; i++)
+                using (Local val = GetLocalWithValue(typeof(int), null))
                 {
-                    blockLabels[i] = il.DefineLabel();
-                }
-                CodeLabel endOfSwitch = DefineLabel();
+                    int count = jumpTable.Length, offset = 0;
+                    int blockCount = count / MAX_JUMPS;
+                    if ((count % MAX_JUMPS) != 0) blockCount++;
 
-                LoadValue(val);
-                LoadValue(MAX_JUMPS);
-                Emit(OpCodes.Div);
-                TraceCompile(OpCodes.Switch.ToString());
-                il.Emit(OpCodes.Switch, blockLabels);
-                Branch(endOfSwitch, false);
-
-                Label[] innerLabels = new Label[MAX_JUMPS];
-                for (int blockIndex = 0; blockIndex < blockCount; blockIndex++)
-                {
-                    il.MarkLabel(blockLabels[blockIndex]);
-
-                    int itemsThisBlock = Math.Min(MAX_JUMPS, count);
-                    count -= itemsThisBlock;
-                    if (innerLabels.Length != itemsThisBlock) innerLabels = new Label[itemsThisBlock];
-
-                    int subtract = offset;
-                    for (int j = 0; j < itemsThisBlock; j++)
+                    Label[] blockLabels = new Label[blockCount];
+                    for (int i = 0; i < blockCount; i++)
                     {
-                        innerLabels[j] = jumpTable[offset++].Value;
+                        blockLabels[i] = il.DefineLabel();
                     }
+
+                    CodeLabel endOfSwitch = DefineLabel();
+
                     LoadValue(val);
-                    if (subtract != 0) // switches are always zero-based
-                    {
-                        LoadValue(subtract);
-                        Emit(OpCodes.Sub);
-                    }
+                    LoadValue(MAX_JUMPS);
+                    Emit(OpCodes.Div);
                     TraceCompile(OpCodes.Switch.ToString());
-                    il.Emit(OpCodes.Switch, innerLabels);
-                    if (count != 0)
-                    { // force default to the very bottom
-                        Branch(endOfSwitch, false);
+                    il.Emit(OpCodes.Switch, blockLabels);
+                    Branch(endOfSwitch, false);
+
+                    Label[] innerLabels = new Label[MAX_JUMPS];
+                    for (int blockIndex = 0; blockIndex < blockCount; blockIndex++)
+                    {
+                        il.MarkLabel(blockLabels[blockIndex]);
+
+                        int itemsThisBlock = Math.Min(MAX_JUMPS, count);
+                        count -= itemsThisBlock;
+                        if (innerLabels.Length != itemsThisBlock) innerLabels = new Label[itemsThisBlock];
+
+                        int subtract = offset;
+                        for (int j = 0; j < itemsThisBlock; j++)
+                        {
+                            innerLabels[j] = jumpTable[offset++].Value;
+                        }
+
+                        LoadValue(val);
+                        if (subtract != 0) // switches are always zero-based
+                        {
+                            LoadValue(subtract);
+                            Emit(OpCodes.Sub);
+                        }
+
+                        TraceCompile(OpCodes.Switch.ToString());
+                        il.Emit(OpCodes.Switch, innerLabels);
+                        if (count != 0)
+                        {
+                            // force default to the very bottom
+                            Branch(endOfSwitch, false);
+                        }
                     }
+
+                    Debug.Assert(count == 0, "Should use exactly all switch items");
+                    MarkLabel(endOfSwitch);
                 }
-                Debug.Assert(count == 0, "Should use exactly all switch items");
-                MarkLabel(endOfSwitch);
             }
         }
 
@@ -1232,13 +1255,15 @@ namespace ProtoBuf.Compiler
                     }
                     else
                     {   // *could* be IDisposable; test via "as"
-                        using Compiler.Local disp = new Compiler.Local(ctx, disposableType);
-                        ctx.LoadValue(local);
-                        ctx.TryCast(disposableType);
-                        ctx.CopyValue();
-                        ctx.StoreValue(disp);
-                        ctx.BranchIfFalse(@null, true);
-                        ctx.LoadAddress(disp, disposableType);
+                        using (Compiler.Local disp = new Compiler.Local(ctx, disposableType))
+                        {
+                            ctx.LoadValue(local);
+                            ctx.TryCast(disposableType);
+                            ctx.CopyValue();
+                            ctx.StoreValue(disp);
+                            ctx.BranchIfFalse(@null, true);
+                            ctx.LoadAddress(disp, disposableType);
+                        }
                     }
                     ctx.EmitCall(dispose);
                     ctx.MarkLabel(@null);
@@ -1293,7 +1318,7 @@ namespace ProtoBuf.Compiler
             Type type = arr.Type;
             Debug.Assert(type.IsArray && arr.Type.GetArrayRank() == 1);
             type = type.GetElementType();
-            Debug.Assert(type is not null, "Not an array: " + arr.Type.FullName);
+            Debug.Assert(type != null, "Not an array: " + arr.Type.FullName);
             LoadValue(arr);
             LoadValue(i);
             switch (Helpers.GetTypeCode(type))

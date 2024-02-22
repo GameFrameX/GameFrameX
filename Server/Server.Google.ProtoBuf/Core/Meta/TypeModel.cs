@@ -1,5 +1,4 @@
-
-﻿using ProtoBuf.Internal;
+using ProtoBuf.Internal;
 using ProtoBuf.Serializers;
 using System;
 using System.Buffers;
@@ -49,6 +48,7 @@ namespace ProtoBuf.Meta
             get => _bufferSize;
             set => _bufferSize = value <= 0 ? BufferPool.BUFFER_LENGTH : value; // use default if invalid
         }
+
         /// <summary>
         /// Gets or sets the max serialization/deserialization depth
         /// </summary>
@@ -79,18 +79,22 @@ namespace ProtoBuf.Meta
             /// No additional options
             /// </summary>
             None = 0,
+
             /// <summary>
             /// Should the deserializer attempt to avoid duplicate copies of the same string?
             /// </summary>
             InternStrings = 1 << 0,
+
             /// <summary>
             /// Should the <c>Kind</c> be included on date/time values?
             /// </summary>
             IncludeDateTimeKind = 1 << 1,
+
             /// <summary>
             /// Should zero-length packed arrays be serialized? (this is the v2 behavior, but skipping them is more efficient)
             /// </summary>
             SkipZeroLengthPackedArrays = 1 << 2,
+
             /// <summary>
             /// Should root-values allow "packed" encoding? (v2 does not support this)
             /// </summary>
@@ -121,7 +125,7 @@ namespace ProtoBuf.Meta
         {
             if (type.IsEnum) return WireType.Varint;
 
-            if (model is not null && model.CanSerializeContractType(type))
+            if (model != null && model.CanSerializeContractType(type))
             {
                 return format == DataFormat.Group ? WireType.StartGroup : WireType.String;
             }
@@ -156,13 +160,16 @@ namespace ProtoBuf.Meta
                 case ProtoTypeCode.Uri:
                     return WireType.String;
             }
+
             return WireType.None;
         }
-        /// <summary>        /// Indicates whether a type is known to the model
+
+        /// <summary>
+        /// Indicates whether a type is known to the model
         /// </summary>
         internal virtual bool IsKnownType<T>(CompatibilityLevel ambient)
             => (TypeHelper<T>.IsReferenceType | !TypeHelper<T>.CanBeNull) // don't claim T?
-            && GetSerializerCore<T>(ambient) is object;
+               && GetSerializerCore<T>(ambient) is object;
 
         internal const SerializerFeatures FromAux = (SerializerFeatures)(1 << 30);
 
@@ -192,6 +199,7 @@ namespace ProtoBuf.Meta
                 {
                     ThrowHelper.ThrowProtoException(ex.Message + $"; scope: {scope}, features: {features}; type: {type.NormalizeName()}", ex);
                 }
+
                 return true;
             }
 
@@ -207,8 +215,10 @@ namespace ProtoBuf.Meta
                         ThrowUnexpectedType(item.GetType(), this);
                     }
                 }
+
                 return true;
             }
+
             return false;
         }
 
@@ -302,6 +312,7 @@ namespace ProtoBuf.Meta
                     {
                         ThrowUnexpectedType(type, this);
                     }
+
                     state.Close();
                 }
             }
@@ -375,7 +386,7 @@ namespace ProtoBuf.Meta
             var serializer = TryGetSerializer<T>(state.Model);
             if (serializer is null)
             {
-                Debug.Assert(state.Model is not null, "Model is null");
+                Debug.Assert(state.Model != null, "Model is null");
                 long position = state.GetPosition();
                 state.Model.SerializeRootFallback(ref state, value);
                 return state.GetPosition() - position;
@@ -452,7 +463,8 @@ namespace ProtoBuf.Meta
         /// <returns>The updated instance; this may be different to the instance argument if
         /// either the original instance was null, or the stream defines a known sub-type of the
         /// original instance.</returns>
-        public object DeserializeWithLengthPrefix(Stream source, object value, [DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, PrefixStyle style, int expectedField, TypeResolver resolver, out long bytesRead) => DeserializeWithLengthPrefix(source, value, type, style, expectedField, resolver, out bytesRead, out bool _, null);
+        public object DeserializeWithLengthPrefix(Stream source, object value, [DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, PrefixStyle style, int expectedField, TypeResolver resolver, out long bytesRead) =>
+            DeserializeWithLengthPrefix(source, value, type, style, expectedField, resolver, out bytesRead, out bool _, null);
 
         private object DeserializeWithLengthPrefix(Stream source, object value, [DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, PrefixStyle style, int expectedField, TypeResolver resolver, out long bytesRead, out bool haveObject, SerializationContext context)
         {
@@ -464,9 +476,10 @@ namespace ProtoBuf.Meta
             {
                 ThrowHelper.ThrowInvalidOperationException("A type must be provided unless base-128 prefixing is being used in combination with a resolver");
             }
+
             do
             {
-                bool expectPrefix = expectedField > 0 || resolver is not null;
+                bool expectPrefix = expectedField > 0 || resolver != null;
                 len = ProtoReader.ReadLongLengthPrefix(source, expectPrefix, style, out int actualField, out int tmpBytesRead);
                 if (tmpBytesRead == 0) return value;
                 bytesRead += tmpBytesRead;
@@ -475,12 +488,16 @@ namespace ProtoBuf.Meta
                 switch (style)
                 {
                     case PrefixStyle.Base128:
-                        if (expectPrefix && expectedField == 0 && type is null && resolver is not null)
+                        if (expectPrefix && expectedField == 0 && type is null && resolver != null)
                         {
                             type = resolver(actualField);
                             skip = type is null;
                         }
-                        else { skip = expectedField != actualField; }
+                        else
+                        {
+                            skip = expectedField != actualField;
+                        }
+
                         break;
                     default:
                         skip = false;
@@ -509,12 +526,14 @@ namespace ProtoBuf.Meta
                         TypeModel.ThrowUnexpectedType(type, this); // throws
                     }
                 }
+
                 bytesRead += state.GetPosition();
             }
             finally
             {
                 state.Dispose();
             }
+
             haveObject = true;
             return value;
         }
@@ -539,6 +558,7 @@ namespace ProtoBuf.Meta
         {
             return DeserializeItems(source, type, style, expectedField, resolver, null);
         }
+
         /// <summary>
         /// Reads a sequence of consecutive length-prefixed items from a stream, using
         /// either base-128 or fixed-length prefixes. Base-128 prefixes with a tag
@@ -580,6 +600,7 @@ namespace ProtoBuf.Meta
         {
             return DeserializeItems<T>(source, style, expectedField, null);
         }
+
         /// <summary>
         /// Reads a sequence of consecutive length-prefixed items from a stream, using
         /// either base-128 or fixed-length prefixes. Base-128 prefixes with a tag
@@ -605,28 +626,56 @@ namespace ProtoBuf.Meta
             IEnumerator<T>,
             IEnumerable<T>
         {
-            IEnumerator<T> IEnumerable<T>.GetEnumerator() { return this; }
-            public new T Current { get { return (T)base.Current; } }
-            void IDisposable.Dispose() { }
+            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            {
+                return this;
+            }
+
+            public new T Current
+            {
+                get { return (T)base.Current; }
+            }
+
+            void IDisposable.Dispose()
+            {
+            }
+
             public DeserializeItemsIterator(TypeModel model, Stream source, PrefixStyle style, int expectedField, SerializationContext context)
-                : base(model, source, typeof(T), style, expectedField, null, context) { }
+                : base(model, source, typeof(T), style, expectedField, null, context)
+            {
+            }
         }
 
         private class DeserializeItemsIterator : IEnumerator, IEnumerable
         {
-            IEnumerator IEnumerable.GetEnumerator() { return this; }
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this;
+            }
+
             private bool haveObject;
             private object current;
+
             public bool MoveNext()
             {
                 if (haveObject)
                 {
                     current = model.DeserializeWithLengthPrefix(source, null, type, style, expectedField, resolver, out long _, out haveObject, context);
                 }
+
                 return haveObject;
             }
-            void IEnumerator.Reset() { ThrowHelper.ThrowNotSupportedException(); }
-            public object Current { get { return current; } }
+
+            void IEnumerator.Reset()
+            {
+                ThrowHelper.ThrowNotSupportedException();
+            }
+
+            public object Current
+            {
+                get { return current; }
+            }
+
             private readonly Stream source;
             private readonly Type type;
             private readonly PrefixStyle style;
@@ -634,6 +683,7 @@ namespace ProtoBuf.Meta
             private readonly TypeResolver resolver;
             private readonly TypeModel model;
             private readonly SerializationContext context;
+
             public DeserializeItemsIterator(TypeModel model, Stream source, Type type, PrefixStyle style, int expectedField, TypeResolver resolver, SerializationContext context)
             {
                 haveObject = true;
@@ -701,6 +751,7 @@ namespace ProtoBuf.Meta
                         ThrowHelper.ThrowArgumentOutOfRangeException(nameof(style));
                         break;
                 }
+
                 state.Flush();
                 state.Close();
             }
@@ -714,6 +765,7 @@ namespace ProtoBuf.Meta
                 state.Dispose();
             }
         }
+
         /// <summary>
         /// Applies a protocol-buffer stream to an existing instance (which may be null).
         /// </summary>
@@ -726,7 +778,7 @@ namespace ProtoBuf.Meta
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public object Deserialize(Stream source, object value, [DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type)
         {
-            using var state = ProtoReader.State.Create(source, this, null, ProtoReader.TO_EOF);
+            var state = ProtoReader.State.Create(source, this, null, ProtoReader.TO_EOF);
             return state.DeserializeRootFallback(value, type);
         }
 
@@ -743,7 +795,7 @@ namespace ProtoBuf.Meta
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public object Deserialize(Stream source, object value, [DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, SerializationContext context)
         {
-            using var state = ProtoReader.State.Create(source, this, context, ProtoReader.TO_EOF);
+            var state = ProtoReader.State.Create(source, this, context, ProtoReader.TO_EOF);
             return state.DeserializeRootFallback(value, type);
         }
 
@@ -759,7 +811,7 @@ namespace ProtoBuf.Meta
         /// original instance.</returns>
         public T Deserialize<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(Stream source, T value = default, object userState = null)
         {
-            using var state = ProtoReader.State.Create(source, this, userState);
+            var state = ProtoReader.State.Create(source, this, userState);
             return state.DeserializeRootImpl<T>(value);
         }
 
@@ -775,7 +827,7 @@ namespace ProtoBuf.Meta
         /// original instance.</returns>
         public T Deserialize<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(ReadOnlyMemory<byte> source, T value = default, object userState = null)
         {
-            using var state = ProtoReader.State.Create(source, this, userState);
+            var state = ProtoReader.State.Create(source, this, userState);
             return state.DeserializeRootImpl<T>(value);
         }
 
@@ -825,7 +877,7 @@ namespace ProtoBuf.Meta
         /// original instance.</returns>
         public T Deserialize<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(ReadOnlySequence<byte> source, T value = default, object userState = null)
         {
-            using var state = ProtoReader.State.Create(source, this, userState);
+            var state = ProtoReader.State.Create(source, this, userState);
             return state.DeserializeRootImpl<T>(value);
         }
 
@@ -842,7 +894,7 @@ namespace ProtoBuf.Meta
         /// original instance.</returns>
         public object Deserialize([DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, Stream source, object value = default, object userState = null, long length = ProtoReader.TO_EOF)
         {
-            using var state = ProtoReader.State.Create(source, this, userState, length);
+            var state = ProtoReader.State.Create(source, this, userState, length);
             return state.DeserializeRootFallback(value, type);
         }
 
@@ -858,7 +910,7 @@ namespace ProtoBuf.Meta
         /// original instance.</returns>
         public object Deserialize([DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, ReadOnlyMemory<byte> source, object value = default, object userState = null)
         {
-            using var state = ProtoReader.State.Create(source, this, userState);
+            var state = ProtoReader.State.Create(source, this, userState);
             return state.DeserializeRootFallback(value, type);
         }
 
@@ -908,7 +960,7 @@ namespace ProtoBuf.Meta
         /// original instance.</returns>
         public object Deserialize([DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, ReadOnlySequence<byte> source, object value = default, object userState = null)
         {
-            using var state = ProtoReader.State.Create(source, this, userState);
+            var state = ProtoReader.State.Create(source, this, userState);
             return state.DeserializeRootFallback(value, type);
         }
 
@@ -931,6 +983,7 @@ namespace ProtoBuf.Meta
                 type = underlyingType;
                 autoCreate = false;
             }
+
             return autoCreate;
         }
 
@@ -999,6 +1052,7 @@ namespace ProtoBuf.Meta
                 {
                     value = state.DeserializeRootFallback(value, type);
                 }
+
                 return value;
             }
             finally
@@ -1027,6 +1081,7 @@ namespace ProtoBuf.Meta
                 {
                     value = state.DeserializeRootFallback(value, type);
                 }
+
                 return value;
             }
             finally
@@ -1055,6 +1110,7 @@ namespace ProtoBuf.Meta
                 {
                     value = state.DeserializeRootFallback(value, type);
                 }
+
                 return value;
             }
             finally
@@ -1083,6 +1139,7 @@ namespace ProtoBuf.Meta
                 // this returns true to say we actively found something, but a value is assigned either way (or throws)
                 TryDeserializeAuxiliaryType(ref state, DataFormat.Default, TypeModel.ListItemTag, type, ref value, true, false, autoCreate, false, null, isRoot: true);
             }
+
             return value;
         }
 
@@ -1102,6 +1159,7 @@ namespace ProtoBuf.Meta
                     value = CreateListInstance(listType, itemType);
                     list = value as IList;
                 }
+
                 if (list is object)
                 {
                     list.Add(nextItem);
@@ -1110,15 +1168,18 @@ namespace ProtoBuf.Meta
                 {
                     arraySurrogate.Add(nextItem);
                 }
+
                 nextItem = null;
             }
+
             if (arraySurrogate is object)
             {
                 Array newArray;
-                if (value is not null)
+                if (value != null)
                 {
                     if (arraySurrogate.Count == 0)
-                    {   // we'll stay with what we had, thanks
+                    {
+                        // we'll stay with what we had, thanks
                     }
                     else
                     {
@@ -1136,6 +1197,7 @@ namespace ProtoBuf.Meta
                     value = newArray;
                 }
             }
+
             return found;
         }
 
@@ -1149,14 +1211,13 @@ namespace ProtoBuf.Meta
             }
 
             if (!listType.IsClass || listType.IsAbstract
-                || Helpers.GetConstructor(listType, Type.EmptyTypes, true) is null)
+                                  || Helpers.GetConstructor(listType, Type.EmptyTypes, true) is null)
             {
                 string fullName;
                 bool handled = false;
                 if (listType.IsInterface &&
-                    (fullName = listType.FullName) is not null && fullName.Contains("Dictionary")) // have to try to be frugal here...
+                    (fullName = listType.FullName) != null && fullName.Contains("Dictionary")) // have to try to be frugal here...
                 {
-
                     if (listType.IsGenericType && listType.GetGenericTypeDefinition() == typeof(System.Collections.Generic.IDictionary<,>))
                     {
                         Type[] genericTypes = listType.GetGenericArguments();
@@ -1185,6 +1246,7 @@ namespace ProtoBuf.Meta
 #pragma warning restore IDE0059
                 }
             }
+
             return Activator.CreateInstance(concreteListType, nonPublic: true);
         }
 
@@ -1196,6 +1258,7 @@ namespace ProtoBuf.Meta
             state = liquid.Solidify();
             return result;
         }
+
         /// <summary>
         /// <para>
         /// This is the more "complete" version of Deserialize, which handles single instances of mapped types.
@@ -1225,7 +1288,8 @@ namespace ProtoBuf.Meta
                 {
                     itemType = type.GetElementType();
                 }
-                if (itemType is not null)
+
+                if (itemType != null)
                 {
                     if (insideList) TypeModel.ThrowNestedListsNotSupported((parentListOrType as Type) ?? (parentListOrType?.GetType()));
                     found = TryDeserializeList(ref state, format, tag, type, itemType, ref value, isRoot);
@@ -1233,6 +1297,7 @@ namespace ProtoBuf.Meta
                     {
                         value = CreateListInstance(type, itemType);
                     }
+
                     return found;
                 }
 
@@ -1260,8 +1325,10 @@ namespace ProtoBuf.Meta
                         state.SkipField();
                         continue;
                     }
+
                     state.ThrowInvalidOperationException($"Expected field {tag}, but found {fieldNumber}");
                 }
+
                 found = true;
                 state.Hint(wiretype); // handle signed data etc
 
@@ -1270,6 +1337,7 @@ namespace ProtoBuf.Meta
                 var scope = NormalizeAuxScope(features, insideList, type, isRoot);
                 value = Deserialize(scope, ref state, type, value);
             }
+
             if (!found && !asListItem && autoCreate)
             {
                 if (type != typeof(string))
@@ -1277,6 +1345,7 @@ namespace ProtoBuf.Meta
                     value = Activator.CreateInstance(type, nonPublic: true);
                 }
             }
+
             return found;
         }
 
@@ -1295,8 +1364,10 @@ namespace ProtoBuf.Meta
                     Interlocked.Exchange(ref s_defaultModel, newValue);
                     break;
             }
+
             return Volatile.Read(ref s_defaultModel);
         }
+
         private static TypeModel s_defaultModel;
 
         internal static void ResetDefaultModel()
@@ -1306,7 +1377,10 @@ namespace ProtoBuf.Meta
 
         internal sealed class NullModel : TypeModel
         {
-            private NullModel() { }
+            private NullModel()
+            {
+            }
+
             private static readonly NullModel s_Singleton = new NullModel();
 
             public static TypeModel Singleton
@@ -1314,6 +1388,7 @@ namespace ProtoBuf.Meta
                 [MethodImpl(MethodImplOptions.NoInlining)]
                 get => s_Singleton;
             }
+
             protected override ISerializer<T> GetSerializer<T>() => null;
         }
 
@@ -1370,7 +1445,7 @@ namespace ProtoBuf.Meta
         /// <summary>
         /// Indicates whether the supplied type is explicitly modelled by the model
         /// </summary>
-        internal bool IsDefined(Type type, CompatibilityLevel ambient) => type is not null && DynamicStub.IsKnownType(type, this, ambient);
+        internal bool IsDefined(Type type, CompatibilityLevel ambient) => type != null && DynamicStub.IsKnownType(type, this, ambient);
 
         /// <summary>
         /// Get a typed serializer for <typeparamref name="T"/>
@@ -1389,6 +1464,7 @@ namespace ProtoBuf.Meta
             {
                 suffix = "; you may need to ensure that RuntimeTypeModel.Initialize has been invoked";
             }
+
             ThrowHelper.ThrowInvalidOperationException($"No serializer for type {typeof(T).NormalizeName()} is available for model {model?.ToString() ?? "(none)"}{suffix}");
             return default;
         }
@@ -1404,12 +1480,16 @@ namespace ProtoBuf.Meta
         {
             if (TypeHelper<T>.IsReferenceType)
             {
-                serializer ??= TypeModel.TryGetSerializer<T>(context?.Model);
+                serializer = serializer ?? TypeModel.TryGetSerializer<T>(context?.Model);
                 T obj = default;
                 if (serializer is IFactory<T> factory) obj = factory.Create(context);
 
                 // note we already know this is a ref-type
-                obj ??= ActivatorCreate<T>();
+                if (obj == null)
+                {
+                    obj = ActivatorCreate<T>();
+                }
+
                 return obj;
             }
             else
@@ -1434,15 +1514,15 @@ namespace ProtoBuf.Meta
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static ISerializer<T> GetSerializer<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(TypeModel model, CompatibilityLevel ambient = default)
-           => SerializerCache<PrimaryTypeProvider, T>.InstanceField
-            ?? model?.GetSerializerCore<T>(ambient)
-            ?? NoSerializer<T>(model);
+            => SerializerCache<PrimaryTypeProvider, T>.InstanceField
+               ?? model?.GetSerializerCore<T>(ambient)
+               ?? NoSerializer<T>(model);
 
         /// <summary>
         /// Gets the inbuilt serializer relevant to a specific <see cref="CompatibilityLevel"/> (and <see cref="DataFormat"/>).
         /// Returns null if there is no defined inbuilt serializer.
         /// </summary>
-#if DEBUG   // I always want these explicitly specified in the library code; so: enforce that
+#if DEBUG // I always want these explicitly specified in the library code; so: enforce that
         public static ISerializer<T> GetInbuiltSerializer<T>(CompatibilityLevel compatibilityLevel, DataFormat dataFormat)
 #else
         public static ISerializer<T> GetInbuiltSerializer<T>(CompatibilityLevel compatibilityLevel = default, DataFormat dataFormat = DataFormat.Default)
@@ -1456,6 +1536,7 @@ namespace ProtoBuf.Meta
                     serializer = SerializerCache<Level300FixedSerializer, T>.InstanceField;
                     if (serializer is object) return serializer;
                 }
+
                 serializer = SerializerCache<Level300DefaultSerializer, T>.InstanceField;
                 if (serializer is object) return serializer;
             }
@@ -1481,13 +1562,13 @@ namespace ProtoBuf.Meta
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static ISerializer<T> TryGetSerializer<T>(TypeModel model)
-          => SerializerCache<PrimaryTypeProvider, T>.InstanceField
-            ?? model?.GetSerializer<T>();
+            => SerializerCache<PrimaryTypeProvider, T>.InstanceField
+               ?? model?.GetSerializer<T>();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static ISubTypeSerializer<T> GetSubTypeSerializer<T>(TypeModel model) where T : class
-           => model?.GetSerializer<T>() as ISubTypeSerializer<T>
-            ?? NoSubTypeSerializer<T>(model);
+            => model?.GetSerializer<T>() as ISubTypeSerializer<T>
+               ?? NoSubTypeSerializer<T>(model);
 
         /// <summary>
         /// Applies a protocol-buffer stream to an existing instance (which may be null).
@@ -1505,6 +1586,7 @@ namespace ProtoBuf.Meta
             {
                 ThrowHelper.ThrowNotSupportedException($"{nameof(Deserialize)} is not supported for {type.NormalizeName()} by {this}");
             }
+
             return value;
         }
 
@@ -1517,14 +1599,17 @@ namespace ProtoBuf.Meta
             /// Invoked before an object is serialized
             /// </summary>
             BeforeSerialize,
+
             /// <summary>
             /// Invoked after an object is serialized
             /// </summary>
             AfterSerialize,
+
             /// <summary>
             /// Invoked before an object is deserialized (or when a new instance is created)
             /// </summary>            
             BeforeDeserialize,
+
             /// <summary>
             /// Invoked after an object is deserialized
             /// </summary>
@@ -1554,10 +1639,12 @@ namespace ProtoBuf.Meta
             }
             else
             {
-                using var ms = new MemoryStream();
-                Serialize<T>(ms, value, userState);
-                ms.Position = 0;
-                return Deserialize<T>(ms, default, userState);
+                using (var ms = new MemoryStream())
+                {
+                    Serialize<T>(ms, value, userState);
+                    ms.Position = 0;
+                    return Deserialize<T>(ms, default, userState);
+                }
             }
         }
 
@@ -1569,43 +1656,47 @@ namespace ProtoBuf.Meta
             if (value is null) return null;
             Type type = value.GetType();
             return DynamicStub.TryDeepClone(type, this, ref value)
-                ? value : DeepCloneFallback(type, value);
+                ? value
+                : DeepCloneFallback(type, value);
         }
 
         private object DeepCloneFallback(Type type, object value)
         {
             // must be some kind of aux scenario, then
-            using MemoryStream ms = new MemoryStream();
-            var writeState = ProtoWriter.State.Create(ms, this, null);
-            PrepareDeserialize(value, ref type);
-            try
+            using (MemoryStream ms = new MemoryStream())
             {
-                if (!TrySerializeAuxiliaryType(ref writeState, type, DataFormat.Default, TypeModel.ListItemTag, value, false, null, isRoot: true))
-                    ThrowUnexpectedType(type, this);
-                writeState.Close();
-            }
-            catch
-            {
-                writeState.Abandon();
-                throw;
-            }
-            finally
-            {
-                writeState.Dispose();
-            }
-            ms.Position = 0;
-            var readState = ProtoReader.State.Create(ms, this, null, ProtoReader.TO_EOF);
-            try
-            {
-                value = null; // start from scratch!
-                TryDeserializeAuxiliaryType(ref readState, DataFormat.Default, TypeModel.ListItemTag, type, ref value, true, false, true, false, null, isRoot: true);
-            }
-            finally
-            {
-                readState.Dispose();
-            }
+                var writeState = ProtoWriter.State.Create(ms, this, null);
+                PrepareDeserialize(value, ref type);
+                try
+                {
+                    if (!TrySerializeAuxiliaryType(ref writeState, type, DataFormat.Default, TypeModel.ListItemTag, value, false, null, isRoot: true))
+                        ThrowUnexpectedType(type, this);
+                    writeState.Close();
+                }
+                catch
+                {
+                    writeState.Abandon();
+                    throw;
+                }
+                finally
+                {
+                    writeState.Dispose();
+                }
 
-            return value;
+                ms.Position = 0;
+                var readState = ProtoReader.State.Create(ms, this, null, ProtoReader.TO_EOF);
+                try
+                {
+                    value = null; // start from scratch!
+                    TryDeserializeAuxiliaryType(ref readState, DataFormat.Default, TypeModel.ListItemTag, type, ref value, true, false, true, false, null, isRoot: true);
+                }
+                finally
+                {
+                    readState.Dispose();
+                }
+
+                return value;
+            }
         }
 
         /// <summary>
@@ -1656,11 +1747,11 @@ namespace ProtoBuf.Meta
         {
             string fullName = type is null ? "(unknown)" : type.FullName;
 
-            if (type is not null)
+            if (type != null)
             {
                 Type baseType = type.BaseType;
-                if (baseType is not null && baseType
-                    .IsGenericType && baseType.GetGenericTypeDefinition().Name == "GeneratedMessage`2")
+                if (baseType != null && baseType
+                        .IsGenericType && baseType.GetGenericTypeDefinition().Name == "GeneratedMessage`2")
                 {
                     ThrowHelper.ThrowInvalidOperationException(
                         "Are you mixing protobuf-net and protobuf-csharp-port? See https://stackoverflow.com/q/11564914/23354; type: " + fullName);
@@ -1671,7 +1762,7 @@ namespace ProtoBuf.Meta
             {
                 ThrowHelper.ThrowInvalidOperationException("Type is not expected, and no contract can be inferred: " + fullName);
             }
-            catch (Exception ex) when (model is not null)
+            catch (Exception ex) when (model != null)
             {
                 ex.Data["TypeModel"] = model.ToString();
                 throw;
@@ -1693,31 +1784,33 @@ namespace ProtoBuf.Meta
 
         internal static string SerializeType(TypeModel model, System.Type type)
         {
-            if (model is not null)
+            if (model != null)
             {
                 TypeFormatEventHandler handler = model.DynamicTypeFormatting;
-                if (handler is not null)
+                if (handler != null)
                 {
                     TypeFormatEventArgs args = new TypeFormatEventArgs(type);
                     handler(model, args);
                     if (!string.IsNullOrEmpty(args.FormattedName)) return args.FormattedName;
                 }
             }
+
             return type.AssemblyQualifiedName;
         }
 
         internal static Type DeserializeType(TypeModel model, string value)
         {
-            if (model is not null)
+            if (model != null)
             {
                 TypeFormatEventHandler handler = model.DynamicTypeFormatting;
-                if (handler is not null)
+                if (handler != null)
                 {
                     TypeFormatEventArgs args = new TypeFormatEventArgs(value);
                     handler(model, args);
-                    if (args.Type is not null) return args.Type;
+                    if (args.Type != null) return args.Type;
                 }
             }
+
             return Type.GetType(value);
         }
 
@@ -1742,21 +1835,30 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool CanSerializeBasicType(Type type) => CanSerialize(type, true, false, true, out _);
 
+        static bool CheckIfNullableT(ref Type type)
+        {
+            Type tmp = Nullable.GetUnderlyingType(type);
+            if (tmp != null)
+            {
+                type = tmp;
+                return true;
+            }
+
+            return false;
+        }
+
+        static bool DoCheckLists(Type type, TypeModel model, bool allowBasic, bool allowContract)
+        {
+            // is it a list?
+#pragma warning disable CS0618 // this is a legit usage
+            return TypeHelper.ResolveUniqueEnumerableT(type, out var itemType)
+                   && model.CanSerialize(itemType, allowBasic, allowContract, false, out _);
+#pragma warning restore CS0618
+        }
 
         internal bool CanSerialize(Type type, bool allowBasic, bool allowContract, bool allowLists, out SerializerFeatures category)
         {
             if (type is null) ThrowHelper.ThrowArgumentNullException(nameof(type));
-
-            static bool CheckIfNullableT(ref Type type)
-            {
-                Type tmp = Nullable.GetUnderlyingType(type);
-                if (tmp is not null)
-                {
-                    type = tmp;
-                    return true;
-                }
-                return false;
-            }
 
             do
             {
@@ -1776,14 +1878,6 @@ namespace ProtoBuf.Meta
                 }
             } while (CheckIfNullableT(ref type));
 
-            static bool DoCheckLists(Type type, TypeModel model, bool allowBasic, bool allowContract)
-            {
-                // is it a list?
-#pragma warning disable CS0618 // this is a legit usage
-                return TypeHelper.ResolveUniqueEnumerableT(type, out var itemType)
-                    && model.CanSerialize(itemType, allowBasic, allowContract, false, out _);
-#pragma warning restore CS0618
-            }
             category = default;
             return false;
         }
@@ -1811,8 +1905,9 @@ namespace ProtoBuf.Meta
             else
             {
                 options = new SchemaGenerationOptions { Syntax = syntax };
-                if (type is not null) options.Types.Add(type);
+                if (type != null) options.Types.Add(type);
             }
+
             return GetSchema(options);
         }
 
@@ -1848,6 +1943,7 @@ namespace ProtoBuf.Meta
         {
             private readonly TypeModel model;
             private readonly Type type;
+
             internal Formatter(TypeModel model, Type type)
             {
                 if (model is null) ThrowHelper.ThrowArgumentNullException(nameof(model));
@@ -1862,7 +1958,7 @@ namespace ProtoBuf.Meta
 
             public object Deserialize(Stream serializationStream)
             {
-                using var state = ProtoReader.State.Create(serializationStream, model, Context);
+                var state = ProtoReader.State.Create(serializationStream, model, Context);
                 return state.DeserializeRootFallback(null, type);
             }
 
@@ -1897,20 +1993,26 @@ namespace ProtoBuf.Meta
             {
                 Type type = Type.GetType(name);
 
-                if (type is not null) return type;
+                if (type != null) return type;
             }
-            catch { }
+            catch
+            {
+            }
+
             try
             {
                 int i = name.IndexOf(',');
                 string fullName = (i > 0 ? name.Substring(0, i) : name).Trim();
 
-                assembly ??= Assembly.GetCallingAssembly();
+                assembly = assembly ?? Assembly.GetCallingAssembly();
 
                 Type type = assembly?.GetType(fullName);
-                if (type is not null) return type;
+                if (type != null) return type;
             }
-            catch { }
+            catch
+            {
+            }
+
             return null;
         }
 

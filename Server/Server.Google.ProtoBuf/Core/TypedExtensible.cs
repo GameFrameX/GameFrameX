@@ -29,7 +29,7 @@ namespace ProtoBuf
             var extn = GetExtension(instance, type, false, ref model);
             value = default;
             bool set = false;
-            if (extn is not null)
+            if (extn != null)
             {
                 foreach (TValue val in ExtensibleUtil.GetExtendedValues(model, typeof(TValue), extn, tag, format, true))
                 {
@@ -105,7 +105,7 @@ namespace ProtoBuf
             if (instance is null) ThrowHelper.ThrowArgumentNullException(nameof(instance));
 
             var objType = instance.GetType();
-            type ??= objType;
+            type = type ?? objType;
 
             if (!type.IsClass) // rule out interfaces and structs as target types
             {
@@ -115,7 +115,7 @@ namespace ProtoBuf
             {
                 // need to assert that the caller is asking inside the inheritance tree; we'll also exclude
                 // object and Extensible, and defer to the model for everything else
-                model ??= TypeModel.DefaultModel; // note: if we're still using the null model, we skip the contract type test; it would always say "no"
+                model = model ?? TypeModel.DefaultModel; // note: if we're still using the null model, we skip the contract type test; it would always say "no"
                 if (type == typeof(object) || type == typeof(Extensible) || !type.IsAssignableFrom(objType) || !(model is TypeModel.NullModel || model.CanSerializeContractType(type)))
                 {
                     ThrowHelper.ThrowInvalidOperationException($"The extension field target type '{type.NormalizeName()}' is not a valid base-type of '{objType.NormalizeName()}'");

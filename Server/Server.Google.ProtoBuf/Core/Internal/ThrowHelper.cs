@@ -61,7 +61,7 @@ namespace ProtoBuf.Internal
         {
             var ex = new InvalidOperationException("No serializer defined for type: " + type.NormalizeName());
 
-            if (type is not null && type.FindInterfaces((i, _) => i.FullName == "Google.Protobuf.IMessage", null).Length > 0)
+            if (type != null && type.FindInterfaces((i, _) => i.FullName == "Google.Protobuf.IMessage", null).Length > 0)
             {
                 try { throw ex; } // this is just to set the stack-trace
                 catch (Exception inner)

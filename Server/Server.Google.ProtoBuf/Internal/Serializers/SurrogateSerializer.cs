@@ -42,7 +42,7 @@ namespace ProtoBuf.Internal.Serializers
 
         public SurrogateSerializer(Type declaredType, MethodInfo toTail, MethodInfo fromTail, IRuntimeProtoSerializerNode rootTail, SerializerFeatures features)
         {
-            Debug.Assert(declaredType is not null, "declaredType");
+            Debug.Assert(declaredType != null, "declaredType");
             Debug.Assert(rootTail is object, "rootTail");
             Debug.Assert(declaredType == rootTail.ExpectedType || Helpers.IsSubclassOf(declaredType, rootTail.ExpectedType), "surrogate type mismatch");
             this.declaredType = declaredType;
@@ -146,19 +146,21 @@ namespace ProtoBuf.Internal.Serializers
         void IRuntimeProtoSerializerNode.EmitRead(Compiler.CompilerContext ctx, Compiler.Local valueFrom)
         {
             // Debug.Assert(valueFrom is object, "surrogate value on stack-head"); // don't support stack-head for this
-            using Compiler.Local converted = rootTail.RequiresOldValue ? new Compiler.Local(ctx, declaredType) : null;
-
-            if (rootTail.RequiresOldValue)
+            using (Compiler.Local converted = rootTail.RequiresOldValue ? new Compiler.Local(ctx, declaredType) : null)
             {
-                ctx.LoadValue(valueFrom); // load primary onto stack
-                ctx.EmitCall(toTail); // static convert op, primary-to-surrogate
-                ctx.StoreValue(converted); // store into surrogate local
-            }
-            rootTail.EmitRead(ctx, converted); // downstream processing against surrogate local
+                if (rootTail.RequiresOldValue)
+                {
+                    ctx.LoadValue(valueFrom); // load primary onto stack
+                    ctx.EmitCall(toTail); // static convert op, primary-to-surrogate
+                    ctx.StoreValue(converted); // store into surrogate local
+                }
 
-            ctx.LoadValue(converted); // load from surrogate local
-            ctx.EmitCall(fromTail);  // static convert op, surrogate-to-primary
-            ctx.StoreValue(valueFrom); // store back into primary
+                rootTail.EmitRead(ctx, converted); // downstream processing against surrogate local
+
+                ctx.LoadValue(converted); // load from surrogate local
+                ctx.EmitCall(fromTail); // static convert op, surrogate-to-primary
+                ctx.StoreValue(valueFrom); // store back into primary
+            }
         }
 
         void IRuntimeProtoSerializerNode.EmitWrite(Compiler.CompilerContext ctx, Compiler.Local valueFrom)

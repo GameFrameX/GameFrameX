@@ -20,7 +20,7 @@ namespace ProtoBuf.Internal.Serializers
 
         public static DateTimeSerializer Create(CompatibilityLevel compatibilityLevel, TypeModel model)
             =>  compatibilityLevel >= CompatibilityLevel.Level240
-                ? s_Timestamp ??= new DateTimeSerializer(true, false)
+                ? s_Timestamp = s_Timestamp ?? new DateTimeSerializer(true, false)
                 : new DateTimeSerializer(false, model.HasOption(TypeModel.TypeModelOptions.IncludeDateTimeKind));
 
         private DateTimeSerializer(bool useTimestamp, bool includeKind)

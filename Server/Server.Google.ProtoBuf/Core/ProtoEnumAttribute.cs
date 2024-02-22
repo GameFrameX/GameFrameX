@@ -17,9 +17,9 @@ namespace ProtoBuf
         /// </summary>
         public int Value
         {
-            [Obsolete(EnumValueDeprecated, false)]
+            // [Obsolete(EnumValueDeprecated, false)]
             get { return default; }
-            [Obsolete(EnumValueDeprecated, true)]
+            // [Obsolete(EnumValueDeprecated, true)]
             set { ThrowHelper.ThrowNotSupportedException(); }
         }
 

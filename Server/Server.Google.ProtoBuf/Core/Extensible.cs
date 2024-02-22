@@ -67,11 +67,11 @@ namespace ProtoBuf
             BufferExtension root = extensionObject as BufferExtension, current = root;
             if (root is null)
             {
-                if (extensionObject is not null) ThrowHelper.ThrowNotSupportedException($"Custom extension implementations should not be passed to {nameof(GetExtensionObject)}");
+                if (extensionObject != null) ThrowHelper.ThrowNotSupportedException($"Custom extension implementations should not be passed to {nameof(GetExtensionObject)}");
             }
             else
             {
-                while (current is not null)
+                while (current != null)
                 {
                     var targetType = current.Type;
                     if (targetType is null) ThrowHelper.ThrowInvalidOperationException("Typed and untyped extension data cannot be mixed");
@@ -112,7 +112,7 @@ namespace ProtoBuf
                     extensionObject = new BufferExtension();
                 }
             }
-            else if (extensionObject is BufferExtension be && be.Type is not null)
+            else if (extensionObject is BufferExtension be && be.Type != null)
             {
                 ThrowHelper.ThrowInvalidOperationException("Typed and untyped extension data cannot be mixed");
             }

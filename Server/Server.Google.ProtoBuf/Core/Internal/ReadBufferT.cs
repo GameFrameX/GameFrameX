@@ -8,18 +8,18 @@ using System.Runtime.InteropServices;
 
 namespace ProtoBuf.Internal
 {
-
     // kinda like List<T>, but with some array-pool love
     [StructLayout(LayoutKind.Auto)]
     internal struct ReadBuffer<T> : IDisposable, ICollection<T>, IReadOnlyCollection<T>, ICollection
     {
         public void Clear() => _count = 0;
 
-        readonly bool ICollection<T>.IsReadOnly => false;
-        public readonly void CopyTo(T[] array, int arrayIndex = 0)
+        bool ICollection<T>.IsReadOnly => false;
+
+        public void CopyTo(T[] array, int arrayIndex = 0)
             => Array.Copy(_arr, 0, array, arrayIndex, _count);
 
-        readonly void ICollection.CopyTo(Array array, int index)
+        void ICollection.CopyTo(Array array, int index)
             => Array.Copy(_arr, 0, array, index, _count);
 
         public T[] ToArray()
@@ -45,8 +45,9 @@ namespace ProtoBuf.Internal
             return arr;
         }
 
-        readonly bool ICollection<T>.Contains(T item)
+        bool ICollection<T>.Contains(T item)
             => Array.IndexOf(_arr, item, 0, _count) >= 0;
+
         bool ICollection<T>.Remove(T item)
         {
             int index = Array.IndexOf(_arr, item, 0, _count);
@@ -56,7 +57,8 @@ namespace ProtoBuf.Internal
             Array.Copy(_arr, index + 1, _arr, index, _count - index);
             return true;
         }
-        public readonly IEnumerator<T> GetEnumerator() => _arr.Take(_count).GetEnumerator();
+
+        public IEnumerator<T> GetEnumerator() => _arr.Take(_count).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -64,22 +66,23 @@ namespace ProtoBuf.Internal
         private T[] _arr;
         private int _count;
 
-        readonly bool ICollection.IsSynchronized => false;
+        bool ICollection.IsSynchronized => false;
 
-        readonly object ICollection.SyncRoot => _arr;
+        object ICollection.SyncRoot => _arr;
 
         private ReadBuffer(int minimumLength)
         {
             _arr = ArrayPool<T>.Shared.Rent(minimumLength);
             _count = 0;
         }
+
         [MethodImpl(ProtoReader.HotPath)]
         public static ReadBuffer<T> Create(int minimumLength = 16)
             => new ReadBuffer<T>(minimumLength);
 
         private static void Recyle(ref T[] array)
         {
-            if (array is not null)
+            if (array != null)
             {
 #if PLAT_ISREF
                         bool clearArray = System.Runtime.CompilerServices.RuntimeHelpers.IsReferenceOrContainsReferences<T>();
@@ -91,12 +94,12 @@ namespace ProtoBuf.Internal
             }
         }
 
-        public readonly bool IsEmpty => _count == 0;
+        public bool IsEmpty => _count == 0;
 
-        public readonly int Count => _count;
+        public int Count => _count;
 
-        public readonly ArraySegment<T> Segment => new ArraySegment<T>(_arr, 0, _count);
-        public readonly Span<T> Span => new Span<T>(_arr, 0, _count);
+        public ArraySegment<T> Segment => new ArraySegment<T>(_arr, 0, _count);
+        public Span<T> Span => new Span<T>(_arr, 0, _count);
 
         public void Dispose()
         {
@@ -125,6 +128,5 @@ namespace ProtoBuf.Internal
             if (index == _arr.Length) Grow();
             _arr[index] = value;
         }
-
     }
 }

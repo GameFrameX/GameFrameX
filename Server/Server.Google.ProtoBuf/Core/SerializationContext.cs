@@ -75,16 +75,15 @@ namespace ProtoBuf
         public static SerializationContext AsSerializationContext(ISerializationContext context)
         {
             var userState = context?.UserState;
-            return userState switch
+            switch (userState)
             {
-                null => Default,
-                SerializationContext ctx => ctx,
-                _ => new SerializationContext
-                {
-                    context = context,
-                    frozen = true,
-                },
-            };
+                case null:
+                    return Default;
+                case SerializationContext ctx:
+                    return ctx;
+                default:
+                    return new SerializationContext { context = context, frozen = true, };
+            }
         }
     }
 

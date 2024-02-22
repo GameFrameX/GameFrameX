@@ -18,12 +18,20 @@ namespace ProtoBuf.Internal.Serializers
         internal static IRepeatedSerializer<T> GetSerializer<T>(MemberInfo original)
         {
             var provider = RuntimeTypeModel.GetUnderlyingProvider(original, typeof(T));
-            object obj = provider switch
+            object obj;
+            switch (provider)
             {
-                FieldInfo field when field.IsStatic => field.GetValue(null),
-                MethodInfo method when method.IsStatic => method.Invoke(null, null),
-                _ => null,
-            };
+                case FieldInfo field when field.IsStatic:
+                    obj = field.GetValue(null);
+                    break;
+                case MethodInfo method when method.IsStatic:
+                    obj = method.Invoke(null, null);
+                    break;
+                default:
+                    obj = null;
+                    break;
+            }
+
             if (obj is IRepeatedSerializer<T> serializer) return serializer;
             ThrowHelper.ThrowInvalidOperationException($"No suitable repeated serializer resolved for {typeof(T).NormalizeName()}");
             return default;
@@ -41,7 +49,7 @@ namespace ProtoBuf.Internal.Serializers
             get
             {
                 var inbuilt = TypeModel.GetInbuiltSerializer<T>(_compatibilityLevel, _dataFormat);
-                return inbuilt is not null && inbuilt.Features.IsScalar();
+                return inbuilt != null && inbuilt.Features.IsScalar();
             }
         }
 
@@ -69,13 +77,15 @@ namespace ProtoBuf.Internal.Serializers
             _ = Serializer; // this is to force a type-check
             var method = typeof(RepeatedSerializer<TCollection, T>).GetMethod(nameof(RepeatedSerializer<TCollection, T>.ReadRepeated));
 
-            using var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom);
-            _stub.EmitProvider(ctx);
-            ctx.LoadState();
-            ctx.LoadValue((int)_features);
-            ctx.LoadValue(loc);
-            ctx.LoadSelfAsService<ISerializer<T>, T>(_compatibilityLevel, _dataFormat);
-            ctx.EmitCall(method);
+            using (var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom))
+            {
+                _stub.EmitProvider(ctx);
+                ctx.LoadState();
+                ctx.LoadValue((int)_features);
+                ctx.LoadValue(loc);
+                ctx.LoadSelfAsService<ISerializer<T>, T>(_compatibilityLevel, _dataFormat);
+                ctx.EmitCall(method);
+            }
         }
 
         public void Write(ref ProtoWriter.State state, object value)
@@ -85,14 +95,16 @@ namespace ProtoBuf.Internal.Serializers
         {
             var method = typeof(RepeatedSerializer<TCollection, T>).GetMethod(nameof(RepeatedSerializer<TCollection, T>.WriteRepeated));
 
-            using var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom);
-            _stub.EmitProvider(ctx);
-            ctx.LoadState();
-            ctx.LoadValue(_fieldNumber);
-            ctx.LoadValue((int)_features);
-            ctx.LoadValue(loc);
-            ctx.LoadSelfAsService<ISerializer<T>, T>(_compatibilityLevel, _dataFormat);
-            ctx.EmitCall(method);
+            using (var loc = ctx.GetLocalWithValue(ExpectedType, valueFrom))
+            {
+                _stub.EmitProvider(ctx);
+                ctx.LoadState();
+                ctx.LoadValue(_fieldNumber);
+                ctx.LoadValue((int)_features);
+                ctx.LoadValue(loc);
+                ctx.LoadSelfAsService<ISerializer<T>, T>(_compatibilityLevel, _dataFormat);
+                ctx.EmitCall(method);
+            }
         }
     }
 }

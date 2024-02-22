@@ -20,15 +20,16 @@ namespace ProtoBuf
 
         ref partial struct State
         {
-
-
             /// <summary>
             /// Reads an unsigned 16-bit integer from the stream; supported wire-types: Variant, Fixed32, Fixed64
             /// </summary>
             [MethodImpl(HotPath)]
             public ushort ReadUInt16()
             {
-                checked { return (ushort)ReadUInt32(); }
+                checked
+                {
+                    return (ushort)ReadUInt32();
+                }
             }
 
             /// <summary>
@@ -37,7 +38,10 @@ namespace ProtoBuf
             [MethodImpl(HotPath)]
             public short ReadInt16()
             {
-                checked { return (short)ReadInt32(); }
+                checked
+                {
+                    return (short)ReadInt32();
+                }
             }
 
             /// <summary>
@@ -45,7 +49,7 @@ namespace ProtoBuf
             /// in the underlying stream, if multiple readers are used on the same stream)
             /// </summary>
             [MethodImpl(HotPath)]
-            public readonly long GetPosition() => _reader._longPosition;
+            public long GetPosition() => _reader._longPosition;
 
             /// <summary>
             /// Reads an unsigned 8-bit integer from the stream; supported wire-types: Variant, Fixed32, Fixed64
@@ -53,7 +57,10 @@ namespace ProtoBuf
             [MethodImpl(HotPath)]
             public byte ReadByte()
             {
-                checked { return (byte)ReadUInt32(); }
+                checked
+                {
+                    return (byte)ReadUInt32();
+                }
             }
 
             /// <summary>
@@ -62,20 +69,23 @@ namespace ProtoBuf
             [MethodImpl(HotPath)]
             public sbyte ReadSByte()
             {
-                checked { return (sbyte)ReadInt32(); }
+                checked
+                {
+                    return (sbyte)ReadInt32();
+                }
             }
 
             /// <summary>
             /// Reads a native integer from the stream; if the value exceeds the native width, an error will occur; supported wire-types: Variant, Fixed32, Fixed64
             /// </summary>
             [MethodImpl(HotPath)]
-            public IntPtr ReadIntPtr() => new(ReadInt64());
+            public IntPtr ReadIntPtr() => new IntPtr(ReadInt64());
 
             /// <summary>
             /// Reads a native integer from the stream; if the value exceeds the native width, an error will occur; supported wire-types: Variant, Fixed32, Fixed64
             /// </summary>
             [MethodImpl(HotPath)]
-            public UIntPtr ReadUIntPtr() => new(ReadUInt64());
+            public UIntPtr ReadUIntPtr() => new UIntPtr(ReadUInt64());
 
             /// <summary>
             /// Reads an unsigned 32-bit integer from the stream; supported wire-types: Variant, Fixed32, Fixed64, SignedVariant
@@ -91,7 +101,10 @@ namespace ProtoBuf
                         return _reader.ImplReadUInt32Fixed(ref this);
                     case WireType.Fixed64:
                         ulong val = _reader.ImplReadUInt64Fixed(ref this);
-                        checked { return (uint)val; }
+                        checked
+                        {
+                            return (uint)val;
+                        }
                     default:
                         ThrowWireTypeException();
                         return default;
@@ -112,7 +125,10 @@ namespace ProtoBuf
                         return (int)_reader.ImplReadUInt32Fixed(ref this);
                     case WireType.Fixed64:
                         long l = ReadInt64();
-                        checked { return (int)l; }
+                        checked
+                        {
+                            return (int)l;
+                        }
                     case WireType.SignedVarint:
                         return Zag(ReadUInt32Varint(Read32VarintMode.Signed));
                     default:
@@ -155,7 +171,10 @@ namespace ProtoBuf
                         return ReadSingle();
                     case WireType.Fixed64:
                         long value = ReadInt64();
-                        unsafe { return *(double*)&value; }
+                        unsafe
+                        {
+                            return *(double*)&value;
+                        }
                     default:
                         ThrowWireTypeException();
                         return default;
@@ -171,17 +190,20 @@ namespace ProtoBuf
                 switch (_reader.WireType)
                 {
                     case WireType.Fixed32:
+                    {
+                        int value = ReadInt32();
+                        unsafe
                         {
-                            int value = ReadInt32();
-                            unsafe { return *(float*)&value; }
+                            return *(float*)&value;
                         }
+                    }
                     case WireType.Fixed64:
-                        {
-                            double value = ReadDouble();
-                            float f = (float)value;
-                            if (float.IsInfinity(f) && !double.IsInfinity(value)) ThrowOverflow();
-                            return f;
-                        }
+                    {
+                        double value = ReadDouble();
+                        float f = (float)value;
+                        if (float.IsInfinity(f) && !double.IsInfinity(value)) ThrowOverflow();
+                        return f;
+                    }
                     default:
                         ThrowWireTypeException();
                         return default;
@@ -239,6 +261,7 @@ namespace ProtoBuf
                                 break;
                         }
                     }
+
                     values.Add(element);
                 } while (TryReadFieldHeader(field));
             }
@@ -260,7 +283,7 @@ namespace ProtoBuf
                     case WireType.Fixed64:
                         if ((bytes % 8) != 0) ThrowHelper.ThrowInvalidOperationException("packed length should be multiple of 8");
                         count = bytes / 8;
-                    ReadFixedQuantity:
+                        ReadFixedQuantity:
                         // boost the List<T> capacity if we can, as long as it is within reason (i.e. don't let
                         // a small message lie and claim to have a huge payload)
 
@@ -272,6 +295,7 @@ namespace ProtoBuf
                             _reader.WireType = wireType;
                             list.Add(serializer.Read(ref this, default));
                         }
+
                         break;
                     case WireType.Varint:
                     case WireType.SignedVarint:
@@ -281,6 +305,7 @@ namespace ProtoBuf
                             _reader.WireType = wireType;
                             list.Add(serializer.Read(ref this, default));
                         } while (GetPosition() < end);
+
                         if (GetPosition() != end) ThrowHelper.ThrowInvalidOperationException("over-read packed data");
                         break;
                     default:
@@ -303,7 +328,14 @@ namespace ProtoBuf
                 }
                 catch
                 {
-                    try { buffer.Dispose(); } catch { }
+                    try
+                    {
+                        buffer.Dispose();
+                    }
+                    catch
+                    {
+                    }
+
                     throw;
                 }
             }
@@ -387,7 +419,7 @@ namespace ProtoBuf
                             ThrowHelper.ThrowInvalidOperationException($"The memory converter ({converter.GetType().NormalizeName()}) got the lengths wrong for the updated value; expected {oldLength + len}, got {converter.GetLength(value)}");
                         if (newChunk.Length != len)
                             ThrowHelper.ThrowInvalidOperationException($"The memory converter ({converter.GetType().NormalizeName()}) got the lengths wrong for the returned chunk; expected {len}, got {newChunk.Length}");
-#endif               
+#endif
                         // read the data into the new part
                         _reader.ImplReadBytes(ref this, newChunk.Span);
 
@@ -552,11 +584,12 @@ namespace ProtoBuf
                         {
                             ThrowProtoException($"Sub-message not read correctly (end {reader.blockEnd64} vs {position})");
                         }
+
                         reader.blockEnd64 = value64;
                         reader.DecrDepth();
                         break;
-                        /*default:
-                            throw reader.BorkedIt(); */
+                    /*default:
+                        throw reader.BorkedIt(); */
                 }
             }
 
@@ -578,7 +611,7 @@ namespace ProtoBuf
 
 
                 SubItemToken token = StartSubItem();
-                if (type is not null && model.TryDeserializeAuxiliaryType(ref this, DataFormat.Default, TypeModel.ListItemTag, type, ref value, true, false, true, false, null, isRoot: false))
+                if (type != null && model.TryDeserializeAuxiliaryType(ref this, DataFormat.Default, TypeModel.ListItemTag, type, ref value, true, false, true, false, null, isRoot: false))
                 {
                     // handled it the easy way
                 }
@@ -586,6 +619,7 @@ namespace ProtoBuf
                 {
                     TypeModel.ThrowUnexpectedType(type, Model);
                 }
+
                 EndSubItem(token);
                 return value;
             }
@@ -610,9 +644,14 @@ namespace ProtoBuf
                     if (bytes == 0) return "";
                     if (bytes < 0) ThrowInvalidLength(bytes);
                     var s = _reader.ImplReadString(ref this, bytes);
-                    if (_reader.InternStrings) { s = _reader.Intern(s); }
+                    if (_reader.InternStrings)
+                    {
+                        s = _reader.Intern(s);
+                    }
+
                     return s;
                 }
+
                 ThrowWireTypeException();
                 return default;
             }
@@ -626,6 +665,7 @@ namespace ProtoBuf
                     if (mode == Read32VarintMode.FieldHeader) return 0;
                     ThrowEoF();
                 }
+
                 _reader.ImplSkipBytes(ref this, read);
                 return value;
             }
@@ -648,13 +688,17 @@ namespace ProtoBuf
             public void Assert(WireType wireType)
             {
                 var actual = _reader.WireType;
-                if (actual == wireType) { }  // fine; everything as we expect
+                if (actual == wireType)
+                {
+                } // fine; everything as we expect
                 else if (((int)wireType & 7) == (int)actual)
-                {   // the underling type is a match; we're customising it with an extension
+                {
+                    // the underling type is a match; we're customising it with an extension
                     _reader.WireType = wireType;
                 }
                 else
-                {   // nope; that is *not* what we were expecting!
+                {
+                    // nope; that is *not* what we were expecting!
                     ThrowWireTypeException();
                 }
             }
@@ -701,20 +745,26 @@ namespace ProtoBuf
                 }
             }
 
-            internal readonly Type DeserializeType(string typeName) => _reader.DeserializeType(typeName);
+            internal Type DeserializeType(string typeName) => _reader.DeserializeType(typeName);
 
             [MethodImpl(MethodImplOptions.NoInlining)]
             private void SkipGroup()
             {
                 int originalFieldNumber = _reader._fieldNumber;
                 if (_reader.IncrDepth()) ThrowTooDeep(); // need to satisfy the sanity-checks in ReadFieldHeader
-                while (ReadFieldHeader() > 0) { SkipField(); }
+                while (ReadFieldHeader() > 0)
+                {
+                    SkipField();
+                }
+
                 _reader.DecrDepth();
                 if (_reader.WireType == WireType.EndGroup && _reader._fieldNumber == originalFieldNumber)
-                { // we expect to exit in a similar state to how we entered
+                {
+                    // we expect to exit in a similar state to how we entered
                     _reader.WireType = WireType.None;
                     return;
                 }
+
                 ThrowWireTypeException();
             }
 
@@ -737,6 +787,7 @@ namespace ProtoBuf
                     _reader.Advance(read);
                     return _reader.SetTag(tag);
                 }
+
                 return ReadFieldHeaderFallback();
             }
 
@@ -749,6 +800,7 @@ namespace ProtoBuf
                     _reader.WireType = 0;
                     return _reader._fieldNumber = 0;
                 }
+
                 _reader.ImplSkipBytes(ref this, read);
                 return _reader.SetTag(tag);
             }
@@ -762,18 +814,22 @@ namespace ProtoBuf
             {
                 var reader = _reader;
                 // check for virtual end of stream
-                if (reader.blockEnd64 <= reader._longPosition || reader.WireType == WireType.EndGroup) { return false; }
+                if (reader.blockEnd64 <= reader._longPosition || reader.WireType == WireType.EndGroup)
+                {
+                    return false;
+                }
 
                 int read = reader.ImplTryReadUInt32VarintWithoutMoving(ref this, Read32VarintMode.FieldHeader, out uint tag);
                 WireType tmpWireType; // need to catch this to exclude (early) any "end group" tokens
                 if (read > 0 && ((int)tag >> 3) == field
-                    && (tmpWireType = (WireType)(tag & 7)) != WireType.EndGroup)
+                             && (tmpWireType = (WireType)(tag & 7)) != WireType.EndGroup)
                 {
                     reader.WireType = tmpWireType;
                     reader._fieldNumber = field;
                     reader.ImplSkipBytes(ref this, read);
                     return true;
                 }
+
                 return false;
             }
 
@@ -788,7 +844,7 @@ namespace ProtoBuf
             /// a Variant may be updated to SignedVariant. If the hinted wire-type is unrelated then no change is made.
             /// </summary>
             [MethodImpl(HotPath)]
-            public readonly void Hint(WireType wireType) => _reader.Hint(wireType);
+            public void Hint(WireType wireType) => _reader.Hint(wireType);
 
             [MethodImpl(MethodImplOptions.NoInlining)]
             internal void ThrowWireTypeException()
@@ -837,11 +893,12 @@ namespace ProtoBuf
 
             internal static Exception AddErrorData(Exception exception, ProtoReader source, ref State state)
             {
-                if (exception is not null && source is not null && !exception.Data.Contains("protoSource"))
+                if (exception != null && source != null && !exception.Data.Contains("protoSource"))
                 {
                     exception.Data.Add("protoSource", string.Format("tag={0}; wire-type={1}; offset={2}; depth={3}",
                         source.FieldNumber, source.WireType, state.GetPosition(), source._depth));
                 }
+
                 return exception;
             }
 
@@ -920,16 +977,18 @@ namespace ProtoBuf
 
                     commit = true;
                 }
-                finally { extn.EndAppend(dest, commit); }
+                finally
+                {
+                    extn.EndAppend(dest, commit);
+                }
             }
 
             /// <summary>
             /// Indicates the underlying proto serialization format on the wire.
             /// </summary>
-            public readonly WireType WireType
+            public WireType WireType
             {
-                [MethodImpl(HotPath)]
-                get => _reader.WireType;
+                [MethodImpl(HotPath)] get => _reader.WireType;
             }
 
             /// <summary>
@@ -938,7 +997,7 @@ namespace ProtoBuf
             /// than a second instance of the same string. Disabled by default. Note that this uses
             /// a <i>custom</i> interner - the system-wide string interner is not used.
             /// </summary>
-            public readonly bool InternStrings
+            public bool InternStrings
             {
                 get => _reader.InternStrings;
                 set => _reader.InternStrings = value;
@@ -947,10 +1006,9 @@ namespace ProtoBuf
             /// <summary>
             /// Gets the number of the field being processed.
             /// </summary>
-            public readonly int FieldNumber
+            public int FieldNumber
             {
-                [MethodImpl(HotPath)]
-                get => _reader._fieldNumber;
+                [MethodImpl(HotPath)] get => _reader._fieldNumber;
             }
 
             [MethodImpl(MethodImplOptions.NoInlining)]
@@ -976,7 +1034,11 @@ namespace ProtoBuf
                         SubItemToken readerToken = StartSubItem(),
 #pragma warning disable CS0618 // fine for groups
                             writerToken = writeState.StartSubItem(null);
-                        while (ReadFieldHeader() > 0) { AppendExtensionField(ref writeState); }
+                        while (ReadFieldHeader() > 0)
+                        {
+                            AppendExtensionField(ref writeState);
+                        }
+
                         EndSubItem(readerToken);
                         writeState.EndSubItem(writerToken);
 #pragma warning restore CS0618 // fine for groups
@@ -1044,13 +1106,14 @@ namespace ProtoBuf
             [MethodImpl(HotPath)]
             public T ReadAny<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(SerializerFeatures features, T value = default, ISerializer<T> serializer = null)
             {
-                serializer ??= TypeModel.GetSerializer<T>(Model);
+                serializer = serializer ?? TypeModel.GetSerializer<T>(Model);
                 var serializerFeatures = serializer.Features;
                 features.InheritFrom(serializerFeatures);
 
                 if (features.HasAny(SerializerFeatures.OptionWrappedValue | SerializerFeatures.OptionWrappedCollection))
                 {
-                    return ReadWrapped<T>(features, value, serializer); ;
+                    return ReadWrapped<T>(features, value, serializer);
+                    ;
                 }
 
                 switch (serializerFeatures.GetCategory())
@@ -1074,7 +1137,7 @@ namespace ProtoBuf
             /// </summary>
             public T ReadWrapped<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(SerializerFeatures features, T value, ISerializer<T> serializer = null)
             {
-                serializer ??= TypeModel.GetSerializer<T>(Model);
+                serializer = serializer ?? TypeModel.GetSerializer<T>(Model);
                 features.InheritFrom(serializer.Features);
 
                 ProtoWriter.State.AssertWrappedAndGetWireType(ref features, out var fieldPresence);
@@ -1093,6 +1156,7 @@ namespace ProtoBuf
                             break;
                     }
                 }
+
                 EndSubItem(tok);
                 if (!fieldPresence && TypeHelper<T>.CanBeNull && TypeHelper<T>.ValueChecker.IsNull(value))
                 {
@@ -1104,10 +1168,9 @@ namespace ProtoBuf
                 return value;
             }
 
-            internal readonly TypeModel Model
+            internal TypeModel Model
             {
-                [MethodImpl(HotPath)]
-                get => _reader?.Model;
+                [MethodImpl(HotPath)] get => _reader?.Model;
                 private set => _reader.Model = value;
             }
 
@@ -1161,33 +1224,33 @@ namespace ProtoBuf
                     default:
                         features.ThrowInvalidCategory();
                         return default;
-
-                }
-
-                static T ReadFieldOne(ref State state, SerializerFeatures features, T value, ISerializer<T> serializer)
-                {
-                    int field;
-                    bool found = false;
-                    while ((field = state.ReadFieldHeader()) > 0)
-                    {
-                        if (field == 1)
-                        {
-                            found = true;
-                            value = state.ReadAny<T>(features, value, serializer);
-                        }
-                        else
-                        {
-                            state.SkipField();
-                        }
-                    }
-                    if (TypeHelper<T>.IsReferenceType && !found && value is null)
-                    {
-                        value = state.CreateInstance<T>(serializer);
-                    }
-                    return value;
                 }
             }
 
+            static T ReadFieldOne<T>(ref State state, SerializerFeatures features, T value, ISerializer<T> serializer)
+            {
+                int field;
+                bool found = false;
+                while ((field = state.ReadFieldHeader()) > 0)
+                {
+                    if (field == 1)
+                    {
+                        found = true;
+                        value = state.ReadAny<T>(features, value, serializer);
+                    }
+                    else
+                    {
+                        state.SkipField();
+                    }
+                }
+
+                if (TypeHelper<T>.IsReferenceType && !found && value == null)
+                {
+                    value = state.CreateInstance<T>(serializer);
+                }
+
+                return value;
+            }
             //[MethodImpl(HotPath)]
             //internal T DeserializeRaw<T>(T value = default, ISerializer<T> serializer = null)
             //    => (serializer ?? TypeModel.GetSerializer<T>(Model)).Read(ref this, value);
@@ -1195,10 +1258,9 @@ namespace ProtoBuf
             /// <summary>
             /// Gets the serialization context associated with this instance;
             /// </summary>
-            public readonly ISerializationContext Context
+            public ISerializationContext Context
             {
-                [MethodImpl(HotPath)]
-                get => _reader;
+                [MethodImpl(HotPath)] get => _reader;
             }
 
             /// <summary>
@@ -1207,7 +1269,7 @@ namespace ProtoBuf
             /// This is used when decoding packed data.
             /// </summary>
             [MethodImpl(HotPath)]
-            public readonly bool HasSubValue(WireType wireType) => ProtoReader.HasSubValue(wireType, _reader);
+            public bool HasSubValue(WireType wireType) => ProtoReader.HasSubValue(wireType, _reader);
 
             /// <summary>
             /// Create an instance of the provided type, respecting any custom factory rules

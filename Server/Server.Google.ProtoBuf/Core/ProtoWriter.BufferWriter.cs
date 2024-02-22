@@ -220,7 +220,7 @@ namespace ProtoBuf
                 switch (WireType)
                 {
                     case WireType.String:
-                        serializer ??= TypeModel.GetSerializer<T>(Model);
+                        serializer = serializer ?? TypeModel.GetSerializer<T>(Model);
                         long calculatedLength = MeasureAny<T>(_nullWriter, TypeModel.ListItemTag, features, value, serializer);
 
                         // write length-prefix as varint
@@ -256,7 +256,7 @@ namespace ProtoBuf
                 switch (WireType)
                 {
                     case WireType.String:
-                        valueSerializer ??= TypeModel.GetSerializer<TItem>(Model);
+                        valueSerializer = valueSerializer ?? TypeModel.GetSerializer<TItem>(Model);
                         long calculatedLength = MeasureRepeated<TCollection, TItem>(_nullWriter, TypeModel.ListItemTag, features, values, serializer, valueSerializer);
 
                         // write length-prefix as varint
@@ -339,7 +339,7 @@ namespace ProtoBuf
 
             private void WriteWithLengthPrefix<T>(ref State state, T value, ISerializer<T> serializer, PrefixStyle style)
             {
-                serializer ??= TypeModel.GetSerializer<T>(Model);
+                serializer = serializer ?? TypeModel.GetSerializer<T>(Model);
                 long calculatedLength = Measure<T>(_nullWriter, value, serializer);
 
                 switch (style)
@@ -378,7 +378,7 @@ namespace ProtoBuf
             private void WriteWithLengthPrefix<T>(ref State state, T value, ISubTypeSerializer<T> serializer)
                 where T : class
             {
-                serializer ??= TypeModel.GetSubTypeSerializer<T>(Model);
+                serializer = serializer ?? TypeModel.GetSubTypeSerializer<T>(Model);
                 long calculatedLength = Measure<T>(_nullWriter, value, serializer);
                 
                 // we'll always use varint here

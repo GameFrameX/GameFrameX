@@ -1,13 +1,11 @@
 ﻿using ProtoBuf.Internal;
 using ProtoBuf.Meta;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 
 namespace ProtoBuf.Compiler
@@ -38,7 +36,7 @@ namespace ProtoBuf.Compiler
         private readonly RuntimeTypeModel _model;
 
         private ModuleBuilder GetModule()
-            => _module ??= GetSharedModule();
+            => _module = _module ?? GetSharedModule();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static ModuleBuilder GetSharedModule() => SharedModule.Shared;
@@ -75,7 +73,34 @@ namespace ProtoBuf.Compiler
         private int Uniquify()
             => IsFullEmit ? Interlocked.Increment(ref _localUniqueId)
             : Interlocked.Increment(ref s_globalUniqueId);
-
+        internal static void WriteCall(ILGenerator il, MethodInfo callback)
+        {
+            il.Emit(OpCodes.Ldarg_0);
+            foreach (var p in callback.GetParameters())
+            {
+                var parameterType = p.ParameterType;
+                if (parameterType == typeof(ISerializationContext))
+                {
+                    il.Emit(OpCodes.Ldarg_1);
+                }
+                else if (parameterType == typeof(SerializationContext))
+                {
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.EmitCall(OpCodes.Call, typeof(SerializationContext).GetMethod(nameof(SerializationContext.AsSerializationContext)), null);
+                }
+                else if (parameterType == typeof(StreamingContext))
+                {
+                    il.Emit(OpCodes.Ldarg_1);
+                    il.EmitCall(OpCodes.Call, typeof(SerializationContext).GetMethod(nameof(SerializationContext.AsStreamingContext)), null);
+                }
+                else
+                {
+                    ThrowHelper.ThrowNotSupportedException($"Unknown callback parameter: {p.Name}, {parameterType}");
+                }
+            }
+            il.EmitCall(OpCodes.Callvirt, callback, null);
+            il.Emit(OpCodes.Ret);
+        }
         internal FieldInfo DefineSubTypeStateCallbackField<T>(MethodInfo callback)
         {
             if (typeof(T).IsValueType) ThrowHelper.ThrowInvalidOperationException("Not expected for value-type");
@@ -101,34 +126,7 @@ namespace ProtoBuf.Compiler
                 if (IsFullEmit) fieldAttribs |= FieldAttributes.InitOnly;
                 var field = type.DefineField(fieldName, delegateType, fieldAttribs);
 
-                static void WriteCall(ILGenerator il, MethodInfo callback)
-                {
-                    il.Emit(OpCodes.Ldarg_0);
-                    foreach (var p in callback.GetParameters())
-                    {
-                        var parameterType = p.ParameterType;
-                        if (parameterType == typeof(ISerializationContext))
-                        {
-                            il.Emit(OpCodes.Ldarg_1);
-                        }
-                        else if (parameterType == typeof(SerializationContext))
-                        {
-                            il.Emit(OpCodes.Ldarg_1);
-                            il.EmitCall(OpCodes.Call, typeof(SerializationContext).GetMethod(nameof(SerializationContext.AsSerializationContext)), null);
-                        }
-                        else if (parameterType == typeof(StreamingContext))
-                        {
-                            il.Emit(OpCodes.Ldarg_1);
-                            il.EmitCall(OpCodes.Call, typeof(SerializationContext).GetMethod(nameof(SerializationContext.AsStreamingContext)), null);
-                        }
-                        else
-                        {
-                            ThrowHelper.ThrowNotSupportedException($"Unknown callback parameter: {p.Name}, {parameterType}");
-                        }
-                    }
-                    il.EmitCall(OpCodes.Callvirt, callback, null);
-                    il.Emit(OpCodes.Ret);
-                }
+
                 if (IsFullEmit)
                 {
                     var method = type.DefineMethod(callback.Name,
@@ -164,14 +162,14 @@ namespace ProtoBuf.Compiler
 
         internal bool ImplementsServiceFor<T>(CompatibilityLevel ambient)
         {
-            if (_model is null || typeof(T).IsEnum || Nullable.GetUnderlyingType(typeof(T)) is not null) return false;
+            if (_model is null || typeof(T).IsEnum || Nullable.GetUnderlyingType(typeof(T)) != null) return false;
             if (!_model.IsKnownType<T>(ambient)) return false;
 
             var mt = _model[typeof(T)];
             if (mt is null) return false;
-            if (mt.SerializerType is not null) return false;
+            if (mt.SerializerType != null) return false;
 
-            if (_model.TryGetRepeatedProvider(mt.Type) is not null) return false;
+            if (_model.TryGetRepeatedProvider(mt.Type) != null) return false;
             return true;
         }
     }

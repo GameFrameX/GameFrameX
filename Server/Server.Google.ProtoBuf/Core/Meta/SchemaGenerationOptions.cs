@@ -28,12 +28,12 @@ namespace ProtoBuf.Meta
         /// <summary>
         /// The services to consider as part of this operation.
         /// </summary>
-        public List<Service> Services => _services ??= new List<Service>();
+        public List<Service> Services => _services = _services ?? new List<Service>();
 
         /// <summary>
         /// The types to consider as part of this operation.
         /// </summary>
-        public List<Type> Types => _types ??= new List<Type>();
+        public List<Type> Types => _types = _types ?? new List<Type>();
 
         private List<Service> _services;
         private List<Type> _types;

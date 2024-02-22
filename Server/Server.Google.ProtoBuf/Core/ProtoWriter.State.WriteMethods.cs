@@ -18,7 +18,7 @@ namespace ProtoBuf
             /// </summary>
             public void WriteString(int fieldNumber, string value, StringMap map = null)
             {
-                if (value is not null)
+                if (value != null)
                 {
                     WriteFieldHeader(fieldNumber, WireType.String);
                     WriteStringWithLengthPrefix(value, map);
@@ -41,6 +41,7 @@ namespace ProtoBuf
                     writer.ImplWriteString(ref this, value, len);
                 }
             }
+
             /// <summary>
             /// Writes a string to the stream; supported wire-types: String
             /// </summary>
@@ -84,33 +85,36 @@ namespace ProtoBuf
                 {
                     WritePackedField(writer, fieldNumber, wireType);
                 }
+            }
 
-                static void FailPendingField(ProtoWriter writer, int fieldNumber, WireType wireType)
+            static void FailPendingField(ProtoWriter writer, int fieldNumber, WireType wireType)
+            {
+                ThrowHelper.ThrowInvalidOperationException($"Cannot write a {wireType}/{fieldNumber} header until the {writer.WireType}/{writer.fieldNumber} data has been written; writer: {writer}");
+            }
+
+            static void WritePackedField(ProtoWriter writer, int fieldNumber, WireType wireType)
+            {
+                if (writer.packedFieldNumber == fieldNumber)
                 {
-                    ThrowHelper.ThrowInvalidOperationException($"Cannot write a {wireType}/{fieldNumber} header until the {writer.WireType}/{writer.fieldNumber} data has been written; writer: {writer}");
-                }
-                static void WritePackedField(ProtoWriter writer, int fieldNumber, WireType wireType)
-                {
-                    if (writer.packedFieldNumber == fieldNumber)
-                    { // we'll set things up, but note we *don't* actually write the header here
-                        switch (wireType)
-                        {
-                            case WireType.Fixed32:
-                            case WireType.Fixed64:
-                            case WireType.Varint:
-                            case WireType.SignedVarint:
-                                break; // fine
-                            default:
-                                ThrowHelper.ThrowInvalidOperationException("Wire-type cannot be encoded as packed: " + wireType.ToString());
-                                break;
-                        }
-                        writer.fieldNumber = fieldNumber;
-                        writer.WireType = wireType;
-                    }
-                    else
+                    // we'll set things up, but note we *don't* actually write the header here
+                    switch (wireType)
                     {
-                        ThrowHelper.ThrowInvalidOperationException("Field mismatch during packed encoding; expected " + writer.packedFieldNumber.ToString() + " but received " + fieldNumber.ToString());
+                        case WireType.Fixed32:
+                        case WireType.Fixed64:
+                        case WireType.Varint:
+                        case WireType.SignedVarint:
+                            break; // fine
+                        default:
+                            ThrowHelper.ThrowInvalidOperationException("Wire-type cannot be encoded as packed: " + wireType.ToString());
+                            break;
                     }
+
+                    writer.fieldNumber = fieldNumber;
+                    writer.WireType = wireType;
+                }
+                else
+                {
+                    ThrowHelper.ThrowInvalidOperationException("Field mismatch during packed encoding; expected " + writer.packedFieldNumber.ToString() + " but received " + fieldNumber.ToString());
                 }
             }
 
@@ -241,10 +245,15 @@ namespace ProtoBuf
                         {
                             ThrowHelper.ThrowOverflowException();
                         }
+
                         WriteSingle(f);
                         return;
                     case WireType.Fixed64:
-                        unsafe { writer.ImplWriteFixed64(ref this, *(ulong*)&value); }
+                        unsafe
+                        {
+                            writer.ImplWriteFixed64(ref this, *(ulong*)&value);
+                        }
+
                         writer.AdvanceAndReset(8);
                         return;
                     default:
@@ -262,7 +271,11 @@ namespace ProtoBuf
                 switch (writer.WireType)
                 {
                     case WireType.Fixed32:
-                        unsafe { writer.ImplWriteFixed32(ref this, *(uint*)&value); }
+                        unsafe
+                        {
+                            writer.ImplWriteFixed32(ref this, *(uint*)&value);
+                        }
+
                         writer.AdvanceAndReset(4);
                         return;
                     case WireType.Fixed64:
@@ -366,7 +379,7 @@ namespace ProtoBuf
             /// </summary>
             public void WriteAny<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(int fieldNumber, T value, ISerializer<T> serializer = null)
             {
-                serializer ??= TypeModel.GetSerializer<T>(Model);
+                serializer = serializer ?? TypeModel.GetSerializer<T>(Model);
                 WriteAny<T>(fieldNumber, serializer.Features, value, serializer);
             }
 
@@ -382,16 +395,18 @@ namespace ProtoBuf
                     fieldPresence = features.HasAny(SerializerFeatures.OptionWrappedValueFieldPresence);
                     return AssertWrappedAndGetWireType(ref features, SerializerFeatures.OptionWrappedValue, SerializerFeatures.OptionWrappedValueGroup);
                 }
-                static WireType AssertWrappedAndGetWireType(ref SerializerFeatures features,
-                    SerializerFeatures demanded, SerializerFeatures group)
+            }
+
+            static WireType AssertWrappedAndGetWireType(ref SerializerFeatures features,
+                SerializerFeatures demanded, SerializerFeatures group)
+            {
+                if (!features.HasAny(demanded))
                 {
-                    if (!features.HasAny(demanded))
-                    {
-                        ThrowHelper.ThrowInvalidOperationException($"{nameof(WriteWrapped)} called for {features.GetCategory()}, but {demanded} was not specified");
-                    }
-                    features &= ~demanded; // we then *remove* that option, to prevent recursion from WriteAny
-                    return features.HasAny(group) ? WireType.StartGroup : WireType.String;
+                    ThrowHelper.ThrowInvalidOperationException($"{nameof(WriteWrapped)} called for {features.GetCategory()}, but {demanded} was not specified");
                 }
+
+                features &= ~demanded; // we then *remove* that option, to prevent recursion from WriteAny
+                return features.HasAny(group) ? WireType.StartGroup : WireType.String;
             }
 
             /// <summary>
@@ -399,7 +414,7 @@ namespace ProtoBuf
             /// </summary>
             public void WriteWrapped<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(int fieldNumber, SerializerFeatures features, T value, ISerializer<T> serializer = null)
             {
-                serializer ??= TypeModel.GetSerializer<T>(Model);
+                serializer = serializer ?? TypeModel.GetSerializer<T>(Model);
                 features.InheritFrom(serializer.Features);
 
                 var wrapperFormat = AssertWrappedAndGetWireType(ref features, out var fieldPresence);
@@ -409,10 +424,12 @@ namespace ProtoBuf
                     // nothing to do
                     return;
                 }
+
                 WriteFieldHeader(fieldNumber, wrapperFormat);
 
                 if (!isNull && (fieldPresence || TypeHelper<T>.ValueChecker.HasNonTrivialValue(value)))
-                {   // only write the field if it has a meaningful value (note: we already remove the relevant wrap options,
+                {
+                    // only write the field if it has a meaningful value (note: we already remove the relevant wrap options,
                     // so: not recursive); if we're using field-presence, we write any non-null value; otherwise,
                     // (think 'wrappers.proto') we only write non-zero values
 
@@ -430,7 +447,7 @@ namespace ProtoBuf
             /// </summary>
             public void WriteAny<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(int fieldNumber, SerializerFeatures features, T value, ISerializer<T> serializer = null)
             {
-                serializer ??= TypeModel.GetSerializer<T>(Model);
+                serializer = serializer ?? TypeModel.GetSerializer<T>(Model);
                 features.InheritFrom(serializer.Features);
 
                 if (features.HasAny(SerializerFeatures.OptionWrappedValue))
@@ -438,6 +455,7 @@ namespace ProtoBuf
                     WriteWrapped<T>(fieldNumber, features, value, serializer);
                     return;
                 }
+
                 if (!(TypeHelper<T>.CanBeNull && TypeHelper<T>.ValueChecker.IsNull(value)))
                 {
                     switch (features.GetCategory())
@@ -485,7 +503,7 @@ namespace ProtoBuf
             public void WriteBaseType<T>([DynamicallyAccessedMembers(DynamicAccess.ContractType)] T value, ISubTypeSerializer<T> serializer = null) where T : class
                 => (serializer ?? TypeModel.GetSubTypeSerializer<T>(Model)).WriteSubType(ref this, value);
 
-            internal readonly TypeModel Model => _writer?.Model;
+            internal TypeModel Model => _writer?.Model;
 
             /// <summary>
             /// Gets the serializer associated with a specific type
@@ -493,28 +511,28 @@ namespace ProtoBuf
             [MethodImpl(HotPath)]
             public ISerializer<T> GetSerializer<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>() => TypeModel.GetSerializer<T>(Model);
 
-            internal readonly WireType WireType
+            internal WireType WireType
             {
                 get => _writer.WireType;
                 set => _writer.WireType = value;
             }
 
-            internal readonly int Depth => _writer.Depth;
+            internal int Depth => _writer.Depth;
 
-            internal readonly int FieldNumber
+            internal int FieldNumber
             {
                 get => _writer.fieldNumber;
                 private set => _writer.fieldNumber = value;
             }
 
-            internal readonly long GetPosition() => _writer._position64;
+            internal long GetPosition() => _writer._position64;
 
-            internal readonly ProtoWriter GetWriter() => _writer;
+            internal ProtoWriter GetWriter() => _writer;
 
             /// <summary>
             /// The serialization context associated with this instance
             /// </summary>
-            public readonly ISerializationContext Context => _writer;
+            public ISerializationContext Context => _writer;
 
             /// <summary>
             /// Writes a byte-array to the stream; supported wire-types: String
@@ -567,7 +585,7 @@ namespace ProtoBuf
             public void WriteBytes<TStorage>(TStorage value, IMemoryConverter<TStorage, byte> converter = null)
                 => WriteBytes((ReadOnlyMemory<byte>)(
                     converter ?? DefaultMemoryConverter<byte>.GetFor<TStorage>(Model)
-                    ).GetMemory(value));
+                ).GetMemory(value));
 
             /// <summary>
             /// Writes a binary chunk to the stream; supported wire-types: String
@@ -622,7 +640,7 @@ namespace ProtoBuf
                 try
                 {
                     CheckClear();
-                    serializer ??= TypeModel.GetSerializer<T>(Model);
+                    serializer = serializer ?? TypeModel.GetSerializer<T>(Model);
                     long before = GetPosition();
 #if FEAT_DYNAMIC_REF
                     if (TypeHelper<T>.IsReferenceType && value is object)
@@ -696,7 +714,7 @@ namespace ProtoBuf
             /// Abandon any pending unflushed data
             /// </summary>
             [MethodImpl(HotPath)]
-            public readonly void Abandon() => _writer?.Abandon();
+            public void Abandon() => _writer?.Abandon();
 
             void CheckClear() => _writer?.CheckClear(ref this);
 
@@ -712,13 +730,19 @@ namespace ProtoBuf
                 switch (wireType)
                 {
                     // use long in case very large arrays are enabled
-                    case WireType.Fixed32: bytes = ((ulong)elementCount) << 2; break; // x4
-                    case WireType.Fixed64: bytes = ((ulong)elementCount) << 3; break; // x8
+                    case WireType.Fixed32:
+                        bytes = ((ulong)elementCount) << 2;
+                        break; // x4
+                    case WireType.Fixed64:
+                        bytes = ((ulong)elementCount) << 3;
+                        break; // x8
                     default:
                         ThrowHelper.ThrowArgumentOutOfRangeException(nameof(wireType), "Invalid wire-type: " + wireType);
                         bytes = default;
                         break;
-                };
+                }
+
+                ;
                 int prefixLength = _writer.ImplWriteVarint64(ref this, bytes);
                 _writer.AdvanceAndReset(prefixLength);
             }
@@ -770,7 +794,8 @@ namespace ProtoBuf
                 {
                     ThrowHelper.ThrowInvalidOperationException("Cannot serialize sub-objects unless a model is provided");
                 }
-                type ??= value.GetType();
+
+                type = type ?? value.GetType();
                 if (WireType != WireType.None) ThrowInvalidSerializationOperation();
 
                 switch (style)
@@ -796,13 +821,15 @@ namespace ProtoBuf
                 {
                     TypeModel.ThrowUnexpectedType(value.GetType(), Model);
                 }
+
                 EndSubItem(token, style);
 #pragma warning restore CS0618
             }
+
             internal void WriteHeaderCore(int fieldNumber, WireType wireType)
             {
                 uint header = (((uint)fieldNumber) << 3)
-                    | (((uint)wireType) & 7);
+                              | (((uint)wireType) & 7);
                 int bytes = _writer.ImplWriteVarint32(ref this, header);
                 _writer.Advance(bytes);
             }
@@ -844,10 +871,11 @@ namespace ProtoBuf
                                 ThrowInvalidSerializationOperation();
                                 return default;
                         }
+
                         goto case WireType.String;
                     case WireType.String:
 #if DEBUG
-                        if (Model is not null && Model.ForwardsOnly)
+                        if (Model != null && Model.ForwardsOnly)
                         {
                             ThrowHelper.ThrowProtoException("Should not be buffering data: " + instance ?? "(null)");
                         }
@@ -865,7 +893,8 @@ namespace ProtoBuf
                 _writer.PostSubItem(ref this);
                 int value = (int)token.value64;
                 if (value < 0)
-                {   // group - very simple append
+                {
+                    // group - very simple append
                     WriteHeaderCore(-value, WireType.EndGroup);
                     WireType = WireType.None;
                 }
@@ -925,7 +954,10 @@ namespace ProtoBuf
                             _writer.ImplCopyRawFromStream(ref this, source);
                         }
                     }
-                    finally { extn.EndQuery(source); }
+                    finally
+                    {
+                        extn.EndQuery(source);
+                    }
                 }
             }
 
@@ -951,7 +983,7 @@ namespace ProtoBuf
             }
 
             [MethodImpl(MethodImplOptions.NoInlining)]
-            internal readonly void ThrowTooDeep(int depth) => ThrowHelper.ThrowInvalidOperationException("Maximum model depth exceeded (see " + nameof(TypeModel) + "." + nameof(TypeModel.MaxDepth) + "): " + depth.ToString());
+            internal void ThrowTooDeep(int depth) => ThrowHelper.ThrowInvalidOperationException("Maximum model depth exceeded (see " + nameof(TypeModel) + "." + nameof(TypeModel.MaxDepth) + "): " + depth.ToString());
 
             /// <summary>
             /// Used for packed encoding; indicates that the next field should be skipped rather than
@@ -959,7 +991,7 @@ namespace ProtoBuf
             /// when the attempt is made to write the (incorrect) field. The wire-type is taken from the
             /// subsequent call to WriteFieldHeader. Only primitive types can be packed.
             /// </summary>
-            public readonly void SetPackedField(int fieldNumber)
+            public void SetPackedField(int fieldNumber)
             {
                 if (fieldNumber <= 0) ThrowHelper.ThrowArgumentOutOfRangeException(nameof(fieldNumber));
                 _writer.packedFieldNumber = fieldNumber;
@@ -969,16 +1001,16 @@ namespace ProtoBuf
             /// Used for packed encoding; explicitly reset the packed field marker; this is not required
             /// if using StartSubItem/EndSubItem
             /// </summary>
-            public readonly void ClearPackedField(int fieldNumber)
+            public void ClearPackedField(int fieldNumber)
             {
                 if (fieldNumber != _writer.packedFieldNumber)
                     ThrowWrongPackedField(fieldNumber, _writer);
                 _writer.packedFieldNumber = 0;
+            }
 
-                static void ThrowWrongPackedField(int fieldNumber, ProtoWriter writer)
-                {
-                    ThrowHelper.ThrowInvalidOperationException("Field mismatch during packed encoding; expected " + writer.packedFieldNumber.ToString() + " but received " + fieldNumber.ToString());
-                }
+            static void ThrowWrongPackedField(int fieldNumber, ProtoWriter writer)
+            {
+                ThrowHelper.ThrowInvalidOperationException("Field mismatch during packed encoding; expected " + writer.packedFieldNumber.ToString() + " but received " + fieldNumber.ToString());
             }
 
             /// <summary>

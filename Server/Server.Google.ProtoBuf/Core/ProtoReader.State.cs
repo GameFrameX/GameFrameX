@@ -27,7 +27,8 @@ namespace ProtoBuf
                 this = default;
                 reader?.Dispose();
             }
-            internal readonly SolidState Solidify() => new SolidState(
+
+            internal SolidState Solidify() => new SolidState(
                 _reader,
                 _memory.Slice(OffsetInCurrent, RemainingInCurrent));
 
@@ -54,6 +55,7 @@ namespace ProtoBuf
                 OffsetInCurrent = 0;
                 RemainingInCurrent = Span.Length;
             }
+
             internal ReadOnlySpan<byte> Span { get; private set; }
             private ReadOnlyMemory<byte> _memory;
 
@@ -66,6 +68,7 @@ namespace ProtoBuf
                 OffsetInCurrent += bytes;
                 RemainingInCurrent -= bytes;
             }
+
             [MethodImpl(HotPath)]
             internal ReadOnlySpan<byte> Consume(int bytes)
             {
@@ -88,8 +91,10 @@ namespace ProtoBuf
             {
                 Debug.Assert(RemainingInCurrent >= 5);
                 value = Span[OffsetInCurrent];
-                int bytes = (value & 0x80) == 0 ? 1 : ParseVarintUInt32Tail(
-                    Span.Slice(OffsetInCurrent), ref value);
+                int bytes = (value & 0x80) == 0
+                    ? 1
+                    : ParseVarintUInt32Tail(
+                        Span.Slice(OffsetInCurrent), ref value);
                 Debug.Assert(value != 0);
                 OffsetInCurrent += bytes;
                 RemainingInCurrent -= bytes;
@@ -109,6 +114,7 @@ namespace ProtoBuf
                 value = span[offset];
                 return (value & 0x80) == 0 ? 1 : ParseVarintUInt32Tail(span.Slice(offset), ref value);
             }
+
             private int ParseVarintUInt32Tail(ReadOnlySpan<byte> span, ref uint value)
             {
                 uint chunk = span[1];
@@ -132,7 +138,7 @@ namespace ProtoBuf
             }
 
             [MethodImpl(HotPath)]
-            internal readonly void Advance(long count) => _reader.Advance(count);
+            internal void Advance(long count) => _reader.Advance(count);
 
             internal static int TryParseUInt64Varint(ReadOnlySpan<byte> span, int offset, out ulong value)
             {
@@ -141,6 +147,7 @@ namespace ProtoBuf
                     value = 0;
                     return 0;
                 }
+
                 value = span[offset++];
                 if ((value & 0x80) == 0) return 1;
                 value &= 0x7F;
@@ -194,7 +201,7 @@ namespace ProtoBuf
             }
 
             [MethodImpl(HotPath)]
-            internal readonly ProtoReader GetReader() => _reader;
+            internal ProtoReader GetReader() => _reader;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -209,11 +216,13 @@ namespace ProtoBuf
             public void Dispose() => _reader?.Dispose();
             private readonly ReadOnlyMemory<byte> _memory;
             private readonly ProtoReader _reader;
+
             internal SolidState(ProtoReader reader, ReadOnlyMemory<byte> memory)
             {
                 _memory = memory;
                 _reader = reader;
             }
+
             internal State Liquify() => new State(_reader, _memory);
         }
     }

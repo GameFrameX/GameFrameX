@@ -60,6 +60,7 @@ namespace ProtoBuf.Internal.Serializers
             {
                 throw new InvalidOperationException($"Unable to bind serializer: " + ex.Message, ex);
             }
+
             try
             {
                 subTypeDeserializer = Compiler.CompilerContext.BuildSubTypeDeserializer<T>(model.Scope, head, model);
@@ -68,6 +69,7 @@ namespace ProtoBuf.Internal.Serializers
             {
                 throw new InvalidOperationException($"Unable to bind deserializer: " + ex.Message, ex);
             }
+
             factory = Compiler.CompilerContext.BuildFactory<T>(model.Scope, head, model);
         }
     }
@@ -99,6 +101,7 @@ namespace ProtoBuf.Internal.Serializers
             {
                 throw new InvalidOperationException($"Unable to bind deserializer: " + ex.Message, ex);
             }
+
             factory = Compiler.CompilerContext.BuildFactory<T>(model.Scope, head, model);
         }
 
@@ -126,11 +129,16 @@ namespace ProtoBuf.Internal.Serializers
             => factory is null ? default : factory.Invoke(context);
     }
 
-    interface ICompiledSerializer { Type ExpectedType { get; } } // just means "nothing more to do here" in terms of auto-compile
+    interface ICompiledSerializer
+    {
+        Type ExpectedType { get; }
+    } // just means "nothing more to do here" in terms of auto-compile
+
     internal abstract class CompiledSerializer : IProtoTypeSerializer, ICompiledSerializer
     {
         bool IRuntimeProtoSerializerNode.IsScalar => head.IsScalar;
         public SerializerFeatures Features => head.Features;
+
         bool IProtoTypeSerializer.HasCallbacks(TypeModel.CallbackType callbackType)
         {
             return head.HasCallbacks(callbackType); // these routes only used when bits of the model not compiled
@@ -149,7 +157,8 @@ namespace ProtoBuf.Internal.Serializers
 
         public static ICompiledSerializer Wrap(IProtoTypeSerializer head, RuntimeTypeModel model)
         {
-            if (head is not ICompiledSerializer result)
+            ICompiledSerializer result = head as ICompiledSerializer;
+            if (result == null)
             {
                 ConstructorInfo ctor;
                 try
@@ -164,10 +173,12 @@ namespace ProtoBuf.Internal.Serializers
                         ctor = Helpers.GetConstructor(typeof(SimpleCompiledSerializer<>).MakeGenericType(head.BaseType),
                             new Type[] { typeof(IProtoTypeSerializer), typeof(RuntimeTypeModel) }, true);
                     }
-                } catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     throw new InvalidOperationException($"Unable to wrap {head.BaseType.NormalizeName()}/{head.ExpectedType.NormalizeName()}", ex);
                 }
+
                 try
                 {
                     result = (CompiledSerializer)ctor.Invoke(new object[] { head, model });
@@ -176,13 +187,16 @@ namespace ProtoBuf.Internal.Serializers
                 {
                     throw new InvalidOperationException($"Unable to wrap {head.BaseType.NormalizeName()}/{head.ExpectedType.NormalizeName()}: {tie.InnerException.Message} ({head.GetType().NormalizeName()})", tie.InnerException);
                 }
+
                 Debug.Assert(result.ExpectedType == head.ExpectedType);
             }
+
             return result;
         }
 
         protected readonly IProtoTypeSerializer head;
         Type IProtoTypeSerializer.BaseType => head.BaseType;
+
         protected CompiledSerializer(IProtoTypeSerializer head)
         {
             this.head = head;

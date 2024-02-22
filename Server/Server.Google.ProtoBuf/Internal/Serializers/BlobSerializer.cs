@@ -35,19 +35,22 @@ namespace ProtoBuf.Internal.Serializers
         }
         void IRuntimeProtoSerializerNode.EmitRead(Compiler.CompilerContext ctx, Compiler.Local entity)
         {
-            using var tmp = overwriteList ? default : ctx.GetLocalWithValue(typeof(T), entity);
-            ctx.LoadState();
-            if (overwriteList)
+            using (var tmp = overwriteList ? default : ctx.GetLocalWithValue(typeof(T), entity))
             {
-                ctx.LoadNullRef();
+                ctx.LoadState();
+                if (overwriteList)
+                {
+                    ctx.LoadNullRef();
+                }
+                else
+                {
+                    ctx.LoadValue(tmp);
+                }
+
+                ctx.EmitCall(typeof(ProtoReader.State)
+                    .GetMethod(nameof(ProtoReader.State.AppendBytes),
+                        new[] { typeof(T) }));
             }
-            else
-            {
-                ctx.LoadValue(tmp);
-            }
-            ctx.EmitCall(typeof(ProtoReader.State)
-               .GetMethod(nameof(ProtoReader.State.AppendBytes),
-               new[] { typeof(T)}));
         }
     }
 }

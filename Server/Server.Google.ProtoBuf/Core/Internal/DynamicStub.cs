@@ -14,10 +14,10 @@ namespace ProtoBuf.Internal
         WrappedMessage,
         Scalar,
     }
+
     // bridge between the world of Type and the world of <T>, in a way that doesn't involve constant reflection
     internal abstract class DynamicStub
     {
-        
         private static readonly Hashtable s_byType = new Hashtable
         {
             { typeof(object), NilStub.Instance },
@@ -36,9 +36,11 @@ namespace ProtoBuf.Internal
                 {
                     return true;
                 }
+
                 // since we might be ignoring sub-types, we need to walk upwards and check all
                 type = type.BaseType;
-            } while (type is not null && type != typeof(object));
+            } while (type != null && type != typeof(object));
+
             return false;
         }
 
@@ -55,9 +57,11 @@ namespace ProtoBuf.Internal
                 {
                     return true;
                 }
+
                 // since we might be ignoring sub-types, we need to walk upwards and check all
                 type = type.BaseType;
-            } while (type is not null && type != typeof(object));
+            } while (type != null && type != typeof(object));
+
             return false;
         }
 
@@ -70,10 +74,11 @@ namespace ProtoBuf.Internal
                 {
                     return true;
                 }
+
                 // since we might be ignoring sub-types, we need to walk upwards and check all
                 type = type.BaseType;
-            }
-            while (type is not null && type != typeof(object));
+            } while (type != null && type != typeof(object));
+
             return false;
         }
 
@@ -90,9 +95,8 @@ namespace ProtoBuf.Internal
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static DynamicStub SlowGet(Type type)
         {
-            
             if (type is null) return NilStub.Instance;
-            
+
             DynamicStub obj = null;
             Type alt = null;
             if (type.IsGenericParameter)
@@ -111,55 +115,57 @@ namespace ProtoBuf.Internal
             // use indirection if possible
             if (obj is null)
             {
-                if (alt is not null && alt != type) obj = Get(alt);
-                obj ??= TryCreateConcrete(typeof(ConcreteStub<>), type);
+                if (alt != null && alt != type) obj = Get(alt);
+                obj = obj ?? TryCreateConcrete(typeof(ConcreteStub<>), type);
             }
+
             lock (s_byType)
             {
                 s_byType[type] = obj;
             }
 
             return obj;
+        }
 
-            static DynamicStub TryCreateConcrete(Type typeDef, params Type[] args)
+        static DynamicStub TryCreateConcrete(Type typeDef, params Type[] args)
+        {
+            try
             {
-                try
+                return (DynamicStub)Activator.CreateInstance(typeDef.MakeGenericType(args), nonPublic: true);
+            }
+            catch
+            {
+                return NilStub.Instance;
+            }
+        }
+
+        // Applies common proxy scenarios, resolving the actual type to consider
+        static Type ResolveProxies(Type type)
+        {
+            if (type is null) return null;
+            if (type.IsGenericParameter) return null;
+
+            // EF POCO
+            string fullName = type.FullName;
+            if (fullName != null && fullName.StartsWith("System.Data.Entity.DynamicProxies."))
+            {
+                return type.BaseType;
+            }
+
+            // NHibernate
+            Type[] interfaces = type.GetInterfaces();
+            foreach (Type t in interfaces)
+            {
+                switch (t.FullName)
                 {
-                    return (DynamicStub)Activator.CreateInstance(typeDef.MakeGenericType(args), nonPublic: true);
-                }
-                catch
-                {
-                    return NilStub.Instance;
+                    case "NHibernate.Proxy.INHibernateProxy":
+                    case "NHibernate.Proxy.DynamicProxy.IProxy":
+                    case "NHibernate.Intercept.IFieldInterceptorAccessor":
+                        return type.BaseType;
                 }
             }
 
-            // Applies common proxy scenarios, resolving the actual type to consider
-            static Type ResolveProxies(Type type)
-            {
-                if (type is null) return null;
-                if (type.IsGenericParameter) return null;
-
-                // EF POCO
-                string fullName = type.FullName;
-                if (fullName is not null && fullName.StartsWith("System.Data.Entity.DynamicProxies."))
-                {
-                    return type.BaseType;
-                }
-
-                // NHibernate
-                Type[] interfaces = type.GetInterfaces();
-                foreach (Type t in interfaces)
-                {
-                    switch (t.FullName)
-                    {
-                        case "NHibernate.Proxy.INHibernateProxy":
-                        case "NHibernate.Proxy.DynamicProxy.IProxy":
-                        case "NHibernate.Intercept.IFieldInterceptorAccessor":
-                            return type.BaseType;
-                    }
-                }
-                return null;
-            }
+            return null;
         }
 
         protected abstract bool TryDeserializeRoot(TypeModel model, ref ProtoReader.State state, ref object value, bool autoCreate);
@@ -176,15 +182,21 @@ namespace ProtoBuf.Internal
 
         private class NilStub : DynamicStub
         {
-            protected NilStub() { }
+            protected NilStub()
+            {
+            }
+
             public static readonly NilStub Instance = new NilStub();
 
             protected override bool TryDeserializeRoot(TypeModel model, ref ProtoReader.State state, ref object value, bool autoCreate)
                 => false;
+
             protected override bool TryDeserialize(ObjectScope scope, TypeModel model, ref ProtoReader.State state, ref object value)
                 => false;
+
             protected override bool TrySerializeRoot(TypeModel model, ref ProtoWriter.State state, object value)
                 => false;
+
             protected override bool TrySerializeAny(int fieldNumber, SerializerFeatures features, TypeModel model, ref ProtoWriter.State state, object value)
                 => false;
 
@@ -206,6 +218,7 @@ namespace ProtoBuf.Internal
         private sealed class ConcreteStub<T> : DynamicStub
         {
             protected override Type GetEffectiveType() => typeof(T);
+
             protected override bool TryDeserializeRoot(TypeModel model, ref ProtoReader.State state, ref object value, bool autoCreate)
             {
                 var serializer = TypeModel.TryGetSerializer<T>(model);
@@ -219,13 +232,14 @@ namespace ProtoBuf.Internal
                 if (resetToNullIfNotMoved && oldPos == state.GetPosition()) value = null;
                 return true;
             }
+
             protected override bool TryDeserialize(ObjectScope scope, TypeModel model, ref ProtoReader.State state, ref object value)
             {
                 var serializer = TypeModel.TryGetSerializer<T>(model);
                 if (serializer is null) return false;
                 // note this null-check is non-trivial; for value-type T it promotes the null to a default
                 T typed = TypeHelper<T>.FromObject(value);
-                switch(scope)
+                switch (scope)
                 {
                     case ObjectScope.LikeRoot:
                         typed = state.ReadAsRoot<T>(typed, serializer);
@@ -240,13 +254,14 @@ namespace ProtoBuf.Internal
                     default:
                         return false;
                 }
+
                 value = typed;
                 return true;
             }
 
             // note: in IsKnownType and CanSerialize we want to avoid asking for the serializer from
             // the model unless we actually need it, as that can cause re-entrancy loops
-            protected override bool IsKnownType(TypeModel model, CompatibilityLevel ambient) => model is not null && model.IsKnownType<T>(ambient);
+            protected override bool IsKnownType(TypeModel model, CompatibilityLevel ambient) => model != null && model.IsKnownType<T>(ambient);
 
             protected override bool CanSerialize(TypeModel model, out SerializerFeatures features)
             {
@@ -260,11 +275,13 @@ namespace ProtoBuf.Internal
                     features = default;
                     return false;
                 }
+
                 if (ser is null)
                 {
                     features = default;
                     return false;
                 }
+
                 features = ser.Features;
                 return true;
             }
@@ -294,6 +311,7 @@ namespace ProtoBuf.Internal
                 {
                     state.WriteAny<T>(fieldNumber, features, typed, serializer);
                 }
+
                 return true;
             }
 
@@ -317,7 +335,7 @@ namespace ProtoBuf.Internal
 
         internal static bool IsTypeEquivalent(Type expected, Type actual)
             => ReferenceEquals(expected, actual) // since SlowGet checks for proxies etc, we can
-            || ReferenceEquals(Get(expected), Get(actual)); // just compare the results
+               || ReferenceEquals(Get(expected), Get(actual)); // just compare the results
 
         internal static Type GetEffectiveType(Type type)
             => type is null ? null : Get(type).GetEffectiveType() ?? type;

@@ -12,8 +12,8 @@ namespace ProtoBuf.Internal.Serializers
 
         public static TimeSpanSerializer Create(CompatibilityLevel compatibilityLevel)
             => compatibilityLevel >= CompatibilityLevel.Level240
-            ? s_Duration ??= new TimeSpanSerializer(true)
-            : s_Legacy ??= new TimeSpanSerializer(false);
+            ? s_Duration = s_Duration ?? new TimeSpanSerializer(true)
+            : s_Legacy = s_Legacy ?? new TimeSpanSerializer(false);
 
         private TimeSpanSerializer(bool useDuration)
             => _useDuration = useDuration;

@@ -241,7 +241,7 @@ namespace ProtoBuf
 
         internal void InitializeFrom(NetObjectCache obj)
         {
-            if (obj is not null)
+            if (obj != null)
             {
                 _knownLengths.Clear();
                 foreach (var pair in obj._knownLengths)
@@ -251,7 +251,7 @@ namespace ProtoBuf
 
         internal void CopyBack(NetObjectCache obj)
         {
-            if (obj is not null)
+            if (obj != null)
             {
                 obj._hit += _hit;
                 obj._miss += _miss;

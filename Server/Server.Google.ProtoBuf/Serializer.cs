@@ -74,7 +74,7 @@ namespace ProtoBuf
         /// original instance.</returns>
         public static T Merge<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(Stream source, T instance)
         {
-            using var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default);
+            var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default);
             return state.DeserializeRootImpl<T>(instance);
         }
 
@@ -91,10 +91,12 @@ namespace ProtoBuf
         /// <returns>A new instane of type TNewType, with the data from TOldType.</returns>
         public static TTo ChangeType<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] TFrom, [DynamicallyAccessedMembers(DynamicAccess.ContractType)] TTo>(TFrom instance)
         {
-            using var ms = new MemoryStream();
-            Serialize<TFrom>(ms, instance);
-            ms.Position = 0;
-            return Deserialize<TTo>(ms);
+            using (var ms = new MemoryStream())
+            {
+                Serialize<TFrom>(ms, instance);
+                ms.Position = 0;
+                return Deserialize<TTo>(ms);
+            }
         }
 
         /// <summary>
@@ -105,26 +107,30 @@ namespace ProtoBuf
         /// <param name="reader">The XmlReader containing the data to apply to the instance (cannot be null).</param>
         public static void Merge<[DynamicallyAccessedMembers(DynamicAccess.ContractType)] T>(System.Xml.XmlReader reader, T instance) where T : System.Xml.Serialization.IXmlSerializable
         {
-            if (reader is null) throw new ArgumentNullException(nameof(reader));
-            if (instance is null) throw new ArgumentNullException(nameof(instance));
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
             const int LEN = 4096;
             byte[] buffer = new byte[LEN];
             int read;
-            using MemoryStream ms = new MemoryStream();
-            int depth = reader.Depth;
-            while (reader.Read() && reader.Depth > depth)
+            using (MemoryStream ms = new MemoryStream())
             {
-                if (reader.NodeType == System.Xml.XmlNodeType.Text)
+                int depth = reader.Depth;
+                while (reader.Read() && reader.Depth > depth)
                 {
-                    while ((read = reader.ReadContentAsBase64(buffer, 0, LEN)) > 0)
+                    if (reader.NodeType == System.Xml.XmlNodeType.Text)
                     {
-                        ms.Write(buffer, 0, read);
+                        while ((read = reader.ReadContentAsBase64(buffer, 0, LEN)) > 0)
+                        {
+                            ms.Write(buffer, 0, read);
+                        }
+
+                        if (reader.Depth <= depth) break;
                     }
-                    if (reader.Depth <= depth) break;
                 }
+
+                ms.Position = 0;
+                Serializer.Merge(ms, instance);
             }
-            ms.Position = 0;
-            Serializer.Merge(ms, instance);
         }
 
         private const string ProtoBinaryField = "proto";
@@ -139,6 +145,7 @@ namespace ProtoBuf
         {
             Merge<T>(info, new StreamingContext(StreamingContextStates.Persistence), instance);
         }
+
         /// <summary>
         /// Applies a protocol-buffer from a SerializationInfo to an existing instance.
         /// </summary>
@@ -155,11 +162,13 @@ namespace ProtoBuf
             if (instance.GetType() != typeof(T)) throw new ArgumentException("Incorrect type", nameof(instance));
 
             byte[] buffer = (byte[])info.GetValue(ProtoBinaryField, typeof(byte[]));
-            using MemoryStream ms = new MemoryStream(buffer);
-            T result = RuntimeTypeModel.Default.Deserialize<T>(ms, instance, context.Context);
-            if (!ReferenceEquals(result, instance))
+            using (MemoryStream ms = new MemoryStream(buffer))
             {
-                throw new ProtoException("Deserialization changed the instance; cannot succeed.");
+                T result = RuntimeTypeModel.Default.Deserialize<T>(ms, instance, context.Context);
+                if (!ReferenceEquals(result, instance))
+                {
+                    throw new ProtoException("Deserialization changed the instance; cannot succeed.");
+                }
             }
         }
 
@@ -262,8 +271,10 @@ namespace ProtoBuf
         /// <returns>True if a length could be obtained, false otherwise.</returns>
         public static bool TryReadLengthPrefix(byte[] buffer, int index, int count, PrefixStyle style, out int length)
         {
-            using Stream source = new MemoryStream(buffer, index, count);
-            return TryReadLengthPrefix(source, style, out length);
+            using (Stream source = new MemoryStream(buffer, index, count))
+            {
+                return TryReadLengthPrefix(source, style, out length);
+            }
         }
 
         /// <summary>
@@ -292,7 +303,7 @@ namespace ProtoBuf
             /// <param name="dest">The destination stream to write to.</param>
             public static void Serialize(Stream dest, object instance)
             {
-                if (instance is not null)
+                if (instance != null)
                 {
                     var state = ProtoWriter.State.Create(dest, RuntimeTypeModel.Default);
                     try
@@ -347,7 +358,7 @@ namespace ProtoBuf
             public static object Merge(Stream source, object instance)
             {
                 if (instance is null) throw new ArgumentNullException(nameof(instance));
-                using var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default);
+                var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default);
                 return state.DeserializeRootFallback(instance, instance.GetType());
             }
 
@@ -366,6 +377,7 @@ namespace ProtoBuf
                 if (instance is null) throw new ArgumentNullException(nameof(instance));
                 RuntimeTypeModel.Default.SerializeWithLengthPrefix(destination, instance, instance.GetType(), style, fieldNumber);
             }
+
             /// <summary>
             /// Applies a protocol-buffer stream to an existing instance (or null), using length-prefixed
             /// data - useful with network IO.
@@ -380,7 +392,7 @@ namespace ProtoBuf
             public static bool TryDeserializeWithLengthPrefix(Stream source, PrefixStyle style, ProtoBuf.TypeResolver resolver, out object value)
             {
                 value = RuntimeTypeModel.Default.DeserializeWithLengthPrefix(source, null, null, style, 0, resolver);
-                return value is not null;
+                return value != null;
             }
 
             /// <summary>
@@ -435,12 +447,17 @@ namespace ProtoBuf
                 }
             }
 
-            internal static ProtoSyntax Normalize(ProtoSyntax syntax) => syntax switch
+            internal static ProtoSyntax Normalize(ProtoSyntax syntax)
             {
-                ProtoSyntax.Proto2 => syntax,
-                ProtoSyntax.Proto3 => syntax,
-                _ => DefaultSyntax,
-            };
+                switch (syntax)
+                {
+                    case ProtoSyntax.Proto2:
+                    case ProtoSyntax.Proto3:
+                        return syntax;
+                    default:
+                        return DefaultSyntax;
+                }
+            }
         }
 
         /// <summary>
@@ -450,7 +467,9 @@ namespace ProtoBuf
         /// </summary>
         [Obsolete("This API is no longer required and may be removed in a future release")]
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public static void FlushPool() { }
+        public static void FlushPool()
+        {
+        }
 
 
         /// <summary>

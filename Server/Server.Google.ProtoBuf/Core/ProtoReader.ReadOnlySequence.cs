@@ -64,6 +64,7 @@ namespace ProtoBuf
                         {
                             UTF8.GetChars(bPtr, bytes, cPtr, chars);
                         }
+
                         return s;
                     }
                 }
@@ -88,6 +89,7 @@ namespace ProtoBuf
                         {
                             UTF8.GetChars(bPtr, bytes, cPtr, chars);
                         }
+
                         return s;
                     }
                 }
@@ -129,11 +131,11 @@ namespace ProtoBuf
                 if (trimNegative // allow for -ve values
                     && (chunk & 0xF0) == 0xF0
                     && offset + 4 < (uint)span.Length
-                        && span[offset] == 0xFF
-                        && span[offset + 1] == 0xFF
-                        && span[offset + 2] == 0xFF
-                        && span[offset + 3] == 0xFF
-                        && span[offset + 4] == 0x01)
+                    && span[offset] == 0xFF
+                    && span[offset + 1] == 0xFF
+                    && span[offset + 2] == 0xFF
+                    && span[offset + 3] == 0xFF
+                    && span[offset + 4] == 0x01)
                 {
                     return 10;
                 }
@@ -174,8 +176,10 @@ namespace ProtoBuf
                         if (throwIfEOF) state.ThrowEoF();
                         return 0;
                     }
+
                     state.Init(_source.Current);
                 } while (state.Span.IsEmpty);
+
                 return state.Span.Length;
             }
 
@@ -184,36 +188,36 @@ namespace ProtoBuf
                 return state.RemainingInCurrent >= 10
                     ? State.TryParseUInt64Varint(state.Span, state.OffsetInCurrent, out value)
                     : ViaStackAlloc(this, ref state, out value);
-                
-                static int ViaStackAlloc(ReadOnlySequenceProtoReader reader, ref State s, out ulong val)
+            }
+
+            static int ViaStackAlloc(ReadOnlySequenceProtoReader reader, ref State s, out ulong val)
+            {
+                Span<byte> span = stackalloc byte[10];
+                Span<byte> target = span;
+
+                int available = 0;
+                if (s.RemainingInCurrent != 0)
                 {
-                    Span<byte> span = stackalloc byte[10];
-                    Span<byte> target = span;
-
-                    int available = 0;
-                    if (s.RemainingInCurrent != 0)
-                    {
-                        int take = Math.Min(s.RemainingInCurrent, target.Length);
-                        Peek(ref s, take).CopyTo(target);
-                        target = target.Slice(take);
-                        available += take;
-                    }
-
-                    var iterCopy = reader._source;
-                    while (!target.IsEmpty && iterCopy.MoveNext())
-                    {
-                        var nextBuffer = iterCopy.Current.Span;
-                        var take = Math.Min(nextBuffer.Length, target.Length);
-
-                        nextBuffer.Slice(0, take).CopyTo(target);
-                        target = target.Slice(take);
-                        available += take;
-                    }
-
-                    if (available != 10) span = span.Slice(0, available);
-
-                    return ProtoReader.State.TryParseUInt64Varint(span, 0, out val);
+                    int take = Math.Min(s.RemainingInCurrent, target.Length);
+                    Peek(ref s, take).CopyTo(target);
+                    target = target.Slice(take);
+                    available += take;
                 }
+
+                var iterCopy = reader._source;
+                while (!target.IsEmpty && iterCopy.MoveNext())
+                {
+                    var nextBuffer = iterCopy.Current.Span;
+                    var take = Math.Min(nextBuffer.Length, target.Length);
+
+                    nextBuffer.Slice(0, take).CopyTo(target);
+                    target = target.Slice(take);
+                    available += take;
+                }
+
+                if (available != 10) span = span.Slice(0, available);
+
+                return ProtoReader.State.TryParseUInt64Varint(span, 0, out val);
             }
 
             private protected override uint ImplReadUInt32Fixed(ref State state)
@@ -233,6 +237,7 @@ namespace ProtoBuf
                         Consume(ref st, take).CopyTo(target);
                         target = target.Slice(take);
                     }
+
                     return BinaryPrimitives.ReadUInt32LittleEndian(span);
                 }
             }
@@ -254,6 +259,7 @@ namespace ProtoBuf
                         Consume(ref st, take).CopyTo(target);
                         target = target.Slice(take);
                     }
+
                     return BinaryPrimitives.ReadUInt64LittleEndian(span);
                 }
             }
@@ -280,7 +286,6 @@ namespace ProtoBuf
                 {
                     BufferPool.ReleaseBufferToPool(ref arr);
                 }
-                
             }
 
             private void ImplReadBytes(ref State state, Span<byte> target, int bytesToRead)
@@ -349,6 +354,7 @@ namespace ProtoBuf
                         target = target.Slice(take);
                         available += take;
                     }
+
                     if (available != 10) span = span.Slice(0, available);
                     return TryParseUInt32Varint(ref s, 0, m == Read32VarintMode.Signed, out val, span);
                 }

@@ -108,12 +108,15 @@ namespace ProtoBuf
                     return scaled.ToTimeSpan();
                 case WireType.Fixed64:
                     long ticks = state.ReadInt64();
-                    return ticks switch
+                    switch (ticks)
                     {
-                        long.MinValue => TimeSpan.MinValue,
-                        long.MaxValue => TimeSpan.MaxValue,
-                        _ => TimeSpan.FromTicks(ticks),
-                    };
+                        case long.MinValue:
+                            return TimeSpan.MinValue;
+                        case long.MaxValue:
+                            return TimeSpan.MaxValue;
+                        default:
+                            return TimeSpan.FromTicks(ticks);
+                    }
                 default:
                     ThrowHelper.ThrowProtoException($"Unexpected wire-type: {state.WireType}");
                     return default;
@@ -217,12 +220,15 @@ namespace ProtoBuf
                     return scaled.ToDateTime();
                 case WireType.Fixed64:
                     long ticks = state.ReadInt64();
-                    return ticks switch
+                    switch (ticks)
                     {
-                        long.MinValue => DateTime.MinValue,
-                        long.MaxValue => DateTime.MaxValue,
-                        _ => EpochOrigin[(int)DateTimeKind.Unspecified].AddTicks(ticks),
-                    };
+                        case long.MinValue:
+                            return DateTime.MinValue;
+                        case long.MaxValue:
+                            return DateTime.MaxValue;
+                        default:
+                            return EpochOrigin[(int)DateTimeKind.Unspecified].AddTicks(ticks);
+                    }
                 default:
                     ThrowHelper.ThrowProtoException($"Unexpected wire-type: {state.WireType}");
                     return default;

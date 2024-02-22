@@ -58,7 +58,7 @@ namespace ProtoBuf.Internal
             {   // no field? treat as null
                 return default;
             }
-            if (serializer is not null && serializer.Features.GetCategory() == SerializerFeatures.CategoryMessage)
+            if (serializer != null && serializer.Features.GetCategory() == SerializerFeatures.CategoryMessage)
             {
                 // get the serializer to do the work, by reading an empty payload
                 // (zero bytes is a default object in protobuf)

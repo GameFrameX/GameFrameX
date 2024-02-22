@@ -42,12 +42,14 @@ namespace ProtoBuf.Internal.Serializers
 
         void IDirectWriteNode.EmitDirectWrite(int fieldNumber, WireType wireType, Compiler.CompilerContext ctx, Compiler.Local valueFrom)
         {
-            using var loc = ctx.GetLocalWithValue(typeof(int), valueFrom);
-            ctx.LoadState();
-            ctx.LoadValue(fieldNumber);
-            ctx.LoadValue(loc);
-            ctx.EmitCall(typeof(ProtoWriter.State).GetMethod(nameof(ProtoWriter.State.WriteInt32Varint), BindingFlags.Instance | BindingFlags.Public,
-                null, new[] { typeof(int), typeof(int) }, null));
+            using (var loc = ctx.GetLocalWithValue(typeof(int), valueFrom))
+            {
+                ctx.LoadState();
+                ctx.LoadValue(fieldNumber);
+                ctx.LoadValue(loc);
+                ctx.EmitCall(typeof(ProtoWriter.State).GetMethod(nameof(ProtoWriter.State.WriteInt32Varint), BindingFlags.Instance | BindingFlags.Public,
+                    null, new[] { typeof(int), typeof(int) }, null));
+            }
         }
     }
 }

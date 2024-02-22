@@ -47,19 +47,30 @@ namespace ProtoBuf.Internal
         {
             private int position;
             private readonly Node node;
+
             internal NodeEnumerator(Node node)
             {
                 this.position = -1;
                 this.node = node;
             }
-            void IEnumerator.Reset() { position = -1; }
-            public readonly object Current { get { return node[position]; } }
+
+            void IEnumerator.Reset()
+            {
+                position = -1;
+            }
+
+            public object Current
+            {
+                get { return node[position]; }
+            }
+
             public bool MoveNext()
             {
                 int len = node.Length;
                 return (position <= len) && (++position < len);
             }
         }
+
         [StructLayout(LayoutKind.Auto)]
         internal readonly struct Node
         {
@@ -71,6 +82,7 @@ namespace ProtoBuf.Internal
                     {
                         return data[index];
                     }
+
                     throw new ArgumentOutOfRangeException(nameof(index));
                 }
                 set
@@ -85,6 +97,7 @@ namespace ProtoBuf.Internal
                     }
                 }
             }
+
             //public object TryGet(int index)
             //{
             //    return (index >= 0 && index < length) ? data[index] : null;
@@ -96,7 +109,7 @@ namespace ProtoBuf.Internal
             internal Node(object[] data, int length)
             {
                 Debug.Assert((data is null && length == 0) ||
-                    (data is not null && length > 0 && length <= data.Length));
+                             (data != null && length > 0 && length <= data.Length));
                 this.data = data;
 
                 this.Length = length;
@@ -119,6 +132,7 @@ namespace ProtoBuf.Internal
                 {
                     newData = data;
                 }
+
                 newData[Length] = value;
                 return new Node(newData, newLength);
             }
@@ -129,7 +143,8 @@ namespace ProtoBuf.Internal
                 {
                     if ((object)instance == (object)data[i]) return i;
                 } // ^^^ (object) above should be preserved, even if this was typed; needs
-                  // to be a reference check
+
+                // to be a reference check
                 return -1;
             }
 
@@ -139,6 +154,7 @@ namespace ProtoBuf.Internal
                 {
                     if (predicate(data[i], ctx)) return i;
                 }
+
                 return -1;
             }
         }
@@ -156,6 +172,7 @@ namespace ProtoBuf.Internal
             {
                 if (object.Equals(obj, value)) return true;
             }
+
             return false;
         }
 
@@ -165,6 +182,7 @@ namespace ProtoBuf.Internal
             public readonly int First;
             public readonly List<T> Items;
             public bool IsEmpty => Items is null;
+
             public Group(int first)
             {
                 this.First = first;
@@ -181,14 +199,20 @@ namespace ProtoBuf.Internal
             Group<T> group = default;
             for (int i = 0; i < keys.Length; i++)
             {
-                if (i == 0 || keys[i] != keys[i - 1]) { group = default; }
+                if (i == 0 || keys[i] != keys[i - 1])
+                {
+                    group = default;
+                }
+
                 if (group.IsEmpty)
                 {
                     group = new Group<T>(keys[i]);
                     outer.Add(group);
                 }
+
                 group.Items.Add(values[i]);
             }
+
             return outer;
         }
 

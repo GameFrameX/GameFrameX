@@ -22,6 +22,7 @@ namespace ProtoBuf.Meta
         }
 
         public string SchemaTypeName => _originalSchemaTypeName;
+
         public string WrappedSchemaTypeName
         {
             get
@@ -51,16 +52,26 @@ namespace ProtoBuf.Meta
         /// </summary>
         public bool HasGroupModifier => _valueMember.RequiresGroupModifier;
 
+
         /// <summary>
         /// Identifies, if original schemaTypeName is a known .net type
         /// </summary>
-        /// <returns>
-        /// true, if original schemaTypeName is a string representation of known System.XXX type 
-        /// </returns>
-        private bool HasKnownTypeSchema() => _originalSchemaTypeName switch
+        /// <returns> true, if original schemaTypeName is a string representation of known System.XXX type</returns>
+        private bool HasKnownTypeSchema()
         {
-            "int32" or "uint32" or "int64" or "uint64" or "double" or "bool" or "string" => true,
-            _ => false
-        };
+            switch (_originalSchemaTypeName)
+            {
+                case "int32":
+                case "uint32":
+                case "int64":
+                case "uint64":
+                case "double":
+                case "bool":
+                case "string":
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

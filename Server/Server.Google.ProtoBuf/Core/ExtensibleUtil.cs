@@ -44,7 +44,7 @@ namespace ProtoBuf
 
         internal static IEnumerable GetExtendedValues(TypeModel model, Type type, IExtension extn, int tag, DataFormat format, bool singleton)
         {
-            model ??= TypeModel.DefaultModel;
+            model = model ?? TypeModel.DefaultModel;
 
             if (extn is null)
             {
@@ -59,7 +59,7 @@ namespace ProtoBuf
                 var state = ProtoReader.State.Create(stream, model, ctx, ProtoReader.TO_EOF).Solidify();
                 try
                 {
-                    while (model.TryDeserializeAuxiliaryType(ref state, format, tag, type, ref value, true, true, false, false, null, isRoot: false) && value is not null)
+                    while (model.TryDeserializeAuxiliaryType(ref state, format, tag, type, ref value, true, true, false, false, null, isRoot: false) && value != null)
                     {
                         if (!singleton)
                         {
@@ -68,7 +68,7 @@ namespace ProtoBuf
                             value = null; // fresh item each time
                         }
                     }
-                    if (singleton && value is not null)
+                    if (singleton && value != null)
                     {
                         yield return value;
                     }
@@ -93,7 +93,7 @@ namespace ProtoBuf
         }
         internal static void AppendExtendValue(TypeModel model, IExtension extn, int tag, DataFormat format, object value)
         {
-            model ??= TypeModel.DefaultModel;
+            model = model ?? TypeModel.DefaultModel;
             
             if (extn is null) ThrowHelper.ThrowInvalidOperationException("No extension object available; appended data would be lost.");
             bool commit = false;

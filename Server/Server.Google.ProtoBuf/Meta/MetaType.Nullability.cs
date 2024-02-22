@@ -8,8 +8,8 @@ namespace ProtoBuf.Meta
     {
         private class ExtraLayerValueMembers : IEnumerable<NullWrappedValueMemberData>
         {
-            private readonly Dictionary<string, Type> _schemaMemberTypeMap = new();
-            private readonly Dictionary<string, NullWrappedValueMemberData> _wrappedSchemaMembers = new();
+            private readonly Dictionary<string, Type> _schemaMemberTypeMap = new Dictionary<string, Type>();
+            private readonly Dictionary<string, NullWrappedValueMemberData> _wrappedSchemaMembers = new Dictionary<string, NullWrappedValueMemberData>();
 
             /// <returns>true, if doese not contain any <see cref="NullWrappedValueMemberData"/></returns>
             public bool IsEmpty() => _wrappedSchemaMembers.Count == 0;

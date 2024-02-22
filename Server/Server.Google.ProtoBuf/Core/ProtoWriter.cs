@@ -105,7 +105,7 @@ namespace ProtoBuf
         private void CheckRecursionStackAndPush(object instance)
         {
             if (recursionStack is null) { recursionStack = new List<object>(); }
-            else if (instance is not null)
+            else if (instance != null)
             {
                 int hitLevel = 0;
                 foreach (var obj in recursionStack)
@@ -604,7 +604,7 @@ namespace ProtoBuf
             writer.SetWriteState(oldState); // make sure we leave it how we found it
 
             // cache it if we can
-            if (obj is not null)
+            if (obj != null)
             {   // we know it isn't null; we'd have exited above
                 writer.netCache.SetKnownLength(obj, null, length);
             }
@@ -631,7 +631,7 @@ namespace ProtoBuf
             writer.SetWriteState(oldState); // make sure we leave it how we found it
 
             // cache it if we can
-            if (obj is not null)
+            if (obj != null)
             {   // we know it isn't null; we'd have exited above
                 writer.netCache.SetKnownLength(obj, null, length);
             }
@@ -672,7 +672,7 @@ namespace ProtoBuf
             writer.SetWriteState(oldState); // make sure we leave it how we found it
 
             // cache it if we can
-            if (obj is not null)
+            if (obj != null)
             {   // we know it isn't null; we'd have exited above
                 writer.netCache.SetKnownLength(obj, null, length);
             }

@@ -85,189 +85,277 @@ namespace ProtoBuf.Internal
         void ISerializer<string>.Write(ref ProtoWriter.State state, string value) => state.WriteString(value);
         SerializerFeatures ISerializer<string>.Features => SerializerFeatures.WireTypeString | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<string>.Measure(ISerializationContext context, WireType wireType, string value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.String => ProtoWriter.UTF8.GetByteCount(value),
-                _ => -1,
-            };
+                case WireType.String:
+                    return ProtoWriter.UTF8.GetByteCount(value);
+                default:
+                    return -1;
+            }
+        }
 
         int ISerializer<int>.Read(ref ProtoReader.State state, int value) => state.ReadInt32();
         void ISerializer<int>.Write(ref ProtoWriter.State state, int value) => state.WriteInt32(value);
         SerializerFeatures ISerializer<int>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<int>.Measure(ISerializationContext context, WireType wireType, int value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => ProtoWriter.MeasureInt32(value),
-                WireType.SignedVarint => ProtoWriter.MeasureUInt32(ProtoWriter.Zig(value)),
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureInt32(value);
+                case WireType.SignedVarint:
+                    return ProtoWriter.MeasureUInt32(ProtoWriter.Zig(value));
+                default:
+                    return -1;
+            }
+        }
 
 
         byte[] ISerializer<byte[]>.Read(ref ProtoReader.State state, byte[] value) => state.AppendBytes(value);
         void ISerializer<byte[]>.Write(ref ProtoWriter.State state, byte[] value) => state.WriteBytes(value);
         SerializerFeatures ISerializer<byte[]>.Features => SerializerFeatures.WireTypeString | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<byte[]>.Measure(ISerializationContext context, WireType wireType, byte[] value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.String => value.Length,
-                _ => -1,
-            };
+                case WireType.String:
+                    return value.Length;
+                default:
+                    return -1;
+            }
+        }
 
         ArraySegment<byte> ISerializer<ArraySegment<byte>>.Read(ref ProtoReader.State state, ArraySegment<byte> value) => state.AppendBytes(value);
         void ISerializer<ArraySegment<byte>>.Write(ref ProtoWriter.State state, ArraySegment<byte> value) => state.WriteBytes(value);
         SerializerFeatures ISerializer<ArraySegment<byte>>.Features => SerializerFeatures.WireTypeString | SerializerFeatures.CategoryScalar;
 
         int IMeasuringSerializer<ArraySegment<byte>>.Measure(ISerializationContext context, WireType wireType, ArraySegment<byte> value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.String => value.Count,
-                _ => -1,
-            };
+                case WireType.String:
+                    return value.Count;
+                default:
+                    return -1;
+            }
+        }
 
         Memory<byte> ISerializer<Memory<byte>>.Read(ref ProtoReader.State state, Memory<byte> value) => state.AppendBytes(value);
         void ISerializer<Memory<byte>>.Write(ref ProtoWriter.State state, Memory<byte> value) => state.WriteBytes(value);
         SerializerFeatures ISerializer<Memory<byte>>.Features => SerializerFeatures.WireTypeString | SerializerFeatures.CategoryScalar;
 
         int IMeasuringSerializer<Memory<byte>>.Measure(ISerializationContext context, WireType wireType, Memory<byte> value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.String => value.Length,
-                _ => -1,
-            };
+                case WireType.String:
+                    return value.Length;
+                default:
+                    return -1;
+            }
+        }
 
         ReadOnlyMemory<byte> ISerializer<ReadOnlyMemory<byte>>.Read(ref ProtoReader.State state, ReadOnlyMemory<byte> value) => state.AppendBytes(value);
         void ISerializer<ReadOnlyMemory<byte>>.Write(ref ProtoWriter.State state, ReadOnlyMemory<byte> value) => state.WriteBytes(value);
         SerializerFeatures ISerializer<ReadOnlyMemory<byte>>.Features => SerializerFeatures.WireTypeString | SerializerFeatures.CategoryScalar;
 
         int IMeasuringSerializer<ReadOnlyMemory<byte>>.Measure(ISerializationContext context, WireType wireType, ReadOnlyMemory<byte> value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.String => value.Length,
-                _ => -1,
-            };
+                case WireType.String:
+                    return value.Length;
+                default:
+                    return -1;
+            }
+        }
 
         byte ISerializer<byte>.Read(ref ProtoReader.State state, byte value) => state.ReadByte();
         void ISerializer<byte>.Write(ref ProtoWriter.State state, byte value) => state.WriteByte(value);
         SerializerFeatures ISerializer<byte>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<byte>.Measure(ISerializationContext context, WireType wireType, byte value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => ProtoWriter.MeasureUInt32(value),
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureUInt32(value);
+                default:
+                    return -1;
+            }
+        }
 
         ushort ISerializer<ushort>.Read(ref ProtoReader.State state, ushort value) => state.ReadUInt16();
         void ISerializer<ushort>.Write(ref ProtoWriter.State state, ushort value) => state.WriteUInt16(value);
         SerializerFeatures ISerializer<ushort>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<ushort>.Measure(ISerializationContext context, WireType wireType, ushort value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => ProtoWriter.MeasureUInt32(value),
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureUInt32(value);
+                default:
+                    return -1;
+            }
+        }
 
         uint ISerializer<uint>.Read(ref ProtoReader.State state, uint value) => state.ReadUInt32();
         void ISerializer<uint>.Write(ref ProtoWriter.State state, uint value) => state.WriteUInt32(value);
         SerializerFeatures ISerializer<uint>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<uint>.Measure(ISerializationContext context, WireType wireType, uint value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => ProtoWriter.MeasureUInt32(value),
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureUInt32(value);
+                default:
+                    return -1;
+            }
+        }
 
         ulong ISerializer<ulong>.Read(ref ProtoReader.State state, ulong value) => state.ReadUInt64();
         void ISerializer<ulong>.Write(ref ProtoWriter.State state, ulong value) => state.WriteUInt64(value);
         SerializerFeatures ISerializer<ulong>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<ulong>.Measure(ISerializationContext context, WireType wireType, ulong value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => ProtoWriter.MeasureUInt64(value),
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureUInt64(value);
+                default:
+                    return -1;
+            }
+        }
 
         long ISerializer<long>.Read(ref ProtoReader.State state, long value) => state.ReadInt64();
         void ISerializer<long>.Write(ref ProtoWriter.State state, long value) => state.WriteInt64(value);
         SerializerFeatures ISerializer<long>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<long>.Measure(ISerializationContext context, WireType wireType, long value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => ProtoWriter.MeasureUInt64((ulong)value),
-                WireType.SignedVarint => ProtoWriter.MeasureUInt64(ProtoWriter.Zig(value)),
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureUInt64((ulong)value);
+                case WireType.SignedVarint:
+                    return ProtoWriter.MeasureUInt64(ProtoWriter.Zig(value));
+                default:
+                    return -1;
+            }
+        }
 
         bool ISerializer<bool>.Read(ref ProtoReader.State state, bool value) => state.ReadBoolean();
         void ISerializer<bool>.Write(ref ProtoWriter.State state, bool value) => state.WriteBoolean(value);
         SerializerFeatures ISerializer<bool>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<bool>.Measure(ISerializationContext context, WireType wireType, bool value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => 1,
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return 1;
+                default:
+                    return -1;
+            }
+        }
 
         float ISerializer<float>.Read(ref ProtoReader.State state, float value) => state.ReadSingle();
         void ISerializer<float>.Write(ref ProtoWriter.State state, float value) => state.WriteSingle(value);
         SerializerFeatures ISerializer<float>.Features => SerializerFeatures.WireTypeFixed32 | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<float>.Measure(ISerializationContext context, WireType wireType, float value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                default:
+                    return -1;
+            }
+        }
 
         double ISerializer<double>.Read(ref ProtoReader.State state, double value) => state.ReadDouble();
         void ISerializer<double>.Write(ref ProtoWriter.State state, double value) => state.WriteDouble(value);
         SerializerFeatures ISerializer<double>.Features => SerializerFeatures.WireTypeFixed64 | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<double>.Measure(ISerializationContext context, WireType wireType, double value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                default:
+                    return -1;
+            }
+        }
 
         sbyte ISerializer<sbyte>.Read(ref ProtoReader.State state, sbyte value) => state.ReadSByte();
         void ISerializer<sbyte>.Write(ref ProtoWriter.State state, sbyte value) => state.WriteSByte(value);
         SerializerFeatures ISerializer<sbyte>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<sbyte>.Measure(ISerializationContext context, WireType wireType, sbyte value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => ProtoWriter.MeasureInt32(value),
-                WireType.SignedVarint => ProtoWriter.MeasureUInt32(ProtoWriter.Zig(value)),
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureInt32(value);
+                case WireType.SignedVarint:
+                    return ProtoWriter.MeasureUInt32(ProtoWriter.Zig(value));
+                default:
+                    return -1;
+            }
+        }
 
         short ISerializer<short>.Read(ref ProtoReader.State state, short value) => state.ReadInt16();
         void ISerializer<short>.Write(ref ProtoWriter.State state, short value) => state.WriteInt16(value);
         SerializerFeatures ISerializer<short>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<short>.Measure(ISerializationContext context, WireType wireType, short value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.Fixed32 => 4,
-                WireType.Fixed64 => 8,
-                WireType.Varint => ProtoWriter.MeasureInt32(value),
-                WireType.SignedVarint => ProtoWriter.MeasureUInt32(ProtoWriter.Zig(value)),
-                _ => -1,
-            };
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureInt32(value);
+                case WireType.SignedVarint:
+                    return ProtoWriter.MeasureUInt32(ProtoWriter.Zig(value));
+                default:
+                    return -1;
+            }
+        }
 
         Uri ISerializer<Uri>.Read(ref ProtoReader.State state, Uri value)
         {
@@ -277,22 +365,33 @@ namespace ProtoBuf.Internal
         void ISerializer<Uri>.Write(ref ProtoWriter.State state, Uri value) => state.WriteString(value.OriginalString);
         SerializerFeatures ISerializer<Uri>.Features => SerializerFeatures.WireTypeString | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<Uri>.Measure(ISerializationContext context, WireType wireType, Uri value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.String => ProtoWriter.UTF8.GetByteCount(value.OriginalString),
-                _ => -1,
-            };
+                case WireType.String:
+                    return ProtoWriter.UTF8.GetByteCount(value.OriginalString);
+                default:
+                    return -1;
+            }
+        }
 
         char ISerializer<char>.Read(ref ProtoReader.State state, char value) => (char)state.ReadUInt16();
         void ISerializer<char>.Write(ref ProtoWriter.State state, char value) => state.WriteUInt16(value);
         SerializerFeatures ISerializer<char>.Features => SerializerFeatures.WireTypeVarint | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<char>.Measure(ISerializationContext context, WireType wireType, char value)
-            => wireType switch {
-            WireType.Fixed32 => 4,
-            WireType.Fixed64 => 8,
-            WireType.Varint => ProtoWriter.MeasureUInt32(value),
-            _ => -1,
-        };
+        {
+            switch (wireType)
+            {
+                case WireType.Fixed32:
+                    return 4;
+                case WireType.Fixed64:
+                    return 8;
+                case WireType.Varint:
+                    return ProtoWriter.MeasureUInt32(value);
+                default:
+                    return -1;
+            }
+        }
 
         string IFactory<string>.Create(ISerializationContext context) => "";
 
@@ -350,17 +449,21 @@ namespace ProtoBuf.Internal
         void ISerializer<Type>.Write(ref ProtoWriter.State state, Type value) => state.WriteType(value);
         SerializerFeatures ISerializer<Type>.Features => SerializerFeatures.WireTypeString | SerializerFeatures.CategoryScalar;
         int IMeasuringSerializer<Type>.Measure(ISerializationContext context, WireType wireType, Type value)
-            => wireType switch
+        {
+            switch (wireType)
             {
-                WireType.String => Encoding.UTF8.GetByteCount(TypeModel.SerializeType(context?.Model, value)),
-                _ => -1,
-            };
+                case WireType.String:
+                    return Encoding.UTF8.GetByteCount(TypeModel.SerializeType(context?.Model, value));
+                default:
+                    return -1;
+            }
+        }
 
 
-        bool IValueChecker<string>.HasNonTrivialValue(string value) => value is not null; //  note: we write "" (when found), for compat
-        bool IValueChecker<Uri>.HasNonTrivialValue(Uri value) => value?.OriginalString is not null; //  note: we write "" (when found), for compat
-        bool IValueChecker<Type>.HasNonTrivialValue(Type value) => value is not null;
-        bool IValueChecker<byte[]>.HasNonTrivialValue(byte[] value) => value is not null;  //  note: we write [] (when found), for compat
+        bool IValueChecker<string>.HasNonTrivialValue(string value) => value != null; //  note: we write "" (when found), for compat
+        bool IValueChecker<Uri>.HasNonTrivialValue(Uri value) => value?.OriginalString != null; //  note: we write "" (when found), for compat
+        bool IValueChecker<Type>.HasNonTrivialValue(Type value) => value != null;
+        bool IValueChecker<byte[]>.HasNonTrivialValue(byte[] value) => value != null;  //  note: we write [] (when found), for compat
         bool IValueChecker<sbyte>.HasNonTrivialValue(sbyte value) => value != 0;
         bool IValueChecker<short>.HasNonTrivialValue(short value) => value != 0;
         bool IValueChecker<int>.HasNonTrivialValue(int value) => value != 0;

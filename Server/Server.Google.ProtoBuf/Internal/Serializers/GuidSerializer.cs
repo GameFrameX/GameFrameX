@@ -5,12 +5,20 @@ namespace ProtoBuf.Internal.Serializers
 {
     internal sealed class GuidSerializer : IRuntimeProtoSerializerNode
     {
-        bool IRuntimeProtoSerializerNode.IsScalar => _variant switch
+        bool IRuntimeProtoSerializerNode.IsScalar
         {
-            Variant.GuidString => true,
-            Variant.GuidBytes => true,
-            _ => false,
-        };
+            get
+            {
+                switch (_variant)
+                {
+                    case Variant.GuidString:
+                    case Variant.GuidBytes:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }
 
         private enum Variant
         {
@@ -24,10 +32,10 @@ namespace ProtoBuf.Internal.Serializers
         internal static GuidSerializer Create(CompatibilityLevel compatibilityLevel, DataFormat dataFormat)
         {
             if (compatibilityLevel < CompatibilityLevel.Level300)
-                return s_Legacy ??= new GuidSerializer(Variant.BclGuid);
+                return s_Legacy = s_Legacy ?? new GuidSerializer(Variant.BclGuid);
             if (dataFormat == DataFormat.FixedSize)
-                return s_Bytes ??= new GuidSerializer(Variant.GuidBytes);
-            return s_String ??= new GuidSerializer(Variant.GuidString);
+                return s_Bytes = s_Bytes ?? new GuidSerializer(Variant.GuidBytes);
+            return s_String = s_String ?? new GuidSerializer(Variant.GuidString);
         }
 
         private GuidSerializer(Variant variant) => _variant = variant;
@@ -59,33 +67,27 @@ namespace ProtoBuf.Internal.Serializers
         public object Read(ref ProtoReader.State state, object value)
         {
             Debug.Assert(value is null); // since replaces
-            return _variant switch
+            switch (_variant)
             {
-                Variant.GuidString => BclHelpers.ReadGuidString(ref state),
-                Variant.GuidBytes => BclHelpers.ReadGuidBytes(ref state),
-                _ => BclHelpers.ReadGuid(ref state),
-            };
+                case Variant.GuidString:
+                    return BclHelpers.ReadGuidString(ref state);
+                case Variant.GuidBytes:
+                    return BclHelpers.ReadGuidBytes(ref state);
+                default:
+                    return BclHelpers.ReadGuid(ref state);
+            }
         }
 
         void IRuntimeProtoSerializerNode.EmitWrite(Compiler.CompilerContext ctx, Compiler.Local valueFrom)
         {
             ctx.EmitStateBasedWrite(
-                _variant switch {
-                    Variant.GuidString => nameof(BclHelpers.WriteGuidString),
-                    Variant.GuidBytes => nameof(BclHelpers.WriteGuidBytes),
-                    _ => nameof(BclHelpers.WriteGuid),
-                }, valueFrom, typeof(BclHelpers));
+                _variant == Variant.GuidString ? nameof(BclHelpers.WriteGuidString) : _variant == Variant.GuidBytes ? nameof(BclHelpers.WriteGuidBytes) : nameof(BclHelpers.WriteGuid), valueFrom, typeof(BclHelpers));
         }
 
         void IRuntimeProtoSerializerNode.EmitRead(Compiler.CompilerContext ctx, Compiler.Local entity)
         {
             ctx.EmitStateBasedRead(typeof(BclHelpers),
-                _variant switch
-                {
-                    Variant.GuidString => nameof(BclHelpers.ReadGuidString),
-                    Variant.GuidBytes => nameof(BclHelpers.ReadGuidBytes),
-                    _ => nameof(BclHelpers.ReadGuid),
-                }, ExpectedType);
+                _variant == Variant.GuidString ? nameof(BclHelpers.ReadGuidString) : _variant == Variant.GuidBytes ? nameof(BclHelpers.ReadGuidBytes) : nameof(BclHelpers.ReadGuid), ExpectedType);
         }
     }
 }

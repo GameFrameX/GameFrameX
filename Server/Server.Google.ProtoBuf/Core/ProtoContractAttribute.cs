@@ -119,7 +119,7 @@ namespace ProtoBuf
             set { SetFlag(OPTIONS_AsReferenceDefault, value); }
 #else
             get => false;
-            [Obsolete(ReferenceDynamicDisabled, true)]
+            // [Obsolete(ReferenceDynamicDisabled, true)]
             set { if (value != AsReferenceDefault) ThrowHelper.ThrowNotSupportedException(); }
 #endif
         }

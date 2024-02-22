@@ -23,7 +23,7 @@ namespace ProtoBuf
 
         internal static MethodInfo GetInstanceMethod(Type declaringType, string name, Type[] types)
         {
-            types ??= Type.EmptyTypes;
+            types = types ?? Type.EmptyTypes;
             return declaringType.GetMethod(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                 null, types, null);
         }
@@ -79,7 +79,7 @@ namespace ProtoBuf
             if (method is null && !nonPublic && allowInternal)
             { // could be "internal" or "protected internal"; look for a non-public, then back-check
                 method = property.GetGetMethod(true);
-                if (method is not null && !(method.IsAssembly || method.IsFamilyOrAssembly))
+                if (method != null && !(method.IsAssembly || method.IsFamilyOrAssembly))
                 {
                     method = null;
                 }
@@ -95,7 +95,7 @@ namespace ProtoBuf
             if (method is null && !nonPublic && allowInternal)
             { // could be "internal" or "protected internal"; look for a non-public, then back-check
                 method = property.GetSetMethod(true);
-                if (method is not null && !(method.IsAssembly || method.IsFamilyOrAssembly))
+                if (method != null && !(method.IsAssembly || method.IsFamilyOrAssembly))
                 {
                     method = null;
                 }
@@ -147,12 +147,15 @@ namespace ProtoBuf
 
         internal static Type GetMemberType(MemberInfo member)
         {
-            return member.MemberType switch
+            switch (member.MemberType)
             {
-                MemberTypes.Field => ((FieldInfo)member).FieldType,
-                MemberTypes.Property => ((PropertyInfo)member).PropertyType,
-                _ => null,
-            };
+                case MemberTypes.Field:
+                    return ((FieldInfo)member).FieldType;
+                case MemberTypes.Property:
+                    return ((PropertyInfo)member).PropertyType;
+                default:
+                    return null;
+            }
         }
     }
     /// <summary>

@@ -92,6 +92,7 @@ namespace ProtoBuf.Serializers
         /// <summary>Reverses a range of values</summary>
         [MethodImpl(ProtoReader.HotPath)] // note: not "in" because ArraySegment<T> isn't "readonly" on all TFMs
         internal static void ReverseInPlace<T>(this ref ArraySegment<T> values) => Array.Reverse(values.Array, values.Offset, values.Count);
+
         [MethodImpl(ProtoReader.HotPath)]
         internal static ref T Singleton<T>(this ref ArraySegment<T> values) => ref values.Array[values.Offset];
     }
@@ -144,7 +145,7 @@ namespace ProtoBuf.Serializers
                 return;
             }
 
-            serializer ??= TypeModel.GetSerializer<TItem>(state.Model);
+            serializer = serializer ?? TypeModel.GetSerializer<TItem>(state.Model);
             var serializerFeatures = serializer.Features;
             if (serializerFeatures.IsRepeated()) TypeModel.ThrowNestedListsNotSupported(typeof(TItem));
             features.InheritFrom(serializerFeatures);
@@ -174,7 +175,8 @@ namespace ProtoBuf.Serializers
         private static void WriteZeroLengthPackedHeader(ref ProtoWriter.State state, int fieldNumber)
         {
             if (state.Model.OmitsOption(TypeModel.TypeModelOptions.SkipZeroLengthPackedArrays))
-            {   // we only need to write these for exact v2 compatibility
+            {
+                // we only need to write these for exact v2 compatibility
                 state.WriteFieldHeader(fieldNumber, WireType.String);
                 var writer = state.GetWriter();
                 writer.AdvanceAndReset(writer.ImplWriteVarint64(ref state, 0UL));
@@ -236,6 +238,7 @@ namespace ProtoBuf.Serializers
             {
                 length += serializer.Measure(context, wireType, values.Current);
             }
+
             return length;
         }
 
@@ -281,8 +284,9 @@ namespace ProtoBuf.Serializers
             long before = state.GetPosition();
             WritePacked(ref state, values, serializer, wireType);
             long actualLength = state.GetPosition() - before;
-            if (actualLength != expectedLength) ThrowHelper.ThrowInvalidOperationException(
-                $"packed encoding length miscalculation for {typeof(TItem).NormalizeName()}, {wireType}; expected {expectedLength}, got {actualLength}");
+            if (actualLength != expectedLength)
+                ThrowHelper.ThrowInvalidOperationException(
+                    $"packed encoding length miscalculation for {typeof(TItem).NormalizeName()}, {wireType}; expected {expectedLength}, got {actualLength}");
         }
 
         /// <summary>If possible to do so *cheaply*, return the count of the items in the collection</summary>
@@ -295,17 +299,19 @@ namespace ProtoBuf.Serializers
         {
             try
             {
-                return values switch
-                {
-                    IReadOnlyCollection<TItem> roc => roc.Count, // test this first - most common things implement it
-                    ICollection<TItem> collection => collection.Count,
-                    ICollection untyped => untyped.Count,
-                    null => 0,
-                    _ => -1,
-                };
+                if (values is IReadOnlyCollection<TItem> roc)
+                    return roc.Count; // test this first - most common things implement it
+                if (values is ICollection<TItem> collection)
+                    return collection.Count;
+                if (values is ICollection untyped)
+                    return untyped.Count;
+                if (values == null)
+                    return 0;
+                return -1;
             }
             catch
-            {   // some types pretend to be countable, but they *lie*
+            {
+                // some types pretend to be countable, but they *lie*
                 return -1;
             }
         }
@@ -328,11 +334,13 @@ namespace ProtoBuf.Serializers
                     state.SkipField();
                 }
             }
+
             state.EndSubItem(tok);
             if (needInit)
             {
                 values = Initialize(values, state.Context);
             }
+
             return values;
         }
 
@@ -346,7 +354,7 @@ namespace ProtoBuf.Serializers
                 return ReadNullWrapped(ref state, features, values, serializer);
             }
 
-            serializer ??= TypeModel.GetSerializer<TItem>(state.Model);
+            serializer = serializer ?? TypeModel.GetSerializer<TItem>(state.Model);
             var serializerFeatures = serializer.Features;
             if (serializerFeatures.IsRepeated()) TypeModel.ThrowNestedListsNotSupported(typeof(TItem));
             features.InheritFrom(serializerFeatures);
@@ -356,11 +364,13 @@ namespace ProtoBuf.Serializers
 
             var ctx = state.Context;
             values = Initialize(values, ctx);
-            using var buffer = state.FillBuffer<ISerializer<TItem>, TItem>(features, serializer, features.DefaultFor<TItem>());
-            if ((features & SerializerFeatures.OptionClearCollection) != 0) values = Clear(values, ctx);
-            if (buffer.IsEmpty) return values;
-            var segment = buffer.Segment;
-            return AddRange(values, ref segment, ctx);
+            using (var buffer = state.FillBuffer<ISerializer<TItem>, TItem>(features, serializer, features.DefaultFor<TItem>()))
+            {
+                if ((features & SerializerFeatures.OptionClearCollection) != 0) values = Clear(values, ctx);
+                if (buffer.IsEmpty) return values;
+                var segment = buffer.Segment;
+                return AddRange(values, ref segment, ctx);
+            }
         }
 
 
@@ -380,6 +390,7 @@ namespace ProtoBuf.Serializers
     {
         protected override TCollection Initialize(TCollection values, ISerializationContext context)
             => values ?? TypeModel.ActivatorCreate<TCollection>();
+
         protected override TCollection Clear(TCollection values, ISerializationContext context)
         {
             values.Clear();
@@ -395,6 +406,7 @@ namespace ProtoBuf.Serializers
                 values.Push(value);
             return values;
         }
+
         internal override long Measure(TCollection values, IMeasuringSerializer<T> serializer, ISerializationContext context, WireType wireType)
         {
             var iter = values.GetEnumerator();
@@ -419,6 +431,7 @@ namespace ProtoBuf.Serializers
         protected override List<T> Initialize(List<T> values, ISerializationContext context)
             => values ?? new List<T>();
     }
+
     class ListSerializer<TList, T> : RepeatedSerializer<TList, T>
         where TList : List<T>
     {
@@ -431,6 +444,7 @@ namespace ProtoBuf.Serializers
             values.Clear();
             return values;
         }
+
         protected override TList AddRange(TList values, ref ArraySegment<T> newValues, ISerializationContext context)
         {
             values.AddRange(newValues);
@@ -444,11 +458,13 @@ namespace ProtoBuf.Serializers
             var iter = values.GetEnumerator();
             return Measure(ref iter, serializer, context, wireType);
         }
+
         internal override void WritePacked(ref ProtoWriter.State state, TList values, IMeasuringSerializer<T> serializer, WireType wireType)
         {
             var iter = values.GetEnumerator();
             WritePacked(ref state, ref iter, serializer, wireType);
         }
+
         internal override void Write(ref ProtoWriter.State state, int fieldNumber, SerializerFeatures category, WireType wireType, TList values, ISerializer<T> serializer, SerializerFeatures features)
         {
             var iter = values.GetEnumerator();
@@ -478,6 +494,7 @@ namespace ProtoBuf.Serializers
                 iter?.Dispose();
             }
         }
+
         internal override void WritePacked(ref ProtoWriter.State state, TCollection values, IMeasuringSerializer<T> serializer, WireType wireType)
         {
             var iter = values.GetEnumerator();
@@ -490,6 +507,7 @@ namespace ProtoBuf.Serializers
                 iter?.Dispose();
             }
         }
+
         internal override void Write(ref ProtoWriter.State state, int fieldNumber, SerializerFeatures category, WireType wireType, TCollection values, ISerializer<T> serializer, SerializerFeatures features)
         {
             var iter = values.GetEnumerator();
@@ -504,7 +522,8 @@ namespace ProtoBuf.Serializers
         }
 
         private static void ThrowInvalidCollectionType(object collection)
-            => ThrowHelper.ThrowInvalidOperationException($"For repeated data declared as {typeof(TCollection).NormalizeName()}, the *underlying* collection ({collection?.GetType().NormalizeName()}) must implement ICollection<T> and must not declare itself read-only; alternative (more exotic) collections can be used, but must be declared using their well-known form (for example, a member could be declared as ImmutableHashSet<T>)");
+            => ThrowHelper.ThrowInvalidOperationException(
+                $"For repeated data declared as {typeof(TCollection).NormalizeName()}, the *underlying* collection ({collection?.GetType().NormalizeName()}) must implement ICollection<T> and must not declare itself read-only; alternative (more exotic) collections can be used, but must be declared using their well-known form (for example, a member could be declared as ImmutableHashSet<T>)");
 
         protected override TCollection Clear(TCollection values, ISerializationContext context)
         {
@@ -524,6 +543,7 @@ namespace ProtoBuf.Serializers
                     ThrowInvalidCollectionType(values);
                 }
             }
+
             return values;
         }
 
@@ -542,6 +562,7 @@ namespace ProtoBuf.Serializers
                     ThrowInvalidCollectionType(values);
                     break;
             }
+
             return values;
         }
     }
@@ -550,8 +571,10 @@ namespace ProtoBuf.Serializers
     {
         protected override T[] Initialize(T[] values, ISerializationContext context)
             => values ?? Array.Empty<T>();
+
         protected override T[] Clear(T[] values, ISerializationContext context)
             => Array.Empty<T>();
+
         protected override T[] AddRange(T[] values, ref ArraySegment<T> newValues, ISerializationContext context)
         {
             var arr = new T[values.Length + newValues.Count];
@@ -559,6 +582,7 @@ namespace ProtoBuf.Serializers
             Array.Copy(newValues.Array, newValues.Offset, arr, values.Length, newValues.Count);
             return arr;
         }
+
         protected override int TryGetCount(T[] values) => values is null ? 0 : values.Length;
 
         internal override long Measure(T[] values, IMeasuringSerializer<T> serializer, ISerializationContext context, WireType wireType)
@@ -582,19 +606,24 @@ namespace ProtoBuf.Serializers
         [StructLayout(LayoutKind.Auto)]
         struct Enumerator : IEnumerator<T>
         {
-            public readonly void Reset() => ThrowHelper.ThrowNotSupportedException();
+            public void Reset() => ThrowHelper.ThrowNotSupportedException();
             private readonly T[] _array;
             private int _index;
+
             public Enumerator(T[] array)
             {
                 _array = array;
                 _index = -1;
             }
-            public readonly T Current => _array[_index];
 
-            readonly object IEnumerator.Current => _array[_index];
+            public T Current => _array[_index];
+
+            object IEnumerator.Current => _array[_index];
             public bool MoveNext() => ++_index < _array.Length;
-            public readonly void Dispose() { }
+
+            public void Dispose()
+            {
+            }
         }
     }
 
@@ -603,6 +632,7 @@ namespace ProtoBuf.Serializers
     {
         protected override TCollection Initialize(TCollection values, ISerializationContext context)
             => values ?? TypeModel.ActivatorCreate<TCollection>();
+
         protected override TCollection Clear(TCollection values, ISerializationContext context)
         {
             values.Clear();
@@ -623,11 +653,13 @@ namespace ProtoBuf.Serializers
             var iter = values.GetEnumerator();
             return Measure(ref iter, serializer, context, wireType);
         }
+
         internal override void WritePacked(ref ProtoWriter.State state, TCollection values, IMeasuringSerializer<T> serializer, WireType wireType)
         {
             var iter = values.GetEnumerator();
             WritePacked(ref state, ref iter, serializer, wireType);
         }
+
         internal override void Write(ref ProtoWriter.State state, int fieldNumber, SerializerFeatures category, WireType wireType, TCollection values, ISerializer<T> serializer, SerializerFeatures features)
         {
             var iter = values.GetEnumerator();
@@ -638,8 +670,15 @@ namespace ProtoBuf.Serializers
     sealed class SetSerializer<TCollection, T> : RepeatedSerializer<TCollection, T>
         where TCollection : ISet<T>
     {
-        protected override TCollection Initialize(TCollection values, ISerializationContext context) =>
-            values ?? (typeof(TCollection).IsInterface ? (TCollection)(object)new HashSet<T>() : TypeModel.ActivatorCreate<TCollection>());
+        protected override TCollection Initialize(TCollection values, ISerializationContext context)
+        {
+            if (values == null)
+            {
+                return (typeof(TCollection).IsInterface ? (TCollection)(object)new HashSet<T>() : TypeModel.ActivatorCreate<TCollection>());
+            }
+
+            return values;
+        }
 
         protected override TCollection Clear(TCollection values, ISerializationContext context)
         {
@@ -647,7 +686,7 @@ namespace ProtoBuf.Serializers
             return values;
         }
 
-        protected override int TryGetCount(TCollection values) => values is null ? 0 : values.Count;
+        protected override int TryGetCount(TCollection values) => values == null ? 0 : values.Count;
 
         protected override TCollection AddRange(TCollection values, ref ArraySegment<T> newValues, ISerializationContext context)
         {

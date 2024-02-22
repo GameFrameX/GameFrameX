@@ -4,7 +4,6 @@ using System.Buffers;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -20,7 +19,7 @@ namespace ProtoBuf.Serializers
         private static readonly Hashtable s_methodsPerDeclaringType = new Hashtable(), s_knownTypes = new Hashtable();
         internal static MemberInfo Resolve(Type declaringType, string methodName, Type[] targs)
         {
-            targs ??= Type.EmptyTypes;
+            targs = targs ?? Type.EmptyTypes;
             var methods = (MethodTuple[])s_methodsPerDeclaringType[declaringType];
             if (methods is null)
             {
@@ -69,19 +68,19 @@ namespace ProtoBuf.Serializers
                 root == current ? targs : new[] { root, targs[0] }), false);
 
             // note that the immutable APIs can look a lot like the non-immutable ones; need to have them with *higher* priority to ensure they get recognized correctly
-            Add(typeof(ImmutableArray<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableArray), targs));
-            Add(typeof(ImmutableDictionary<,>), (root, current, targs) => Resolve(typeof(MapSerializer), nameof(MapSerializer.CreateImmutableDictionary), targs));
-            Add(typeof(ImmutableSortedDictionary<,>), (root, current, targs) => Resolve(typeof(MapSerializer), nameof(MapSerializer.CreateImmutableSortedDictionary), targs));
-            Add(typeof(IImmutableDictionary<,>), (root, current, targs) => Resolve(typeof(MapSerializer), nameof(MapSerializer.CreateIImmutableDictionary), targs));
-            Add(typeof(ImmutableList<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableList), targs));
-            Add(typeof(IImmutableList<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableIList), targs));
-            Add(typeof(ImmutableHashSet<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableHashSet), targs));
-            Add(typeof(ImmutableSortedSet<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableSortedSet), targs));
-            Add(typeof(IImmutableSet<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableISet), targs));
-            Add(typeof(ImmutableQueue<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableQueue), targs));
-            Add(typeof(IImmutableQueue<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableIQueue), targs));
-            Add(typeof(ImmutableStack<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableStack), targs));
-            Add(typeof(IImmutableStack<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableIStack), targs));
+            // Add(typeof(ImmutableArray<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableArray), targs));
+            // Add(typeof(ImmutableDictionary<,>), (root, current, targs) => Resolve(typeof(MapSerializer), nameof(MapSerializer.CreateImmutableDictionary), targs));
+            // Add(typeof(ImmutableSortedDictionary<,>), (root, current, targs) => Resolve(typeof(MapSerializer), nameof(MapSerializer.CreateImmutableSortedDictionary), targs));
+            // Add(typeof(IImmutableDictionary<,>), (root, current, targs) => Resolve(typeof(MapSerializer), nameof(MapSerializer.CreateIImmutableDictionary), targs));
+            // Add(typeof(ImmutableList<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableList), targs));
+            // Add(typeof(IImmutableList<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableIList), targs));
+            // Add(typeof(ImmutableHashSet<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableHashSet), targs));
+            // Add(typeof(ImmutableSortedSet<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableSortedSet), targs));
+            // Add(typeof(IImmutableSet<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableISet), targs));
+            // Add(typeof(ImmutableQueue<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableQueue), targs));
+            // Add(typeof(IImmutableQueue<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableIQueue), targs));
+            // Add(typeof(ImmutableStack<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableStack), targs));
+            // Add(typeof(IImmutableStack<>), (root, current, targs) => Resolve(typeof(RepeatedSerializer), nameof(RepeatedSerializer.CreateImmutableIStack), targs));
 
             // the concurrent set
             Add(typeof(ConcurrentDictionary<,>), (root, current, targs) => Resolve(typeof(MapSerializer), nameof(MapSerializer.CreateConcurrentDictionary), new[] { root, targs[0], targs[1] }), false);
@@ -198,7 +197,7 @@ namespace ProtoBuf.Serializers
 
             if (!repeated.IsMap) // we allow nesting on dictionaries, just not on arrays/lists etc
             {
-                if (repeated.ItemType == repeated.ForType || TryGetRepeatedProvider(repeated.ItemType) is not null) return true;
+                if (repeated.ItemType == repeated.ForType || TryGetRepeatedProvider(repeated.ItemType) != null) return true;
             }
             return false;
         }
@@ -237,7 +236,7 @@ namespace ProtoBuf.Serializers
             Type current = type;
             if (externalProviders != null)
             {
-                while (current is not null && current != typeof(object))
+                while (current != null && current != typeof(object))
                 {
                     if (TryGetExternalProvider(type, current, bestMatchPriority, out var found, out var priority, externalProviders)) Consider(found, priority);
                     current = current.BaseType;
@@ -249,7 +248,7 @@ namespace ProtoBuf.Serializers
                 }
             }
             current = type;
-            while (current is not null && current != typeof(object))
+            while (current != null && current != typeof(object))
             {
                 if (TryGetProvider(type, current, bestMatchPriority, out var found, out var priority)) Consider(found, priority);
                 current = current.BaseType;

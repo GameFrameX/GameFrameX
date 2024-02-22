@@ -18,8 +18,8 @@ namespace ProtoBuf.Internal.Serializers
         public static DecimalSerializer Create(CompatibilityLevel compatibilityLevel)
         {
             if (compatibilityLevel < CompatibilityLevel.Level300)
-                return s_BclDecimal ??= new DecimalSerializer(Variant.BclDecimal);
-            return s_String ??= new DecimalSerializer(Variant.String);
+                return s_BclDecimal = s_BclDecimal ?? new DecimalSerializer(Variant.BclDecimal);
+            return s_String = s_String ?? new DecimalSerializer(Variant.String);
         }
 
         private readonly Variant _variant;
@@ -36,11 +36,13 @@ namespace ProtoBuf.Internal.Serializers
         public object Read(ref ProtoReader.State state, object value)
         {
             Debug.Assert(value is null); // since replaces
-            return _variant switch
+            switch (_variant)
             {
-                Variant.String => BclHelpers.ReadDecimalString(ref state),
-                _ => BclHelpers.ReadDecimal(ref state),
-            };
+                case Variant.String:
+                    return BclHelpers.ReadDecimalString(ref state);
+                default:
+                    return BclHelpers.ReadDecimal(ref state);
+            }
         }
 
         public void Write(ref ProtoWriter.State state, object value)
@@ -58,19 +60,11 @@ namespace ProtoBuf.Internal.Serializers
 
         void IRuntimeProtoSerializerNode.EmitWrite(Compiler.CompilerContext ctx, Compiler.Local valueFrom)
         {
-            ctx.EmitStateBasedWrite(_variant switch
-            {
-                Variant.String => nameof(BclHelpers.WriteDecimalString),
-                _ => nameof(BclHelpers.WriteDecimal),
-            }, valueFrom, typeof(BclHelpers));
+            ctx.EmitStateBasedWrite(_variant == Variant.String ? nameof(BclHelpers.WriteDecimalString) : nameof(BclHelpers.WriteDecimal), valueFrom, typeof(BclHelpers));
         }
         void IRuntimeProtoSerializerNode.EmitRead(Compiler.CompilerContext ctx, Compiler.Local entity)
         {
-            ctx.EmitStateBasedRead(typeof(BclHelpers), _variant switch
-            {
-                Variant.String => nameof(BclHelpers.ReadDecimalString),
-                _ => nameof(BclHelpers.ReadDecimal),
-            }, ExpectedType);
+            ctx.EmitStateBasedRead(typeof(BclHelpers), _variant == Variant.String ? nameof(BclHelpers.ReadDecimalString) : nameof(BclHelpers.ReadDecimal), ExpectedType);
         }
     }
 }

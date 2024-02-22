@@ -57,8 +57,8 @@ namespace ProtoBuf.Serializers
         static KeyValuePairSerializer<TKey, TValue> GetSerializer(
             TypeModel model, SerializerFeatures keyFeatures, SerializerFeatures valueFeatures, ISerializer<TKey> keySerializer, ISerializer<TValue> valueSerializer)
         {
-            keySerializer ??= TypeModel.GetSerializer<TKey>(model);
-            valueSerializer ??= TypeModel.GetSerializer<TValue>(model);
+            keySerializer = keySerializer ?? TypeModel.GetSerializer<TKey>(model);
+            valueSerializer = valueSerializer ?? TypeModel.GetSerializer<TValue>(model);
 
             keyFeatures.InheritFrom(keySerializer.Features);
             valueFeatures.InheritFrom(valueSerializer.Features);
@@ -144,17 +144,20 @@ namespace ProtoBuf.Serializers
             features.InheritFrom(pairSerializer.Features);
             values = Initialize(values, ctx);
 
-            using var buffer = state.FillBuffer(features, pairSerializer,
-                new KeyValuePair<TKey, TValue>(TypeHelper<TKey>.Default, features.DefaultFor<TValue>()));
-            if ((features & SerializerFeatures.OptionClearCollection) != 0) values = Clear(values, ctx);
-            if (!buffer.IsEmpty)
+            using (var buffer = state.FillBuffer(features, pairSerializer,
+                       new KeyValuePair<TKey, TValue>(TypeHelper<TKey>.Default, features.DefaultFor<TValue>())))
             {
-                var segment = buffer.Segment;
-                values = (features & SerializerFeatures.OptionFailOnDuplicateKey) == 0
-                    ? SetValues(values, ref segment, ctx) : AddRange(values, ref segment, ctx);
-            }
-            return values;
+                if ((features & SerializerFeatures.OptionClearCollection) != 0) values = Clear(values, ctx);
+                if (!buffer.IsEmpty)
+                {
+                    var segment = buffer.Segment;
+                    values = (features & SerializerFeatures.OptionFailOnDuplicateKey) == 0
+                        ? SetValues(values, ref segment, ctx)
+                        : AddRange(values, ref segment, ctx);
+                }
 
+                return values;
+            }
         }
 
         private TCollection ReadNullWrapped(ref ProtoReader.State state, SerializerFeatures features, TCollection values, SerializerFeatures keyFeatures, SerializerFeatures valueFeatures, ISerializer<TKey> keySerializer, ISerializer<TValue> valueSerializer)
@@ -175,11 +178,13 @@ namespace ProtoBuf.Serializers
                     state.SkipField();
                 }
             }
+
             state.EndSubItem(tok);
             if (needInit)
             {
                 values = Initialize(values, state.Context);
             }
+
             return values;
         }
     }
@@ -215,12 +220,19 @@ namespace ProtoBuf.Serializers
             Write(ref state, fieldNumber, wireType, ref iter, pairSerializer);
         }
     }
+
     class DictionarySerializer<TCollection, TKey, TValue> : MapSerializer<TCollection, TKey, TValue>
         where TCollection : IDictionary<TKey, TValue>
     {
-        protected override TCollection Initialize(TCollection values, ISerializationContext context)
-            // note: don't call TypeModel.CreateInstance: *we are the factory*
-            => values ?? (typeof(TCollection).IsInterface ? (TCollection)(object)new Dictionary<TKey, TValue>() : TypeModel.ActivatorCreate<TCollection>());
+        protected override TCollection Initialize(TCollection values, ISerializationContext context) // note: don't call TypeModel.CreateInstance: *we are the factory*
+        {
+            if (values == null)
+            {
+                return (typeof(TCollection).IsInterface ? (TCollection)(object)new Dictionary<TKey, TValue>() : TypeModel.ActivatorCreate<TCollection>());
+            }
+
+            return values;
+        }
 
         protected override TCollection Clear(TCollection values, ISerializationContext context)
         {
@@ -268,6 +280,7 @@ namespace ProtoBuf.Serializers
                 target.Clear();
                 return values;
             }
+
             return new Dictionary<TKey, TValue>();
         }
 

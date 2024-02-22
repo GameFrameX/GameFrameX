@@ -64,7 +64,7 @@ namespace ProtoBuf
             return len;
         }
 
-        private readonly void SerializeCore(ProtoWriter.State state)
+        private void SerializeCore(ProtoWriter.State state)
         {
             try
             {
@@ -87,18 +87,18 @@ namespace ProtoBuf
             }
         }
 
-        internal readonly int GetLengthHits(out int misses) => _writer.GetLengthHits(out misses);
+        internal int GetLengthHits(out int misses) => _writer.GetLengthHits(out misses);
 
         /// <summary>
         /// Perform the calculated serialization operation against the provided target stream. If the object state changes between the
         /// measure and serialize operations, the behavior is undefined.
         /// </summary>
-        public readonly void Serialize(Stream stream) => SerializeCore(ProtoWriter.State.Create(stream, _model, _userState));
+        public void Serialize(Stream stream) => SerializeCore(ProtoWriter.State.Create(stream, _model, _userState));
 
         /// <summary>
         /// Perform the calculated serialization operation against the provided target writer. If the object state changes between the
         /// measure and serialize operations, the behavior is undefined.
         /// </summary>
-        public readonly void Serialize(IBufferWriter<byte> writer) => SerializeCore(ProtoWriter.State.Create(writer, _model, _userState));
+        public void Serialize(IBufferWriter<byte> writer) => SerializeCore(ProtoWriter.State.Create(writer, _model, _userState));
     }
 }

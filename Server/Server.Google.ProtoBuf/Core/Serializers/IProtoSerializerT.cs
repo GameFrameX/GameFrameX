@@ -110,7 +110,7 @@ namespace ProtoBuf.Serializers
         /// When using <see cref="OptionWrappedValue"/>, specifies that the field should be written using field-presence
         /// rules (rather than implicit-zero rules, as per <c>wrappers.proto</c>); when specified, the wrapper message
         /// is always written, and the inner field is only written if the value is non-null; when omitted, the wrapper
-        /// message is only written if the value is not null, and the inner field is only written if the value
+        /// message is only written if the value != null, and the inner field is only written if the value
         /// is non-zero/empty; this flag is added automatically when serializing collection elements
         /// </summary>
         OptionWrappedValueFieldPresence = 1 << 13,
@@ -191,7 +191,7 @@ namespace ProtoBuf.Serializers
         [MethodImpl(ProtoReader.HotPath)]
         public static bool IsGroup(this SerializerFeatures features)
             => (features & (WireTypeMask | SerializerFeatures.WireTypeSpecified))
-                == (SerializerFeatures.WireTypeStartGroup | SerializerFeatures.WireTypeSpecified);
+               == (SerializerFeatures.WireTypeStartGroup | SerializerFeatures.WireTypeSpecified);
 
         [MethodImpl(ProtoReader.HotPath)]
         public static bool HasAny(this SerializerFeatures features, SerializerFeatures values)
@@ -265,7 +265,7 @@ namespace ProtoBuf.Serializers
         /// <summary>
         /// Gets the actual serializer for the type
         /// </summary>
-        public ISerializer<T> Serializer { get; }
+        ISerializer<T> Serializer { get; }
     }
 
     /// <summary>
@@ -369,12 +369,12 @@ namespace ProtoBuf.Serializers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CreateIfNeeded() => _ = Value;
 
-        internal readonly object RawValue => _value;
+        internal object RawValue => _value;
 
         /// <summary>
         /// Indicates whether an instance currently exists
         /// </summary>
-        public readonly bool HasValue => _value is not null;
+        public bool HasValue => _value != null;
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private T Cast()
@@ -386,15 +386,17 @@ namespace ProtoBuf.Serializers
             // what they asked for)
             var typed = ((_ctor as Func<ISerializationContext, T>) ?? TypeHelper<T>.Factory)(_context);
 
-            if (_value is not null) typed = Merge(_context, _value, typed);
+            if (_value != null) typed = Merge(_context, _value, typed);
             _onBeforeDeserialize?.Invoke(typed, _context);
             _value = typed;
             return typed;
+        }
 
-            // this isn't especially efficient, but it should work
-            static T Merge(ISerializationContext context, object value, T typed)
+        // this isn't especially efficient, but it should work
+        static T Merge(ISerializationContext context, object value, T typed)
+        {
+            using (var ms = new MemoryStream())
             {
-                using var ms = new MemoryStream();
                 // this <object> sneakily finds the correct base-type
                 context.Model.Serialize<object>(ms, value, context.UserState);
                 ms.Position = 0;
@@ -419,10 +421,10 @@ namespace ProtoBuf.Serializers
         /// </summary>
         public void OnBeforeDeserialize(Action<T, ISerializationContext> callback)
         {
-            if (callback is not null)
+            if (callback != null)
             {
                 if (_value is T obj) callback.Invoke(obj, _context);
-                else if (_onBeforeDeserialize is not null) ThrowHelper.ThrowInvalidOperationException("Only one pending " + nameof(OnBeforeDeserialize) + " callback is supported");
+                else if (_onBeforeDeserialize != null) ThrowHelper.ThrowInvalidOperationException("Only one pending " + nameof(OnBeforeDeserialize) + " callback is supported");
                 else _onBeforeDeserialize = callback;
             }
         }
