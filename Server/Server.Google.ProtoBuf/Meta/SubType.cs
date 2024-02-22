@@ -1,5 +1,6 @@
-﻿#if !NO_RUNTIME
-using System;
+﻿using System;
+using System.Collections.Generic;
+using ProtoBuf.Internal.Serializers;
 using ProtoBuf.Serializers;
 
 namespace ProtoBuf.Meta
@@ -9,10 +10,7 @@ namespace ProtoBuf.Meta
     /// </summary>
     public sealed class SubType
     {
-        internal sealed class Comparer : System.Collections.IComparer
-#if !NO_GENERICS
-            , System.Collections.Generic.IComparer<SubType>
-#endif
+        internal sealed class Comparer : System.Collections.IComparer, IComparer<SubType>
         {
             public static readonly Comparer Default = new Comparer();
 
@@ -24,14 +22,14 @@ namespace ProtoBuf.Meta
             public int Compare(SubType x, SubType y)
             {
                 if (ReferenceEquals(x, y)) return 0;
-                if (x == null) return -1;
-                if (y == null) return 1;
+                if (x is null) return -1;
+                if (y is null) return 1;
 
                 return x.FieldNumber.CompareTo(y.FieldNumber);
             }
         }
 
-        private readonly int fieldNumber;
+        private int _fieldNumber;
 
         /// <summary>
         /// The field-number that is used to encapsulate the data (as a nested
@@ -39,17 +37,27 @@ namespace ProtoBuf.Meta
         /// </summary>
         public int FieldNumber
         {
-            get { return fieldNumber; }
+            get => _fieldNumber;
+            internal set
+            {
+                if (_fieldNumber != value)
+                {
+                    MetaType.AssertValidFieldNumber(value);
+                    ThrowIfFrozen();
+                    _fieldNumber = value;
+                }
+            }
+        }
+
+        private void ThrowIfFrozen()
+        {
+            if (serializer is object) throw new InvalidOperationException("The type cannot be changed once a serializer has been generated");
         }
 
         /// <summary>
         /// The sub-type to be considered.
         /// </summary>
-        public MetaType DerivedType
-        {
-            get { return derivedType; }
-        }
-
+        public MetaType DerivedType => derivedType;
         private readonly MetaType derivedType;
 
         /// <summary>
@@ -61,35 +69,26 @@ namespace ProtoBuf.Meta
         /// <param name="format">Specific encoding style to use; in particular, Grouped can be used to avoid buffering, but is not the default.</param>
         public SubType(int fieldNumber, MetaType derivedType, DataFormat format)
         {
-            if (derivedType == null) throw new ArgumentNullException("derivedType");
-            if (fieldNumber <= 0) throw new ArgumentOutOfRangeException("fieldNumber");
-            this.fieldNumber = fieldNumber;
-            this.derivedType = derivedType;
+            if (fieldNumber <= 0) throw new ArgumentOutOfRangeException(nameof(fieldNumber));
+            _fieldNumber = fieldNumber;
+            this.derivedType = derivedType ?? throw new ArgumentNullException(nameof(derivedType));
             this.dataFormat = format;
         }
 
         private readonly DataFormat dataFormat;
 
-        private IProtoSerializer serializer;
+        private IRuntimeProtoSerializerNode serializer;
 
-        internal IProtoSerializer Serializer
-        {
-            get
-            {
-                if (serializer == null) serializer = BuildSerializer();
-                return serializer;
-            }
-        }
+        internal IRuntimeProtoSerializerNode GetSerializer(Type parentType) => serializer ??= BuildSerializer(parentType);
 
-        private IProtoSerializer BuildSerializer()
+        private IRuntimeProtoSerializerNode BuildSerializer(Type parentType)
         {
             // note the caller here is MetaType.BuildSerializer, which already has the sync-lock
             WireType wireType = WireType.String;
-            if (dataFormat == DataFormat.Group) wireType = WireType.StartGroup; // only one exception
-
-            IProtoSerializer ser = new SubItemSerializer(derivedType.Type, derivedType.GetKey(false, false), derivedType, false);
-            return new TagDecorator(fieldNumber, wireType, false, ser);
+            if(dataFormat == DataFormat.Group) wireType = WireType.StartGroup; // only one exception
+            
+            IRuntimeProtoSerializerNode ser = SubItemSerializer.Create(derivedType.Type, derivedType, parentType);
+            return new TagDecorator(_fieldNumber, wireType, false, ser);
         }
     }
 }
-#endif

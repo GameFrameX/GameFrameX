@@ -8,4 +8,8 @@
         <RootNamespace>Server.Google.ProtoBuf</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Properties\" />
+    </ItemGroup>
+
 </Project>
