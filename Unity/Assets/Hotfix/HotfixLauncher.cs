@@ -5,7 +5,6 @@ using GameFrameX;
 using GameFrameX.Event;
 using GameFrameX.Network;
 using Hotfix.Proto.Proto;
-using Resolvers;
 using SimpleJSON;
 using UnityEngine;
 using GameFrameX.Runtime;
@@ -18,8 +17,8 @@ namespace Hotfix
 {
     public static class HotfixLauncher
     {
-        public static string serverIp = "127.0.0.1";
-        public static int serverPort = 8898;
+        public static string serverIp = "172.16.130.22";
+        public static int serverPort = 25001;
         private static INetworkChannel networkChannel;
 
         public static void Main()
@@ -78,11 +77,7 @@ namespace Hotfix
 
         static void RegisterMessagePack()
         {
-            PolymorphicResolver.AddInnerResolver(MessagePack.Resolvers.StaticCompositeResolver.Instance);
-            PolymorphicResolver.AddInnerResolver(MessagePack.Resolvers.GeneratedResolver.Instance);
-            PolymorphicResolver.AddInnerResolver(MessageResolver.Instance);
-            Server.Proto.Formatter.PolymorphicRegister.Register();
-            PolymorphicRegister.Load();
+
         }
 
         private static async void NetTest()
