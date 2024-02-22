@@ -111,11 +111,11 @@ namespace Server.Launcher.Common.Session
                 }
 
                 // 新连接 or 顶号
-                oldSession.Channel.RemoveData(GlobalConst.SESSION_ID_KEY);
+                oldSession.Channel.RemoveData(GlobalConst.SessionIdKey);
                 oldSession.Channel.Close();
             }
 
-            session.Channel.SetData(GlobalConst.SESSION_ID_KEY, session.Id);
+            session.Channel.SetData(GlobalConst.SessionIdKey, session.Id);
             sessionMap[session.Id] = session;
         }
     }
