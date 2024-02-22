@@ -111,6 +111,7 @@ namespace GameFrameX.Procedure
         public static async void StartHotfix()
         {
             Log.Info("开始加载AOT DLL");
+#if !UNITY_EDITOR
             foreach (var aotDll in aotDlls)
             {
                 // Log.Info("开始加载AOT DLL ==> " + aotDll);
@@ -118,7 +119,7 @@ namespace GameFrameX.Procedure
                 var aotBytes = assetHandle.GetAssetObject<UnityEngine.TextAsset>().bytes;
                 RuntimeApi.LoadMetadataForAOTAssembly(aotBytes, HomologousImageMode.SuperSet);
             }
-
+#endif
             Log.Info("结束加载AOT DLL");
             // RuntimeApi.LoadMetadataForAOTAssembly()
 
