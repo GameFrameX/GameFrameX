@@ -15,15 +15,6 @@ namespace Unity.Editor
     public static class BuildProductEditor
     {
         /// <summary>
-        /// 获取工程路径
-        /// </summary>
-        /// <returns></returns>
-        private static string GetProjectPath()
-        {
-            return Application.dataPath.Replace("Assets", string.Empty);
-        }
-
-        /// <summary>
         /// 发布 WebGL
         /// </summary>
         [MenuItem("Tools/Build/WebGL", false, 20)]
@@ -31,11 +22,15 @@ namespace Unity.Editor
         {
             PlayerSettings.SplashScreen.show = false;
 
-            string path =
-                $"{GetProjectPath()}/WEBGL/{Application.version}/{Application.identifier}_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_v_{PlayerSettings.bundleVersion}_code_{PlayerSettings.Android.bundleVersionCode}";
-            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, path, BuildTarget.WebGL,
-                BuildOptions.None);
-            Debug.LogError("发布目录:" + path);
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.WebGL)
+            {
+                Debug.LogError("当前构建目标不是 WebGL");
+                return;
+            }
+
+            UpdateBuildTime();
+            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, BuildOutputPath(), BuildTarget.WebGL, BuildOptions.None);
+            Debug.LogError("发布目录:" + BuildOutputPath());
         }
 
         /// <summary>
@@ -45,14 +40,18 @@ namespace Unity.Editor
         private static void BuildPlayerToAndroid()
         {
             PlayerSettings.SplashScreen.show = false;
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
+            {
+                Debug.LogError("当前构建目标不是 Android");
+                return;
+            }
 
+            UpdateBuildTime();
             EditorUserBuildSettings.buildAppBundle = false;
             EditorUserBuildSettings.exportAsGoogleAndroidProject = false;
 
-            string apkPath =
-                $"{GetProjectPath()}/Apks/{Application.version}/{Application.identifier}_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_v_{PlayerSettings.bundleVersion}_code_{PlayerSettings.Android.bundleVersionCode}.apk";
-            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, apkPath, BuildTarget.Android,
-                BuildOptions.None);
+            string apkPath = $"{BuildOutputPath()}.apk";
+            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, apkPath, BuildTarget.Android, BuildOptions.None);
             Debug.LogError("发布目录:" + apkPath);
         }
 
@@ -129,7 +128,6 @@ namespace Unity.Editor
         static string GeneratorGradlewByAssembleDebug(string path)
         {
             File.WriteAllText(path + "/build_debug.bat", "gradlew assembleDebug");
-
             return path + "/build_debug.bat";
         }
 
@@ -137,8 +135,7 @@ namespace Unity.Editor
         {
             string outputPath = GetOutPutPath(path, "debug");
 
-            File.WriteAllText(path + "/build_output_debug" + extensionSuffix,
-                $"start {outputPath}");
+            File.WriteAllText(path + "/build_output_debug" + extensionSuffix, $"start {outputPath}");
 
             return path + "/build_output_debug" + extensionSuffix;
         }
@@ -159,8 +156,7 @@ namespace Unity.Editor
         {
             string outputPath = GetOutPutPath(path, "release");
 
-            File.WriteAllText(path + "/build_output_release" + extensionSuffix,
-                $"start {outputPath}");
+            File.WriteAllText(path + "/build_output_release" + extensionSuffix, $"start {outputPath}");
 
             return path + "/build_output_release.bat";
         }
@@ -169,8 +165,7 @@ namespace Unity.Editor
         {
             string outputPath = GetOutPutPath(path, "release");
 
-            File.WriteAllText(path + "/build_release" + extensionSuffix,
-                $"gradlew assembleRelease");
+            File.WriteAllText(path + "/build_release" + extensionSuffix, $"gradlew assembleRelease");
 
             return path + "/build_release" + extensionSuffix;
         }
@@ -193,19 +188,19 @@ namespace Unity.Editor
         private static void ExportToAndroidStudioToDevelop()
         {
             PlayerSettings.SplashScreen.show = false;
-            string apkPath = GetBuildPath();
+            UpdateBuildTime();
+            string buildOutputPath = BuildOutputPath();
 
             EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
             EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
             EditorUserBuildSettings.development = true;
 
-            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, apkPath, BuildTarget.Android,
-                BuildOptions.None);
-            Debug.Log(apkPath);
+            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, buildOutputPath, BuildTarget.Android, BuildOptions.None);
+            Debug.Log(buildOutputPath);
 
-            GeneratorGradle(apkPath);
-            CopyFileByBuildGradle(apkPath);
-            Process.Start(apkPath);
+            GeneratorGradle(buildOutputPath);
+            CopyFileByBuildGradle(buildOutputPath);
+            Process.Start(buildOutputPath);
         }
 
         /// <summary>
@@ -215,107 +210,18 @@ namespace Unity.Editor
         private static void ExportToAndroidStudioToRelease()
         {
             PlayerSettings.SplashScreen.show = false;
-            var apkPath = GetBuildPath();
+            UpdateBuildTime();
+            var buildOutputPath = BuildOutputPath();
 
             EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
             EditorUserBuildSettings.development = false;
             EditorUserBuildSettings.exportAsGoogleAndroidProject = true;
 
-            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, apkPath, BuildTarget.Android,
-                BuildOptions.None);
-            Debug.Log(apkPath);
-            GeneratorGradle(apkPath);
-            CopyFileByBuildGradle(apkPath);
-            Debug.LogError("发布目录:" + apkPath);
-        }
-
-        /// <summary>
-        /// 获取发布路径
-        /// </summary>
-        /// <returns></returns>
-        private static string GetBuildPath()
-        {
-            DirectoryInfo dataDir = new DirectoryInfo(Application.dataPath);
-
-            string workPathName = "Build";
-            switch (EditorUserBuildSettings.activeBuildTarget)
-            {
-                case BuildTarget.StandaloneOSX:
-                case BuildTarget.iOS:
-                    workPathName = "Xcode";
-
-                    break;
-                case BuildTarget.Android:
-                    workPathName = "ASWork";
-
-                    break;
-            }
-
-            string apkPath = $"{dataDir.Parent.Parent.FullName}/{workPathName}/{Application.version}/{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
-            DirectoryInfo asWorkDir = new DirectoryInfo(apkPath);
-            if (asWorkDir.Exists)
-            {
-                asWorkDir.Delete(true);
-            }
-            else
-            {
-                asWorkDir.Create();
-            }
-
-            return apkPath;
-        }
-
-        public static Process ProcessRun(string exe, string arguments, string workingDirectory = ".",
-            bool waitExit = false)
-        {
-            try
-            {
-                bool redirectStandardOutput = true;
-                bool redirectStandardError = true;
-                bool useShellExecute = false;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    redirectStandardOutput = false;
-                    redirectStandardError = false;
-                    useShellExecute = true;
-                }
-
-                if (waitExit)
-                {
-                    redirectStandardOutput = true;
-                    redirectStandardError = true;
-                    useShellExecute = false;
-                }
-
-                ProcessStartInfo info = new ProcessStartInfo
-                {
-                    FileName = exe,
-                    Arguments = arguments,
-                    CreateNoWindow = true,
-                    UseShellExecute = useShellExecute,
-                    WorkingDirectory = workingDirectory,
-                    RedirectStandardOutput = redirectStandardOutput,
-                    RedirectStandardError = redirectStandardError,
-                };
-
-                Process process = Process.Start(info);
-
-                if (waitExit)
-                {
-                    process.WaitForExit();
-                    if (process.ExitCode != 0)
-                    {
-                        throw new Exception(
-                            $"{process.StandardOutput.ReadToEnd()} {process.StandardError.ReadToEnd()}");
-                    }
-                }
-
-                return process;
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"dir: {Path.GetFullPath(workingDirectory)}, command: {exe} {arguments}", e);
-            }
+            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, buildOutputPath, BuildTarget.Android, BuildOptions.None);
+            Debug.Log(buildOutputPath);
+            GeneratorGradle(buildOutputPath);
+            CopyFileByBuildGradle(buildOutputPath);
+            Debug.LogError("发布目录:" + buildOutputPath);
         }
 
 
@@ -326,14 +232,14 @@ namespace Unity.Editor
         private static void ExportToXcodeToDevelop()
         {
             PlayerSettings.SplashScreen.show = false;
-            string xcodePath = GetBuildPath();
+            UpdateBuildTime();
+            string buildOutputPath = BuildOutputPath();
 
             EditorUserBuildSettings.development = true;
 
-            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, xcodePath, BuildTarget.iOS,
-                BuildOptions.None);
-            Process.Start(xcodePath);
-            Debug.LogError("发布目录:" + xcodePath);
+            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, buildOutputPath, BuildTarget.iOS, BuildOptions.None);
+            Process.Start(buildOutputPath);
+            Debug.LogError("发布目录:" + buildOutputPath);
         }
 
         /// <summary>
@@ -343,14 +249,14 @@ namespace Unity.Editor
         private static void ExportToXcodeToRelease()
         {
             PlayerSettings.SplashScreen.show = false;
-            string xcodePath = GetBuildPath();
+            UpdateBuildTime();
+            string buildOutputPath = BuildOutputPath();
 
             EditorUserBuildSettings.development = false;
 
-            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, xcodePath, BuildTarget.iOS,
-                BuildOptions.None);
-            Process.Start(xcodePath);
-            Debug.LogError("发布目录:" + xcodePath);
+            BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, buildOutputPath, BuildTarget.iOS, BuildOptions.None);
+            Process.Start(buildOutputPath);
+            Debug.LogError("发布目录:" + buildOutputPath);
         }
 
         /// <summary>
@@ -364,16 +270,63 @@ namespace Unity.Editor
             if (target == BuildTarget.Android)
             {
                 // Update Build Version Code
-                PlayerSettings.Android.bundleVersionCode =
-                    Convert.ToInt32(PlayerSettings.Android.bundleVersionCode) + 1;
+                PlayerSettings.Android.bundleVersionCode = Convert.ToInt32(PlayerSettings.Android.bundleVersionCode) + 1;
             }
 
             if (target == BuildTarget.iOS)
             {
                 // Update Build Version Code
-                PlayerSettings.iOS.buildNumber =
-                    (Convert.ToInt32(PlayerSettings.iOS.buildNumber) + 1).ToString();
+                PlayerSettings.iOS.buildNumber = (Convert.ToInt32(PlayerSettings.iOS.buildNumber) + 1).ToString();
             }
+        }
+
+        /// <summary>
+        /// 获取工程路径
+        /// </summary>
+        /// <returns></returns>
+        private static string GetProjectPath()
+        {
+            return Application.dataPath.Replace("Assets", string.Empty);
+        }
+
+        /// <summary>
+        /// 构建导出根目录
+        /// </summary>
+        private static string GetBuildRootPath
+        {
+            get { return $"{GetProjectPath()}/Builds"; }
+        }
+
+        private static string _buildTime;
+
+        static BuildProductEditor()
+        {
+            _buildTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        }
+
+        /// <summary>
+        /// 更新时间命名
+        /// </summary>
+        private static void UpdateBuildTime()
+        {
+            _buildTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        }
+
+        /// <summary>
+        /// 获取发布导出路径
+        /// </summary>
+        /// <returns></returns>
+        private static string BuildOutputPath()
+        {
+            string pathName = $"{Application.identifier}_{_buildTime}_v_{PlayerSettings.bundleVersion}_code_{PlayerSettings.Android.bundleVersionCode}";
+            string path = Path.Combine(GetBuildRootPath, EditorUserBuildSettings.activeBuildTarget.ToString(), Application.version, Application.identifier, pathName);
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            return path;
         }
     }
 }
