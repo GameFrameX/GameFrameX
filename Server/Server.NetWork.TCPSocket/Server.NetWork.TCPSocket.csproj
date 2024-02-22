@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Server.NetWork\Server.NetWork.csproj" />
+      <ProjectReference Include="..\Server.Setting\Server.Setting.csproj" />
     </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Server.Extension;
 using Server.NetWork.Messages;
 using Server.Serialize.Serialize;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.NetWork.TCPSocket
@@ -111,7 +112,7 @@ namespace Server.NetWork.TCPSocket
             }
             else
             {
-                var message = SerializerHelper.Deserialize<MessageObject>(reader.UnreadSequence);
+                var message = (MessageObject)SerializerHelper.Deserialize(reader.UnreadSequence, msgType);
                 message.MsgId = msgId;
                 if (message.MsgId != msgId)
                 {
@@ -198,7 +199,10 @@ namespace Server.NetWork.TCPSocket
             span.WriteBytesWithoutLength(bytes, ref offset);
             Writer.Advance(len);
             _ = Writer.FlushAsync(CloseSrc.Token);
-            Logger.Debug($"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(msg)}");
+            if (GlobalSettings.IsDebug)
+            {
+                Logger.Info($"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(msg)}");
+            }
         }
 
         public override void WriteAsync(IMessage msg, int uniId, int code, string desc = "")

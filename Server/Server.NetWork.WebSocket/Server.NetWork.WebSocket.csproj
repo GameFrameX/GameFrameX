@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj" />
       <ProjectReference Include="..\Server.NetWork\Server.NetWork.csproj" />
+      <ProjectReference Include="..\Server.Setting\Server.Setting.csproj" />
     </ItemGroup>
 
     <ItemGroup>

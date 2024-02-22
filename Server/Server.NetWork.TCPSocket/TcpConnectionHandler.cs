@@ -1,18 +1,12 @@
 ﻿using Microsoft.AspNetCore.Connections;
 using Newtonsoft.Json;
 using Server.NetWork.Messages;
+using Server.Setting;
 
 namespace Server.NetWork.TCPSocket
 {
     public class TcpConnectionHandler : ConnectionHandler
     {
-        // public TcpConnectionHandler(Func<int, IMessageHandler> messageHandler, Func<int, Type> typeGetter, Func<Type, int> idGetter)
-        // {
-        //     MessageHandler = messageHandler;
-        //     TypeGetter = typeGetter;
-        //     IdGetter = idGetter;
-        // }
-
         static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public override async Task OnConnectedAsync(ConnectionContext connection)
@@ -37,7 +31,12 @@ namespace Server.NetWork.TCPSocket
             }
 
             var messageType = messageObject.GetType();
-            Logger.Debug($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}");
+
+            if (GlobalSettings.IsDebug)
+            {
+                Logger.Info($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}");
+            }
+
             var handler = TcpServer.MessageHelper.MessageHandler(messageObject.MsgId);
             if (handler == null)
             {
