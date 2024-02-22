@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj" />
       <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
     </ItemGroup>
 
