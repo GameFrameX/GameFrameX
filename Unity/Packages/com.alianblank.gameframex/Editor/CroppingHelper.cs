@@ -8,7 +8,7 @@ namespace GameFrameX.Editor
 {
     public static class CroppingHelper
     {
-        [MenuItem("YooAsset/CroppingHelper")]
+        [MenuItem("Game Framework/CroppingHelper")]
         static void Run()
         {
             var types = typeof(GameApp).Assembly.GetTypes();
