@@ -27,8 +27,7 @@ namespace GameFrameX.Runtime
 
         protected override void Awake()
         {
-                        
-#if UNITY_WEBGL
+#if UNITY_WEBGL && !UNITY_EDITOR
             GamePlayMode = EPlayMode.WebPlayMode;
 #endif
             base.Awake();
