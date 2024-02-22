@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using ProtoBuf;
 
 namespace GameFrameX.Network
 {
@@ -75,7 +76,7 @@ namespace GameFrameX.Network
                 }
 
                 stringBuilder.AppendLine(type.FullName);
-
+                SerializerHelper.Register(type);
                 if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
                     if (type.IsImplWithInterface(typeof(IRequestMessage)))
