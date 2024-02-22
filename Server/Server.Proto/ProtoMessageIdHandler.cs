@@ -5,6 +5,7 @@ using System.Text;
 using NLog;
 using Server.Extension;
 using Server.NetWork.Messages;
+using Server.Serialize.Serialize;
 
 namespace Server.Proto
 {
@@ -81,7 +82,7 @@ namespace Server.Proto
                 }
 
                 stringBuilder.AppendLine(" 注册消息ID类型: " + type);
-
+                SerializerHelper.Register(type);
                 if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
                     if (type.IsImplWithInterface(typeof(IRequestMessage)))
