@@ -2,7 +2,6 @@
 using NLog;
 using NLog.Config;
 using NLog.LayoutRenderers;
-using PolymorphicMessagePack;
 using Server.Apps;
 using Server.Config;
 using Server.Core.Actors.Impl;
@@ -84,10 +83,7 @@ namespace Server.Launcher.Common
         private static void RegisterMessagePack()
         {
             // PolymorphicTypeMapper.Register(typeof(AppStartUp).Assembly); //app
-            PolymorphicTypeMapper.Register<IMessage>();
-            PolymorphicTypeMapper.Register<MessageObject>();
             PolymorphicRegister.Load();
-            PolymorphicResolver.Instance.Init();
         }
     }
 }
