@@ -7,7 +7,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using Hotfix.Config.Generate;
 using LuBan.Runtime;
 using SimpleJSON;
 
@@ -32,7 +31,7 @@ namespace cfg.ai
                 case "ChooseSkill": return new ai.ChooseSkill(_buf);
                 case "MoveToRandomLocation": return new ai.MoveToRandomLocation(_buf);
                 case "MoveToLocation": return new ai.MoveToLocation(_buf);
-                case "DebugPrint": return new DebugPrint(_buf);
+                case "DebugPrint": return new ai.DebugPrint(_buf);
                 default: throw new SerializationException();
             }
         }

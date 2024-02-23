@@ -7,15 +7,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using cfg;
-using cfg.ai;
 using LuBan.Runtime;
 using SimpleJSON;
 
-namespace Hotfix.Config.Generate
+
+namespace cfg.ai
 {
     
-    public sealed partial class DebugPrint : Task
+    public sealed partial class DebugPrint : ai.Task
     {
         public DebugPrint(JSONNode _buf)  : base(_buf) 
         {
@@ -24,7 +23,7 @@ namespace Hotfix.Config.Generate
     
         public static DebugPrint DeserializeDebugPrint(JSONNode _buf)
         {
-            return new DebugPrint(_buf);
+            return new ai.DebugPrint(_buf);
         }
     
         public readonly string Text;
