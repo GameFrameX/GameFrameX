@@ -28,3 +28,5 @@ Unity/Unity.sln
 docker/redis/apps/datadir
 .DS_Store
 Unity/HybridCLRData
+Unity/Builds
+Unity/Logs
