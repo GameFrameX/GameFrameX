@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj" />
       <ProjectReference Include="..\Server.Serialize\Server.Serialize.csproj" />
     </ItemGroup>
 

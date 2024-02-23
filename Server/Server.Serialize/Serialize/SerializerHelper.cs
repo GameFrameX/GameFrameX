@@ -16,6 +16,7 @@ namespace Server.Serialize.Serialize
             return ProtoBuf.SerializerHelper.Serialize<T>(value);
         }
 
+        /*
         /// <summary>
         /// 序列化对象
         /// </summary>
@@ -26,11 +27,8 @@ namespace Server.Serialize.Serialize
         {
             ProtoBuf.SerializerHelper.Serialize<T>(ref bufferWriter, value);
         }
+        */
 
-        public static void Register<T>()
-        {
-            ProtoBuf.SerializerHelper.Register<T>();
-        }
 
         public static void Register(Type type)
         {
@@ -48,6 +46,7 @@ namespace Server.Serialize.Serialize
             return ProtoBuf.SerializerHelper.Deserialize(data, type);
         }
 
+        /*
         /// <summary>
         /// 反序列化数据对象
         /// </summary>
@@ -58,5 +57,6 @@ namespace Server.Serialize.Serialize
         {
             return ProtoBuf.SerializerHelper.Deserialize(ref data, type);
         }
+        */
     }
 }

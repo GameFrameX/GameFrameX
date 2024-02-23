@@ -125,7 +125,7 @@ namespace Server.NetWork.WebSocket
 
             // string json = Encoding.UTF8.GetString(reader.UnreadSequence.First.ToArray());
             var messageType = MessageHelper.MessageTypeByIdGetter(messageId);
-            var message = (MessageObject)RuntimeTypeModel.Default.Deserialize(messageType, reader.UnreadSequence);
+            var message = (MessageObject)SerializerHelper.Deserialize(reader.UnreadSequence.First.ToArray(), messageType);
 
             // var message = MessagePackSerializer.Deserialize<MessageObject>(reader.UnreadSequence);
             message.MsgId = messageId;

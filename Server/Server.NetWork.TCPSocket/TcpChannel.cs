@@ -112,7 +112,7 @@ namespace Server.NetWork.TCPSocket
             }
             else
             {
-                var message = (MessageObject)SerializerHelper.Deserialize(reader.UnreadSequence, msgType);
+                var message = (MessageObject)SerializerHelper.Deserialize(reader.UnreadSequence.ToArray(), msgType);
                 message.MsgId = msgId;
                 if (message.MsgId != msgId)
                 {

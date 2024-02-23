@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Setting", "Server.Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Serialize", "Server.Serialize\Server.Serialize.csproj", "{551705D2-C054-4B86-807D-5F0EF6EF6579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Google.ProtoBuf", "Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj", "{8B3C26ED-D193-4345-8C9A-82174579FBA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.ProtoBuf.Net", "Server.ProtoBuf.Net\Server.ProtoBuf.Net.csproj", "{8B3C26ED-D193-4345-8C9A-82174579FBA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Apps", "Server.Apps\Server.Apps.csproj", "{EAA64025-FD7E-4E0F-92D1-AEBAC1A552BF}"
 EndProject

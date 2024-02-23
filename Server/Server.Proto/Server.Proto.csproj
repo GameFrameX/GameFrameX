@@ -7,7 +7,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Server.Core\Server.Core.csproj" />
         <ProjectReference Include="..\Server.Extension\Server.Extension.csproj" />
-        <ProjectReference Include="..\Server.Google.ProtoBuf\Server.Google.ProtoBuf.csproj" />
+        <ProjectReference Include="..\Server.ProtoBuf.Net\Server.ProtoBuf.Net.csproj" />
         <ProjectReference Include="..\Server.Serialize\Server.Serialize.csproj" />
     </ItemGroup>
 
