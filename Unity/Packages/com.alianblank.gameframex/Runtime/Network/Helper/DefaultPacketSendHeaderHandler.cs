@@ -1,8 +1,6 @@
-using System;
-using System.Buffers;
 using System.IO;
 using GameFrameX.Runtime;
-using MessagePack;
+using ProtoBuf;
 
 namespace GameFrameX.Network
 {
@@ -55,8 +53,7 @@ namespace GameFrameX.Network
             cachedStream.Seek(0, SeekOrigin.Begin);
             cachedStream.SetLength(0);
 
-
-            messageBodyBuffer = MessagePackSerializer.Serialize(messageObject);
+            messageBodyBuffer = SerializerHelper.Serialize(messageObject);
             var messageType = messageObject.GetType();
             Id = ProtoMessageIdHandler.GetReqMessageIdByType(messageType);
             var messageLength = messageBodyBuffer.Length;

@@ -76,7 +76,6 @@ namespace GameFrameX.Network
                 }
 
                 stringBuilder.AppendLine(type.FullName);
-                SerializerHelper.Register(type);
                 if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
                     if (type.IsImplWithInterface(typeof(IRequestMessage)))

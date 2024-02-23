@@ -132,11 +132,11 @@ namespace GameMain
             return _netChannel.PacketReceiveHeaderHandler.Handler(source);
         }
 
-        public bool DeserializePacketBody(object source, out MessageObject messageObject)
+        public bool DeserializePacketBody(object source, int messageId, out MessageObject messageObject)
         {
             GameFrameworkGuard.NotNull(source, nameof(source));
 
-            return _netChannel.PacketReceiveBodyHandler.Handler(source, out messageObject);
+            return _netChannel.PacketReceiveBodyHandler.Handler(source,messageId, out messageObject);
         }
 
         public void Clear()

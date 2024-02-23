@@ -11,9 +11,7 @@ using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 using GameFrameX.Runtime;
-using MessagePack;
 
 namespace GameFrameX.Network
 {
@@ -323,7 +321,7 @@ namespace GameFrameX.Network
 
                         var body = buffer.Slice(buffer.Start, bodyLength);
                         buffer = buffer.Slice(bodyLength);
-                        result = PNetworkChannelHelper.DeserializePacketBody(body, out var messageObject);
+                        result = PNetworkChannelHelper.DeserializePacketBody(body,PacketReceiveHeaderHandler.Id, out var messageObject);
 #if UNITY_EDITOR
                         Log.Debug($"收到消息 ID:[{PacketReceiveHeaderHandler.Id}] ==>消息类型:{messageObject.GetType()} 消息内容:{Utility.Json.ToJson(messageObject)}");
 #endif

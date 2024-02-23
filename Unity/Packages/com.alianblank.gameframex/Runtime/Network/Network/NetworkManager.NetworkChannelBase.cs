@@ -750,7 +750,7 @@ namespace GameFrameX.Network
 
                 try
                 {
-                    var packet = PNetworkChannelHelper.DeserializePacketBody(PReceiveState.Stream, out var customErrorData);
+                    var packet = PNetworkChannelHelper.DeserializePacketBody(PReceiveState.Stream, 0, out var customErrorData);
 
                     if (customErrorData != null && NetworkChannelCustomError != null)
                     {

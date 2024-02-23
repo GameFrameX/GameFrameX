@@ -16,7 +16,7 @@ namespace GameFrameX.Network
     /// <summary>
     /// 消息对象标签
     /// </summary>
-    public class MessagePackageObjectAttribute : ProtoBuf.ProtoContractAttribute
+    public class MessagePackageObjectAttribute : Attribute
     {
         public MessagePackageObjectAttribute() : base()
         {

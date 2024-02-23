@@ -1,9 +1,12 @@
-﻿namespace GameFrameX.Network
+﻿using ProtoBuf;
+
+namespace GameFrameX.Network
 {
     /// <summary>
     /// 消息基类
     /// </summary>
-    public class IMessageObject
+    [ProtoContract]
+    public class MessageObject
     {
     }
 }

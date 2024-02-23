@@ -67,8 +67,9 @@ namespace GameFrameX.Network
         /// 反序列化消息包。
         /// </summary>
         /// <param name="source">要反序列化的来源流。</param>
+        /// <param name="messageId">消息ID</param>
         /// <param name="messageObject"></param>
         /// <returns>反序列化后的消息包。</returns>
-        bool DeserializePacketBody(object source, out MessageObject messageObject);
+        bool DeserializePacketBody(object source, int messageId, out MessageObject messageObject);
     }
 }
