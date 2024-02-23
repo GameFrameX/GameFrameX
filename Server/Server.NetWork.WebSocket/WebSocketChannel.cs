@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
-using ProtoBuf.Meta;
+using Newtonsoft.Json;
 using Server.Extension;
 using Server.NetWork.Messages;
 using Server.Serialize.Serialize;
@@ -95,7 +95,7 @@ namespace Server.NetWork.WebSocket
                         stringBuilder.Append(b + " ");
                     }
 
-                    Logger.Info($"---发送消息ID:[{message.MsgId}] ==>消息类型:{messageType} 消息内容长度：{len}=>{bytes.Length} 消息内容:{sendData} \n {stringBuilder}");
+                    Logger.Info($"---发送消息ID:[{message.MsgId}] ==>消息类型:{messageType} 消息内容长度：{len}=>{bytes.Length} 消息内容:{JsonConvert.SerializeObject(sendData)} 消息字节数组:{stringBuilder}");
                 }
 
                 await webSocket.SendAsync(sendData, WebSocketMessageType.Binary, true, CloseSrc.Token);
@@ -107,14 +107,7 @@ namespace Server.NetWork.WebSocket
         {
             var data = stream.GetBuffer();
 
-            // StringBuilder stringBuilder = new StringBuilder();
-            // for (var index = 0; index < stream.Length; index++)
-            // {
-            //     var b = data[index];
-            //     stringBuilder.Append(b + " ");
-            // }
-            //
-            // Console.WriteLine(stringBuilder);
+
             var input = new ReadOnlySequence<byte>(data, 0, (int)stream.Length);
             var reader = new SequenceReader<byte>(input);
             reader.TryReadBigEndian(out int msgLength); //reader.ReadInt32()
@@ -125,16 +118,23 @@ namespace Server.NetWork.WebSocket
 
             // string json = Encoding.UTF8.GetString(reader.UnreadSequence.First.ToArray());
             var messageType = MessageHelper.MessageTypeByIdGetter(messageId);
-            var message = (MessageObject)SerializerHelper.Deserialize(reader.UnreadSequence.First.ToArray(), messageType);
+            var messageObject = (MessageObject)SerializerHelper.Deserialize(reader.UnreadSequence.First.ToArray(), messageType);
 
             // var message = MessagePackSerializer.Deserialize<MessageObject>(reader.UnreadSequence);
-            message.MsgId = messageId;
-            if (message.MsgId != messageId)
+            messageObject.MsgId = messageId;
+            if (GlobalSettings.IsDebug)
             {
-                throw new Exception($"解析消息错误，注册消息id和消息无法对应.real:{message.MsgId}, register:{messageId}");
+                StringBuilder stringBuilder = new StringBuilder();
+                for (var index = 0; index < stream.Length; index++)
+                {
+                    var b = data[index];
+                    stringBuilder.Append(b + " ");
+                }
+
+                Logger.Info($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}  消息字节数组:{stringBuilder}");
             }
 
-            return message;
+            return messageObject;
         }
 
         async Task DoRevice()
@@ -162,11 +162,6 @@ namespace Server.NetWork.WebSocket
                 //这里默认用多态类型的反序列方式，里面做了兼容处理 
                 var messageObject = DeserializeMsg(stream); // Serializer.Deserialize<Message>(stream);
 
-                if (GlobalSettings.IsDebug)
-                {
-                    var messageType = messageObject.GetType();
-                    Logger.Info($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{messageObject}");
-                }
 
                 onMessage(messageObject);
             }

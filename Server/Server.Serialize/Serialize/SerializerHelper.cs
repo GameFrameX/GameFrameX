@@ -13,7 +13,11 @@ namespace Server.Serialize.Serialize
         /// <returns></returns>
         public static byte[] Serialize<T>(T value)
         {
-            return ProtoBuf.SerializerHelper.Serialize<T>(value);
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                ProtoBuf.Serializer.Serialize(memoryStream, value);
+                return memoryStream.ToArray();
+            }
         }
 
         /*
@@ -32,7 +36,7 @@ namespace Server.Serialize.Serialize
 
         public static void Register(Type type)
         {
-            ProtoBuf.SerializerHelper.Register(type);
+            RuntimeTypeModel.Default.Add(type, false);
         }
 
         /// <summary>
@@ -43,7 +47,10 @@ namespace Server.Serialize.Serialize
         /// <returns></returns>
         public static object Deserialize(byte[] data, Type type)
         {
-            return ProtoBuf.SerializerHelper.Deserialize(data, type);
+            using (var memoryStream = new MemoryStream(data))
+            {
+                return ProtoBuf.Serializer.Deserialize(type, memoryStream);
+            }
         }
 
         /*

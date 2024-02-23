@@ -82,7 +82,7 @@ namespace Server.Proto
                 }
 
                 stringBuilder.AppendLine(" 注册消息ID类型: " + type);
-                SerializerHelper.Register(type);
+                // SerializerHelper.Register(type);
                 if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
                     if (type.IsImplWithInterface(typeof(IRequestMessage)))
