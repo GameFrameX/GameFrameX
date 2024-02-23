@@ -1,4 +1,5 @@
 ﻿using System;
+using ProtoBuf;
 using System.Collections.Generic;
 using GameFrameX.Network;
 
@@ -25,32 +26,37 @@ namespace Hotfix.Proto.Proto
 	/// 玩家基础信息
 	/// </summary>
 	
-	[MessagePackageObject]
+	[ProtoContract]
 	public partial class UserInfo : MessageObject
 	{
 		/// <summary>
 		///  角色名
 		/// </summary>
+		[ProtoMember(1)]
 		public string RoleName { get; set; }
 
 		/// <summary>
 		///  角色ID
 		/// </summary>
+		[ProtoMember(2)]
 		public long RoleId { get; set; }
 
 		/// <summary>
 		///  角色等级
 		/// </summary>
+		[ProtoMember(3)]
 		public int Level { get; set; }
 
 		/// <summary>
 		///  创建时间
 		/// </summary>
+		[ProtoMember(4)]
 		public DateTime CreateTime { get; set; }
 
 		/// <summary>
 		///  vip等级
 		/// </summary>
+		[ProtoMember(5)]
 		public int VipLevel { get; set; }
 
 	}
@@ -75,43 +81,49 @@ namespace Hotfix.Proto.Proto
 	}
 
 	
-	[MessagePackageObject]
+	[ProtoContract]
 	public partial class PhoneNumber : MessageObject
 	{
 		/// <summary>
 		/// 
 		/// </summary>
+		[ProtoMember(1)]
 		public string number { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
+		[ProtoMember(2)]
 		public PhoneType type { get; set; }
 
 	}
 
 	
-	[MessagePackageObject]
+	[ProtoContract]
 	public partial class Person : MessageObject
 	{
 		/// <summary>
 		/// 
 		/// </summary>
+		[ProtoMember(1)]
 		public string name { get; set; }
 
 		/// <summary>
 		///  Unique ID number for this person.
 		/// </summary>
+		[ProtoMember(2)]
 		public int id { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
+		[ProtoMember(3)]
 		public string email { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
+		[ProtoMember(4)]
 		public List<PhoneNumber> phones = new List<PhoneNumber>();
 
 	}
@@ -120,12 +132,13 @@ namespace Hotfix.Proto.Proto
 	/// Ouraddressbookfileisjustoneofthese.
 	/// </summary>
 	
-	[MessagePackageObject]
+	[ProtoContract]
 	public partial class AddressBook : MessageObject
 	{
 		/// <summary>
 		/// 
 		/// </summary>
+		[ProtoMember(1)]
 		public List<Person> people = new List<Person>();
 
 	}
