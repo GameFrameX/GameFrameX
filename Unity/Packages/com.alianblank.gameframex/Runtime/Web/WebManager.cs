@@ -24,6 +24,7 @@ namespace GameFrameX.Web
 
         internal override void Shutdown()
         {
+            HTTPManager.OnQuit();
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace GameFrameX.Web
             var uniTaskCompletionSource = new TaskCompletionSource<string>();
             _stringBuilder.Clear();
 
-            if (queryString.Count > 0)
+            if (queryString != null && queryString.Count > 0)
             {
                 _stringBuilder.Append(url);
                 if (!url.EndsWithFast("?"))
@@ -151,7 +152,7 @@ namespace GameFrameX.Web
             var uniTaskCompletionSource = new TaskCompletionSource<byte[]>();
             _stringBuilder.Clear();
 
-            if (queryString.Count > 0)
+            if (queryString != null && queryString.Count > 0)
             {
                 _stringBuilder.Append(url);
                 if (!url.EndsWithFast("?"))
@@ -272,7 +273,7 @@ namespace GameFrameX.Web
 
             _stringBuilder.Clear();
 
-            if (queryString.Count > 0)
+            if (queryString != null && queryString.Count > 0)
             {
                 _stringBuilder.Append(url);
                 if (!url.EndsWithFast("?"))
@@ -320,10 +321,8 @@ namespace GameFrameX.Web
             });
             if (from != null && from.Count > 0)
             {
-                foreach (var kv in from)
-                {
-                    httpRequest.AddField(kv.Key, kv.Value);
-                }
+                string body = Utility.Json.ToJson(from);
+                httpRequest.RawData = Encoding.UTF8.GetBytes(body);
             }
 
             if (header != null && header.Count > 0)
@@ -352,7 +351,7 @@ namespace GameFrameX.Web
 
             _stringBuilder.Clear();
 
-            if (queryString.Count > 0)
+            if (queryString != null && queryString.Count > 0)
             {
                 _stringBuilder.Append(url);
                 if (!url.EndsWithFast("?"))
