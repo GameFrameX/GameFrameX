@@ -16,10 +16,10 @@ namespace Server.NetWork.TCPSocket
     public static class TcpServer
     {
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-        private static WebApplication App { get; set; }
+        private static WebApplication? App { get; set; }
         public static IMessageHelper MessageHelper { get; private set; }
 
-        public static Task Start(int port, IMessageHelper messageHelper, Action<ListenOptions> configure = null)
+        public static Task Start(int port, IMessageHelper messageHelper, Action<ListenOptions>? configure = null)
         {
             Guard.NotNull(messageHelper, nameof(messageHelper));
             MessageHelper = messageHelper;
