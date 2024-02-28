@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Server.NetWork\Server.NetWork.csproj" />
+      <ProjectReference Include="..\Server.Setting\Server.Setting.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NLog.Web.AspNetCore" Version="5.0.0" />
+    </ItemGroup>
+
+</Project>
