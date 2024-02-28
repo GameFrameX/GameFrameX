@@ -78,6 +78,7 @@ namespace ProtoBuf
                 return Serializer.Deserialize(type, memoryStream);
             }
         }
+
         //
         // /// <summary>
         // /// 反序列化数据对象
@@ -91,16 +92,16 @@ namespace ProtoBuf
         //     return Serializer.Deserialize(type, data);
         // }
         //
-        // /// <summary>
-        // /// 反序列化数据对象
-        // /// </summary>
-        // /// <param name="data">数据</param>
-        // /// <typeparam name="T">类型</typeparam>
-        // /// <returns></returns>
-        // public static T Deserialize<T>(ref ReadOnlySequence<byte> data)
-        // {
-        //     return RuntimeTypeModel.Default.Deserialize<T>(data);
-        // }
+        /// <summary>
+        /// 反序列化数据对象
+        /// </summary>
+        /// <param name="data">数据</param>
+        /// <typeparam name="T">类型</typeparam>
+        /// <returns></returns>
+        public static T Deserialize<T>(ref ReadOnlySequence<byte> data)
+        {
+            return Deserialize<T>(data.ToArray());
+        }
         //
         //
         // /// <summary>
