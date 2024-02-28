@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.ProtoBuf.Net", "Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.UDPSocket", "Server.NetWork.UDPSocket\Server.NetWork.UDPSocket.csproj", "{A63E01FA-5584-41ED-AC27-23204AEC7D9B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.KCPSocket", "Server.NetWork.KCPSocket\Server.NetWork.KCPSocket.csproj", "{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{A63E01FA-5584-41ED-AC27-23204AEC7D9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A63E01FA-5584-41ED-AC27-23204AEC7D9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A63E01FA-5584-41ED-AC27-23204AEC7D9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
