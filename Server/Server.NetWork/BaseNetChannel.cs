@@ -5,6 +5,9 @@ namespace Server.NetWork
 {
     public abstract class BaseNetChannel : INetChannel
     {
+        public long NetId { get; set; } = 0;
+        public int TargetServerId { get; set; }
+
         public BaseNetChannel(IMessageHelper messageHelper)
         {
             MessageHelper = messageHelper;
@@ -55,6 +58,27 @@ namespace Server.NetWork
         public void SetData(string key, object v)
         {
             datas[key] = v;
+        }
+
+        protected long LastReceiveMessageTime;
+
+        /// <summary>
+        /// 更新接收消息的时间
+        /// </summary>
+        /// <param name="offsetTicks"></param>
+        public void UpdateReceiveMessageTime(long offsetTicks = 0)
+        {
+            LastReceiveMessageTime = DateTime.UtcNow.Ticks + offsetTicks;
+        }
+
+        /// <summary>
+        /// 获取最后接收消息到现在的时间。单位秒
+        /// </summary>
+        /// <param name="utcTime"></param>
+        /// <returns></returns>
+        public long GetLastMessageTimeSecond(in DateTime utcTime)
+        {
+            return (utcTime.Ticks - LastReceiveMessageTime) / 10000_000;
         }
 
         /// <summary>
