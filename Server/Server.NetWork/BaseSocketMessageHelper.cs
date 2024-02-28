@@ -5,17 +5,17 @@ namespace Server.NetWork.TCPSocket
         /// <summary>
         /// 消息处理器。根据消息Id查找消息的处理器
         /// </summary>
-        public Func<int, IMessageHandler> MessageHandler { get; set; }
+        public Func<int, IMessageHandler> MessageHandler { get;protected set; }
 
         /// <summary>
         /// 根据消息Id查找消息类型
         /// </summary>
-        public Func<int, Type> MessageTypeByIdGetter { get; set; }
+        public Func<int, Type> MessageTypeByIdGetter { get; protected set; }
 
         /// <summary>
         /// 根据消息类型查找消息ID
         /// </summary>
-        public Func<Type, int> MessageIdByTypeGetter { get; set; }
+        public Func<Type, int> MessageIdByTypeGetter { get; protected set; }
 
         /// <summary>
         /// 构建基础的消息帮助器
