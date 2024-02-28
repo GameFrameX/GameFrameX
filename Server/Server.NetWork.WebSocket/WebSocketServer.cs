@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using NLog.Web;
 using Server.Utility;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Server.NetWork.WebSocket
 {
@@ -18,9 +17,9 @@ namespace Server.NetWork.WebSocket
     {
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication? App { get; set; }
-        public static IMessageHelper MessageHelper { get; private set; }
+        public static IMessageHelper? MessageHelper { get; private set; }
 
-        public static Task Start(int wsPort, int wssPort,string wssCertFilePath, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
+        public static Task Start(int wsPort, int wssPort, string wssCertFilePath, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
         {
             Guard.NotNull(messageHelper, nameof(messageHelper));
             Guard.NotNull(handler, nameof(handler));
