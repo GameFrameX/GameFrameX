@@ -17,7 +17,7 @@ namespace Server.NetWork.WebSocket
     public static class WebSocketServer
     {
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-        private static WebApplication App { get; set; }
+        private static WebApplication? App { get; set; }
         public static IMessageHelper MessageHelper { get; private set; }
 
         public static Task Start(int wsPort, int wssPort,string wssCertFilePath, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
