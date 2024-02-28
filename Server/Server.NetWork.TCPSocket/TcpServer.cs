@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 using Server.Utility;
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Server.NetWork.TCPSocket
 {
@@ -17,7 +16,7 @@ namespace Server.NetWork.TCPSocket
     {
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication? App { get; set; }
-        public static IMessageHelper MessageHelper { get; private set; }
+        public static IMessageHelper? MessageHelper { get; private set; }
 
         public static Task Start(int port, IMessageHelper messageHelper, Action<ListenOptions>? configure = null)
         {
