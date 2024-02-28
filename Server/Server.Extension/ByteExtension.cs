@@ -148,21 +148,7 @@ namespace Server.Extension
             offset += LongSize;
         }
 
-        /*public static void Write(this Span<byte> buffer, TempNetPackage package, ref int offset)
-        {
-            if (buffer.Length - offset < package.Length)
-            {
-                throw new ArgumentException($"Write out of index {buffer.Length}, {package.Length}");
-            }
-            buffer[offset] = package.flag;
-            offset++;
-            buffer.Write(package.netId, ref offset);
-            buffer.Write(package.innerServerId, ref offset);
-            if (!package.body.IsEmpty)
-            {
-                package.body.CopyTo(buffer[offset..]);
-            }
-        }*/
+
        
         public static ArraySegment<byte> GetArray(this ReadOnlyMemory<byte> memory)
         {
