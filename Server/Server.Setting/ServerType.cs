@@ -28,5 +28,15 @@ public enum ServerType
     ///<summary>
     /// 远程备份
     /// </summary>
-    Backup = 4
+    Backup = 4,
+
+    /// <summary>
+    /// 服务发现服
+    /// </summary>
+    Discovery = 5,
+
+    /// <summary>
+    /// 网关服
+    /// </summary>
+    Gate
 }
