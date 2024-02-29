@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.UDPSocket", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.KCPSocket", "Server.NetWork.KCPSocket\Server.NetWork.KCPSocket.csproj", "{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.RPCSocket", "Server.NetWork.RPCSocket\Server.NetWork.RPCSocket.csproj", "{B0F0C270-E4A2-4E66-A9BF-477603A63ACA}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.EntryUtility", "Server.EntryUtility\Server.EntryUtility.csproj", "{C1AF76BF-A50D-4B00-801C-306E3A06C0A1}"
 EndProject
 Global
@@ -149,6 +151,10 @@ Global
 		{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C04DAD1-5FAF-4281-B33D-761E5769C1C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0F0C270-E4A2-4E66-A9BF-477603A63ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0F0C270-E4A2-4E66-A9BF-477603A63ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0F0C270-E4A2-4E66-A9BF-477603A63ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0F0C270-E4A2-4E66-A9BF-477603A63ACA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1AF76BF-A50D-4B00-801C-306E3A06C0A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C1AF76BF-A50D-4B00-801C-306E3A06C0A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1AF76BF-A50D-4B00-801C-306E3A06C0A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
