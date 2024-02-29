@@ -1,4 +1,5 @@
 ﻿using Server.Apps.Player.Player.Component;
+using Server.Constants;
 using Server.Launcher.Common;
 using Server.Launcher.Common.Session;
 using Server.Hotfix.Player.Role.Bag.Agent;
@@ -11,7 +12,7 @@ namespace Server.Hotfix.Player.Role.Role.Agent
     {
         private static readonly NLog.Logger LOGGER = LogManager.GetCurrentClassLogger();
 
-        public static async Task NotifyClient(this IComponentAgent agent, MessageObject msg, int uniId = 0, StateCode code = StateCode.Success)
+        public static async Task NotifyClient(this IComponentAgent agent, MessageObject msg, int uniId = 0, OperationStatusCode code = OperationStatusCode.Success)
         {
             var roleComp = await agent.GetComponentAgent<RoleComponentAgent>();
             if (roleComp != null)
@@ -81,7 +82,7 @@ namespace Server.Hotfix.Player.Role.Role.Agent
             return Task.CompletedTask;
         }
 
-        public void NotifyClient(MessageObject msg, int uniId = 0, StateCode code = StateCode.Success)
+        public void NotifyClient(MessageObject msg, int uniId = 0, OperationStatusCode code = OperationStatusCode.Success)
         {
             var channel = SessionManager.GetChannel(ActorId);
             if (channel != null && !channel.IsClose())

@@ -1,5 +1,6 @@
 ﻿using Server.Apps.Account.Login.Component;
 using Server.Apps.Account.Login.Entity;
+using Server.Constants;
 using Server.Launcher.Common;
 using Server.Core.Net;
 using Server.NetWork;
@@ -12,7 +13,7 @@ namespace Server.Hotfix.Account.Login.Agent
         {
             if (string.IsNullOrEmpty(reqLogin.UserName))
             {
-                channel.WriteAsync(null, reqLogin.UniId, (int)StateCode.AccountCannotBeNull);
+                channel.WriteAsync(null, reqLogin.UniId, (int)OperationStatusCode.AccountCannotBeNull);
                 return;
             }
 

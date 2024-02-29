@@ -1,3 +1,4 @@
+using Server.Constants;
 using Server.Launcher.Common;
 using Server.NetWork;
 using Server.NetWork.Messages;
@@ -14,7 +15,7 @@ public static class NetChannelExtensions
     /// <param name="uniId">唯一ID。</param>
     /// <param name="code">状态码。</param>
     /// <param name="desc">描述。</param>
-    public static void WriteAsync(this BaseNetChannel channel, MessageObject msg, int uniId, StateCode code = StateCode.Success, string desc = "")
+    public static void WriteAsync(this BaseNetChannel channel, MessageObject msg, int uniId, OperationStatusCode code = OperationStatusCode.Success, string desc = "")
     {
         if (msg != null)
         {
