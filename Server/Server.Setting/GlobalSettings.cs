@@ -8,7 +8,7 @@ namespace Server.Setting;
 public static class GlobalSettings
 {
     private static BaseSetting _instance = null!;
-
+    public static BaseSetting Instance => _instance;
     public static void Load<T>(string path, ServerType serverType) where T : BaseSetting
     {
         var configJson = File.ReadAllText(path);
@@ -142,4 +142,5 @@ public static class GlobalSettings
     public static int SDKType => _instance.SDKType;
 
     public static string WssCertFilePath => _instance.WssCertFilePath;
+    public static Task<bool> AppExitToken => _instance.AppExitToken;
 }

@@ -2,6 +2,10 @@ namespace Server.Setting;
 
 public abstract class BaseSetting
 {
+    private static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
+    public TaskCompletionSource<bool> AppExitSource = new TaskCompletionSource<bool>();
+    public Task<bool> AppExitToken => AppExitSource.Task;
+
     /// <summary>
     /// 是否是本地
     /// </summary>
@@ -17,10 +21,35 @@ public abstract class BaseSetting
     /// </summary>
     public DateTime LaunchTime { get; set; }
 
-    /// <summary>
-    /// 是否正在运行中
-    /// </summary>
-    public volatile bool AppRunning = false;
+    bool _appRunning;
+
+    public bool AppRunning
+    {
+        get => _appRunning;
+        set
+        {
+            lock (AppExitSource)
+            {
+                if (AppExitSource.Task.IsCanceled)
+                {
+                    if (value)
+                    {
+                        LOGGER.Error("AppRunning已经被设置为退出，不能再次开启...");
+                    }
+
+                    _appRunning = false;
+                    return;
+                }
+
+                _appRunning = value;
+                if (!value && !AppExitSource.Task.IsCompleted)
+                {
+                    LOGGER.Info("Set AppRunning false...");
+                    AppExitSource.TrySetCanceled();
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// 服务器类型
