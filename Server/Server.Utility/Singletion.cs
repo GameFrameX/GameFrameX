@@ -16,21 +16,18 @@
         {
             get
             {
-                lock (LockObject)
+                if (_instance == null)
                 {
-                    if (_instance == null)
+                    lock (LockObject)
                     {
-                        lock (LockObject)
+                        if (_instance == null)
                         {
-                            if (_instance == null)
-                            {
-                                _instance = new T();
-                            }
+                            _instance = new T();
                         }
                     }
-
-                    return _instance;
                 }
+
+                return _instance;
             }
         }
     }
