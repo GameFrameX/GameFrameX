@@ -1,68 +1,67 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
 namespace Server.NetWork.UDPSocket
 {
     /// <summary>
-    /// UDP server is used to send or multicast datagrams to UDP endpoints
+    /// UDP client is used to read/write data from/into the connected UDP server
     /// </summary>
     /// <remarks>Thread-safe</remarks>
-    public class UdpServer : IDisposable
+    public class UdpClient : IDisposable
     {
         /// <summary>
-        /// Initialize UDP server with a given IP address and port number
+        /// Initialize UDP client with a given server IP address and port number
         /// </summary>
         /// <param name="address">IP address</param>
         /// <param name="port">Port number</param>
-        public UdpServer(IPAddress address, int port) : this(new IPEndPoint(address, port))
+        public UdpClient(IPAddress address, int port) : this(new IPEndPoint(address, port))
         {
         }
 
         /// <summary>
-        /// Initialize UDP server with a given IP address and port number
+        /// Initialize UDP client with a given server IP address and port number
         /// </summary>
         /// <param name="address">IP address</param>
         /// <param name="port">Port number</param>
-        public UdpServer(string address, int port) : this(new IPEndPoint(IPAddress.Parse(address), port))
+        public UdpClient(string address, int port) : this(new IPEndPoint(IPAddress.Parse(address), port))
         {
         }
 
         /// <summary>
-        /// Initialize UDP server with a given DNS endpoint
+        /// Initialize UDP client with a given DNS endpoint
         /// </summary>
         /// <param name="endpoint">DNS endpoint</param>
-        public UdpServer(DnsEndPoint endpoint) : this(endpoint as EndPoint, endpoint.Host, endpoint.Port)
+        public UdpClient(DnsEndPoint endpoint) : this(endpoint as EndPoint, endpoint.Host, endpoint.Port)
         {
         }
 
         /// <summary>
-        /// Initialize UDP server with a given IP endpoint
+        /// Initialize UDP client with a given IP endpoint
         /// </summary>
         /// <param name="endpoint">IP endpoint</param>
-        public UdpServer(IPEndPoint endpoint) : this(endpoint as EndPoint, endpoint.Address.ToString(), endpoint.Port)
+        public UdpClient(IPEndPoint endpoint) : this(endpoint as EndPoint, endpoint.Address.ToString(), endpoint.Port)
         {
         }
 
         /// <summary>
-        /// Initialize UDP server with a given endpoint, address and port
+        /// Initialize UDP client with a given endpoint, address and port
         /// </summary>
         /// <param name="endpoint">Endpoint</param>
         /// <param name="address">Server address</param>
         /// <param name="port">Server port</param>
-        private UdpServer(EndPoint endpoint, string address, int port)
+        private UdpClient(EndPoint endpoint, string address, int port)
         {
-            Id = Guid.NewGuid();
+            Id = Guid.NewGuid().ToString("N");
             Address = address;
             Port = port;
             Endpoint = endpoint;
         }
 
         /// <summary>
-        /// Server Id
+        /// Client Id
         /// </summary>
-        public Guid Id { get; }
+        public string Id { get; }
 
         /// <summary>
         /// UDP server address
@@ -80,42 +79,37 @@ namespace Server.NetWork.UDPSocket
         public EndPoint Endpoint { get; private set; }
 
         /// <summary>
-        /// Multicast endpoint
-        /// </summary>
-        public EndPoint MulticastEndpoint { get; private set; }
-
-        /// <summary>
         /// Socket
         /// </summary>
         public Socket Socket { get; private set; }
 
         /// <summary>
-        /// Number of bytes pending sent by the server
+        /// Number of bytes pending sent by the client
         /// </summary>
         public long BytesPending { get; private set; }
 
         /// <summary>
-        /// Number of bytes sending by the server
+        /// Number of bytes sending by the client
         /// </summary>
         public long BytesSending { get; private set; }
 
         /// <summary>
-        /// Number of bytes sent by the server
+        /// Number of bytes sent by the client
         /// </summary>
         public long BytesSent { get; private set; }
 
         /// <summary>
-        /// Number of bytes received by the server
+        /// Number of bytes received by the client
         /// </summary>
         public long BytesReceived { get; private set; }
 
         /// <summary>
-        /// Number of datagrams sent by the server
+        /// Number of datagrams sent by the client
         /// </summary>
         public long DatagramsSent { get; private set; }
 
         /// <summary>
-        /// Number of datagrams received by the server
+        /// Number of datagrams received by the client
         /// </summary>
         public long DatagramsReceived { get; private set; }
 
@@ -145,6 +139,11 @@ namespace Server.NetWork.UDPSocket
         public bool OptionExclusiveAddressUse { get; set; }
 
         /// <summary>
+        /// Option: bind the socket to the multicast UDP server
+        /// </summary>
+        public bool OptionMulticast { get; set; }
+
+        /// <summary>
         /// Option: receive buffer limit
         /// </summary>
         public int OptionReceiveBufferLimit { get; set; } = 0;
@@ -167,9 +166,9 @@ namespace Server.NetWork.UDPSocket
         #region Connect/Disconnect client
 
         /// <summary>
-        /// Is the server started?
+        /// Is the client connected?
         /// </summary>
-        public bool IsStarted { get; private set; }
+        public bool IsConnected { get; private set; }
 
         /// <summary>
         /// Create a new socket object
@@ -184,13 +183,12 @@ namespace Server.NetWork.UDPSocket
         }
 
         /// <summary>
-        /// Start the server (synchronous)
+        /// Connect the client (synchronous)
         /// </summary>
-        /// <returns>'true' if the server was successfully started, 'false' if the server failed to start</returns>
-        public virtual bool Start()
+        /// <returns>'true' if the client was successfully connected, 'false' if the client failed to connect</returns>
+        public virtual bool Connect()
         {
-            Debug.Assert(!IsStarted, "UDP server is already started!");
-            if (IsStarted)
+            if (IsConnected)
                 return false;
 
             // Setup buffers
@@ -203,27 +201,61 @@ namespace Server.NetWork.UDPSocket
             _sendEventArg = new SocketAsyncEventArgs();
             _sendEventArg.Completed += OnAsyncCompleted;
 
-            // Create a new server socket
+            // Create a new client socket
             Socket = CreateSocket();
 
-            // Update the server socket disposed flag
+            // Update the client socket disposed flag
             IsSocketDisposed = false;
 
             // Apply the option: reuse address
             Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, OptionReuseAddress);
             // Apply the option: exclusive address use
             Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ExclusiveAddressUse, OptionExclusiveAddressUse);
-            // Apply the option: dual mode (this option must be applied before recieving)
+            // Apply the option: dual mode (this option must be applied before recieving/sending)
             if (Socket.AddressFamily == AddressFamily.InterNetworkV6)
                 Socket.DualMode = OptionDualMode;
 
-            // Bind the server socket to the endpoint
-            Socket.Bind(Endpoint);
-            // Refresh the endpoint property based on the actual endpoint created
-            Endpoint = Socket.LocalEndPoint;
+            // Call the client connecting handler
+            OnConnecting();
 
-            // Call the server starting handler
-            OnStarting();
+            try
+            {
+                // Bind the acceptor socket to the endpoint
+                if (OptionMulticast)
+                    Socket.Bind(Endpoint);
+                else
+                {
+                    var endpoint = new IPEndPoint((Endpoint.AddressFamily == AddressFamily.InterNetworkV6) ? IPAddress.IPv6Any : IPAddress.Any, 0);
+                    Socket.Bind(endpoint);
+                }
+            }
+            catch (SocketException ex)
+            {
+                // Call the client error handler
+                SendError(ex.SocketErrorCode);
+
+                // Reset event args
+                _receiveEventArg.Completed -= OnAsyncCompleted;
+                _sendEventArg.Completed -= OnAsyncCompleted;
+
+                // Call the client disconnecting handler
+                OnDisconnecting();
+
+                // Close the client socket
+                Socket.Close();
+
+                // Dispose the client socket
+                Socket.Dispose();
+
+                // Dispose event arguments
+                _receiveEventArg.Dispose();
+                _sendEventArg.Dispose();
+
+                // Call the client disconnected handler
+                OnDisconnected();
+
+                return false;
+            }
 
             // Prepare receive endpoint
             _receiveEndpoint = new IPEndPoint((Endpoint.AddressFamily == AddressFamily.InterNetworkV6) ? IPAddress.IPv6Any : IPAddress.Any, 0);
@@ -239,80 +271,52 @@ namespace Server.NetWork.UDPSocket
             DatagramsSent = 0;
             DatagramsReceived = 0;
 
-            // Update the started flag
-            IsStarted = true;
+            // Update the connected flag
+            IsConnected = true;
 
-            // Call the server started handler
-            OnStarted();
+            // Call the client connected handler
+            OnConnected();
 
             return true;
         }
 
         /// <summary>
-        /// Start the server with a given multicast IP address and port number (synchronous)
+        /// Disconnect the client (synchronous)
         /// </summary>
-        /// <param name="multicastAddress">Multicast IP address</param>
-        /// <param name="multicastPort">Multicast port number</param>
-        /// <returns>'true' if the server was successfully started, 'false' if the server failed to start</returns>
-        public virtual bool Start(IPAddress multicastAddress, int multicastPort) => Start(new IPEndPoint(multicastAddress, multicastPort));
-
-        /// <summary>
-        /// Start the server with a given multicast IP address and port number (synchronous)
-        /// </summary>
-        /// <param name="multicastAddress">Multicast IP address</param>
-        /// <param name="multicastPort">Multicast port number</param>
-        /// <returns>'true' if the server was successfully started, 'false' if the server failed to start</returns>
-        public virtual bool Start(string multicastAddress, int multicastPort) => Start(new IPEndPoint(IPAddress.Parse(multicastAddress), multicastPort));
-
-        /// <summary>
-        /// Start the server with a given multicast endpoint (synchronous)
-        /// </summary>
-        /// <param name="multicastEndpoint">Multicast endpoint</param>
-        /// <returns>'true' if the server was successfully started, 'false' if the server failed to start</returns>
-        public virtual bool Start(EndPoint multicastEndpoint)
+        /// <returns>'true' if the client was successfully disconnected, 'false' if the client is already disconnected</returns>
+        public virtual bool Disconnect()
         {
-            MulticastEndpoint = multicastEndpoint;
-            return Start();
-        }
-
-        /// <summary>
-        /// Stop the server (synchronous)
-        /// </summary>
-        /// <returns>'true' if the server was successfully stopped, 'false' if the server is already stopped</returns>
-        public virtual bool Stop()
-        {
-            Debug.Assert(IsStarted, "UDP server is not started!");
-            if (!IsStarted)
+            if (!IsConnected)
                 return false;
 
             // Reset event args
             _receiveEventArg.Completed -= OnAsyncCompleted;
             _sendEventArg.Completed -= OnAsyncCompleted;
 
-            // Call the server stopping handler
-            OnStopping();
+            // Call the client disconnecting handler
+            OnDisconnecting();
 
             try
             {
-                // Close the server socket
+                // Close the client socket
                 Socket.Close();
 
-                // Dispose the server socket
+                // Dispose the client socket
                 Socket.Dispose();
 
                 // Dispose event arguments
                 _receiveEventArg.Dispose();
                 _sendEventArg.Dispose();
 
-                // Update the server socket disposed flag
+                // Update the client socket disposed flag
                 IsSocketDisposed = true;
             }
             catch (ObjectDisposedException)
             {
             }
 
-            // Update the started flag
-            IsStarted = false;
+            // Update the connected flag
+            IsConnected = false;
 
             // Update sending/receiving flags
             _receiving = false;
@@ -321,22 +325,84 @@ namespace Server.NetWork.UDPSocket
             // Clear send/receive buffers
             ClearBuffers();
 
-            // Call the server stopped handler
-            OnStopped();
+            // Call the client disconnected handler
+            OnDisconnected();
 
             return true;
         }
 
         /// <summary>
-        /// Restart the server (synchronous)
+        /// Reconnect the client (synchronous)
         /// </summary>
-        /// <returns>'true' if the server was successfully restarted, 'false' if the server failed to restart</returns>
-        public virtual bool Restart()
+        /// <returns>'true' if the client was successfully reconnected, 'false' if the client is already reconnected</returns>
+        public virtual bool Reconnect()
         {
-            if (!Stop())
+            if (!Disconnect())
                 return false;
 
-            return Start();
+            return Connect();
+        }
+
+        #endregion
+
+        #region Multicast group
+
+        /// <summary>
+        /// Setup multicast: bind the socket to the multicast UDP server
+        /// </summary>
+        /// <param name="enable">Enable/disable multicast</param>
+        public virtual void SetupMulticast(bool enable)
+        {
+            OptionReuseAddress = enable;
+            OptionMulticast = enable;
+        }
+
+        /// <summary>
+        /// Join multicast group with a given IP address (synchronous)
+        /// </summary>
+        /// <param name="address">IP address</param>
+        public virtual void JoinMulticastGroup(IPAddress address)
+        {
+            if (Endpoint.AddressFamily == AddressFamily.InterNetworkV6)
+                Socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.AddMembership, new IPv6MulticastOption(address));
+            else
+                Socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(address));
+
+            // Call the client joined multicast group notification
+            OnJoinedMulticastGroup(address);
+        }
+
+        /// <summary>
+        /// Join multicast group with a given IP address (synchronous)
+        /// </summary>
+        /// <param name="address">IP address</param>
+        public virtual void JoinMulticastGroup(string address)
+        {
+            JoinMulticastGroup(IPAddress.Parse(address));
+        }
+
+        /// <summary>
+        /// Leave multicast group with a given IP address (synchronous)
+        /// </summary>
+        /// <param name="address">IP address</param>
+        public virtual void LeaveMulticastGroup(IPAddress address)
+        {
+            if (Endpoint.AddressFamily == AddressFamily.InterNetworkV6)
+                Socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.DropMembership, new IPv6MulticastOption(address));
+            else
+                Socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.DropMembership, new MulticastOption(address));
+
+            // Call the client left multicast group notification
+            OnLeftMulticastGroup(address);
+        }
+
+        /// <summary>
+        /// Leave multicast group with a given IP address (synchronous)
+        /// </summary>
+        /// <param name="address">IP address</param>
+        public virtual void LeaveMulticastGroup(string address)
+        {
+            LeaveMulticastGroup(IPAddress.Parse(address));
         }
 
         #endregion
@@ -358,80 +424,6 @@ namespace Server.NetWork.UDPSocket
         private bool _sending;
         private SocketBuffer sendSocketBuffer;
         private SocketAsyncEventArgs _sendEventArg;
-
-        /// <summary>
-        /// Multicast datagram to the prepared mulicast endpoint (synchronous)
-        /// </summary>
-        /// <param name="buffer">Datagram buffer to multicast</param>
-        /// <returns>Size of multicasted datagram</returns>
-        public virtual long Multicast(byte[] buffer) => Multicast(buffer.AsSpan());
-
-        /// <summary>
-        /// Multicast datagram to the prepared mulicast endpoint (synchronous)
-        /// </summary>
-        /// <param name="buffer">Datagram buffer to multicast</param>
-        /// <param name="offset">Datagram buffer offset</param>
-        /// <param name="size">Datagram buffer size</param>
-        /// <returns>Size of multicasted datagram</returns>
-        public virtual long Multicast(byte[] buffer, long offset, long size) => Multicast(buffer.AsSpan((int)offset, (int)size));
-
-        /// <summary>
-        /// Multicast datagram to the prepared mulicast endpoint (synchronous)
-        /// </summary>
-        /// <param name="buffer">Datagram buffer to multicast as a span of bytes</param>
-        /// <returns>Size of multicasted datagram</returns>
-        public virtual long Multicast(ReadOnlySpan<byte> buffer) => Send(MulticastEndpoint, buffer);
-
-        /// <summary>
-        /// Multicast text to the prepared mulicast endpoint (synchronous)
-        /// </summary>
-        /// <param name="text">Text string to multicast</param>
-        /// <returns>Size of multicasted datagram</returns>
-        public virtual long Multicast(string text) => Multicast(Encoding.UTF8.GetBytes(text));
-
-        /// <summary>
-        /// Multicast text to the prepared mulicast endpoint (synchronous)
-        /// </summary>
-        /// <param name="text">Text to multicast as a span of characters</param>
-        /// <returns>Size of multicasted datagram</returns>
-        public virtual long Multicast(ReadOnlySpan<char> text) => Multicast(Encoding.UTF8.GetBytes(text.ToArray()));
-
-        /// <summary>
-        /// Multicast datagram to the prepared mulicast endpoint (asynchronous)
-        /// </summary>
-        /// <param name="buffer">Datagram buffer to multicast</param>
-        /// <returns>'true' if the datagram was successfully multicasted, 'false' if the datagram was not multicasted</returns>
-        public virtual bool MulticastAsync(byte[] buffer) => MulticastAsync(buffer.AsSpan());
-
-        /// <summary>
-        /// Multicast datagram to the prepared mulicast endpoint (asynchronous)
-        /// </summary>
-        /// <param name="buffer">Datagram buffer to multicast</param>
-        /// <param name="offset">Datagram buffer offset</param>
-        /// <param name="size">Datagram buffer size</param>
-        /// <returns>'true' if the datagram was successfully multicasted, 'false' if the datagram was not multicasted</returns>
-        public virtual bool MulticastAsync(byte[] buffer, long offset, long size) => MulticastAsync(buffer.AsSpan((int)offset, (int)size));
-
-        /// <summary>
-        /// Multicast datagram to the prepared mulicast endpoint (asynchronous)
-        /// </summary>
-        /// <param name="buffer">Datagram buffer to multicast as a span of bytes</param>
-        /// <returns>'true' if the datagram was successfully multicasted, 'false' if the datagram was not multicasted</returns>
-        public virtual bool MulticastAsync(ReadOnlySpan<byte> buffer) => SendAsync(MulticastEndpoint, buffer);
-
-        /// <summary>
-        /// Multicast text to the prepared mulicast endpoint (asynchronous)
-        /// </summary>
-        /// <param name="text">Text string to multicast</param>
-        /// <returns>'true' if the text was successfully multicasted, 'false' if the text was not multicasted</returns>
-        public virtual bool MulticastAsync(string text) => MulticastAsync(Encoding.UTF8.GetBytes(text));
-
-        /// <summary>
-        /// Multicast text to the prepared mulicast endpoint (asynchronous)
-        /// </summary>
-        /// <param name="text">Text to multicast as a span of characters</param>
-        /// <returns>'true' if the text was successfully multicasted, 'false' if the text was not multicasted</returns>
-        public virtual bool MulticastAsync(ReadOnlySpan<char> text) => MulticastAsync(Encoding.UTF8.GetBytes(text.ToArray()));
 
         /// <summary>
         /// Send datagram to the connected server (synchronous)
@@ -496,7 +488,7 @@ namespace Server.NetWork.UDPSocket
         /// <returns>Size of sent datagram</returns>
         public virtual long Send(EndPoint endpoint, ReadOnlySpan<byte> buffer)
         {
-            if (!IsStarted)
+            if (!IsConnected)
                 return 0;
 
             if (buffer.IsEmpty)
@@ -504,7 +496,7 @@ namespace Server.NetWork.UDPSocket
 
             try
             {
-                // Sent datagram to the client
+                // Sent datagram to the server
                 long sent = Socket.SendTo(buffer, SocketFlags.None, endpoint);
                 if (sent > 0)
                 {
@@ -525,6 +517,7 @@ namespace Server.NetWork.UDPSocket
             catch (SocketException ex)
             {
                 SendError(ex.SocketErrorCode);
+                Disconnect();
                 return 0;
             }
         }
@@ -544,6 +537,43 @@ namespace Server.NetWork.UDPSocket
         /// <param name="text">Text to send as a span of characters</param>
         /// <returns>Size of sent datagram</returns>
         public virtual long Send(EndPoint endpoint, ReadOnlySpan<char> text) => Send(endpoint, Encoding.UTF8.GetBytes(text.ToArray()));
+
+        /// <summary>
+        /// Send datagram to the connected server (asynchronous)
+        /// </summary>
+        /// <param name="buffer">Datagram buffer to send</param>
+        /// <returns>'true' if the datagram was successfully sent, 'false' if the datagram was not sent</returns>
+        public virtual bool SendAsync(byte[] buffer) => SendAsync(buffer.AsSpan());
+
+        /// <summary>
+        /// Send datagram to the connected server (asynchronous)
+        /// </summary>
+        /// <param name="buffer">Datagram buffer to send</param>
+        /// <param name="offset">Datagram buffer offset</param>
+        /// <param name="size">Datagram buffer size</param>
+        /// <returns>'true' if the datagram was successfully sent, 'false' if the datagram was not sent</returns>
+        public virtual bool SendAsync(byte[] buffer, long offset, long size) => SendAsync(buffer.AsSpan((int)offset, (int)size));
+
+        /// <summary>
+        /// Send datagram to the connected server (asynchronous)
+        /// </summary>
+        /// <param name="buffer">Datagram buffer to send as a span of bytes</param>
+        /// <returns>'true' if the datagram was successfully sent, 'false' if the datagram was not sent</returns>
+        public virtual bool SendAsync(ReadOnlySpan<byte> buffer) => SendAsync(Endpoint, buffer);
+
+        /// <summary>
+        /// Send text to the connected server (asynchronous)
+        /// </summary>
+        /// <param name="text">Text string to send</param>
+        /// <returns>'true' if the text was successfully sent, 'false' if the text was not sent</returns>
+        public virtual bool SendAsync(string text) => SendAsync(Encoding.UTF8.GetBytes(text));
+
+        /// <summary>
+        /// Send text to the connected server (asynchronous)
+        /// </summary>
+        /// <param name="text">Text to send as a span of characters</param>
+        /// <returns>'true' if the text was successfully sent, 'false' if the text was not sent</returns>
+        public virtual bool SendAsync(ReadOnlySpan<char> text) => SendAsync(Encoding.UTF8.GetBytes(text.ToArray()));
 
         /// <summary>
         /// Send datagram to the given endpoint (asynchronous)
@@ -574,7 +604,7 @@ namespace Server.NetWork.UDPSocket
             if (_sending)
                 return false;
 
-            if (!IsStarted)
+            if (!IsConnected)
                 return false;
 
             if (buffer.IsEmpty)
@@ -639,7 +669,7 @@ namespace Server.NetWork.UDPSocket
         /// <returns>Size of received datagram</returns>
         public virtual long Receive(ref EndPoint endpoint, byte[] buffer, long offset, long size)
         {
-            if (!IsStarted)
+            if (!IsConnected)
                 return 0;
 
             if (size == 0)
@@ -647,7 +677,7 @@ namespace Server.NetWork.UDPSocket
 
             try
             {
-                // Receive datagram from the client
+                // Receive datagram from the server
                 long received = Socket.ReceiveFrom(buffer, (int)offset, (int)size, SocketFlags.None, ref endpoint);
 
                 // Update statistic
@@ -666,6 +696,7 @@ namespace Server.NetWork.UDPSocket
             catch (SocketException ex)
             {
                 SendError(ex.SocketErrorCode);
+                Disconnect();
                 return 0;
             }
         }
@@ -684,7 +715,7 @@ namespace Server.NetWork.UDPSocket
         }
 
         /// <summary>
-        /// Receive datagram from the client (asynchronous)
+        /// Receive datagram from the server (asynchronous)
         /// </summary>
         public virtual void ReceiveAsync()
         {
@@ -700,7 +731,7 @@ namespace Server.NetWork.UDPSocket
             if (_receiving)
                 return;
 
-            if (!IsStarted)
+            if (!IsConnected)
                 return;
 
             try
@@ -725,7 +756,7 @@ namespace Server.NetWork.UDPSocket
             if (_sending)
                 return;
 
-            if (!IsStarted)
+            if (!IsConnected)
                 return;
 
             try
@@ -788,21 +819,18 @@ namespace Server.NetWork.UDPSocket
         {
             _receiving = false;
 
-            if (!IsStarted)
+            if (!IsConnected)
                 return;
 
-            // Check for error
+            // Disconnect on error
             if (e.SocketError != SocketError.Success)
             {
                 SendError(e.SocketError);
-
-                // Call the datagram received zero handler
-                OnReceived(e.RemoteEndPoint, receiveSocketBuffer.Data, 0, 0);
-
+                Disconnect();
                 return;
             }
 
-            // Received some data from the client
+            // Received some data from the server
             long size = e.BytesTransferred;
 
             // Update statistic
@@ -819,10 +847,7 @@ namespace Server.NetWork.UDPSocket
                 if (((2 * size) > OptionReceiveBufferLimit) && (OptionReceiveBufferLimit > 0))
                 {
                     SendError(SocketError.NoBufferSpaceAvailable);
-
-                    // Call the datagram received zero handler
-                    OnReceived(e.RemoteEndPoint, receiveSocketBuffer.Data, 0, 0);
-
+                    Disconnect();
                     return;
                 }
 
@@ -837,23 +862,20 @@ namespace Server.NetWork.UDPSocket
         {
             _sending = false;
 
-            if (!IsStarted)
+            if (!IsConnected)
                 return;
 
-            // Check for error
+            // Disconnect on error
             if (e.SocketError != SocketError.Success)
             {
                 SendError(e.SocketError);
-
-                // Call the buffer sent zero handler
-                OnSent(_sendEndpoint, 0);
-
+                Disconnect();
                 return;
             }
 
             long sent = e.BytesTransferred;
 
-            // Send some data to the client
+            // Send some data to the server
             if (sent > 0)
             {
                 // Update statistic
@@ -870,33 +892,49 @@ namespace Server.NetWork.UDPSocket
 
         #endregion
 
-        #region Datagram handlers
+        #region Session handlers
 
         /// <summary>
-        /// Handle server starting notification
+        /// Handle client connecting notification
         /// </summary>
-        protected virtual void OnStarting()
+        protected virtual void OnConnecting()
         {
         }
 
         /// <summary>
-        /// Handle server started notification
+        /// Handle client connected notification
         /// </summary>
-        protected virtual void OnStarted()
+        protected virtual void OnConnected()
         {
         }
 
         /// <summary>
-        /// Handle server stopping notification
+        /// Handle client disconnecting notification
         /// </summary>
-        protected virtual void OnStopping()
+        protected virtual void OnDisconnecting()
         {
         }
 
         /// <summary>
-        /// Handle server stopped notification
+        /// Handle client disconnected notification
         /// </summary>
-        protected virtual void OnStopped()
+        protected virtual void OnDisconnected()
+        {
+        }
+
+        /// <summary>
+        /// Handle client joined multicast group notification
+        /// </summary>
+        /// <param name="address">IP address</param>
+        protected virtual void OnJoinedMulticastGroup(IPAddress address)
+        {
+        }
+
+        /// <summary>
+        /// Handle client left multicast group notification
+        /// </summary>
+        /// <param name="address">IP address</param>
+        protected virtual void OnLeftMulticastGroup(IPAddress address)
         {
         }
 
@@ -920,8 +958,8 @@ namespace Server.NetWork.UDPSocket
         /// <param name="endpoint">Endpoint of sent datagram</param>
         /// <param name="sent">Size of sent datagram buffer</param>
         /// <remarks>
-        /// Notification is called when a datagram was sent to the client.
-        /// This handler could be used to send another datagram to the client for instance when the pending size is zero.
+        /// Notification is called when a datagram was sent to the server.
+        /// This handler could be used to send another datagram to the server for instance when the pending size is zero.
         /// </remarks>
         protected virtual void OnSent(EndPoint endpoint, long sent)
         {
@@ -966,7 +1004,7 @@ namespace Server.NetWork.UDPSocket
         public bool IsDisposed { get; private set; }
 
         /// <summary>
-        /// Server socket disposed flag
+        /// Client socket disposed flag
         /// </summary>
         public bool IsSocketDisposed { get; private set; } = true;
 
@@ -996,7 +1034,7 @@ namespace Server.NetWork.UDPSocket
                 if (disposingManagedResources)
                 {
                     // Dispose managed resources here...
-                    Stop();
+                    Disconnect();
                 }
 
                 // Dispose unmanaged resources here...
