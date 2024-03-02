@@ -3,6 +3,7 @@ namespace Server.Setting;
 /// <summary>
 /// 服务器类型
 /// </summary>
+[Flags]
 public enum ServerType
 {
     /// <summary>
