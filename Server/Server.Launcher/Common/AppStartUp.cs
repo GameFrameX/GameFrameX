@@ -15,7 +15,7 @@ namespace Server.Launcher.Common
     {
         static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
-        public static async Task Enter()
+        public static async Task Enter(ServerType serverType)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace Server.Launcher.Common
                     Directory.CreateDirectory(hotfixPath);
                 }
 
-                GlobalSettings.Load<AppSetting>("Configs/app_config.json", ServerType.Game);
+                GlobalSettings.Load<AppSetting>($"Configs/app_config.{serverType.ToString()}.json", serverType);
                 var flag = LoggerHandler.Start();
                 if (!flag)
                 {

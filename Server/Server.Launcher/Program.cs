@@ -1,6 +1,7 @@
 ﻿using NLog;
 using Server.EntryUtility;
 using Server.Launcher.Common;
+using Server.Setting;
 
 namespace Server.Launcher
 {
@@ -10,7 +11,7 @@ namespace Server.Launcher
 
         static async Task Main(string[] args)
         {
-            await AppEnter.Entry(AppStartUp.Enter, Log, args);
+            await AppEnter.Entry(AppStartUp.Enter, ServerType.All, Log, args);
         }
     }
 }

@@ -17,13 +17,13 @@ namespace Server.EntryUtility
         private static volatile Task? _gameLoopTask = null;
         private static volatile Task? _shutDownTask = null;
 
-        public static async Task Entry(Func<Task> entry, Logger logger, string[] args)
+        public static async Task Entry(Func<ServerType, Task> entry, ServerType serverType, Logger logger, string[] args)
         {
             _log = logger;
             try
             {
                 AppExitHandler.Init(HandleExit);
-                _gameLoopTask = entry();
+                _gameLoopTask = entry(serverType);
                 await _gameLoopTask;
                 if (_shutDownTask != null)
                 {
