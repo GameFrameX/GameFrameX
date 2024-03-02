@@ -1,20 +1,13 @@
-﻿using Microsoft.Extensions.Http.Logging;
-using NLog;
-using NLog.Config;
-using NLog.LayoutRenderers;
+﻿using NLog;
 using Server.Apps;
 using Server.Config;
 using Server.Core.Actors.Impl;
 using Server.Core.Comps;
 using Server.Core.Hotfix;
-using Server.Core.Utility;
 using Server.DBServer;
 using Server.DBServer.DbService.MongoDB;
 using Server.Log;
-using Server.NetWork.Messages;
-using Server.Proto.Formatter;
 using Server.Setting;
-using Server.Utility;
 
 namespace Server.Launcher.Common
 {
@@ -33,7 +26,6 @@ namespace Server.Launcher.Common
                 }
 
                 GlobalSettings.Load<AppSetting>("Configs/app_config.json", ServerType.Game);
-                RegisterMessagePack();
                 var flag = LoggerHandler.Start();
                 if (!flag)
                 {
@@ -78,12 +70,6 @@ namespace Server.Launcher.Common
             Console.WriteLine($"退出服务器开始");
             await HotfixMgr.Stop();
             Console.WriteLine($"退出服务器成功");
-        }
-
-        private static void RegisterMessagePack()
-        {
-            // PolymorphicTypeMapper.Register(typeof(AppStartUp).Assembly); //app
-            PolymorphicRegister.Load();
         }
     }
 }
