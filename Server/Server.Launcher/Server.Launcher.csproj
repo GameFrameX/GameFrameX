@@ -39,6 +39,7 @@
         <ProjectReference Include="..\Server.EntryUtility\Server.EntryUtility.csproj" />
         <ProjectReference Include="..\Server.Log\Server.Log.csproj" />
         <ProjectReference Include="..\Server.NetWork.TCPSocket\Server.NetWork.TCPSocket.csproj" />
+        <ProjectReference Include="..\Server.NetWork.UDPSocket\Server.NetWork.UDPSocket.csproj" />
         <ProjectReference Include="..\Server.NetWork.WebSocket\Server.NetWork.WebSocket.csproj" />
         <ProjectReference Include="..\Server.Proto\Server.Proto.csproj" />
         <ProjectReference Include="..\Server.Serialize\Server.Serialize.csproj" />
