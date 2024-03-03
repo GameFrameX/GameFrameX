@@ -22,8 +22,6 @@ namespace Server.Hotfix.Common
             }
 
             Log.Info("load config data");
-            // PolymorphicTypeMapper.Register(this.GetType().Assembly);
-            ProtoMessageIdHandler.Init();
             HotfixMgr.SetMsgGetterByGetId((type) =>
             {
                 // Log.Debug("MsgType:" + type);
