@@ -26,12 +26,12 @@ public enum ServerType
     /// <summary>
     /// 网关服
     /// </summary>
-    Gate = Cache << 1,
+    Gateway = Cache << 1,
 
     /// <summary>
     /// 账号服
     /// </summary>
-    Account = Gate << 1,
+    Account = Gateway << 1,
 
     /// <summary>
     /// 服务发现服
@@ -89,5 +89,5 @@ public enum ServerType
     /// <summary>
     /// 全部
     /// </summary>
-    All = Room | Game | Logic | Recharge | Chat | Mail | Guild | Backup | Account | Discovery | Gate | Cache | DataBase | Log,
+    All = Room | Game | Logic | Recharge | Chat | Mail | Guild | Backup | Account | Discovery | Gateway | Cache | DataBase | Log,
 }
