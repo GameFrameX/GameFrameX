@@ -18,5 +18,12 @@ namespace Server.NetWork.Messages
         {
             return JsonConvert.SerializeObject(this);
         }
+
+        public string UniqueId { get; set; }
+
+        public MessageObject()
+        {
+            UniqueId = Guid.NewGuid().ToString("N");
+        }
     }
 }
