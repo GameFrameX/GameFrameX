@@ -75,9 +75,9 @@ namespace Server.ServerManager
         /// <summary>
         /// 添加自身
         /// </summary>
-        public void AddSelf(ServerType serverType)
+        public void AddSelf(BaseSetting setting)
         {
-            serverInfo = new ServerInfo(serverType, GlobalSettings.ServerName, GlobalSettings.ServerId, GlobalSettings.LocalIp, GlobalSettings.GrpcPort);
+            serverInfo = new ServerInfo(setting.ServerType, setting.ServerName, setting.ServerId, setting.LocalIp, setting.GrpcPort);
             serverMap[serverInfo.ServerId] = serverInfo;
         }
 
