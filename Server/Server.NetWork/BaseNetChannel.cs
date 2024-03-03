@@ -8,6 +8,10 @@ namespace Server.NetWork
         public long NetId { get; set; } = 0;
         public int TargetServerId { get; set; }
 
+        public BaseNetChannel()
+        {
+        }
+
         public BaseNetChannel(IMessageHelper messageHelper)
         {
             MessageHelper = messageHelper;
