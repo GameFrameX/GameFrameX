@@ -7,140 +7,64 @@ namespace Server.Setting;
 /// </summary>
 public static class GlobalSettings
 {
-    private static BaseSetting _instance = null!;
-    public static BaseSetting Instance => _instance;
-    public static void Load<T>(string path, ServerType serverType) where T : BaseSetting
+    private static readonly List<BaseSetting> Settings = new List<BaseSetting>(16);
+    public static bool IsAppRunning { get; set; }
+    public static DateTime LaunchTime { get; set; }
+    public static bool IsDebug { get; set; }
+    public static int ServerId { get; set; }
+
+    public static void Load<T>(string path) where T : BaseSetting
     {
+        Settings.Clear();
         var configJson = File.ReadAllText(path);
-        _instance = JsonConvert.DeserializeObject<T>(configJson) ?? throw new InvalidOperationException();
-        _instance.ServerType = serverType;
-        if (_instance.ServerId < GlobalConst.MinServerId || _instance.ServerId > GlobalConst.MaxServerId)
+        var settings = JsonConvert.DeserializeObject<List<T>>(configJson) ?? throw new InvalidOperationException();
+
+        foreach (var setting in settings)
         {
-            throw new Exception($"ServerId不合法{_instance.ServerId},需要在[{GlobalConst.MinServerId},{GlobalConst.MaxServerId}]范围之内");
+            if (setting.ServerId < GlobalConst.MinServerId || setting.ServerId > GlobalConst.MaxServerId)
+            {
+                throw new Exception($"ServerId不合法{setting.ServerId},需要在[{GlobalConst.MinServerId},{GlobalConst.MaxServerId}]范围之内");
+            }
+
+            Settings.Add(setting);
         }
     }
 
-    public static T InsAs<T>() where T : BaseSetting
+    public static List<T> GetSettings<T>() where T : BaseSetting
     {
-        return (T)_instance;
+        List<T> result = new List<T>();
+        foreach (var setting in Settings)
+        {
+            result.Add((setting as T)!);
+        }
+
+        return result;
     }
 
-    public static bool IsLocal(int serverId) => _instance.IsLocal(serverId);
-
-    /// <summary>
-    /// 启动时间
-    /// </summary>
-    public static DateTime LaunchTime
+    public static List<T?> GetSettings<T>(ServerType serverType) where T : BaseSetting
     {
-        get => _instance.LaunchTime;
-        set => _instance.LaunchTime = value;
+        List<T?> result = new List<T?>();
+        foreach (var setting in Settings)
+        {
+            if ((setting.ServerType &= serverType) != 0)
+            {
+                result.Add(setting as T);
+            }
+        }
+
+        return result;
     }
 
-    /// <summary>
-    /// 是否正在运行中
-    /// </summary>
-    public static bool IsAppRunning
+    public static T? GetSetting<T>(ServerType serverType) where T : BaseSetting
     {
-        get => _instance.AppRunning;
-        set => _instance.AppRunning = value;
+        foreach (var setting in Settings)
+        {
+            if ((setting.ServerType &= serverType) != 0)
+            {
+                return setting as T;
+            }
+        }
+
+        return null;
     }
-
-    /// <summary>
-    /// 服务器类型
-    /// </summary>
-    public static ServerType ServerType => _instance.ServerType;
-
-    /// <summary>
-    /// 是否是Debug 模式
-    /// </summary>
-    public static bool IsDebug => _instance.IsDebug;
-
-    /// <summary>
-    /// 服务器ID
-    /// </summary>
-    public static int ServerId => _instance.ServerId;
-
-    /// <summary>
-    /// 服务器名称
-    /// </summary>
-    public static string ServerName => _instance.ServerName;
-
-    /// <summary>
-    /// 本地IP
-    /// </summary>
-    public static string LocalIp => _instance.LocalIp;
-
-    /// <summary>
-    /// HTTP 响应码
-    /// </summary>
-    public static string HttpCode => _instance.HttpCode;
-
-    /// <summary>
-    /// Http 地址
-    /// </summary>
-    public static string HttpUrl => _instance.HttpUrl;
-
-    /// <summary>
-    /// HTTP 端口
-    /// </summary>
-    public static int HttpPort => _instance.HttpPort;
-
-    /// <summary>
-    /// HTTPS 端口
-    /// </summary>
-    public static int HttpsPort => _instance.HttpsPort;
-
-    /// <summary>
-    /// TCP 端口
-    /// </summary>
-    public static int TcpPort => _instance.TcpPort;
-
-
-    /// <summary>
-    /// WebSocket 端口
-    /// </summary>
-    public static int WsPort => _instance.WsPort;
-
-    /// <summary>
-    /// WebSocket 加密端口
-    /// </summary>
-    public static int WssPort => _instance.WssPort;
-
-    /// <summary>
-    /// GRPC 端口
-    /// </summary>
-    public static int GrpcPort => _instance.GrpcPort;
-
-    /// <summary>
-    /// 数据库 地址
-    /// </summary>
-    public static string DataBaseUrl => _instance.MongoUrl;
-
-    /// <summary>
-    /// 数据库名称
-    /// </summary>
-    public static string DataBaseName => _instance.MongoDBName;
-
-    /// <summary>
-    /// 语言
-    /// </summary>
-    public static string Language => _instance.Language;
-
-    /// <summary>
-    /// 数据中心
-    /// </summary>
-    public static string DataCenter => _instance.DataCenter;
-
-    /// <summary>
-    /// 数据中心地址
-    /// </summary>
-    public static string CenterUrl => _instance.CenterUrl;
-
-    /// <summary>
-    /// SDK 类型
-    /// </summary>
-    public static int SDKType => _instance.SDKType;
-
-    public static string WssCertFilePath => _instance.WssCertFilePath;
-    public static Task<bool> AppExitToken => _instance.AppExitToken;
 }
