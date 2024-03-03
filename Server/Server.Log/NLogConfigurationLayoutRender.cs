@@ -16,8 +16,11 @@ namespace Server.Log
         {
             if (!string.IsNullOrEmpty(logConfig))
                 return logConfig;
-
-            logConfig = GlobalSettings.IsDebug ? "debug" : "release";
+#if DEBUG
+            logConfig = "debug";
+#else
+            logConfig = "release";
+#endif
             return logConfig;
         }
 
