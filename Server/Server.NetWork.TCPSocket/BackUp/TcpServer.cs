@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+/*using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
@@ -62,4 +62,4 @@ namespace Server.NetWork.TCPSocket
             return Task.CompletedTask;
         }
     }
-}
+}*/
