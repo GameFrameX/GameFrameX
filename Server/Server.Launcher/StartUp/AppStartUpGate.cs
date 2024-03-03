@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using Server.NetWork.UDPSocket;
 
-static class AppStartUpGate
+public static class AppStartUpGate
 {
-    static void Main(string[] args)
+    public static void Enter(string[] args)
     {
         // UDP server address
         string address = "127.0.0.1";
