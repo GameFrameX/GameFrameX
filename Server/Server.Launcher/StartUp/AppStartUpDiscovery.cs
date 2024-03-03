@@ -1,4 +1,6 @@
 using Server.EntryUtility;
+using Server.Launcher.Message;
+using Server.NetWork.TCPSocket;
 using Server.NetWork.UDPSocket;
 using Server.ServerManager;
 using Server.Utility;
@@ -13,7 +15,7 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
 {
     static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    private EchoUdpServer server;
+    private TcpServerMessage server;
 
     public override async Task EnterAsync()
     {
@@ -28,21 +30,16 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
 
             // UDP server port
 
-            Console.WriteLine($"UDP server port: {Setting.TcpPort}");
+            Console.WriteLine($"server port: {Setting.TcpPort}");
 
             // Create a new UDP echo server
-            server = new EchoUdpServer(IPAddress.Any, Setting.TcpPort);
-
+            server = new TcpServerMessage(IPAddress.Any, Setting.TcpPort);
+            server.MessageDecoderHandler = new MessageDecoderHandler();
             // Start the server
             server.Start();
             Console.WriteLine($"启动服务器 {ServerType} 结束!");
 
             await AppExitToken;
-
-            // Stop the server
-            Console.Write("Server stopping...");
-            server.Stop();
-            Console.WriteLine("Done!");
 
             GlobalSettings.IsAppRunning = true;
 
@@ -55,12 +52,13 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
             Log.Fatal(e);
         }
 
+        // Stop the server
         Console.WriteLine($"退出服务器开始");
-        // await RpcServer.Stop();
+        server.Stop();
         Console.WriteLine($"退出服务器成功");
     }
 
-    public override void Stop(string message)
+    public override void Stop(string message = "")
     {
         Console.Write("Server stopping...");
         server.Stop();

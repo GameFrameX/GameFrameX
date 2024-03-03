@@ -5,7 +5,7 @@ namespace Server.Launcher.StartUp
     /// <summary>
     /// 游戏服务器
     /// </summary>
-    [StartUpTag(ServerType.All)]
+    // [StartUpTag(ServerType.All)]
     internal sealed class AppStartUpGame : AppStartUpBase
     {
         static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();

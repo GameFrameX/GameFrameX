@@ -20,7 +20,8 @@ public abstract class AppStartUpBase : IAppStartUp
 
     public abstract Task EnterAsync();
 
-    public virtual void Stop(string message)
+    public virtual void Stop(string message = "")
     {
+        appExitSource.TrySetResult(message);
     }
 }
