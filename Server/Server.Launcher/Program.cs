@@ -5,6 +5,7 @@ using Server.Core.StartUp.Attributes;
 using Server.EntryUtility;
 using Server.Extension;
 using Server.Launcher.Common;
+using Server.Proto;
 using Server.Setting;
 
 namespace Server.Launcher
@@ -18,6 +19,7 @@ namespace Server.Launcher
         {
             GlobalSettings.Load<AppSetting>($"Configs/app_config.json");
 
+            ProtoMessageIdHandler.Init();
 
             var types = Assembly.GetEntryAssembly()?.GetTypes();
             if (types != null)
