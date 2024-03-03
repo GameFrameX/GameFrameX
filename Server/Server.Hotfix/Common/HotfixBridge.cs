@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Connections;
-using Server.Launcher.Common.Net;
-using Server.Launcher.Common.Session;
+﻿using Server.Launcher.Common.Session;
 using Server.NetWork.HTTP;
-using Server.NetWork.TCPSocket;
 using Server.NetWork.WebSocket;
 
 namespace Server.Hotfix.Common
@@ -37,8 +34,8 @@ namespace Server.Hotfix.Common
             await WebSocketServer.Start(appSetting.WsPort, appSetting.WssPort, appSetting.WssCertFilePath, appSetting, webSocketMessageHelper, new WebSocketChannelHandler());
             Log.Info("WebSocket 服务启动完成...");
 
-            var tcpSocketMessageHelper = new TcpSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
-            await TcpServer.Start(appSetting.TcpPort, appSetting, tcpSocketMessageHelper, builder => { builder.UseConnectionHandler<AppTcpConnectionHandler>(); });
+            // var tcpSocketMessageHelper = new TcpSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
+            // await TcpServer.Start(appSetting.TcpPort, appSetting, tcpSocketMessageHelper, builder => { builder.UseConnectionHandler<AppTcpConnectionHandler>(); });
             Log.Info("tcp 服务启动完成...");
             await HttpServer.Start(appSetting.HttpPort, appSetting.HttpsPort, HotfixMgr.GetHttpHandler);
             Log.Info("load config data");
@@ -57,7 +54,7 @@ namespace Server.Hotfix.Common
             // 保证actor之前的任务都执行完毕
             await ActorManager.AllFinish();
             // 关闭网络服务
-            await TcpServer.Stop();
+            // await TcpServer.Stop();
             await WebSocketServer.Stop();
             await HttpServer.Stop();
             // 存储所有数据
