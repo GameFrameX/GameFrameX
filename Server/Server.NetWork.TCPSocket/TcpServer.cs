@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
+using Server.Setting;
 using Server.Utility;
 
 namespace Server.NetWork.TCPSocket
@@ -17,11 +18,14 @@ namespace Server.NetWork.TCPSocket
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication? App { get; set; }
         public static IMessageHelper? MessageHelper { get; private set; }
+        public static AppSetting AppSetting { get; private set; }
 
-        public static Task Start(int port, IMessageHelper messageHelper, Action<ListenOptions>? configure = null)
+        public static Task Start(int port, AppSetting appSetting, IMessageHelper messageHelper, Action<ListenOptions>? configure = null)
         {
             Guard.NotNull(messageHelper, nameof(messageHelper));
             MessageHelper = messageHelper;
+            Guard.NotNull(appSetting, nameof(appSetting));
+            AppSetting = appSetting;
             var builder = WebApplication.CreateBuilder();
             builder.WebHost.UseKestrel(options =>
                 {

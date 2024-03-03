@@ -199,7 +199,7 @@ namespace Server.NetWork.TCPSocket
             span.WriteBytesWithoutLength(bytes, ref offset);
             Writer.Advance(len);
             _ = Writer.FlushAsync(CloseSrc.Token);
-            if (GlobalSettings.IsDebug)
+            if (TcpServer.AppSetting.IsDebug && TcpServer.AppSetting.IsDebugSend)
             {
                 Logger.Info($"---发送消息ID:[{msgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(msg)}");
             }

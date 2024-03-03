@@ -32,7 +32,7 @@ namespace Server.NetWork.TCPSocket
 
             var messageType = messageObject.GetType();
 
-            if (GlobalSettings.IsDebug)
+            if (TcpServer.AppSetting.IsDebug && TcpServer.AppSetting.IsDebugReceive)
             {
                 Logger.Info($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}");
             }
