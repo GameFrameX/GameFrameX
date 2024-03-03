@@ -38,8 +38,11 @@ namespace Server.NetWork.HTTP
 
         public string CheckSign(Dictionary<string, string> paramMap)
         {
-            if (!IsCheckSign || GlobalSettings.IsDebug)
+            // if (!IsCheckSign || GlobalSettings.IsDebug)
+            if (!IsCheckSign)
+            {
                 return "";
+            }
 
             //内部验证
             if (!paramMap.ContainsKey("token") || !paramMap.ContainsKey("timestamp"))
@@ -58,7 +61,7 @@ namespace Server.NetWork.HTTP
                 return HttpResult.Create(HttpStatusCode.Illegal, "http命令已过期");
             }
 
-            var str = GlobalSettings.HttpCode + time;
+            var str = 21001 + time;
             if (sign == GetStringSign(str))
             {
                 return "";
