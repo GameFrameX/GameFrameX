@@ -34,9 +34,14 @@ public enum ServerType
     Account = Gateway << 1,
 
     /// <summary>
+    /// 路由
+    /// </summary>
+    Router = Account << 1,
+
+    /// <summary>
     /// 服务发现服
     /// </summary>
-    Discovery = Account << 1,
+    Discovery = Router << 1,
 
     ///<summary>
     /// 远程备份
