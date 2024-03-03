@@ -57,8 +57,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.RPCSocket", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.EntryUtility", "Server.EntryUtility\Server.EntryUtility.csproj", "{C1AF76BF-A50D-4B00-801C-306E3A06C0A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Constants", "Server.Constants\Server.Constants.csproj", "{977FB214-DBB4-4389-A610-685CFC33CB54}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.UdsSocket", "Server.NetWork.UdsSocket\Server.NetWork.UdsSocket.csproj", "{B5A61ABE-EEB5-4BB8-8328-C99648DD7939}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.ServerManager", "Server.ServerManager\Server.ServerManager.csproj", "{0C904924-63CD-4154-B776-DD0C4ED7F158}"
@@ -165,10 +163,6 @@ Global
 		{C1AF76BF-A50D-4B00-801C-306E3A06C0A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1AF76BF-A50D-4B00-801C-306E3A06C0A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1AF76BF-A50D-4B00-801C-306E3A06C0A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{977FB214-DBB4-4389-A610-685CFC33CB54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{977FB214-DBB4-4389-A610-685CFC33CB54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{977FB214-DBB4-4389-A610-685CFC33CB54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{977FB214-DBB4-4389-A610-685CFC33CB54}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5A61ABE-EEB5-4BB8-8328-C99648DD7939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5A61ABE-EEB5-4BB8-8328-C99648DD7939}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5A61ABE-EEB5-4BB8-8328-C99648DD7939}.Release|Any CPU.ActiveCfg = Release|Any CPU

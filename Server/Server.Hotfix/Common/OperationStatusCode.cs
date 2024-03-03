@@ -1,4 +1,4 @@
-namespace Server.Constants
+namespace Server.Hotfix.Common
 {
     /// <summary>
     /// 操作状态码=>服务器错误码
