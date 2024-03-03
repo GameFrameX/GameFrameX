@@ -36,11 +36,11 @@ namespace Server.Hotfix.Common
             });
             var appSetting = GlobalSettings.GetSetting<AppSetting>(ServerType.Game);
             var webSocketMessageHelper = new WebSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
-            await WebSocketServer.Start(appSetting.WsPort, appSetting.WssPort, appSetting.WssCertFilePath, webSocketMessageHelper, new WebSocketChannelHandler());
+            await WebSocketServer.Start(appSetting.WsPort, appSetting.WssPort, appSetting.WssCertFilePath, appSetting, webSocketMessageHelper, new WebSocketChannelHandler());
             Log.Info("WebSocket 服务启动完成...");
 
             var tcpSocketMessageHelper = new TcpSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
-            await TcpServer.Start(appSetting.TcpPort, tcpSocketMessageHelper, builder => { builder.UseConnectionHandler<AppTcpConnectionHandler>(); });
+            await TcpServer.Start(appSetting.TcpPort, appSetting, tcpSocketMessageHelper, builder => { builder.UseConnectionHandler<AppTcpConnectionHandler>(); });
             Log.Info("tcp 服务启动完成...");
             await HttpServer.Start(appSetting.HttpPort, appSetting.HttpsPort, HotfixMgr.GetHttpHandler);
             Log.Info("load config data");
