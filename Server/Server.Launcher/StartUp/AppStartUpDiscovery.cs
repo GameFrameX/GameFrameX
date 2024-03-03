@@ -1,62 +1,43 @@
-using System.Net;
-using NLog;
+using Server.EntryUtility;
 using Server.NetWork.UDPSocket;
-using Server.Setting;
+using Server.ServerManager;
+using Server.Utility;
 
 namespace Server.Launcher.StartUp;
 
-public class AppStartUpDiscovery
+/// <summary>
+/// 发现服务器
+/// </summary>
+[StartUpTag(ServerType.Discovery, 0)]
+internal sealed class AppStartUpDiscovery : AppStartUpBase
 {
     static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public static async Task Enter(ServerType serverType = ServerType.Discovery)
+    private EchoUdpServer server;
+
+    public override async Task EnterAsync()
     {
         try
         {
-            // LogManager.Configuration = new XmlLoggingConfiguration("Configs/NLog.config");
             LogManager.AutoShutdown = false;
-            GlobalSettings.Load<AppSetting>($"configs/discovery_config.{serverType.ToString()}.json", serverType);
+            Log.Info($"开始启动服务器{ServerType}");
 
-            Log.Info("开始启动...");
+            NamingServiceManager.Instance.AddSelf(Setting);
 
-            // NamingService.Instance.AddSelf();
-
-            Console.WriteLine("启动服务器 开始!");
+            Console.WriteLine($"启动服务器{ServerType} 开始!");
 
             // UDP server port
-            int port = 3333;
-            // if (args.Length > 0)
-            //     port = int.Parse(args[0]);
 
-            Console.WriteLine($"UDP server port: {port}");
-
-            Console.WriteLine();
+            Console.WriteLine($"UDP server port: {Setting.TcpPort}");
 
             // Create a new UDP echo server
-            var server = new EchoUdpServer(IPAddress.Any, port);
+            server = new EchoUdpServer(IPAddress.Any, Setting.TcpPort);
 
             // Start the server
-            Console.Write("Server starting...");
             server.Start();
-            Console.WriteLine("Done!");
+            Console.WriteLine($"启动服务器 {ServerType} 结束!");
 
-            Console.WriteLine("Press Enter to stop the server or '!' to restart the server...");
-
-            // Perform text input
-            for (;;)
-            {
-                string line = Console.ReadLine();
-                if (string.IsNullOrEmpty(line))
-                    break;
-
-                // Restart the server
-                if (line == "!")
-                {
-                    Console.Write("Server restarting...");
-                    server.Restart();
-                    Console.WriteLine("Done!");
-                }
-            }
+            await AppExitToken;
 
             // Stop the server
             Console.Write("Server stopping...");
@@ -66,7 +47,7 @@ public class AppStartUpDiscovery
             GlobalSettings.IsAppRunning = true;
 
             Log.Info("启动完成...");
-            await GlobalSettings.Instance.AppExitToken;
+            // await GlobalSettings.Instance.AppExitToken;
         }
         catch (Exception e)
         {
@@ -77,5 +58,12 @@ public class AppStartUpDiscovery
         Console.WriteLine($"退出服务器开始");
         // await RpcServer.Stop();
         Console.WriteLine($"退出服务器成功");
+    }
+
+    public override void Stop(string message)
+    {
+        Console.Write("Server stopping...");
+        server.Stop();
+        Console.WriteLine("Done!");
     }
 }

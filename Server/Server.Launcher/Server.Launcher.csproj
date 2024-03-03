@@ -26,7 +26,7 @@
         <None Update="Configs\app_log.config">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Configs\app_config.*.json">
+        <None Update="Configs\app_config.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
@@ -43,6 +43,7 @@
         <ProjectReference Include="..\Server.NetWork.WebSocket\Server.NetWork.WebSocket.csproj" />
         <ProjectReference Include="..\Server.Proto\Server.Proto.csproj" />
         <ProjectReference Include="..\Server.Serialize\Server.Serialize.csproj" />
+        <ProjectReference Include="..\Server.ServerManager\Server.ServerManager.csproj" />
         <ProjectReference Include="..\Server.Utility\Server.Utility.csproj" />
     </ItemGroup>
 

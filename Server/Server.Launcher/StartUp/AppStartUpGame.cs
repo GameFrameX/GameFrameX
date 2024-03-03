@@ -1,31 +1,27 @@
-﻿using NLog;
-using Server.Apps;
-using Server.Config;
-using Server.Core.Actors.Impl;
-using Server.Core.Comps;
-using Server.Core.Hotfix;
-using Server.DBServer;
-using Server.DBServer.DbService.MongoDB;
-using Server.Log;
-using Server.Setting;
+﻿using Server.Utility;
 
-namespace Server.Launcher.Common
+namespace Server.Launcher.StartUp
 {
-    internal static class AppStartUp
+    /// <summary>
+    /// 游戏服务器
+    /// </summary>
+    [StartUpTag(ServerType.All)]
+    internal sealed class AppStartUpGame : AppStartUpBase
     {
         static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
-        public static async Task Enter(ServerType serverType)
+        public override async Task EnterAsync()
         {
             try
             {
+                Log.Info($"开始启动服务器{ServerType}");
                 var hotfixPath = Directory.GetCurrentDirectory() + "/hotfix";
                 if (!Directory.Exists(hotfixPath))
                 {
                     Directory.CreateDirectory(hotfixPath);
                 }
 
-                GlobalSettings.Load<AppSetting>($"Configs/app_config.{serverType.ToString()}.json", serverType);
+
                 var flag = LoggerHandler.Start();
                 if (!flag)
                 {
@@ -40,7 +36,7 @@ namespace Server.Launcher.Common
                 Log.Info($"launch db service start...");
                 ActorLimit.Init(ActorLimit.RuleType.None);
                 GameDb.Init(new MongoDbServiceConnection());
-                GameDb.Open(GlobalSettings.DataBaseUrl, GlobalSettings.DataBaseName);
+                GameDb.Open(Setting.DataBaseUrl, Setting.DataBaseName);
                 Log.Info($"launch db service end...");
 
                 Log.Info($"regist comps start...");

@@ -1,0 +1,44 @@
+﻿[
+  {
+    "IsDebug": true,
+    "ServerId": 1001,
+    "ServerType": "All",
+    "ServerName": "gfx_server",
+    "LocalIp": "127.0.0.1",
+    "TcpPort": 8898,
+    "HttpCode": "inner_httpcode",
+    "HttpPort": 20001,
+    "WsPort": 25001,
+    "WssPort": 0,
+    "WssCertFilePath": "certs/cert.pem",
+    "GrpcPort": 30001,
+    "SDKType": 0,
+    "DataBaseUrl": "mongodb+srv://gameframex:f9v42aU9DVeFNfAF@gameframex.8taphic.mongodb.net/?retryWrites=true&w=majority",
+    "DataBaseName": "gameframex"
+  },
+  {
+    "IsDebug": true,
+    "ServerId": 3100,
+    "ServerType": "Discovery",
+    "ServerName": "Discovery",
+    "LocalIp": "127.0.0.1",
+    "TcpPort": 8898,
+    "IsDebugSend": true,
+    "IsDebugReceive": true
+  },
+  {
+    "IsDebug": true,
+    "ServerId": 3300,
+    "ServerType": "Gateway",
+    "ServerName": "Gateway",
+    "LocalIp": "127.0.0.1",
+    "TcpPort": 8898,
+    "HttpCode": "inner_httpcode",
+    "HttpPort": 20001,
+    "WsPort": 25001,
+    "WssPort": 0,
+    "WssCertFilePath": "certs/cert.pem",
+    "GrpcPort": 3300,
+    "CenterUrl": "127.0.0.1"
+  }
+]

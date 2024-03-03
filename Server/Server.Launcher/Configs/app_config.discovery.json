@@ -1,7 +1,0 @@
-﻿{
-  "IsDebug": true,
-  "ServerId": 9001,
-  "ServerName": "DiscoveryServer",
-  "LocalIp":"127.0.0.1",
-  "GrpcPort": 9001
-}
