@@ -149,7 +149,7 @@ namespace Server.Core.Hotfix
                     if ((HotfixBridge == null && type.GetInterface(fullName) != null))
                     {
                         var bridge = (IHotfixBridge)Activator.CreateInstance(type);
-                        if (bridge.BridgeType == GlobalSettings.ServerType)
+                        if (bridge.BridgeType == ServerType.Game)
                         {
                             HotfixBridge = bridge;
                         }
