@@ -64,6 +64,16 @@ public abstract class BaseSetting
     public bool IsDebug { get; init; }
 
     /// <summary>
+    /// 是否打印发送数据
+    /// </summary>
+    public bool IsDebugSend { get; init; }
+
+    /// <summary>
+    /// 是否打印接收数据
+    /// </summary>
+    public bool IsDebugReceive { get; init; }
+
+    /// <summary>
     /// 服务器ID
     /// </summary>
     public int ServerId { get; init; }
@@ -126,12 +136,12 @@ public abstract class BaseSetting
     /// <summary>
     /// 数据库 地址
     /// </summary>
-    public string MongoUrl { get; init; }
+    public string DataBaseUrl { get; init; }
 
     /// <summary>
     /// 数据库名称
     /// </summary>
-    public string MongoDBName { get; init; }
+    public string DataBaseName { get; init; }
 
     /// <summary>
     /// 语言
