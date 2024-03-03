@@ -1,4 +1,4 @@
-﻿
+﻿using Newtonsoft.Json;
 
 namespace Server.NetWork.Messages
 {
@@ -13,5 +13,10 @@ namespace Server.NetWork.Messages
         /// 消息ID
         /// </summary>
         public int MsgId { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }
