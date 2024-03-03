@@ -86,7 +86,7 @@ namespace Server.NetWork.WebSocket
                 var msgId = MessageHelper.MessageIdByTypeGetter(messageType);
                 sendData.WriteInt(msgId, ref offset);
                 sendData.WriteBytesWithoutLength(bytes, ref offset);
-                if (GlobalSettings.IsDebug)
+                if (WebSocketServer.AppSetting.IsDebug && WebSocketServer.AppSetting.IsDebugSend)
                 {
                     StringBuilder stringBuilder = new StringBuilder();
                     for (var index = 0; index < len; index++)
@@ -122,7 +122,7 @@ namespace Server.NetWork.WebSocket
 
             // var message = MessagePackSerializer.Deserialize<MessageObject>(reader.UnreadSequence);
             messageObject.MsgId = messageId;
-            if (GlobalSettings.IsDebug)
+            if (WebSocketServer.AppSetting.IsDebug && WebSocketServer.AppSetting.IsDebugReceive)
             {
                 StringBuilder stringBuilder = new StringBuilder();
                 for (var index = 0; index < stream.Length; index++)

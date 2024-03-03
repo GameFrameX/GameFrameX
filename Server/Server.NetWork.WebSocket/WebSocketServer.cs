@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
+using Server.Setting;
 using Server.Utility;
 
 
@@ -18,12 +19,15 @@ namespace Server.NetWork.WebSocket
         static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication? App { get; set; }
         public static IMessageHelper? MessageHelper { get; private set; }
+        public static AppSetting AppSetting { get; private set; }
 
-        public static Task Start(int wsPort, int wssPort, string wssCertFilePath, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
+        public static Task Start(int wsPort, int wssPort, string wssCertFilePath, AppSetting appSetting, IMessageHelper messageHelper, WebSocketConnectionHandler handler)
         {
             Guard.NotNull(messageHelper, nameof(messageHelper));
             Guard.NotNull(handler, nameof(handler));
             MessageHelper = messageHelper;
+            Guard.NotNull(appSetting, nameof(appSetting));
+            AppSetting = appSetting;
             var builder = WebApplication.CreateBuilder();
             builder.WebHost
                 .UseKestrel(
@@ -32,13 +36,7 @@ namespace Server.NetWork.WebSocket
                         options.ListenAnyIP(wsPort);
                         if (wssPort > 0)
                         {
-                            options.ListenAnyIP(wssPort, listenOptions =>
-                            {
-                                listenOptions.UseHttps((httpsConnectionAdapterOptions) =>
-                                {
-                                    httpsConnectionAdapterOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(wssCertFilePath);
-                                });
-                            });
+                            options.ListenAnyIP(wssPort, listenOptions => { listenOptions.UseHttps((httpsConnectionAdapterOptions) => { httpsConnectionAdapterOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(wssCertFilePath); }); });
                         }
                     })
                 .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
