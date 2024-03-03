@@ -8,6 +8,38 @@ namespace Server.Extension
     public static class StringExtension
     {
         /// <summary>
+        /// 从当前字符串中移除指定字符结尾的后缀
+        /// </summary>
+        /// <param name="self">当前字符串</param>
+        /// <param name="toRemove">要移除的字符</param>
+        /// <returns>移除后的字符串</returns>
+        public static string RemoveSuffix(this string self, char toRemove)
+        {
+            return self.IsNullOrEmpty() ? self : (self.EndsWith(toRemove) ? self.Substring(0, self.Length - 1) : self);
+        }
+
+        /// <summary>
+        /// 从当前字符串中移除指定子字符串结尾的后缀
+        /// </summary>
+        /// <param name="self">当前字符串</param>
+        /// <param name="toRemove">要移除的子字符串</param>
+        /// <returns>移除后的字符串</returns>
+        public static string RemoveSuffix(this string self, string toRemove)
+        {
+            return self.IsNullOrEmpty() ? self : (self.EndsWith(toRemove) ? self.Substring(0, self.Length - toRemove.Length) : self);
+        }
+
+        /// <summary>
+        /// 移除当前字符串中的所有空白字符
+        /// </summary>
+        /// <param name="self">当前字符串</param>
+        /// <returns>移除空白字符后的字符串</returns>
+        public static string RemoveWhiteSpace(this string self)
+        {
+            return self.IsNullOrEmpty() ? self : new string(self.Where(c => !char.IsWhiteSpace(c)).ToArray());
+        }
+
+        /// <summary>
         /// 检查字符串是否为 null 或空。
         /// </summary>
         /// <param name="str">要检查的字符串。</param>
@@ -70,7 +102,10 @@ namespace Server.Extension
         public static void CreateAsDirectory(this string path, bool isFile = false)
         {
             if (isFile)
+            {
                 path = Path.GetDirectoryName(path);
+            }
+
             if (!Directory.Exists(path))
             {
                 CreateAsDirectory(path, true);
