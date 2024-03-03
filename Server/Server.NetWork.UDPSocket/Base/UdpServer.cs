@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Server.NetWork.UDPSocket
+namespace Server.NetWork.UDPSocket.Base
 {
     /// <summary>
     /// UDP server is used to send or multicast datagrams to UDP endpoints

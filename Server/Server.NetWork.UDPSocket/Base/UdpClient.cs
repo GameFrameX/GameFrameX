@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace Server.NetWork.UDPSocket
+namespace Server.NetWork.UDPSocket.Base
 {
     /// <summary>
     /// UDP client is used to read/write data from/into the connected UDP server
