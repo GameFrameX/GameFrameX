@@ -7,8 +7,8 @@ public abstract class AppStartUpBase : IAppStartUp
     public ServerType ServerType { get; private set; }
     public AppSetting Setting { get; private set; }
 
-    private readonly TaskCompletionSource<string> appExitSource = new TaskCompletionSource<string>();
-    public Task<string> AppExitToken => appExitSource.Task;
+    protected readonly TaskCompletionSource<string> AppExitSource = new TaskCompletionSource<string>();
+    public Task<string> AppExitToken => AppExitSource.Task;
 
     public bool Init(ServerType serverType, BaseSetting setting, string[] args = null)
     {
@@ -22,6 +22,6 @@ public abstract class AppStartUpBase : IAppStartUp
 
     public virtual void Stop(string message = "")
     {
-        appExitSource.TrySetResult(message);
+        AppExitSource.TrySetResult(message);
     }
 }
