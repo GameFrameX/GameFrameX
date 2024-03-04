@@ -24,7 +24,8 @@ public class TcpSessionMessage : TcpSession
     protected override void OnReceived(byte[] buffer, long offset, long size)
     {
         var message = buffer.AsSpan((int)offset, (int)size);
-        MessageDecoderHandler.Handler(message);
+        var messageObject = MessageDecoderHandler.Handler(message);
+        Console.WriteLine("收到消息:" + messageObject);
         this.Server.UpdateReceiveMessageTime();
     }
 }
