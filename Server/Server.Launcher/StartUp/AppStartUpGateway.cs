@@ -1,14 +1,11 @@
 ﻿using System.Buffers;
-using Server.Extension;
 using Server.Launcher.Message;
 using Server.Launcher.StartUp;
 using Server.NetWork;
 using Server.NetWork.Messages;
 using Server.NetWork.TCPSocket;
-using Server.NetWork.UDPSocket;
 using Server.Proto;
 using Server.Proto.Proto;
-using Server.Serialize.Serialize;
 using Server.Utility;
 
 /// <summary>
@@ -45,7 +42,7 @@ internal sealed class AppStartUpGateway : AppStartUpBase
             {
                 await Task.Delay(5000);
 
-                if (client.IsConnected)
+                if (!AppExitToken.IsCompleted && client.IsConnected)
                 {
                     reqHeartBeat.Timestamp = TimeHelper.UnixTimeSeconds();
                     SendMessage(reqHeartBeat);
@@ -59,6 +56,9 @@ internal sealed class AppStartUpGateway : AppStartUpBase
         }
         catch (Exception e)
         {
+            Stop(e.Message);
+            AppExitSource.TrySetException(e);
+            Console.WriteLine(e);
         }
     }
 
@@ -66,12 +66,13 @@ internal sealed class AppStartUpGateway : AppStartUpBase
     {
         message.UniqueId = Guid.NewGuid().ToString("N");
         var span = messageEncoderHandler.Handler(message);
-        client.Send(span);
-        ArrayPool<byte>.Shared.Return(span);
         if (Setting.IsDebug && Setting.IsDebugSend)
         {
             Console.WriteLine($"---发送消息ID:[{ProtoMessageIdHandler.GetReqMessageIdByType(message.GetType())}] ==>消息类型:{message.GetType()} 消息内容:{message}");
         }
+
+        client.Send(span);
+        ArrayPool<byte>.Shared.Return(span);
     }
 
     public override void Stop(string message = "")
