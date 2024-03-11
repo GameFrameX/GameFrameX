@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using ProtoBuf;
 
 namespace Server.NetWork.Messages
 {
+    [ProtoContract]
     public abstract class MessageObject : IMessage
     {
         /// <summary>
@@ -18,7 +20,7 @@ namespace Server.NetWork.Messages
         {
             return JsonConvert.SerializeObject(this);
         }
-
+        [ProtoMember(999)]
         public string UniqueId { get; set; }
 
         public MessageObject()

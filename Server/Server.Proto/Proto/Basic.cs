@@ -9,7 +9,6 @@ namespace Server.Proto.Proto
 	/// 请求心跳
 	/// </summary>
 	[MessageTypeHandler(1)]
-	[ProtoContract]
 	public partial class ReqHeartBeat : MessageObject, IRequestMessage
 	{
 		/// <summary>
