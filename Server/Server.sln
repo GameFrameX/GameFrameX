@@ -61,6 +61,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.NetWork.UdsSocket", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.ServerManager", "Server.ServerManager\Server.ServerManager.csproj", "{0C904924-63CD-4154-B776-DD0C4ED7F158}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Cache", "Server.Cache\Server.Cache.csproj", "{4222D174-D8B5-45C5-B17D-E01D644FE003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Cache.Memory", "Server.Cache.Memory\Server.Cache.Memory.csproj", "{55189891-1A7A-4909-AB12-3EF761E66C66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +175,14 @@ Global
 		{0C904924-63CD-4154-B776-DD0C4ED7F158}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C904924-63CD-4154-B776-DD0C4ED7F158}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C904924-63CD-4154-B776-DD0C4ED7F158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4222D174-D8B5-45C5-B17D-E01D644FE003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4222D174-D8B5-45C5-B17D-E01D644FE003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4222D174-D8B5-45C5-B17D-E01D644FE003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4222D174-D8B5-45C5-B17D-E01D644FE003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55189891-1A7A-4909-AB12-3EF761E66C66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55189891-1A7A-4909-AB12-3EF761E66C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55189891-1A7A-4909-AB12-3EF761E66C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55189891-1A7A-4909-AB12-3EF761E66C66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

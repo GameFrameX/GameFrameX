@@ -17,36 +17,18 @@
   //    "DataBaseName": "gameframex"
   //  },
   {
-    "IsDebug": true,
-    "ServerId": 3100,
-    "ServerType": "Discovery",
-    "ServerName": "Discovery",
-    "LocalIp": "127.0.0.1",
-    "TcpPort": 3300,
-    "IsDebugSend": true,
-    "IsDebugReceive": true
+    "ServerId": 3300,
+    "ServerType": "Discovery"
   },
   {
-    "IsDebug": true,
-    "IsDebugSend": true,
-    "IsDebugReceive": true,
-    "ServerId": 3300,
+    "ServerId": 2000,
     "ServerType": "Gateway",
     "ServerName": "Gateway",
-    "LocalIp": "127.0.0.1",
     "TcpPort": 8898,
     "HttpCode": "inner_httpcode",
-    "HttpPort": 20001,
-    "WsPort": 25001,
-    "WssPort": 0,
-    "WssCertFilePath": "certs/cert.pem",
-    "GrpcPort": 3300,
-    "CenterUrl": "127.0.0.1"
+    "HttpPort": 20001
   },
   {
-    "IsDebug": true,
-    "IsDebugSend": true,
-    "IsDebugReceive": true,
     "ServerId": 2000,
     "ServerType": "Router",
     "ServerName": "Router",
@@ -59,5 +41,18 @@
     "WssCertFilePath": "certs/cert.pem",
     "GrpcPort": 3300,
     "CenterUrl": "127.0.0.1"
+  },
+  {
+    "ServerId": 5500,
+    "ServerType": "Cache",
+    "LocalIp": "127.0.0.1",
+    "TcpPort": 25500
+  },
+  {
+    "ServerId": 6000,
+    "ServerType": "DataBase",
+    "DataBaseUrl": "mongodb+srv://gameframex:f9v42aU9DVeFNfAF@gameframex.8taphic.mongodb.net/?retryWrites=true&w=majority",
+    "DataBaseName": "gameframex",
+    "TcpPort": 26000
   }
 ]
