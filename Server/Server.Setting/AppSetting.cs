@@ -19,5 +19,14 @@
         {
             return base.IsLocal(serverId) || servers.Contains(serverId);
         }
+
+        public AppSetting()
+        {
+#if DEBUG
+            IsDebug = true;
+            IsDebugReceive = true;
+            IsDebugSend = true;
+#endif
+        }
     }
 }
