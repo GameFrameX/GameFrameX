@@ -21,19 +21,20 @@ namespace ProtoBuf.Meta
     public sealed class RuntimeTypeModel : TypeModel
     {
         private ushort options;
+
         private const ushort
-           OPTIONS_InferTagFromNameDefault = 1,
-           OPTIONS_IsDefaultModel = 2,
-           OPTIONS_Frozen = 4,
-           OPTIONS_AutoAddMissingTypes = 8,
+            OPTIONS_InferTagFromNameDefault = 1,
+            OPTIONS_IsDefaultModel = 2,
+            OPTIONS_Frozen = 4,
+            OPTIONS_AutoAddMissingTypes = 8,
 #if FEAT_COMPILER
            OPTIONS_AutoCompile = 16,
 #endif
-           OPTIONS_UseImplicitZeroDefaults = 32,
-           OPTIONS_AllowParseableTypes = 64,
-           OPTIONS_AutoAddProtoContractTypesOnly = 128,
-           OPTIONS_IncludeDateTimeKind = 256,
-           OPTIONS_DoNotInternStrings = 512;
+            OPTIONS_UseImplicitZeroDefaults = 32,
+            OPTIONS_AllowParseableTypes = 64,
+            OPTIONS_AutoAddProtoContractTypesOnly = 128,
+            OPTIONS_IncludeDateTimeKind = 256,
+            OPTIONS_DoNotInternStrings = 512;
 
         private bool GetOption(ushort option)
         {
@@ -89,6 +90,7 @@ namespace ProtoBuf.Meta
                 {
                     throw new InvalidOperationException("UseImplicitZeroDefaults cannot be disabled on the default model");
                 }
+
                 SetOption(OPTIONS_UseImplicitZeroDefaults, value);
             }
         }
@@ -132,7 +134,10 @@ namespace ProtoBuf.Meta
 
         private sealed class Singleton
         {
-            private Singleton() { }
+            private Singleton()
+            {
+            }
+
             internal static readonly RuntimeTypeModel Value = new RuntimeTypeModel(true);
         }
 
@@ -159,12 +164,14 @@ namespace ProtoBuf.Meta
             MetaType primaryType = null;
             bool isInbuiltType = false;
             if (type == null)
-            { // generate for the entire model
+            {
+                // generate for the entire model
                 foreach (MetaType meta in types)
                 {
                     MetaType tmp = meta.GetSurrogateOrBaseOrSelf(false);
                     if (!requiredTypes.Contains(tmp))
-                    { // ^^^ note that the type might have been added as a descendent
+                    {
+                        // ^^^ note that the type might have been added as a descendent
                         requiredTypes.Add(tmp);
                         CascadeDependents(requiredTypes, tmp);
                     }
@@ -205,20 +212,24 @@ namespace ProtoBuf.Meta
                     {
                         if (tmp.StartsWith("System.")) continue;
                         if (package == null)
-                        { // haven't seen any suggestions yet
+                        {
+                            // haven't seen any suggestions yet
                             package = tmp;
                         }
                         else if (package == tmp)
-                        { // that's fine; a repeat of the one we already saw
+                        {
+                            // that's fine; a repeat of the one we already saw
                         }
                         else
-                        { // something else; have confliucting suggestions; abort
+                        {
+                            // something else; have confliucting suggestions; abort
                             package = null;
                             break;
                         }
                     }
                 }
             }
+
             switch (syntax)
             {
                 case ProtoSyntax.Proto2:
@@ -261,28 +272,34 @@ namespace ProtoBuf.Meta
                     tmp.WriteSchema(bodyBuilder, 0, ref imports, syntax);
                 }
             }
+
             if ((imports & CommonImports.Bcl) != 0)
             {
                 headerBuilder.Append("import \"protobuf-net/bcl.proto\"; // schema for protobuf-net's handling of core .NET types");
                 Helpers.AppendLine(headerBuilder);
             }
+
             if ((imports & CommonImports.Protogen) != 0)
             {
                 headerBuilder.Append("import \"protobuf-net/protogen.proto\"; // custom protobuf-net options");
                 Helpers.AppendLine(headerBuilder);
             }
+
             if ((imports & CommonImports.Timestamp) != 0)
             {
                 headerBuilder.Append("import \"google/protobuf/timestamp.proto\";");
                 Helpers.AppendLine(headerBuilder);
             }
+
             if ((imports & CommonImports.Duration) != 0)
             {
                 headerBuilder.Append("import \"google/protobuf/duration.proto\";");
                 Helpers.AppendLine(headerBuilder);
             }
+
             return Helpers.AppendLine(headerBuilder.Append(bodyBuilder)).ToString();
         }
+
         [Flags]
         internal enum CommonImports
         {
@@ -292,6 +309,7 @@ namespace ProtoBuf.Meta
             Duration = 4,
             Protogen = 8
         }
+
         private void CascadeDependents(BasicList list, MetaType metaType)
         {
             MetaType tmp;
@@ -325,14 +343,17 @@ namespace ProtoBuf.Meta
                         {
                             member.ResolveMapTypes(out _, out _, out type); // don't need key-type
                         }
+
                         if (type == null) type = member.MemberType;
                         TryGetCoreSerializer(list, type);
                     }
                 }
+
                 foreach (var genericArgument in metaType.GetAllGenericArguments())
                 {
                     TryGetCoreSerializer(list, genericArgument);
                 }
+
                 if (metaType.HasSubtypes)
                 {
                     foreach (SubType subType in metaType.GetSubtypes())
@@ -345,6 +366,7 @@ namespace ProtoBuf.Meta
                         }
                     }
                 }
+
                 tmp = metaType.BaseType;
                 if (tmp != null) tmp = tmp.GetSurrogateOrSelf(); // note: already walking base-types; exclude base
                 if (tmp != null && !list.Contains(tmp))
@@ -362,16 +384,19 @@ namespace ProtoBuf.Meta
             {
                 return;
             }
+
             int index = FindOrAddAuto(itemType, false, false, false);
             if (index < 0)
             {
                 return;
             }
+
             var temp = ((MetaType)types[index]).GetSurrogateOrBaseOrSelf(false);
             if (list.Contains(temp))
             {
                 return;
             }
+
             // could perhaps also implement as a queue, but this should work OK for sane models
             list.Add(temp);
             CascadeDependents(list, temp);
@@ -434,7 +459,10 @@ namespace ProtoBuf.Meta
         /// Obtains the MetaType associated with a given Type for the current model,
         /// allowing additional configuration.
         /// </summary>
-        public MetaType this[Type type] { get { return (MetaType)types[FindOrAddAuto(type, true, false, false)]; } }
+        public MetaType this[Type type]
+        {
+            get { return (MetaType)types[FindOrAddAuto(type, true, false, false)]; }
+        }
 
         internal MetaType FindWithoutAdd(Type type)
         {
@@ -447,6 +475,7 @@ namespace ProtoBuf.Meta
                     return metaType;
                 }
             }
+
             // if that failed, check for a proxy
             Type underlyingType = ResolveProxies(type);
             return underlyingType == null ? null : FindWithoutAdd(underlyingType);
@@ -494,6 +523,7 @@ namespace ProtoBuf.Meta
                 this.serializer = serializer;
             }
         }
+
         internal IProtoSerializer TryGetBasicTypeSerializer(Type type)
         {
             int idx = basicTypes.IndexOf(BasicTypeFinder, type);
@@ -501,7 +531,8 @@ namespace ProtoBuf.Meta
             if (idx >= 0) return ((BasicType)basicTypes[idx]).Serializer;
 
             lock (basicTypes)
-            { // don't need a full model lock for this
+            {
+                // don't need a full model lock for this
 
                 // double-checked
                 idx = basicTypes.IndexOf(BasicTypeFinder, type);
@@ -517,7 +548,7 @@ namespace ProtoBuf.Meta
             }
         }
 
-        internal int FindOrAddAuto(Type type, bool demand, bool addWithContractOnly, bool addEvenIfAutoDisabled)
+        internal int FindOrAddAuto(Type type, bool demand, bool addWithContractOnly, bool addEvenIfAutoDisabled = false)
         {
             int key = types.IndexOf(MetaTypeFinder, type);
             MetaType metaType;
@@ -530,6 +561,7 @@ namespace ProtoBuf.Meta
                 {
                     WaitOnLock(metaType);
                 }
+
                 return key;
             }
 
@@ -562,7 +594,8 @@ namespace ProtoBuf.Meta
                     TakeLock(ref opaqueToken);
                     // try to recognise a few familiar patterns...
                     if ((metaType = RecogniseCommonTypes(type)) == null)
-                    { // otherwise, check if it is a contract
+                    {
+                        // otherwise, check if it is a contract
                         MetaType.AttributeFamily family = MetaType.GetContractFamily(this, type, null);
                         if (family == MetaType.AttributeFamily.AutoTuple)
                         {
@@ -570,17 +603,18 @@ namespace ProtoBuf.Meta
                         }
 
                         if (!shouldAdd || (
-                            !Helpers.IsEnum(type) && addWithContractOnly && family == MetaType.AttributeFamily.None)
-                            )
+                                !Helpers.IsEnum(type) && addWithContractOnly && family == MetaType.AttributeFamily.None)
+                           )
                         {
                             if (demand) ThrowUnexpectedType(type);
                             return key;
                         }
+
                         metaType = Create(type);
                     }
 
-                    metaType.Pending = true;                    
-                    
+                    metaType.Pending = true;
+
                     // double-checked
                     int winner = types.IndexOf(MetaTypeFinder, type);
                     if (winner < 0)
@@ -593,6 +627,7 @@ namespace ProtoBuf.Meta
                     {
                         key = winner;
                     }
+
                     if (weAdded)
                     {
                         metaType.ApplyDefaultBehaviour();
@@ -608,6 +643,7 @@ namespace ProtoBuf.Meta
                     }
                 }
             }
+
             return key;
         }
 
@@ -633,6 +669,7 @@ namespace ProtoBuf.Meta
             //            }
             return null;
         }
+
         private MetaType Create(Type type)
         {
             ThrowIfFrozen();
@@ -670,10 +707,11 @@ namespace ProtoBuf.Meta
 #else
             if (type.IsInterface && MapType(MetaType.ienumerable).IsAssignableFrom(type)
 #endif
-                    && GetListItemType(this, type) == null)
+                                 && GetListItemType(this, type) == null)
             {
                 throw new ArgumentException("IEnumerable[<T>] data cannot be used as a meta-type unless an Add method can be resolved");
             }
+
             try
             {
                 newType = RecogniseCommonTypes(type);
@@ -685,9 +723,11 @@ namespace ProtoBuf.Meta
                             "Default behaviour must be observed for certain types with special handling; " + type.FullName,
                             "applyDefaultBehaviour");
                     }
+
                     // we should assume that type is fully configured, though; no need to re-run:
                     applyDefaultBehaviour = false;
                 }
+
                 if (newType == null) newType = Create(type);
                 newType.Pending = true;
                 TakeLock(ref opaqueToken);
@@ -695,7 +735,11 @@ namespace ProtoBuf.Meta
                 if (FindWithoutAdd(type) != null) throw new ArgumentException("Duplicate type", "type");
                 ThrowIfFrozen();
                 types.Add(newType);
-                if (applyDefaultBehaviour) { newType.ApplyDefaultBehaviour(); }
+                if (applyDefaultBehaviour)
+                {
+                    newType.ApplyDefaultBehaviour();
+                }
+
                 newType.Pending = false;
             }
             finally
@@ -732,10 +776,12 @@ namespace ProtoBuf.Meta
                 {
                     throw new InvalidOperationException("The default model must allow missing types");
                 }
+
                 ThrowIfFrozen();
                 SetOption(OPTIONS_AutoAddMissingTypes, value);
             }
         }
+
         /// <summary>
         /// Verifies that the model is still open to changes; if not, an exception is thrown
         /// </summary>
@@ -768,16 +814,17 @@ namespace ProtoBuf.Meta
             Helpers.DebugAssert(type != null);
             try
             {
-                int typeIndex = FindOrAddAuto(type, demand, true, false);
+                int typeIndex = FindOrAddAuto(type, demand, false);
                 if (typeIndex >= 0)
                 {
                     MetaType mt = (MetaType)types[typeIndex];
                     if (getBaseKey)
                     {
                         mt = MetaType.GetRootType(mt);
-                        typeIndex = FindOrAddAuto(mt.Type, true, true, false);
+                        typeIndex = FindOrAddAuto(mt.Type, true, true);
                     }
                 }
+
                 return typeIndex;
             }
             catch (NotSupportedException)
@@ -786,7 +833,7 @@ namespace ProtoBuf.Meta
             }
             catch (Exception ex)
             {
-                if (ex.Message.IndexOf(type.FullName) >= 0) throw;  // already enough info
+                if (ex.Message.IndexOf(type.FullName) >= 0) throw; // already enough info
                 throw new ProtoException(ex.Message + " (" + type.FullName + ")", ex);
             }
         }
@@ -1616,7 +1663,8 @@ namespace ProtoBuf.Meta
             MethodInfo dedicated = methodPairs[i].Deserialize;
             MethodBuilder boxedSerializer = type.DefineMethod("_" + i.ToString(), MethodAttributes.Static, CallingConventions.Standard,
                 model.MapType(typeof(object)), new Type[] { model.MapType(typeof(object)), model.MapType(typeof(ProtoReader)) });
-            Compiler.CompilerContext ctx = new Compiler.CompilerContext(boxedSerializer.GetILGenerator(), true, false, methodPairs, model, ilVersion, assemblyName, model.MapType(typeof(object)), "BoxedSerializer " + valueType.Name);
+            Compiler.CompilerContext ctx =
+ new Compiler.CompilerContext(boxedSerializer.GetILGenerator(), true, false, methodPairs, model, ilVersion, assemblyName, model.MapType(typeof(object)), "BoxedSerializer " + valueType.Name);
             ctx.LoadValue(ctx.InputValue);
             Compiler.CodeLabel @null = ctx.DefineLabel();
             ctx.BranchIfFalse(@null, true);
@@ -1664,6 +1712,7 @@ namespace ProtoBuf.Meta
         }
 
         private int metadataTimeoutMilliseconds = 5000;
+
         /// <summary>
         /// The amount of time to wait if there are concurrent metadata access operations
         /// </summary>
@@ -1682,11 +1731,15 @@ namespace ProtoBuf.Meta
         /// <summary>
         /// Gets how many times a model lock was taken
         /// </summary>
-        public int LockCount { get { return lockCount; } }
+        public int LockCount
+        {
+            get { return lockCount; }
+        }
 #endif
         internal void TakeLock(ref int opaqueToken)
         {
-            const string message = "Timeout while inspecting metadata; this may indicate a deadlock. This can often be avoided by preparing necessary serializers during application initialization, rather than allowing multiple threads to perform the initial metadata inspection; please also see the LockContended event";
+            const string message =
+                "Timeout while inspecting metadata; this may indicate a deadlock. This can often be avoided by preparing necessary serializers during application initialization, rather than allowing multiple threads to perform the initial metadata inspection; please also see the LockContended event";
             opaqueToken = 0;
 #if PORTABLE
             if(!Monitor.TryEnter(types, metadataTimeoutMilliseconds)) throw new TimeoutException(message);
@@ -1737,6 +1790,7 @@ namespace ProtoBuf.Meta
             return Interlocked.CompareExchange(ref contentionCounter, 0, 0);
 #endif
         }
+
         private void AddContention()
         {
 #if PLAT_NO_INTERLOCKED
@@ -1775,6 +1829,7 @@ namespace ProtoBuf.Meta
                 }
             }
         }
+
         /// <summary>
         /// If a lock-contention is detected, this event signals the *owner* of the lock responsible for the blockage, indicating
         /// what caused the problem; this is only raised if the lock-owning code successfully completes.
@@ -1793,6 +1848,7 @@ namespace ProtoBuf.Meta
                 {
                     throw new NotSupportedException("Multi-dimension arrays are supported");
                 }
+
                 itemType = type.GetElementType();
                 if (itemType == MapType(typeof(byte)))
                 {
@@ -1810,7 +1866,10 @@ namespace ProtoBuf.Meta
             }
 
             // handle lists 
-            if (itemType == null) { itemType = TypeModel.GetListItemType(this, type); }
+            if (itemType == null)
+            {
+                itemType = TypeModel.GetListItemType(this, type);
+            }
 
             // check for nested data (not allowed)
             if (itemType != null)
@@ -1834,6 +1893,7 @@ namespace ProtoBuf.Meta
                 {
                     defaultType = type;
                 }
+
                 if (defaultType == null)
                 {
 #if COREFX || PROFILE259
@@ -1842,14 +1902,13 @@ namespace ProtoBuf.Meta
                     if (type.IsInterface)
 #endif
                     {
-
                         Type[] genArgs;
 #if COREFX || PROFILE259
                         if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(System.Collections.Generic.IDictionary<,>)
                             && itemType == typeof(System.Collections.Generic.KeyValuePair<,>).MakeGenericType(genArgs = typeInfo.GenericTypeArguments))
 #else
                         if (type.IsGenericType && type.GetGenericTypeDefinition() == MapType(typeof(System.Collections.Generic.IDictionary<,>))
-                            && itemType == MapType(typeof(System.Collections.Generic.KeyValuePair<,>)).MakeGenericType(genArgs = type.GetGenericArguments()))
+                                               && itemType == MapType(typeof(System.Collections.Generic.KeyValuePair<,>)).MakeGenericType(genArgs = type.GetGenericArguments()))
 #endif
                         {
                             defaultType = MapType(typeof(System.Collections.Generic.Dictionary<,>)).MakeGenericType(genArgs);
@@ -1860,8 +1919,12 @@ namespace ProtoBuf.Meta
                         }
                     }
                 }
+
                 // verify that the default type is appropriate
-                if (defaultType != null && !Helpers.IsAssignableFrom(type, defaultType)) { defaultType = null; }
+                if (defaultType != null && !Helpers.IsAssignableFrom(type, defaultType))
+                {
+                    defaultType = null;
+                }
             }
         }
 
@@ -1875,12 +1938,14 @@ namespace ProtoBuf.Meta
             WireType wireType;
             IProtoSerializer ser = ValueMember.TryGetCoreSerializer(this, dataFormat, effectiveType, out wireType, false, false, false, false);
             if (ser == null)
-            {   // model type
+            {
+                // model type
                 if (asReference || dynamicType)
                 {
                     imports |= CommonImports.Bcl;
                     return ".bcl.NetObjectProxy";
                 }
+
                 return this[effectiveType].GetSurrogateOrBaseOrSelf(true).GetSchemaTypeName();
             }
             else
@@ -1952,13 +2017,16 @@ namespace ProtoBuf.Meta
                                 imports |= CommonImports.Bcl;
                                 return ".bcl.TimeSpan";
                         }
-                    case ProtoTypeCode.Decimal: imports |= CommonImports.Bcl; return ".bcl.Decimal";
-                    case ProtoTypeCode.Guid: imports |= CommonImports.Bcl; return ".bcl.Guid";
+                    case ProtoTypeCode.Decimal:
+                        imports |= CommonImports.Bcl;
+                        return ".bcl.Decimal";
+                    case ProtoTypeCode.Guid:
+                        imports |= CommonImports.Bcl;
+                        return ".bcl.Guid";
                     case ProtoTypeCode.Type: return "string";
                     default: throw new NotSupportedException("No .proto map found for: " + effectiveType.FullName);
                 }
             }
-
         }
 
         /// <summary>
@@ -1969,6 +2037,7 @@ namespace ProtoBuf.Meta
             VerifyFactory(methodInfo, null);
             defaultFactory = methodInfo;
         }
+
         private MethodInfo defaultFactory;
 
         internal void VerifyFactory(MethodInfo factory, Type type)
@@ -1977,7 +2046,8 @@ namespace ProtoBuf.Meta
             {
                 if (type != null && Helpers.IsValueType(type)) throw new InvalidOperationException();
                 if (!factory.IsStatic) throw new ArgumentException("A factory-method must be static", "factory");
-                if ((type != null && factory.ReturnType != type) && factory.ReturnType != MapType(typeof(object))) throw new ArgumentException("The factory-method must return object" + (type == null ? "" : (" or " + type.FullName)), "factory");
+                if ((type != null && factory.ReturnType != type) && factory.ReturnType != MapType(typeof(object)))
+                    throw new ArgumentException("The factory-method must return object" + (type == null ? "" : (" or " + type.FullName)), "factory");
 
                 if (!CallbackSet.CheckCallbackParameters(this, factory)) throw new ArgumentException("Invalid factory signature in " + factory.DeclaringType.FullName + "." + factory.Name, "factory");
             }
@@ -2018,6 +2088,7 @@ namespace ProtoBuf.Meta
     public sealed class LockContentedEventArgs : EventArgs
     {
         private readonly string ownerStackTrace;
+
         internal LockContentedEventArgs(string ownerStackTrace)
         {
             this.ownerStackTrace = ownerStackTrace;
@@ -2028,6 +2099,7 @@ namespace ProtoBuf.Meta
         /// </summary>
         public string OwnerStackTrace => ownerStackTrace;
     }
+
     /// <summary>
     /// Event-type that is raised when a lock-contention scenario is detected
     /// </summary>
