@@ -80,10 +80,11 @@ namespace Server.Proto
                     continue;
                 }
 
-                stringBuilder.AppendLine(" 注册消息ID类型: " + type);
+
                 // SerializerHelper.Register(type);
                 if (attribute is MessageTypeHandlerAttribute messageIdHandler)
                 {
+                    stringBuilder.AppendLine($"ID:{messageIdHandler.MessageId},类型: {type}");
                     if (type.IsImplWithInterface(typeof(IRequestMessage)))
                     {
                         // 请求
