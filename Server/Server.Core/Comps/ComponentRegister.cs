@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
-using NLog;
+
 using Server.Core.Actors;
 using Server.Core.Hotfix;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Utility;
 using Server.Extension;
+using Server.Log;
 
 namespace Server.Core.Comps
 {
     public static class ComponentRegister
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// ActorType -> CompTypeList
@@ -84,7 +84,7 @@ namespace Server.Core.Comps
                 }
             }
 
-            Log.Info($"初始化组件注册完成");
+            LogHelper.Info($"初始化组件注册完成");
             return Task.CompletedTask;
         }
 
@@ -99,7 +99,7 @@ namespace Server.Core.Comps
                         var agentType = HotfixMgr.GetAgentType(compType);
                         if (agentType == null)
                         {
-                            Console.WriteLine($"{compType}未实现agent");
+                            LogHelper.Info($"{compType}未实现agent");
                         }
 
                         // if (actorType > ActorType.Separator)
@@ -111,16 +111,16 @@ namespace Server.Core.Comps
 
                     if (actorType > ActorType.Separator)
                     {
-                        Log.Info($"激活全局Actor: {actorType}");
+                        LogHelper.Info($"激活全局Actor: {actorType}");
                         await ActorManager.GetOrNew(IdGenerator.GetActorID(actorType));
                     }
                 }
 
-                Log.Info($"激活全局组件并检测组件是否都包含Agent实现完成");
+                LogHelper.Info($"激活全局组件并检测组件是否都包含Agent实现完成");
             }
             catch (Exception)
             {
-                Log.Error($"激活全局组件并检测组件是否都包含Agent实现失败");
+                LogHelper.Error($"激活全局组件并检测组件是否都包含Agent实现失败");
                 throw;
             }
         }
@@ -164,7 +164,7 @@ namespace Server.Core.Comps
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        LogHelper.Info(e);
                         // throw;
                     }
                 }

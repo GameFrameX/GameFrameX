@@ -3,7 +3,7 @@ using System.Net;
 using System.Text;
 using Geek.Server.Core.Net.Kcp;
 using NetWork;
-using NLog;
+
 using Server.NetWork.Messages;
 using Server.NetWork.UDPSocket;
 

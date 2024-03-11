@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using Server.Log;
 using Server.Setting;
 using Server.Utility;
 
@@ -9,7 +10,6 @@ namespace Server.ServerManager
     /// </summary>
     public sealed class NamingServiceManager : Singleton<NamingServiceManager>
     {
-        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// 服务器节点的id 为自身的serverId
@@ -89,12 +89,12 @@ namespace Server.ServerManager
         {
             if (node.Type == serverInfo.Type)
             {
-                Log.Error($"不能添加discovery节点...{node}");
+                LogHelper.Error($"不能添加discovery节点...{node}");
                 return;
             }
 
             serverMap[node.ServerId] = node;
-            Log.Info($"新的网络节点:[{node}]   总数：{GetNodeCount()}");
+            LogHelper.Info($"新的网络节点:[{node}]   总数：{GetNodeCount()}");
         }
 
         /// <summary>

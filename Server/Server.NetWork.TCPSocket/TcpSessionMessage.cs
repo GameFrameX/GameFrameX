@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Text;
 using Server.Extension;
+using Server.Log;
 using Server.NetWork.TCPSocket.Base;
 using Server.Serialize.Serialize;
 
@@ -25,7 +26,7 @@ public class TcpSessionMessage : TcpSession
     {
         var message = buffer.AsSpan((int)offset, (int)size);
         var messageObject = MessageDecoderHandler.Handler(message);
-        Console.WriteLine("收到消息:" + messageObject);
+        LogHelper.Info("收到消息:" + messageObject);
         this.Server.UpdateReceiveMessageTime();
     }
 }

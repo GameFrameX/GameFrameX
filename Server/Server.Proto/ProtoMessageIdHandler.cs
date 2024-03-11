@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using NLog;
 using Server.Extension;
+using Server.Log;
 using Server.NetWork.Messages;
 using Server.Serialize.Serialize;
 
@@ -17,7 +17,6 @@ namespace Server.Proto
         private static readonly BidirectionalDictionary<int, Type> ReqDictionary = new BidirectionalDictionary<int, Type>();
         private static readonly BidirectionalDictionary<int, Type> RespDictionary = new BidirectionalDictionary<int, Type>();
 
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// 根据消息ID获取请求的类型
@@ -91,7 +90,7 @@ namespace Server.Proto
                         if (!ReqDictionary.TryAdd(messageIdHandler.MessageId, type))
                         {
                             ReqDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
-                            Log.Error($"请求Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            LogHelper.Error($"请求Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
                         }
                     }
                     else if (type.IsImplWithInterface(typeof(IResponseMessage)))
@@ -100,14 +99,14 @@ namespace Server.Proto
                         if (!RespDictionary.TryAdd(messageIdHandler.MessageId, type))
                         {
                             RespDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
-                            Log.Error($"返回Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            LogHelper.Error($"返回Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
                         }
                     }
                 }
             }
 
-            Log.Debug(stringBuilder.ToString());
-            Log.Info(" 注册消息ID类型: 结束");
+            LogHelper.Debug(stringBuilder.ToString());
+            LogHelper.Info(" 注册消息ID类型: 结束");
         }
     }
 }

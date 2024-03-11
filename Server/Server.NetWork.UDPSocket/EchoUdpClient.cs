@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Server.Log;
 using UdpClient = Server.NetWork.UDPSocket.Base.UdpClient;
 
 namespace Server.NetWork.UDPSocket;
@@ -21,7 +22,7 @@ public class EchoUdpClient : UdpClient
 
     protected override void OnConnected()
     {
-        Console.WriteLine($"Echo UDP client connected a new session with Id {Id}");
+        LogHelper.Info($"Echo UDP client connected a new session with Id {Id}");
 
         // Start receive datagrams
         ReceiveAsync();
@@ -29,7 +30,7 @@ public class EchoUdpClient : UdpClient
 
     protected override void OnDisconnected()
     {
-        Console.WriteLine($"Echo UDP client disconnected a session with Id {Id}");
+        LogHelper.Info($"Echo UDP client disconnected a session with Id {Id}");
 
         // Wait for a while...
         Thread.Sleep(1000);
@@ -41,7 +42,7 @@ public class EchoUdpClient : UdpClient
 
     protected override void OnReceived(EndPoint endpoint, byte[] buffer, long offset, long size)
     {
-        Console.WriteLine("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
+        LogHelper.Info("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
 
         // Continue receive datagrams
         ReceiveAsync();
@@ -49,7 +50,7 @@ public class EchoUdpClient : UdpClient
 
     protected override void OnError(SocketError error)
     {
-        Console.WriteLine($"Echo UDP client caught an error with code {error}");
+        LogHelper.Info($"Echo UDP client caught an error with code {error}");
     }
 
     private bool stop;

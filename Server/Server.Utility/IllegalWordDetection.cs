@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Server.Extension;
+using Server.Log;
 
 namespace Server.Utility
 {
@@ -40,8 +41,6 @@ namespace Server.Utility
         /// </summary>
         static BitArray endCache = new BitArray(char.MaxValue);
 
-        static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-
         /// <summary>
         /// 通过配置表初始化
         /// </summary>
@@ -60,7 +59,7 @@ namespace Server.Utility
                     }
                     catch (Exception e)
                     {
-                        LOGGER.Error(e.ToString());
+                        LogHelper.Error(e.ToString());
                     }
                 });
             }
@@ -72,7 +71,7 @@ namespace Server.Utility
                 }
                 catch (Exception e)
                 {
-                    LOGGER.Error(e.ToString());
+                    LogHelper.Error(e.ToString());
                 }
             }
         }
@@ -89,7 +88,7 @@ namespace Server.Utility
                     }
                     catch (Exception e)
                     {
-                        LOGGER.Error(e.ToString());
+                        LogHelper.Error(e.ToString());
                     }
                 });
             }
@@ -101,7 +100,7 @@ namespace Server.Utility
                 }
                 catch (Exception e)
                 {
-                    LOGGER.Error(e.ToString());
+                    LogHelper.Error(e.ToString());
                 }
             }
         }
@@ -209,7 +208,7 @@ namespace Server.Utility
                 while (itor < end) SkipBitArray[*itor++] = true;
             }
 
-            LOGGER.Info($"敏感词初始化耗时:{(DateTime.Now - startTime).TotalMilliseconds}ms, 有效数量:{activeNum}");
+            LogHelper.Info($"敏感词初始化耗时:{(DateTime.Now - startTime).TotalMilliseconds}ms, 有效数量:{activeNum}");
         }
 
         unsafe static void InnerInit(string[] badwords)
@@ -272,7 +271,7 @@ namespace Server.Utility
                 while (itor < end) SkipBitArray[*itor++] = true;
             }
 
-            LOGGER.Info($"敏感词初始化耗时:{(DateTime.Now - startTime).TotalMilliseconds}ms, 有效数量:{activeNum}");
+            LogHelper.Info($"敏感词初始化耗时:{(DateTime.Now - startTime).TotalMilliseconds}ms, 有效数量:{activeNum}");
         }
 
         unsafe static string OriginalToLower(string text)

@@ -7,8 +7,6 @@ namespace Server.Hotfix.Player.Role.Bag.Agent
 {
     public class BagComponentAgent : StateComponentAgent<BagComponent, BagState>
     {
-        readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-
         public override void Active()
         {
             if (State.ItemMap.Count <= 0)

@@ -5,8 +5,6 @@ namespace Server.Hotfix.Common.Events
 {
     public static class EventDispatcherExtensions
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         public static void Dispatch(this IComponentAgent agent, int evtId, Param args = null)
         {
             var evt = new Event

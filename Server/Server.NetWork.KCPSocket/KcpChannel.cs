@@ -4,9 +4,10 @@ using System.IO.Pipelines;
 using System.Net;
 using System.Net.Sockets.Kcp;
 using Newtonsoft.Json;
-using NLog;
+
 using ProtoBuf;
 using Server.Extension;
+using Server.Log;
 using Server.NetWork;
 using Server.NetWork.Messages;
 using Server.Utility;
@@ -17,7 +18,6 @@ namespace NetWork
     {
         public delegate void KcpOutPutFunc(BaseNetChannel chann, ReadOnlySpan<byte> data);
 
-        private readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
         public EndPoint routerEndPoint { get; set; }
 
         private KcpOutPutFunc kcpDataSendFunc;
@@ -102,7 +102,7 @@ namespace NetWork
                             if (msg != null)
                             {
 #if DEBUG
-                                LOGGER.Info($"收到消息:{msg.GetType().Name}:{JsonConvert.SerializeObject(msg)}");
+                                LogHelper.Info($"收到消息:{msg.GetType().Name}:{JsonConvert.SerializeObject(msg)}");
 #endif
                                 if (onMessageAct != null)
                                     await onMessageAct(this, msg);
@@ -118,7 +118,7 @@ namespace NetWork
                 }
                 catch (Exception e)
                 {
-                    LOGGER.Error(e.Message);
+                    LogHelper.Error(e.Message);
                     break;
                 }
             }
@@ -169,7 +169,7 @@ namespace NetWork
             if (isColose)
                 return;
 #if DEBUG
-            LOGGER.Info($"发送{msg.GetType()}:{JsonConvert.SerializeObject(msg)}");
+            LogHelper.Info($"发送{msg.GetType()}:{JsonConvert.SerializeObject(msg)}");
 #endif
             var bytes = SerializerHelper.Serialize(msg);
 

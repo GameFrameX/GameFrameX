@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using Server.Log;
 using Server.NetWork.UDPSocket.Base;
 
 namespace Server.NetWork.UDPSocket;
@@ -12,6 +13,6 @@ public class MulticastUdpServer : UdpServer
 
     protected override void OnError(SocketError error)
     {
-        Console.WriteLine($"Multicast UDP server caught an error with code {error}");
+        LogHelper.Info($"Multicast UDP server caught an error with code {error}");
     }
 }

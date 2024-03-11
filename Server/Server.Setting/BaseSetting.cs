@@ -2,7 +2,6 @@ namespace Server.Setting;
 
 public abstract class BaseSetting
 {
-    private static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
     public TaskCompletionSource<bool> AppExitSource = new TaskCompletionSource<bool>();
     public Task<bool> AppExitToken => AppExitSource.Task;
 
@@ -34,7 +33,7 @@ public abstract class BaseSetting
                 {
                     if (value)
                     {
-                        LOGGER.Error("AppRunning已经被设置为退出，不能再次开启...");
+                        Serilog.Log.Error("AppRunning已经被设置为退出，不能再次开启...");
                     }
 
                     _appRunning = false;
@@ -44,7 +43,7 @@ public abstract class BaseSetting
                 _appRunning = value;
                 if (!value && !AppExitSource.Task.IsCompleted)
                 {
-                    LOGGER.Info("Set AppRunning false...");
+                    Serilog.Log.Information("Set AppRunning false...");
                     AppExitSource.TrySetCanceled();
                 }
             }

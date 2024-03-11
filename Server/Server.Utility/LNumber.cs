@@ -1,10 +1,11 @@
-using NLog;
+
+
+using Server.Log;
 
 namespace Server.Utility;
 
 public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
 {
-    private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
 
     public const int FRACTION_BITS = 14; // 小数位位数 14
     private const int INTEGER_BITS = sizeof(long) * 8 - FRACTION_BITS; // 整数位位数 50
@@ -151,12 +152,12 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
                 r.raw = long.Parse(c.ToString()); //未越界
             else if ((lhs > 0 && rhs > 0) || (lhs < 0 && rhs < 0))
             {
-                LOGGER.Error("LNumber*已越界>" + c.ToString());
+                LogHelper.Error("LNumber*已越界>" + c.ToString());
                 r.raw = long.MaxValue;
             }
             else
             {
-                LOGGER.Error("LNumber*已越界>" + c.ToString());
+                LogHelper.Error("LNumber*已越界>" + c.ToString());
                 r.raw = long.MinValue;
             }
         }
@@ -198,12 +199,12 @@ public struct LNumber : IComparable<LNumber>, IEquatable<LNumber>
                 r.raw = long.Parse(c.ToString()); //未越界
             else if ((lhs > 0 && rhs > 0) || (lhs < 0 && rhs < 0))
             {
-                LOGGER.Error("LNumber/已越界>" + c.ToString());
+                LogHelper.Error("LNumber/已越界>" + c.ToString());
                 r.raw = long.MaxValue;
             }
             else
             {
-                LOGGER.Error("LNumber/已越界>" + c.ToString());
+                LogHelper.Error("LNumber/已越界>" + c.ToString());
                 r.raw = long.MinValue;
             }
         }

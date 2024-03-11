@@ -6,8 +6,6 @@ namespace Server.Hotfix.Player.Role.Pet.Agent
 {
     public class PetComponentAgent : StateComponentAgent<PetComponent, PetState>
     {
-        readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-
         [Event(EventId.GotNewPet)]
         class EL : EventListener<PetComponentAgent>
         {
@@ -29,7 +27,7 @@ namespace Server.Hotfix.Player.Role.Pet.Agent
             var serverComp = await ActorManager.GetComponentAgent<ServerComponentAgent>();
             //var level = await serverComp.SendAsync(() => serverComp.GetWorldLevel()); //手动入队的写法
             var level = await serverComp.GetWorldLevel();
-            LOGGER.Debug($"PetCompAgent.OnGotNewPet监听到了获得宠物的事件,宠物ID:{param.Value}当前世界等级:{level}");
+            LogHelper.Debug($"PetCompAgent.OnGotNewPet监听到了获得宠物的事件,宠物ID:{param.Value}当前世界等级:{level}");
         }
     }
 }

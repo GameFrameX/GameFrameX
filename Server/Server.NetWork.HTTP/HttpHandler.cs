@@ -1,16 +1,14 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
-using NLog;
 using Server.Extension;
+using Server.Log;
 using Server.Setting;
 
 namespace Server.NetWork.HTTP
 {
     public static class HttpHandler
     {
-        static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         public static async Task HandleRequest(HttpContext context, Func<string, BaseHttpHandler> baseHandler)
         {
             try
@@ -19,7 +17,7 @@ namespace Server.NetWork.HTTP
                 string url = context.Request.PathBase + context.Request.Path;
 
                 string command = context.Request.Path.ToString().Substring(HttpServer.GameApiPath.Length);
-                Logger.Info("收到来自[{}]的HTTP请求. 请求url:[{}]", ip, url);
+                LogHelper.Info("收到来自[{}]的HTTP请求. 请求url:[{}]", ip, url);
                 Dictionary<string, string> paramMap = new Dictionary<string, string>();
 
                 foreach (var keyValuePair in context.Request.Query)
@@ -39,7 +37,7 @@ namespace Server.NetWork.HTTP
 
                     var isJson = context.Request.HasJsonContentType();
                     var isForm = context.Request.HasFormContentType;
-                    Console.WriteLine("isJson:" + isJson);
+                    LogHelper.Info("isJson:" + isJson);
                     if (isJson)
                     {
                         JsonElement json = await context.Request.ReadFromJsonAsync<JsonElement>();
@@ -80,7 +78,7 @@ namespace Server.NetWork.HTTP
                     str.Append("'").Append(parameter.Key).Append("'='").Append(parameter.Value).Append("'  ");
                 }
 
-                Logger.Info(str.ToString());
+                LogHelper.Info(str.ToString());
 
                 if (command.IsNullOrEmpty())
                 {
@@ -97,7 +95,7 @@ namespace Server.NetWork.HTTP
                 var handler = baseHandler(command);
                 if (handler == null)
                 {
-                    Logger.Warn($"http cmd handler 不存在：{command}");
+                    LogHelper.Warn($"http cmd handler 不存在：{command}");
                     await context.Response.WriteAsync(HttpResult.Undefine);
                     return;
                 }
@@ -111,12 +109,12 @@ namespace Server.NetWork.HTTP
                 }
 
                 var ret = await Task.Run(() => { return handler.Action(ip, url, paramMap); });
-                Logger.Warn("http result:" + ret);
+                LogHelper.Warn("http result:" + ret);
                 await context.Response.WriteAsync(ret);
             }
             catch (Exception e)
             {
-                Logger.Error("执行http异常. {} {}", e.Message, e.StackTrace);
+                LogHelper.Error("执行http异常. {0} {1}", e.Message, e.StackTrace);
                 await context.Response.WriteAsync(e.Message);
             }
         }

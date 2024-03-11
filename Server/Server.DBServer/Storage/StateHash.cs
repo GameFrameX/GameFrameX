@@ -1,12 +1,11 @@
-using NLog;
+
 using Server.DBServer.State;
+using Server.Log;
 
 namespace Server.DBServer.Storage;
 
 class StateHash
 {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
     private CacheState State { get; }
 
     public StateHash(CacheState state, bool isNew)
@@ -33,7 +32,7 @@ class StateHash
     {
         if (CacheHash.Equals(ToSaveHash))
         {
-            Log.Error($"调用AfterSaveToDB前CacheHash已经等于ToSaveHash {State}");
+            LogHelper.Error($"调用AfterSaveToDB前CacheHash已经等于ToSaveHash {State}");
         }
 
         CacheHash = ToSaveHash;

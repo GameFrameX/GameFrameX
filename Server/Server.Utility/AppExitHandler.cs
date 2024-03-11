@@ -1,11 +1,11 @@
 ﻿using System.Collections;
-using NLog;
+using Server.Log;
+
 
 namespace Server.Utility
 {
     public static class AppExitHandler
     {
-        static readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static Action _existCallBack;
 
         public static void Init(Action existCallBack)
@@ -22,17 +22,17 @@ namespace Server.Utility
         private static void HandleFetalException(object e)
         {
             //这里可以发送短信或者钉钉消息通知到运维
-            Logger.Error("get unhandled exception");
+            LogHelper.Error("get unhandled exception");
             if (e is IEnumerable arr)
             {
                 foreach (var ex in arr)
                 {
-                    Logger.Error($"Unhandled Exception:{ex}");
+                    LogHelper.Error($"Unhandled Exception:{ex}");
                 }
             }
             else
             {
-                Logger.Error($"Unhandled Exception:{e}");
+                LogHelper.Error($"Unhandled Exception:{e}");
             }
 
             _existCallBack?.Invoke();

@@ -1,17 +1,13 @@
 ﻿using Server.Core.Actors;
 using Server.DBServer;
 using Server.Extension;
+using Server.Log;
 using Server.Setting;
 
 namespace Server.Core.Timer
 {
     public static class GlobalTimer
     {
-        /// <summary>
-        /// 日志记录器
-        /// </summary>
-        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-
         /// <summary>
         /// 循环任务
         /// </summary>
@@ -29,7 +25,7 @@ namespace Server.Core.Timer
         {
             working = true;
             LoopTask = Task.Run(Loop);
-            Log.Info($"初始化全局定时完成");
+            LogHelper.Info($"初始化全局定时完成");
         }
 
         /// <summary>
@@ -43,7 +39,7 @@ namespace Server.Core.Timer
 
             while (working)
             {
-                Log.Info($"下次定时回存时间 {nextSaveTime}");
+                LogHelper.Info($"下次定时回存时间 {nextSaveTime}");
 
                 while (DateTime.Now < nextSaveTime && working)
                 {
@@ -58,7 +54,7 @@ namespace Server.Core.Timer
                 await GameDb.TimerSave();
 
                 var cost = (DateTime.Now - startTime).TotalMilliseconds;
-                Log.Info($"定时回存完成 耗时: {cost:f4}ms");
+                LogHelper.Info($"定时回存完成 耗时: {cost:f4}ms");
 
                 await ActorManager.CheckIdle();
 
@@ -108,7 +104,7 @@ namespace Server.Core.Timer
             await LoopTask;
             await GameDb.SaveAll();
             GameDb.Close();
-            Log.Info($"停止全局定时完成");
+            LogHelper.Info($"停止全局定时完成");
         }
     }
 }

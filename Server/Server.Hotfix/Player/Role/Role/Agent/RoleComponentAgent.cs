@@ -10,15 +10,17 @@ namespace Server.Hotfix.Player.Role.Role.Agent
 {
     public static class RoleCompAgentExtension
     {
-        private static readonly NLog.Logger LOGGER = LogManager.GetCurrentClassLogger();
-
         public static async Task NotifyClient(this IComponentAgent agent, MessageObject msg, int uniId = 0, OperationStatusCode code = OperationStatusCode.Success)
         {
             var roleComp = await agent.GetComponentAgent<RoleComponentAgent>();
             if (roleComp != null)
+            {
                 roleComp.NotifyClient(msg, uniId, code);
+            }
             else
-                LOGGER.Warn($"{agent.OwnerType}未注册RoleComp组件");
+            {
+                LogHelper.Warn($"{agent.OwnerType}未注册RoleComp组件");
+            }
         }
     }
 

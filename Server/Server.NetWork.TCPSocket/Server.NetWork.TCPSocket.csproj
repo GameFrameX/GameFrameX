@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="NLog.Web.AspNetCore" Version="5.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Server.NetWork\Server.NetWork.csproj" />
       <ProjectReference Include="..\Server.Setting\Server.Setting.csproj" />
     </ItemGroup>

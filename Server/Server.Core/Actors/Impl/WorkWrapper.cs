@@ -1,4 +1,6 @@
-﻿namespace Server.Core.Actors.Impl
+﻿using Server.Log;
+
+namespace Server.Core.Actors.Impl
 {
     public abstract class WorkWrapper
     {
@@ -23,7 +25,6 @@
 
     public class ActionWrapper : WorkWrapper
     {
-        static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Action Work { private set; get; }
         public TaskCompletionSource<bool> Tcs { private set; get; }
@@ -43,7 +44,7 @@
             }
             catch (Exception e)
             {
-                Logger.Error(e.ToString());
+                LogHelper.Error(e.ToString());
             }
             finally
             {
@@ -68,8 +69,6 @@
 
     public class FuncWrapper<T> : WorkWrapper
     {
-        static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-
         public Func<T> Work { private set; get; }
         public TaskCompletionSource<T> Tcs { private set; get; }
 
@@ -89,7 +88,7 @@
             }
             catch (Exception e)
             {
-                LOGGER.Error(e.ToString());
+                LogHelper.Error(e.ToString());
             }
             finally
             {
@@ -114,7 +113,7 @@
 
     public class ActionAsyncWrapper : WorkWrapper
     {
-        static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
+        
 
         public Func<Task> Work { private set; get; }
         public TaskCompletionSource<bool> Tcs { private set; get; }
@@ -134,7 +133,7 @@
             }
             catch (Exception e)
             {
-                LOGGER.Error(e.ToString());
+                LogHelper.Error(e.ToString());
             }
             finally
             {
@@ -157,7 +156,7 @@
 
     public class FuncAsyncWrapper<T> : WorkWrapper
     {
-        static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
+        
 
         public Func<Task<T>> Work { private set; get; }
         public TaskCompletionSource<T> Tcs { private set; get; }
@@ -178,7 +177,7 @@
             }
             catch (Exception e)
             {
-                LOGGER.Error(e.ToString());
+                LogHelper.Error(e.ToString());
             }
             finally
             {

@@ -2,9 +2,10 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using NLog;
+
 using Server.DBServer.State;
 using Server.Extension;
+using Server.Log;
 
 namespace Server.DBServer.DbService.MongoDB
 {
@@ -13,8 +14,6 @@ namespace Server.DBServer.DbService.MongoDB
     /// </summary>
     public class MongoDbServiceConnection : IGameDbService
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         /// <summary>
         /// 获取或设置MongoDB客户端。
         /// </summary>
@@ -37,11 +36,11 @@ namespace Server.DBServer.DbService.MongoDB
                 var settings = MongoClientSettings.FromConnectionString(url);
                 Client = new MongoClient(settings);
                 CurrentDatabase = Client.GetDatabase(dbName);
-                Log.Info($"初始化MongoDB服务完成 Url:{url} DbName:{dbName}");
+                LogHelper.Info($"初始化MongoDB服务完成 Url:{url} DbName:{dbName}");
             }
             catch (Exception)
             {
-                Log.Error($"初始化MongoDB服务失败 Url:{url} DbName:{dbName}");
+                LogHelper.Error($"初始化MongoDB服务失败 Url:{url} DbName:{dbName}");
                 throw;
             }
         }

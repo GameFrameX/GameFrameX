@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using NLog.Web;
+using Serilog;
+using Server.Log;
 using Server.Setting;
 using Server.Utility;
 
@@ -16,7 +17,6 @@ namespace Server.NetWork.WebSocket
     /// </summary>
     public static class WebSocketServer
     {
-        static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication? App { get; set; }
         public static IMessageHelper? MessageHelper { get; private set; }
         public static AppSetting AppSetting { get; private set; }
@@ -36,13 +36,18 @@ namespace Server.NetWork.WebSocket
                         options.ListenAnyIP(wsPort);
                         if (wssPort > 0)
                         {
-                            options.ListenAnyIP(wssPort, listenOptions => { listenOptions.UseHttps((httpsConnectionAdapterOptions) => { httpsConnectionAdapterOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(wssCertFilePath); }); });
+                            options.ListenAnyIP(wssPort,
+                                listenOptions =>
+                                {
+                                    listenOptions.UseHttps(
+                                        (httpsConnectionAdapterOptions) => { httpsConnectionAdapterOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(wssCertFilePath); });
+                                });
                         }
                     })
                 .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Error); })
-                .UseNLog();
+                .UseSerilog();
             App = builder.Build();
-            Log.Info("启动websocket服务...");
+            LogHelper.Info("启动websocket服务...");
             App.UseWebSockets();
 
             async Task RequestDelegate(HttpContext context)
@@ -75,7 +80,7 @@ namespace Server.NetWork.WebSocket
         {
             if (App != null)
             {
-                Log.Info("停止websocket服务...");
+                LogHelper.Info("停止websocket服务...");
                 var task = App.StopAsync();
                 App = null;
                 return task;

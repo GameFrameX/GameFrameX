@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using NLog;
+using Server.Log;
 using Server.Setting;
 using Server.Utility;
 
@@ -11,15 +11,13 @@ namespace Server.EntryUtility
     /// </summary>
     public static class AppEnter
     {
-        private static NLog.Logger? _log;
 
         private static volatile bool _exitCalled = false;
         private static volatile Task? _gameLoopTask = null;
         private static volatile Task? _shutDownTask = null;
 
-        public static async Task Entry(Func<Task> entry, Logger logger)
+        public static async Task Entry(Func<Task> entry )
         {
-            _log = logger;
             try
             {
                 AppExitHandler.Init(HandleExit);
@@ -36,12 +34,12 @@ namespace Server.EntryUtility
                 if (GlobalSettings.IsAppRunning)
                 {
                     error = $"服务器运行时异常 e:{e}";
-                    Console.WriteLine(error);
+                    LogHelper.Info(error);
                 }
                 else
                 {
                     error = $"启动服务器失败 e:{e}";
-                    Console.WriteLine(error);
+                    LogHelper.Info(error);
                 }
 
                 await File.WriteAllTextAsync("server_error.txt", $"{error}", Encoding.UTF8);
@@ -56,13 +54,12 @@ namespace Server.EntryUtility
             }
 
             _exitCalled = true;
-            _log?.Info($"监听到退出程序消息");
+            LogHelper.Info($"监听到退出程序消息");
             _shutDownTask = Task.Run(() =>
             {
                 GlobalSettings.IsAppRunning = false;
                 _gameLoopTask?.Wait();
-                LogManager.Shutdown();
-                Console.WriteLine($"退出程序");
+                LogHelper.Info($"退出程序");
                 Process.GetCurrentProcess().Kill();
             });
             _shutDownTask.Wait();

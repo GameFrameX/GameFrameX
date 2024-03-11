@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks.Dataflow;
-using NLog;
+using Serilog;
 using Server.Core.Utility;
 using Server.Setting;
 using Server.Utility;
@@ -8,7 +8,7 @@ namespace Server.Core.Actors.Impl
 {
     public class WorkerActor
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Log = Serilog.Log.ForContext<WorkWrapper>();
 
         internal long CurChainId { get; set; }
         internal long Id { get; init; }
@@ -34,7 +34,7 @@ namespace Server.Core.Actors.Impl
             }
             catch (TimeoutException)
             {
-                Log.Fatal("wrapper执行超时:" + wrapper.GetTrace());
+                WorkerActor.Log.Fatal("wrapper执行超时:" + wrapper.GetTrace());
                 //强制设状态-取消该操作
                 wrapper.ForceSetResult();
             }

@@ -5,14 +5,13 @@ using Server.Core.Actors;
 using Server.Core.Hotfix;
 using Server.Core.Timer.Handler;
 using Server.Core.Utility;
+using Server.Log;
 using Server.Utility;
 
 namespace Server.Core.Timer
 {
     public static class QuartzTimer
     {
-        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-
         private static readonly StatisticsTool StatisticsTool = new();
 
         /// <summary>
@@ -371,12 +370,12 @@ namespace Server.Core.Timer
                     }
                     else
                     {
-                        Log.Error($"错误的ITimer类型，回调失败 type:{handlerType}");
+                        LogHelper.Error($"错误的ITimer类型，回调失败 type:{handlerType}");
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.ToString());
+                    LogHelper.Error(e.ToString());
                 }
             }
         }
@@ -422,11 +421,11 @@ namespace Server.Core.Timer
                         }
                         else if (level == LogLevel.Warn)
                         {
-                            Log.Warn(func(), parameters);
+                            LogHelper.Warn(func(), parameters);
                         }
                         else
                         {
-                            Log.Error(func(), parameters);
+                            LogHelper.Error(func(), parameters);
                         }
                     }
 

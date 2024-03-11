@@ -6,8 +6,6 @@ namespace Server.Hotfix.Common
 {
     internal class HotfixBridge : IHotfixBridge
     {
-        private static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
-
         public ServerType BridgeType => ServerType.Game;
 
         public async Task<bool> OnLoadSuccess(bool reload)
@@ -18,7 +16,7 @@ namespace Server.Hotfix.Common
                 return true;
             }
 
-            Log.Info("load config data");
+            LogHelper.Info("load config data");
             HotfixMgr.SetMsgGetterByGetId((type) =>
             {
                 // Log.Debug("MsgType:" + type);
@@ -32,13 +30,13 @@ namespace Server.Hotfix.Common
             var appSetting = GlobalSettings.GetSetting<AppSetting>(ServerType.Game);
             var webSocketMessageHelper = new WebSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
             await WebSocketServer.Start(appSetting.WsPort, appSetting.WssPort, appSetting.WssCertFilePath, appSetting, webSocketMessageHelper, new WebSocketChannelHandler());
-            Log.Info("WebSocket 服务启动完成...");
+            LogHelper.Info("WebSocket 服务启动完成...");
 
             // var tcpSocketMessageHelper = new TcpSocketMessageHelper(HotfixMgr.GetTcpHandler, HotfixMgr.GetMsgTypeById, HotfixMgr.GetMsgIdByType);
             // await TcpServer.Start(appSetting.TcpPort, appSetting, tcpSocketMessageHelper, builder => { builder.UseConnectionHandler<AppTcpConnectionHandler>(); });
-            Log.Info("tcp 服务启动完成...");
+            LogHelper.Info("tcp 服务启动完成...");
             await HttpServer.Start(appSetting.HttpPort, appSetting.HttpsPort, HotfixMgr.GetHttpHandler);
-            Log.Info("load config data");
+            LogHelper.Info("load config data");
 
             GlobalTimer.Start();
             await ComponentRegister.ActiveGlobalComps();

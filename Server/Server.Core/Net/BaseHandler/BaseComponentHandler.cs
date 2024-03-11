@@ -28,7 +28,7 @@ namespace Server.Core.Net.BaseHandler
             if (CacheComponent == null)
             {
                 CacheComponent = await ActorManager.GetComponentAgent(ActorId, ComponentAgentType);
-                // Console.WriteLine(CacheComp);
+                // LogHelper.Info(CacheComp);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using NLog;
+using Serilog;
 using Server.Core.Utility;
+using Server.Log;
 
 namespace Server.Core.Actors.Impl
 {
@@ -33,7 +34,6 @@ namespace Server.Core.Actors.Impl
         }
 
 
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private static IRule _rule;
         private static readonly Dictionary<ActorType, int> LevelDic = new Dictionary<ActorType, int>(128);
@@ -64,7 +64,7 @@ namespace Server.Core.Actors.Impl
                 case RuleType.None:
                     break;
                 default:
-                    Log.Error($"不支持的rule类型:{type}");
+                    LogHelper.Error($"不支持的rule类型:{type}");
                     break;
             }
         }
@@ -94,7 +94,7 @@ namespace Server.Core.Actors.Impl
                     //等级高的不能【等待】调用等级低的
                     if (LevelDic[curType] > LevelDic[targetType])
                     {
-                        Log.Error($"不合法的调用路径:{curType}==>{targetType}");
+                        LogHelper.Error($"不合法的调用路径:{curType}==>{targetType}");
                         return false;
                     }
                 }
@@ -119,7 +119,7 @@ namespace Server.Core.Actors.Impl
                     return true;
                 if (CrossDic.TryGetValue(target, out var set) && set.ContainsKey(self))
                 {
-                    Log.Error($"发生交叉死锁，ActorId1:{self} ActorType1:{IdGenerator.GetActorType(self)} ActorId2:{target} ActorType2:{IdGenerator.GetActorType(target)}");
+                    LogHelper.Error($"发生交叉死锁，ActorId1:{self} ActorType1:{IdGenerator.GetActorType(self)} ActorId2:{target} ActorType2:{IdGenerator.GetActorType(target)}");
                     return false;
                 }
 

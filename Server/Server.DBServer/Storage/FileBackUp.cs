@@ -2,19 +2,18 @@
 using MongoDB.Driver;
 using Server.DBServer.DbService.MongoDB;
 using Server.DBServer.State;
+using Server.Log;
 
 namespace Server.DBServer.Storage
 {
     public static class FileBackup
     {
-        private static readonly NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-
         public static FileBackupStatus CheckRestoreFromFile()
         {
             var folder = Environment.CurrentDirectory + "/../State/";
             if (Directory.Exists(folder))
             {
-                LOGGER.Warn("need restore...");
+                LogHelper.Warn("need restore...");
 
                 try
                 {
@@ -31,13 +30,13 @@ namespace Server.DBServer.Storage
                                 var fileStr = File.ReadAllText(file.FullName);
                                 BsonDocument bsonElements = BsonDocument.Parse(fileStr);
                                 var filter = Builders<BsonDocument>.Filter.Eq(CacheState.UniqueId, bsonElements.GetValue(CacheState.UniqueId));
-                                var ret = new ReplaceOneModel<BsonDocument>(filter, bsonElements) {IsUpsert = true};
+                                var ret = new ReplaceOneModel<BsonDocument>(filter, bsonElements) { IsUpsert = true };
                                 batchList.Add(ret);
                                 //保存数据
                                 var result = col.BulkWrite(batchList);
                                 if (!result.IsAcknowledged)
                                 {
-                                    LOGGER.Warn($"restore {jsonDir.Name} fail");
+                                    LogHelper.Warn($"restore {jsonDir.Name} fail");
                                     return FileBackupStatus.StoreToDbFailed;
                                 }
                             }
@@ -53,7 +52,7 @@ namespace Server.DBServer.Storage
                 }
                 catch (Exception e)
                 {
-                    LOGGER.Fatal(e.ToString());
+                    LogHelper.Fatal(e.ToString());
                     //回存数据失败 不予启服
                     return FileBackupStatus.StoreToDbFailed;
                 }

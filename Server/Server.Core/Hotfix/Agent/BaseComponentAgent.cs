@@ -1,4 +1,4 @@
-﻿using NLog;
+﻿
 using Server.Core.Actors;
 using Server.Core.Comps;
 using Server.Core.Timer;
@@ -9,21 +9,6 @@ namespace Server.Core.Hotfix.Agent
 {
     public abstract class BaseComponentAgent<TComponent> : IComponentAgent where TComponent : BaseComponent
     {
-        private Logger _logger;
-
-        protected Logger Log
-        {
-            get
-            {
-                if (_logger == null)
-                {
-                    _logger = LogManager.GetLogger(GetType().FullName, GetType());
-                }
-
-                return _logger;
-            }
-        }
-
         public BaseComponent Owner { get; set; }
         public TComponent Comp => (TComponent)Owner;
         public Actor Actor => Owner.Actor;

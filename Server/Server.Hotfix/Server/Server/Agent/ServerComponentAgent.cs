@@ -7,8 +7,6 @@ namespace Server.Hotfix.Server.Server.Agent
 {
     public class ServerComponentAgent : StateComponentAgent<ServerComponent, ServerState>
     {
-        static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
         class DelayTimer : TimerHandler<ServerComponentAgent>
         {
             protected override Task HandleTimer(ServerComponentAgent agent, Param param)
@@ -32,7 +30,7 @@ namespace Server.Hotfix.Server.Server.Agent
         {
             protected override async Task HandleTimer(ServerComponentAgent agent, Param param)
             {
-                Logger.Debug($"ServerCompAgent.CrossDayTimeHandler.跨天定时器执行{TimeHelper.CurrentTimeWithFullString()}");
+                LogHelper.Debug($"ServerCompAgent.CrossDayTimeHandler.跨天定时器执行{TimeHelper.CurrentTimeWithFullString()}");
                 await ActorManager.RoleCrossDay(1);
                 await ActorManager.CrossDay(1, ActorType.Server);
             }
@@ -76,13 +74,13 @@ namespace Server.Hotfix.Server.Server.Agent
 
         private Task TestDelayTimer()
         {
-            Logger.Debug("ServerCompAgent.TestDelayTimer.延时3秒执行.执行一次");
+            LogHelper.Debug("ServerCompAgent.TestDelayTimer.延时3秒执行.执行一次");
             return Task.CompletedTask;
         }
 
         private Task TestScheduleTimer()
         {
-            Logger.Debug("ServerCompAgent.TestSchedueTimer.延时1秒执行.每隔10秒执行");
+            LogHelper.Debug("ServerCompAgent.TestSchedueTimer.延时1秒执行.每隔10秒执行");
             //
             // var states = await GameDb.FindListAsync<LoginState>(m => m.Id != 0);
             // LOGGER.Debug(states);

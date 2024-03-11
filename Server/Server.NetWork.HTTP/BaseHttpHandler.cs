@@ -1,14 +1,12 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using NLog;
+using Server.Log;
 using Server.Setting;
 
 namespace Server.NetWork.HTTP
 {
     public abstract class BaseHttpHandler
     {
-        static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         /// <summary>
         /// 是否使用内部验证方式
         /// </summary>
@@ -47,7 +45,7 @@ namespace Server.NetWork.HTTP
             //内部验证
             if (!paramMap.ContainsKey("token") || !paramMap.ContainsKey("timestamp"))
             {
-                Logger.Error("http命令未包含验证参数");
+                LogHelper.Error("http命令未包含验证参数");
                 return HttpResult.Create(HttpStatusCode.Illegal, "http命令未包含验证参数");
             }
 
@@ -57,7 +55,7 @@ namespace Server.NetWork.HTTP
             var span = new TimeSpan(Math.Abs(DateTime.Now.Ticks - timeTick));
             if (span.TotalMinutes > 5) //5分钟内有效
             {
-                Logger.Error("http命令已过期");
+                LogHelper.Error("http命令已过期");
                 return HttpResult.Create(HttpStatusCode.Illegal, "http命令已过期");
             }
 

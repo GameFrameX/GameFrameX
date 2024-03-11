@@ -1,14 +1,13 @@
-﻿using Server.NetWork.Messages;
+﻿using Server.Log;
+using Server.NetWork.Messages;
 
 namespace Server.NetWork.WebSocket
 {
     public abstract class WebSocketConnectionHandler
     {
-        static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
         public virtual async Task OnConnectedAsync(System.Net.WebSockets.WebSocket socket, string clientAddress)
         {
-            Logger.Info($"new websocket {clientAddress} connect...");
+            LogHelper.Info($"new websocket {clientAddress} connect...");
             WebSocketChannel channel = null;
             channel = new WebSocketChannel(socket, clientAddress, WebSocketServer.MessageHelper, (msg) => _ = Dispatcher(channel, msg));
             await channel.StartAsync();
@@ -17,7 +16,7 @@ namespace Server.NetWork.WebSocket
 
         public virtual void OnDisconnection(INetChannel channel)
         {
-            Logger.Debug($"{channel.RemoteAddress} 断开链接");
+            LogHelper.Debug($"{channel.RemoteAddress} 断开链接");
         }
 
         protected async Task Dispatcher(INetChannel channel, MessageObject msg)
@@ -31,7 +30,7 @@ namespace Server.NetWork.WebSocket
             var handler = WebSocketServer.MessageHelper.MessageHandler(msg.MsgId);
             if (handler == null)
             {
-                Logger.Error($"找不到[{msg.MsgId}][{msg.GetType()}]对应的handler");
+                LogHelper.Error($"找不到[{msg.MsgId}][{msg.GetType()}]对应的handler");
                 return;
             }
 

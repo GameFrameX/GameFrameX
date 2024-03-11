@@ -1,13 +1,12 @@
-using NLog;
+
 using Server.DBServer.State;
+using Server.Log;
 using Server.Utility;
 
 namespace Server.DBServer.Storage;
 
 class StateMd5
 {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
     private CacheState State { get; }
 
     public StateMd5(CacheState state, bool isNew, string cacheMd5, string toSaveMd5)
@@ -36,7 +35,7 @@ class StateMd5
     {
         if (CacheMd5 == ToSaveMd5)
         {
-            Log.Error($"调用AfterSaveToDB前CacheMD5已经等于ToSaveMD5 {State}");
+            LogHelper.Error($"调用AfterSaveToDB前CacheMD5已经等于ToSaveMD5 {State}");
         }
 
         CacheMd5 = ToSaveMd5;

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using cfg;
+using Server.Log;
 
 namespace Server.Config;
 
@@ -11,7 +12,7 @@ public class ConfigManager
     public void LoadConfig()
     {
         Tables = new cfg.Tables(Loader);
-        Console.WriteLine("== load success ==");
+        LogHelper.Info("== load success ==");
     }
 
     private static JsonElement Loader(string file)

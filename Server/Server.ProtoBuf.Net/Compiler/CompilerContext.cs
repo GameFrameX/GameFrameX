@@ -37,7 +37,7 @@ namespace ProtoBuf.Compiler
         {
             traceCompilePath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(),
                 "TraceCompile.txt");
-            Console.WriteLine("DEBUG_COMPILE enabled; writing to " + traceCompilePath);
+            LogHelper.Info("DEBUG_COMPILE enabled; writing to " + traceCompilePath);
         }
 #endif
         [System.Diagnostics.Conditional("DEBUG_COMPILE")]

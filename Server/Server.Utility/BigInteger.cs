@@ -387,7 +387,7 @@ public class BigInteger
         while (dataLength > 1 && data[dataLength - 1] == 0)
             dataLength--;
 
-        //Console.WriteLine("Len = " + dataLength);
+        //LogHelper.Info("Len = " + dataLength);
     }
 
 
@@ -430,7 +430,7 @@ public class BigInteger
         while (dataLength > 1 && data[dataLength - 1] == 0)
             dataLength--;
 
-        //Console.WriteLine("Len = " + dataLength);
+        //LogHelper.Info("Len = " + dataLength);
     }
 
 
@@ -453,7 +453,7 @@ public class BigInteger
         while (dataLength > 1 && data[dataLength - 1] == 0)
             dataLength--;
 
-        //Console.WriteLine("Len = " + dataLength);
+        //LogHelper.Info("Len = " + dataLength);
     }
 
 
@@ -793,7 +793,7 @@ public class BigInteger
             if (count < shiftAmount)
                 shiftAmount = count;
 
-            //Console.WriteLine("shiftAmount = {0}", shiftAmount);
+            //LogHelper.Info("shiftAmount = {0}", shiftAmount);
 
             ulong carry = 0;
             for (int i = 0; i < bufLen; i++)
@@ -862,7 +862,7 @@ public class BigInteger
         while (bufLen > 1 && buffer[bufLen - 1] == 0)
             bufLen--;
 
-        //Console.WriteLine("bufLen = " + bufLen + " buffer.Length = " + buffer.Length);
+        //LogHelper.Info("bufLen = " + bufLen + " buffer.Length = " + buffer.Length);
 
         for (int count = shiftVal; count > 0;)
         {
@@ -872,7 +872,7 @@ public class BigInteger
                 invShift = 32 - shiftAmount;
             }
 
-            //Console.WriteLine("shiftAmount = {0}", shiftAmount);
+            //LogHelper.Info("shiftAmount = {0}", shiftAmount);
 
             ulong carry = 0;
             for (int i = bufLen - 1; i >= 0; i--)
@@ -1101,8 +1101,8 @@ public class BigInteger
             mask >>= 1;
         }
 
-        //Console.WriteLine("shift = {0}", shift);
-        //Console.WriteLine("Before bi1 Len = {0}, bi2 Len = {1}", bi1.dataLength, bi2.dataLength);
+        //LogHelper.Info("shift = {0}", shift);
+        //LogHelper.Info("Before bi1 Len = {0}, bi2 Len = {1}", bi1.dataLength, bi2.dataLength);
 
         for (int i = 0; i < bi1.dataLength; i++)
             remainder[i] = bi1.data[i];
@@ -1110,11 +1110,11 @@ public class BigInteger
         bi2 = bi2 << shift;
 
         /*
-    Console.WriteLine("bi1 Len = {0}, bi2 Len = {1}", bi1.dataLength, bi2.dataLength);
-    Console.WriteLine("dividend = " + bi1 + "\ndivisor = " + bi2);
+    LogHelper.Info("bi1 Len = {0}, bi2 Len = {1}", bi1.dataLength, bi2.dataLength);
+    LogHelper.Info("dividend = " + bi1 + "\ndivisor = " + bi2);
     for(int q = remainderLen - 1; q >= 0; q--)
             Console.Write("{0:x2}", remainder[q]);
-    Console.WriteLine();
+    LogHelper.Info();
     */
 
         int j = remainderLen - bi2.dataLength;
@@ -1129,12 +1129,12 @@ public class BigInteger
         while (j > 0)
         {
             ulong dividend = ((ulong)remainder[pos] << 32) + (ulong)remainder[pos - 1];
-            //Console.WriteLine("dividend = {0}", dividend);
+            //LogHelper.Info("dividend = {0}", dividend);
 
             ulong q_hat = dividend / firstDivisorByte;
             ulong r_hat = dividend % firstDivisorByte;
 
-            //Console.WriteLine("q_hat = {0:X}, r_hat = {1:X}", q_hat, r_hat);
+            //LogHelper.Info("q_hat = {0:X}, r_hat = {1:X}", q_hat, r_hat);
 
             bool done = false;
             while (!done)
@@ -1158,28 +1158,28 @@ public class BigInteger
             BigInteger kk = new BigInteger(dividendPart);
             BigInteger ss = bi2 * (long)q_hat;
 
-            //Console.WriteLine("ss before = " + ss);
+            //LogHelper.Info("ss before = " + ss);
             while (ss > kk)
             {
                 q_hat--;
                 ss -= bi2;
-                //Console.WriteLine(ss);
+                //LogHelper.Info(ss);
             }
 
             BigInteger yy = kk - ss;
 
-            //Console.WriteLine("ss = " + ss);
-            //Console.WriteLine("kk = " + kk);
-            //Console.WriteLine("yy = " + yy);
+            //LogHelper.Info("ss = " + ss);
+            //LogHelper.Info("kk = " + kk);
+            //LogHelper.Info("yy = " + yy);
 
             for (int h = 0; h < divisorLen; h++)
                 remainder[pos - h] = yy.data[bi2.dataLength - h];
 
             /*
-        Console.WriteLine("dividend = ");
+        LogHelper.Info("dividend = ");
         for(int q = remainderLen - 1; q >= 0; q--)
                 Console.Write("{0:x2}", remainder[q]);
-        Console.WriteLine("\n************ q_hat = {0:X}\n", q_hat);
+        LogHelper.Info("\n************ q_hat = {0:X}\n", q_hat);
         */
 
             result[resultPos++] = (uint)q_hat;
@@ -1233,8 +1233,8 @@ public class BigInteger
         int pos = outRemainder.dataLength - 1;
         ulong dividend = (ulong)outRemainder.data[pos];
 
-        //Console.WriteLine("divisor = " + divisor + " dividend = " + dividend);
-        //Console.WriteLine("divisor = " + bi2 + "\ndividend = " + bi1);
+        //LogHelper.Info("divisor = " + divisor + " dividend = " + dividend);
+        //LogHelper.Info("divisor = " + bi2 + "\ndividend = " + bi1);
 
         if (dividend >= divisor)
         {
@@ -1248,7 +1248,7 @@ public class BigInteger
 
         while (pos >= 0)
         {
-            //Console.WriteLine(pos);
+            //LogHelper.Info(pos);
 
             dividend = ((ulong)outRemainder.data[pos + 1] << 32) + (ulong)outRemainder.data[pos];
             ulong quotient = dividend / divisor;
@@ -1256,7 +1256,7 @@ public class BigInteger
 
             outRemainder.data[pos + 1] = 0;
             outRemainder.data[pos--] = (uint)(dividend % divisor);
-            //Console.WriteLine(">>>> " + bi1);
+            //LogHelper.Info(">>>> " + bi1);
         }
 
         outQuotient.dataLength = resultPos;
@@ -1614,7 +1614,7 @@ public class BigInteger
         for (int pos = 0; pos < exp.dataLength; pos++)
         {
             uint mask = 0x01;
-            //Console.WriteLine("pos = " + pos);
+            //LogHelper.Info("pos = " + pos);
 
             for (int index = 0; index < 32; index++)
             {
@@ -1917,7 +1917,7 @@ public class BigInteger
 
             if (resultLen > 1 || (resultLen == 1 && expResult.data[0] != 1))
             {
-                //Console.WriteLine("a = " + a.ToString());
+                //LogHelper.Info("a = " + a.ToString());
                 return false;
             }
         }
@@ -2024,10 +2024,10 @@ public class BigInteger
             BigInteger b = a.modPow(t, thisVal);
 
             /*
-        Console.WriteLine("a = " + a.ToString(10));
-        Console.WriteLine("b = " + b.ToString(10));
-        Console.WriteLine("t = " + t.ToString(10));
-        Console.WriteLine("s = " + s);
+        LogHelper.Info("a = " + a.ToString(10));
+        LogHelper.Info("b = " + b.ToString(10));
+        LogHelper.Info("t = " + t.ToString(10));
+        LogHelper.Info("s = " + s);
         */
 
             bool result = false;
@@ -2137,8 +2137,8 @@ public class BigInteger
             // calculate Jacobi symbol
             BigInteger jacob = Jacobi(a, thisVal);
 
-            //Console.WriteLine("a = " + a.ToString(10) + " b = " + thisVal.ToString(10));
-            //Console.WriteLine("expResult = " + expResult.ToString(10) + " Jacob = " + jacob.ToString(10));
+            //LogHelper.Info("a = " + a.ToString(10) + " b = " + thisVal.ToString(10));
+            //LogHelper.Info("expResult = " + expResult.ToString(10) + " Jacob = " + jacob.ToString(10));
 
             // if they are different then it is not prime
             if (expResult != jacob)
@@ -2216,7 +2216,7 @@ public class BigInteger
                         return false;
                 }
 
-                //Console.WriteLine(D);
+                //LogHelper.Info(D);
                 D = (Math.Abs(D) + 2) * sign;
                 sign = -sign;
             }
@@ -2227,11 +2227,11 @@ public class BigInteger
         long Q = (1 - D) >> 2;
 
         /*
-    Console.WriteLine("D = " + D);
-    Console.WriteLine("Q = " + Q);
-    Console.WriteLine("(n,D) = " + thisVal.gcd(D));
-    Console.WriteLine("(n,Q) = " + thisVal.gcd(Q));
-    Console.WriteLine("J(D|n) = " + BigInteger.Jacobi(D, thisVal));
+    LogHelper.Info("D = " + D);
+    LogHelper.Info("Q = " + Q);
+    LogHelper.Info("(n,D) = " + thisVal.gcd(D));
+    LogHelper.Info("(n,Q) = " + thisVal.gcd(Q));
+    LogHelper.Info("J(D|n) = " + BigInteger.Jacobi(D, thisVal));
     */
 
         BigInteger p_add1 = thisVal + 1;
@@ -2347,7 +2347,7 @@ public class BigInteger
             if (resultNum.IntValue() == 0)
             {
                 /*
-Console.WriteLine("Not prime!  Divisible by {0}\n",
+LogHelper.Info("Not prime!  Divisible by {0}\n",
                               primesBelow2000[p]);
             */
                 return false;
@@ -2358,7 +2358,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
             return true;
         else
         {
-            //Console.WriteLine("Not prime!  Failed primality test\n");
+            //LogHelper.Info("Not prime!  Failed primality test\n");
             return false;
         }
     }
@@ -2418,7 +2418,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
             BigInteger resultNum = thisVal % divisor;
             if (resultNum.IntValue() == 0)
             {
-                //Console.WriteLine("Not prime!  Divisible by {0}\n",
+                //LogHelper.Info("Not prime!  Divisible by {0}\n",
                 //                  primesBelow2000[p]);
 
                 return false;
@@ -2605,7 +2605,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
         while (!done)
         {
             result.genRandomBits(bits, rand);
-            //Console.WriteLine(result.ToString(16));
+            //LogHelper.Info(result.ToString(16));
 
             // gcd test
             BigInteger g = result.gcd(this);
@@ -2651,8 +2651,8 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
                 multiByteDivide(a, b, quotient, remainder);
 
             /*
-        Console.WriteLine(quotient.dataLength);
-        Console.WriteLine("{0} = {1}({2}) + {3}  p = {4}", a.ToString(10),
+        LogHelper.Info(quotient.dataLength);
+        LogHelper.Info("{0} = {1}({2}) + {3}  p = {4}", a.ToString(10),
                           b.ToString(10), quotient.ToString(10), remainder.ToString(10),
                           p[1].ToString(10));
         */
@@ -2695,7 +2695,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
         byte[] result = new byte[numBytes];
 
-        //Console.WriteLine(result.Length);
+        //LogHelper.Info(result.Length);
 
         int pos = 0;
         uint tempVal, val = data[dataLength - 1];
@@ -2899,7 +2899,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
         BigInteger t = k >> s;
 
-        //Console.WriteLine("s = " + s + " t = " + t);
+        //LogHelper.Info("s = " + s + " t = " + t);
         return LucasSequenceHelper(P, Q, t, n, constant, s);
     }
 
@@ -2933,7 +2933,7 @@ Console.WriteLine("Not prime!  Divisible by {0}\n",
 
         for (int i = k.dataLength - 1; i >= 0; i--) // iterate on the binary expansion of k
         {
-            //Console.WriteLine("round");
+            //LogHelper.Info("round");
             while (mask != 0)
             {
                 if (i == 0 && mask == 0x00000001) // last bit

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Server.Log;
 using UdpClient = Server.NetWork.UDPSocket.Base.UdpClient;
 
 namespace Server.NetWork.UDPSocket;
@@ -23,7 +24,7 @@ class MulticastUdpClient : UdpClient
 
     protected override void OnConnected()
     {
-        Console.WriteLine($"Multicast UDP client connected a new session with Id {Id}");
+        LogHelper.Info($"Multicast UDP client connected a new session with Id {Id}");
 
         // Join UDP multicast group
         JoinMulticastGroup(Multicast);
@@ -34,7 +35,7 @@ class MulticastUdpClient : UdpClient
 
     protected override void OnDisconnected()
     {
-        Console.WriteLine($"Multicast UDP client disconnected a session with Id {Id}");
+        LogHelper.Info($"Multicast UDP client disconnected a session with Id {Id}");
 
         // Wait for a while...
         Thread.Sleep(1000);
@@ -46,7 +47,7 @@ class MulticastUdpClient : UdpClient
 
     protected override void OnReceived(EndPoint endpoint, byte[] buffer, long offset, long size)
     {
-        Console.WriteLine("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
+        LogHelper.Info("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
 
         // Continue receive datagrams
         ReceiveAsync();
@@ -54,7 +55,7 @@ class MulticastUdpClient : UdpClient
 
     protected override void OnError(SocketError error)
     {
-        Console.WriteLine($"Multicast UDP client caught an error with code {error}");
+        LogHelper.Info($"Multicast UDP client caught an error with code {error}");
     }
 
     private bool stop;

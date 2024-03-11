@@ -1,12 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
-using NLog;
+
 using Server.Core.Actors;
 using Server.Core.Comps;
 using Server.Core.Events;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Net.BaseHandler;
 using Server.Extension;
+using Server.Log;
 using Server.NetWork.HTTP;
 using Server.NetWork.Messages;
 using Server.Setting;
@@ -15,7 +16,6 @@ namespace Server.Core.Hotfix
 {
     internal class HotfixModule
     {
-        static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private DllLoader _dllLoader = null;
         readonly string _dllPath;
 
@@ -78,12 +78,12 @@ namespace Server.Core.Hotfix
 
                 File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "dllPath.txt"), _dllPath);
 
-                Log.Info($"hotfix dll init success: {_dllPath}");
+                LogHelper.Info($"hotfix dll init success: {_dllPath}");
                 success = true;
             }
             catch (Exception e)
             {
-                Log.Error($"hotfix dll init failed...\n{e}");
+                LogHelper.Error($"hotfix dll init failed...\n{e}");
                 if (!reload)
                     throw;
             }
@@ -109,7 +109,7 @@ namespace Server.Core.Hotfix
                             GC.WaitForPendingFinalizers();
                         }
 
-                        Log.Warn($"hotfix dll unloaded {(weak.IsAlive ? "failed" : "success")}");
+                        LogHelper.Warn($"hotfix dll unloaded {(weak.IsAlive ? "failed" : "success")}");
                     });
                 }
             }
@@ -209,7 +209,7 @@ namespace Server.Core.Hotfix
             }
             else
             {
-                Log.Error("重复注册消息tcp handler:[{}] msg:[{}]", msgId, type);
+                LogHelper.Error("重复注册消息tcp handler:[{}] msg:[{}]", msgId, type);
             }
 
             return true;

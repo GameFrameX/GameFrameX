@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Server.Log\Server.Log.csproj" />
     </ItemGroup>
 
     <ItemGroup>

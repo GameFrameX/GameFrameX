@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using NLog.Web;
+using Serilog;
+using Server.Log;
 
 namespace Server.NetWork.HTTP
 {
     public static class HttpServer
     {
-        static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static WebApplication App { get; set; }
 
         public const string GameApiPath = "/game/api/";
@@ -38,7 +38,7 @@ namespace Server.NetWork.HTTP
                     }
                 })
                 .ConfigureLogging(logging => { logging.SetMinimumLevel(LogLevel.Debug); })
-                .UseNLog();
+                .UseSerilog();
 
             App = builder.Build();
             App.UseExceptionHandler((errorContext) =>
@@ -64,7 +64,7 @@ namespace Server.NetWork.HTTP
         {
             if (App != null)
             {
-                Log.Info("停止http服务...");
+                LogHelper.Info("停止http服务...");
                 var task = App.StopAsync();
                 App = null;
                 return task;

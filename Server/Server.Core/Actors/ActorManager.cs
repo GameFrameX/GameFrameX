@@ -5,6 +5,7 @@ using Server.Core.Hotfix;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Timer;
 using Server.Core.Utility;
+using Server.Log;
 
 namespace Server.Core.Actors
 {
@@ -13,7 +14,6 @@ namespace Server.Core.Actors
     /// </summary>
     public static class ActorManager
     {
-        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         private static readonly ConcurrentDictionary<long, Actor> ActorMap = new ConcurrentDictionary<long, Actor>();
 
@@ -170,7 +170,7 @@ namespace Server.Core.Actors
                                     {
                                         await actor.DeActive();
                                         ActorMap.TryRemove(actor.Id, out var _);
-                                        Log.Debug($"actor回收 id:{actor.Id} type:{actor.Type}");
+                                        LogHelper.Debug($"actor回收 id:{actor.Id} type:{actor.Type}");
                                     }
                                     else
                                     {
@@ -205,11 +205,11 @@ namespace Server.Core.Actors
                 }
 
                 await Task.WhenAll(taskList);
-                Log.Info($"save all state, use: {(DateTime.Now - begin).TotalMilliseconds}ms");
+                LogHelper.Info($"save all state, use: {(DateTime.Now - begin).TotalMilliseconds}ms");
             }
             catch (Exception e)
             {
-                Log.Error($"save all state error \n{e}");
+                LogHelper.Error($"save all state error \n{e}");
                 throw;
             }
         }
@@ -248,8 +248,8 @@ namespace Server.Core.Actors
             }
             catch (Exception e)
             {
-                Log.Info("timer save state error");
-                Log.Error(e.ToString());
+                LogHelper.Info("timer save state error");
+                LogHelper.Error(e.ToString());
             }
         }
 
@@ -297,7 +297,7 @@ namespace Server.Core.Actors
                     b++;
                     actor.Tell(async () =>
                     {
-                        Log.Info($"全局Actor：{actor.Type}执行跨天");
+                        LogHelper.Info($"全局Actor：{actor.Type}执行跨天");
                         await actor.CrossDay(openServerDay);
                         Interlocked.Increment(ref a);
                     });
@@ -308,7 +308,7 @@ namespace Server.Core.Actors
             {
                 if ((DateTime.Now - begin).TotalSeconds > CROSS_DAY_GLOBAL_WAIT_SECONDS)
                 {
-                    Log.Warn($"全局comp跨天耗时过久，不阻止其他comp跨天，当前已过{CROSS_DAY_GLOBAL_WAIT_SECONDS}秒");
+                    LogHelper.Warn($"全局comp跨天耗时过久，不阻止其他comp跨天，当前已过{CROSS_DAY_GLOBAL_WAIT_SECONDS}秒");
                     break;
                 }
 
@@ -316,7 +316,7 @@ namespace Server.Core.Actors
             }
 
             var globalCost = (DateTime.Now - begin).TotalMilliseconds;
-            Log.Info($"全局comp跨天完成 耗时：{globalCost:f4}ms");
+            LogHelper.Info($"全局comp跨天完成 耗时：{globalCost:f4}ms");
             a = 0;
             b = 0;
             foreach (var actor in ActorMap.Values)
@@ -336,7 +336,7 @@ namespace Server.Core.Actors
             {
                 if ((DateTime.Now - begin).TotalSeconds > CROSS_DAY_NOT_ROLE_WAIT_SECONDS)
                 {
-                    Log.Warn($"非玩家comp跨天耗时过久，不阻止玩家comp跨天，当前已过{CROSS_DAY_NOT_ROLE_WAIT_SECONDS}秒");
+                    LogHelper.Warn($"非玩家comp跨天耗时过久，不阻止玩家comp跨天，当前已过{CROSS_DAY_NOT_ROLE_WAIT_SECONDS}秒");
                     break;
                 }
 
@@ -344,7 +344,7 @@ namespace Server.Core.Actors
             }
 
             var otherCost = (DateTime.Now - begin).TotalMilliseconds - globalCost;
-            Log.Info($"非玩家comp跨天完成 耗时：{otherCost:f4}ms");
+            LogHelper.Info($"非玩家comp跨天完成 耗时：{otherCost:f4}ms");
         }
 
         /// <summary>

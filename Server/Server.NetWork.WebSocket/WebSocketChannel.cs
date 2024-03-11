@@ -4,6 +4,7 @@ using System.Net.WebSockets;
 using System.Text;
 using Newtonsoft.Json;
 using Server.Extension;
+using Server.Log;
 using Server.NetWork.Messages;
 using Server.Serialize.Serialize;
 using Server.Setting;
@@ -13,7 +14,6 @@ namespace Server.NetWork.WebSocket
 {
     public sealed class WebSocketChannel : BaseNetChannel
     {
-        static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         System.Net.WebSockets.WebSocket webSocket;
         readonly Action<MessageObject> onMessage;
         private readonly ConcurrentQueue<MessageObject> _sendQueue = new();
@@ -54,7 +54,7 @@ namespace Server.NetWork.WebSocket
             }
             catch (Exception e)
             {
-                Logger.Error(e.Message);
+                LogHelper.Error(e.Message);
             }
         }
 
@@ -95,7 +95,7 @@ namespace Server.NetWork.WebSocket
                         stringBuilder.Append(b + " ");
                     }
 
-                    Logger.Info($"---发送消息ID:[{message.MsgId}] ==>消息类型:{messageType} 消息内容长度：{len}=>{bytes.Length} 消息内容:{JsonConvert.SerializeObject(sendData)} 消息字节数组:{stringBuilder}");
+                    LogHelper.Info($"---发送消息ID:[{message.MsgId}] ==>消息类型:{messageType} 消息内容长度：{len}=>{bytes.Length} 消息内容:{JsonConvert.SerializeObject(sendData)} 消息字节数组:{stringBuilder}");
                 }
 
                 await webSocket.SendAsync(sendData, WebSocketMessageType.Binary, true, CloseSrc.Token);
@@ -131,7 +131,7 @@ namespace Server.NetWork.WebSocket
                     stringBuilder.Append(b + " ");
                 }
 
-                Logger.Info($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}  消息字节数组:{stringBuilder}");
+                LogHelper.Info($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}  消息字节数组:{stringBuilder}");
             }
 
             return messageObject;

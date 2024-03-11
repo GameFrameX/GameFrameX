@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Server.Log;
 using Server.NetWork.UDPSocket.Base;
 
 namespace Server.NetWork.UDPSocket;
@@ -19,7 +20,7 @@ public class EchoUdpServer : UdpServer
 
     protected override void OnReceived(EndPoint endpoint, byte[] buffer, long offset, long size)
     {
-        // Console.WriteLine("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
+        // LogHelper.Info("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
 
         // Echo the message back to the sender
         SendAsync(endpoint, buffer, 0, size);
@@ -33,6 +34,6 @@ public class EchoUdpServer : UdpServer
 
     protected override void OnError(SocketError error)
     {
-        Console.WriteLine($"Echo UDP server caught an error with code {error}");
+        LogHelper.Info($"Echo UDP server caught an error with code {error}");
     }
 }

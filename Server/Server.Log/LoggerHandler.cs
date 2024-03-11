@@ -1,26 +1,26 @@
-﻿using NLog;
-using NLog.Config;
-using NLog.LayoutRenderers;
+﻿using Serilog;
 
 namespace Server.Log;
 
 public static class LoggerHandler
 {
-    static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
     public static bool Start()
     {
         try
         {
-            Console.WriteLine("init NLog config...");
-            LayoutRenderer.Register<NLogConfigurationLayoutRender>("logConfiguration");
-            LogManager.Configuration = new XmlLoggingConfiguration("Configs/app_log.config");
-            LogManager.AutoShutdown = false;
+            var logPath = @".\logs\log.txt"; // 日志文件存储的路径
+            LogHelper.Info("init Log config...");
+            Serilog.Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File(logPath)
+                .CreateLogger();
             return true;
         }
         catch (Exception e)
         {
-            Log.Error($"启动服务器失败,异常:{e}");
+            Serilog.Log.Error($"启动服务器失败,异常:{e}");
             return false;
         }
     }

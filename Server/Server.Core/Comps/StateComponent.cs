@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using NLog;
+
 using Server.Core.Actors;
 using Server.Core.Timer;
 using Server.Core.Utility;
@@ -11,6 +11,7 @@ using Server.DBServer.DbService.MongoDB;
 using Server.DBServer.State;
 using Server.DBServer.Storage;
 using Server.Extension;
+using Server.Log;
 using Server.Setting;
 using Server.Utility;
 
@@ -20,7 +21,6 @@ namespace Server.Core.Comps
     {
         #region 仅DBModel.Mongodb调用
 
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private static readonly ConcurrentBag<Func<bool, bool, Task>> saveFuncs = new();
 
@@ -47,11 +47,11 @@ namespace Server.Core.Comps
                 }
 
                 await Task.WhenAll(tasks);
-                Log.Info($"save all state, use: {(DateTime.Now - begin).TotalMilliseconds}ms");
+                LogHelper.Info($"save all state, use: {(DateTime.Now - begin).TotalMilliseconds}ms");
             }
             catch (Exception e)
             {
-                Log.Error($"save all state error \n{e}");
+                LogHelper.Error($"save all state error \n{e}");
             }
         }
 
@@ -71,8 +71,8 @@ namespace Server.Core.Comps
             }
             catch (Exception e)
             {
-                Log.Info("timer save state error");
-                Log.Error(e.ToString());
+                LogHelper.Info("timer save state error");
+                LogHelper.Error(e.ToString());
             }
         }
 
@@ -83,8 +83,6 @@ namespace Server.Core.Comps
 
     public abstract class StateComponent<TState> : BaseComponent, IState where TState : CacheState, new()
     {
-        static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         static readonly ConcurrentDictionary<long, TState> stateDic = new();
 
         public TState State { get; private set; }
@@ -123,7 +121,7 @@ namespace Server.Core.Comps
             }
             catch (Exception e)
             {
-                Log.Fatal($"StateComp.SaveState.Failed.StateId:{State.Id},{e}");
+                LogHelper.Fatal($"StateComp.SaveState.Failed.StateId:{State.Id},{e}");
             }
         }
 
@@ -194,7 +192,7 @@ namespace Server.Core.Comps
             {
                 var stateName = typeof(TState).FullName;
                 StateComponent.statisticsTool.Count(stateName, writeList.Count);
-                Log.Debug($"状态回存 {stateName} count:{writeList.Count}");
+                LogHelper.Debug($"状态回存 {stateName} count:{writeList.Count}");
                 var currentDatabase = GameDb.As<MongoDbServiceConnection>().CurrentDatabase;
                 var mongoCollection = currentDatabase.GetCollection<MongoState>(stateName);
                 for (int idx = 0; idx < writeList.Count; idx += ONCE_SAVE_COUNT)
@@ -218,12 +216,12 @@ namespace Server.Core.Comps
                         }
                         else
                         {
-                            Log.Error($"保存数据失败，类型:{typeof(TState).FullName}");
+                            LogHelper.Error($"保存数据失败，类型:{typeof(TState).FullName}");
                         }
                     }
                     catch (Exception ex)
                     {
-                        Log.Error($"保存数据异常，类型:{typeof(TState).FullName}，{ex}");
+                        LogHelper.Error($"保存数据异常，类型:{typeof(TState).FullName}，{ex}");
                     }
 
                     if (!save && shutdown)

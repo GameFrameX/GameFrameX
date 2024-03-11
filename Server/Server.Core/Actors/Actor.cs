@@ -3,12 +3,12 @@ using Server.Core.Actors.Impl;
 using Server.Core.Comps;
 using Server.Core.Hotfix.Agent;
 using Server.Core.Timer;
+using Server.Log;
 
 namespace Server.Core.Actors
 {
     public sealed class Actor
     {
-        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly ConcurrentDictionary<Type, BaseComponent> compDic = new ConcurrentDictionary<Type, BaseComponent>();
 
@@ -99,7 +99,7 @@ namespace Server.Core.Actors
         /// <param name="openServerDay">开服天数</param>
         public async Task CrossDay(int openServerDay)
         {
-            Log.Debug($"actor跨天 id:{Id} type:{Type}");
+            LogHelper.Debug($"actor跨天 id:{Id} type:{Type}");
             foreach (var comp in compDic.Values)
             {
                 var agent = comp.GetAgent();
@@ -112,7 +112,7 @@ namespace Server.Core.Actors
                     }
                     catch (Exception e)
                     {
-                        Log.Error($"{agent.GetType().FullName}跨天失败 actorId:{Id} actorType:{Type} 异常：\n{e}");
+                        LogHelper.Error($"{agent.GetType().FullName}跨天失败 actorId:{Id} actorType:{Type} 异常：\n{e}");
                     }
                 }
             }
