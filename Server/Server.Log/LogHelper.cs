@@ -4,7 +4,7 @@ public static class LogHelper
 {
     public static void Debug(string msg, params object[] args)
     {
-        Serilog.Log.Information(msg, args);
+        Serilog.Log.Debug(msg, args);
     }
 
     public static void Error(string msg, params object[] args)
