@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using Server.Extension;
 using Server.Launcher.Message;
 using Server.Launcher.StartUp;
 using Server.NetWork;
@@ -14,7 +15,6 @@ using Server.Utility;
 [StartUpTag(ServerType.Gateway)]
 internal sealed class AppStartUpGateway : AppStartUpBase
 {
-    static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
     private TcpClientMessage client;
     IMessageEncoderHandler messageEncoderHandler = new MessageEncoderHandler();
     IMessageDecoderHandler messageDecoderHandler = new MessageDecoderHandler();
@@ -23,20 +23,32 @@ internal sealed class AppStartUpGateway : AppStartUpBase
     {
         try
         {
-            Log.Info($"开始启动服务器{ServerType}");
+            LogHelper.Info($"开始启动服务器{ServerType}");
             // UDP server address
             string address = Setting.CenterUrl;
             // UDP server port
             int port = Setting.GrpcPort;
-            Console.WriteLine($"启动服务器{ServerType} 开始! address: {address}  port: {port}");
+
+            if (port <= 0)
+            {
+                // 默认缺省端口
+                port = 33300;
+            }
+
+            if (address.IsNullOrEmpty())
+            {
+                address = "127.0.0.1";
+            }
+
+            LogHelper.Info($"启动服务器{ServerType} 开始! address: {address}  port: {port}");
 
 
             // Create a new TCP chat client
             client = new TcpClientMessage(address, port);
             // Connect the client
-            Console.Write("开始链接到中心服务器 ...");
+            LogHelper.Info("开始链接到中心服务器 ...");
             client.Connect();
-            Console.WriteLine("链接完成!");
+            LogHelper.Info("链接完成!");
             ReqHeartBeat reqHeartBeat = new ReqHeartBeat();
             while (client.IsConnected)
             {
@@ -49,16 +61,16 @@ internal sealed class AppStartUpGateway : AppStartUpBase
                 }
             }
 
-            Console.WriteLine("等待!");
+            LogHelper.Info("等待!");
             await AppExitToken;
             Console.Write("全部断开...");
-            Console.WriteLine("Done!");
+            LogHelper.Info("Done!");
         }
         catch (Exception e)
         {
             Stop(e.Message);
             AppExitSource.TrySetException(e);
-            Console.WriteLine(e);
+            LogHelper.Info(e);
         }
     }
 
@@ -68,7 +80,7 @@ internal sealed class AppStartUpGateway : AppStartUpBase
         var span = messageEncoderHandler.Handler(message);
         if (Setting.IsDebug && Setting.IsDebugSend)
         {
-            Console.WriteLine($"---发送消息ID:[{ProtoMessageIdHandler.GetReqMessageIdByType(message.GetType())}] ==>消息类型:{message.GetType()} 消息内容:{message}");
+            LogHelper.Debug($"---发送消息ID:[{ProtoMessageIdHandler.GetReqMessageIdByType(message.GetType())}] ==>消息类型:{message.GetType()} 消息内容:{message}");
         }
 
         client.Send(span);
