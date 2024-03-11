@@ -21,6 +21,7 @@ public abstract class BaseSetting
     public DateTime LaunchTime { get; set; }
 
     bool _appRunning;
+    private ServerType serverType;
 
     public bool AppRunning
     {
@@ -53,7 +54,15 @@ public abstract class BaseSetting
     /// <summary>
     /// 服务器类型
     /// </summary>
-    public ServerType ServerType { get; set; }
+    public ServerType ServerType
+    {
+        get => serverType;
+        set
+        {
+            serverType = value;
+            ServerName = value.ToString();
+        }
+    }
 
     #region from config
 
@@ -80,7 +89,7 @@ public abstract class BaseSetting
     /// <summary>
     /// 服务器名称
     /// </summary>
-    public string ServerName { get; init; }
+    public string ServerName { get; protected set; }
 
     /// <summary>
     /// 本地IP
