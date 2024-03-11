@@ -23,13 +23,13 @@ internal sealed class AppStartUpRouter : AppStartUpBase
             string address = Setting.CenterUrl;
             // UDP server port
             int port = Setting.GrpcPort;
-            Console.WriteLine($"启动服务器{ServerType} 开始! address: {address}  port: {port}");
+            LogHelper.Info($"启动服务器{ServerType} 开始! address: {address}  port: {port}");
             // Create a new TCP chat client
             client = new EchoUdpClient(address, port);
             // Connect the client
             Console.Write("开始链接到中心服务器 ...");
             client.Connect();
-            Console.WriteLine("Done!");
+            LogHelper.Info("Done!");
 
             server = new TcpRouterServer(IPAddress.Any, port);
             server.Start();
@@ -40,7 +40,7 @@ internal sealed class AppStartUpRouter : AppStartUpBase
             Console.Write("全部断开...");
             server.Stop();
             client.Disconnect();
-            Console.WriteLine("Done!");
+            LogHelper.Info("Done!");
         }
         catch (Exception e)
         {
