@@ -13,55 +13,66 @@ namespace Server.Launcher.StartUp;
 [StartUpTag(ServerType.Discovery, 0)]
 internal sealed class AppStartUpDiscovery : AppStartUpBase
 {
-    static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
     private TcpServerMessage server;
 
     public override async Task EnterAsync()
     {
         try
         {
-            LogManager.AutoShutdown = false;
-            Log.Info($"开始启动服务器{ServerType}");
+            LogHelper.Info($"开始启动服务器{ServerType}");
 
             NamingServiceManager.Instance.AddSelf(Setting);
 
-            Console.WriteLine($"启动服务器{ServerType} 开始!");
+            LogHelper.Info($"启动服务器{ServerType} 开始!");
 
             // UDP server port
+            int port = Setting.TcpPort;
+            if (port <= 0)
+            {
+                // 默认缺省端口
+                var ports = await PortHelper.ScanPorts(33300, 33399);
+                if (ports.Count > 0)
+                {
+                    port = ports[0];
+                }
+            }
 
-            Console.WriteLine($"server port: {Setting.TcpPort}");
+            server = new TcpServerMessage(IPAddress.Any, port);
+            server.MessageDecoderHandler = new MessageDecoderHandler();
+            server.Start();
+
+            LogHelper.Info($"服务器端口: {port}");
 
             // Create a new UDP echo server
             server = new TcpServerMessage(IPAddress.Any, Setting.TcpPort);
             server.MessageDecoderHandler = new MessageDecoderHandler();
             // Start the server
             server.Start();
-            Console.WriteLine($"启动服务器 {ServerType} 结束!");
+            LogHelper.Info($"启动服务器 {ServerType} 结束!");
 
             await AppExitToken;
 
             GlobalSettings.IsAppRunning = true;
 
-            Log.Info("启动完成...");
+            LogHelper.Info("启动完成...");
             // await GlobalSettings.Instance.AppExitToken;
         }
         catch (Exception e)
         {
-            Console.WriteLine($"服务器执行异常，e:{e}");
-            Log.Fatal(e);
+            LogHelper.Info($"服务器执行异常，e:{e}");
+            LogHelper.Fatal(e);
         }
 
         // Stop the server
-        Console.WriteLine($"退出服务器开始");
+        LogHelper.Info($"退出服务器开始");
         server.Stop();
-        Console.WriteLine($"退出服务器成功");
+        LogHelper.Info($"退出服务器成功");
     }
 
     public override void Stop(string message = "")
     {
         Console.Write("Server stopping...");
         server.Stop();
-        Console.WriteLine("Done!");
+        LogHelper.Info("Done!");
     }
 }
