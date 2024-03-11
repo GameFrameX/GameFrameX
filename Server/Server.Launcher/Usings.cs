@@ -1,6 +1,6 @@
 ﻿global using MongoDB.Bson.Serialization.Attributes;
 global using MongoDB.Bson.Serialization.Options;
-global using NLog;
+global using Server.Log;    
 global using Server.Apps;
 global using Server.Config;
 global using Server.Core.Actors.Impl;
