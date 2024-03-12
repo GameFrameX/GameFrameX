@@ -9,6 +9,7 @@ namespace Server.NetWork.Messages
         /// <summary>
         /// 消息唯一id
         /// </summary>
+        [JsonIgnore]
         public int UniId { get; set; }
 
         /// <summary>
