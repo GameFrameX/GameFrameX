@@ -5,16 +5,20 @@ namespace Server.Launcher.StartUp;
 public abstract class AppStartUpBase : IAppStartUp
 {
     public ServerType ServerType { get; private set; }
-    public AppSetting Setting { get; private set; }
+    public AppSetting Setting { get; protected set; }
 
     protected readonly TaskCompletionSource<string> AppExitSource = new TaskCompletionSource<string>();
     public Task<string> AppExitToken => AppExitSource.Task;
 
+    public virtual void Init()
+    {
+    }
+
     public bool Init(ServerType serverType, BaseSetting setting, string[] args = null)
     {
         ServerType = serverType;
-        Guard.NotNull(setting, nameof(setting));
         Setting = (AppSetting)setting;
+        Init();
         return true;
     }
 
