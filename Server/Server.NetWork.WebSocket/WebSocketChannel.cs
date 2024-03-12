@@ -95,7 +95,7 @@ namespace Server.NetWork.WebSocket
                         stringBuilder.Append(b + " ");
                     }
 
-                    LogHelper.Info($"---发送消息ID:[{message.MsgId}] ==>消息类型:{messageType} 消息内容长度：{len}=>{bytes.Length} 消息内容:{JsonConvert.SerializeObject(sendData)} 消息字节数组:{stringBuilder}");
+                    LogHelper.Info($"---发送消息ID:[{message.MessageId}] ==>消息类型:{messageType} 消息内容长度：{len}=>{bytes.Length} 消息内容:{JsonConvert.SerializeObject(sendData)} 消息字节数组:{stringBuilder}");
                 }
 
                 await webSocket.SendAsync(sendData, WebSocketMessageType.Binary, true, CloseSrc.Token);
@@ -121,7 +121,7 @@ namespace Server.NetWork.WebSocket
             var messageObject = (MessageObject)SerializerHelper.Deserialize(reader.UnreadSequence.First.ToArray(), messageType);
 
             // var message = MessagePackSerializer.Deserialize<MessageObject>(reader.UnreadSequence);
-            messageObject.MsgId = messageId;
+            messageObject.MessageId = messageId;
             if (WebSocketServer.AppSetting.IsDebug && WebSocketServer.AppSetting.IsDebugReceive)
             {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -131,7 +131,7 @@ namespace Server.NetWork.WebSocket
                     stringBuilder.Append(b + " ");
                 }
 
-                LogHelper.Info($"---收到消息ID:[{messageObject.MsgId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}  消息字节数组:{stringBuilder}");
+                LogHelper.Info($"---收到消息ID:[{messageObject.MessageId}] ==>消息类型:{messageType} 消息内容:{JsonConvert.SerializeObject(messageObject)}  消息字节数组:{stringBuilder}");
             }
 
             return messageObject;

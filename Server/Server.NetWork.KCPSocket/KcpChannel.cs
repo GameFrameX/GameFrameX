@@ -156,7 +156,7 @@ namespace NetWork
             int len = headSize + bytes.Length;
             int offset = 0;
             span.Write(len, ref offset);
-            span.Write(messageObject.MsgId, ref offset);
+            span.Write(messageObject.MessageId, ref offset);
             bytes.CopyTo(span[headSize..]);
             lock (writeLockObj)
             {
@@ -178,7 +178,7 @@ namespace NetWork
             int len = headSize + bytes.Length;
             int offset = 0;
             span.Write(len, ref offset);
-            span.Write(msg.MsgId, ref offset);
+            span.Write(msg.MessageId, ref offset);
             bytes.CopyTo(span[headSize..]);
             lock (writeLockObj)
             {

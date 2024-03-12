@@ -27,10 +27,10 @@ namespace Server.NetWork.WebSocket
             }
 
             //LOGGER.Debug($"-------------收到消息{msg.MsgId} {msg.GetType()}");
-            var handler = WebSocketServer.MessageHelper.MessageHandler(msg.MsgId);
+            var handler = WebSocketServer.MessageHelper.MessageHandler(msg.MessageId);
             if (handler == null)
             {
-                LogHelper.Error($"找不到[{msg.MsgId}][{msg.GetType()}]对应的handler");
+                LogHelper.Error($"找不到[{msg.MessageId}][{msg.GetType()}]对应的handler");
                 return;
             }
 

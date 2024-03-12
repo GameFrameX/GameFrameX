@@ -14,14 +14,15 @@ namespace Server.NetWork.Messages
         /// <summary>
         /// 消息ID
         /// </summary>
-        public int MsgId { get; set; }
+        [ProtoMember(998)]
+        public int MessageId { get; set; }
 
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
         }
-        [ProtoMember(999)]
-        public string UniqueId { get; set; }
+
+        [ProtoMember(999)] public string UniqueId { get; set; }
 
         public MessageObject()
         {
