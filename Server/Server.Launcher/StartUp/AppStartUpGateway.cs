@@ -44,10 +44,10 @@ internal sealed class AppStartUpGateway : AppStartUpBase
             // Create a new TCP chat client
             client = new TcpClientMessage(Setting.CenterUrl, Setting.GrpcPort);
             client.NetWorkChannelHelper = new NetWorkChannelHelper();
-            // client.NetWorkChannelHelper.OnError = OnError;
-            // client.NetWorkChannelHelper.OnSendMessage = OnSendMessage;
-            // client.NetWorkChannelHelper.OnConnected = OnConnected;
-            // client.NetWorkChannelHelper.OnDisconnected = OnDisconnected;
+            client.NetWorkChannelHelper.OnError = OnError;
+            client.NetWorkChannelHelper.OnSendMessage = OnSendMessage;
+            client.NetWorkChannelHelper.OnConnected = OnConnected;
+            client.NetWorkChannelHelper.OnDisconnected = OnDisconnected;
             client.NetWorkChannelHelper.OnReceiveMessage = OnReceiveMessage;
             // Connect the client
             LogHelper.Info("开始链接到中心服务器 ...");
@@ -77,6 +77,36 @@ internal sealed class AppStartUpGateway : AppStartUpBase
             AppExitSource.TrySetException(e);
             LogHelper.Info(e);
         }
+    }
+
+    private byte[] OnSendMessage(IMessage message)
+    {
+        message.UniqueId = Guid.NewGuid().ToString("N");
+        var span = messageEncoderHandler.Handler(message);
+        if (Setting.IsDebug && Setting.IsDebugSend)
+        {
+            LogHelper.Debug($"---发送消息ID:[{ProtoMessageIdHandler.GetReqMessageIdByType(message.GetType())}] ==>消息类型:{message.GetType()} 消息内容:{message}");
+        }
+
+        // client.Send(span);
+        // ArrayPool<byte>.Shared.Return(span);
+
+        return span;
+    }
+
+    private void OnDisconnected()
+    {
+        LogHelper.Info("网络连接断开");
+    }
+
+    private void OnConnected()
+    {
+        LogHelper.Info("网络连接成功");
+    }
+
+    private void OnError(string obj)
+    {
+        LogHelper.Info("网络连接错误：" + obj);
     }
 
     private void OnReceiveMessage(ISession session, byte[] buffer, long offset, long size)
