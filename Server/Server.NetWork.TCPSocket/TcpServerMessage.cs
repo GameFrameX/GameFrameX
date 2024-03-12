@@ -5,7 +5,8 @@ namespace Server.NetWork.TCPSocket;
 
 public class TcpServerMessage : TcpServer
 {
-    public IMessageDecoderHandler MessageDecoderHandler { get; set; }
+    public INetWorkChannelHelper? NetWorkChannelHelper { get; set; }
+
     public TcpServerMessage(string address, int port) : base(address, port)
     {
     }
@@ -16,7 +17,6 @@ public class TcpServerMessage : TcpServer
 
     protected override TcpSessionMessage CreateSession()
     {
-        return new TcpSessionMessage(this,MessageDecoderHandler);
+        return new TcpSessionMessage(this, NetWorkChannelHelper);
     }
-    
 }
