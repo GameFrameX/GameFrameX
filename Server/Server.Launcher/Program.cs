@@ -13,6 +13,7 @@ namespace Server.Launcher
 
         static async Task Main(string[] args)
         {
+            var serverType = Environment.GetEnvironmentVariable("ServerType");
             LoggerHandler.Start();
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -49,6 +50,29 @@ namespace Server.Launcher
             foreach (var keyValuePair in sortedStartUpTypes)
             {
                 bool isFind = false;
+                if (serverType != null)
+                {
+                    foreach (var appSetting in appSettings)
+                    {
+                        if (serverType == appSetting.ServerType.ToString())
+                        {
+                            var task = Start(args, keyValuePair.Key, keyValuePair.Value.ServerType, appSetting);
+                            tasks.Add(task);
+                            isFind = true;
+                            break;
+                        }
+                    }
+
+                    if (isFind == false)
+                    {
+                        LogHelper.Error("没有找到对应的服务器类型的启动配置,将以默认配置启动=>" + keyValuePair.Value.ServerType);
+                        var task = Start(args, keyValuePair.Key, keyValuePair.Value.ServerType, null);
+                        tasks.Add(task);
+                    }
+
+                    break;
+                }
+
                 foreach (var appSetting in appSettings)
                 {
                     if (keyValuePair.Value.ServerType == appSetting.ServerType)
@@ -59,6 +83,7 @@ namespace Server.Launcher
                         break;
                     }
                 }
+
 
                 if (isFind == false)
                 {
