@@ -1,9 +1,9 @@
-using Server.EntryUtility;
+using System.Text;
 using Server.Launcher.Message;
+using Server.NetWork;
+using Server.NetWork.Messages;
 using Server.NetWork.TCPSocket;
-using Server.NetWork.UDPSocket;
 using Server.ServerManager;
-using Server.Utility;
 
 namespace Server.Launcher.StartUp;
 
@@ -14,6 +14,9 @@ namespace Server.Launcher.StartUp;
 internal sealed class AppStartUpDiscovery : AppStartUpBase
 {
     private TcpServerMessage server;
+    readonly IMessageDecoderHandler messageDecoderHandler = new MessageDecoderHandler();
+    readonly IMessageEncoderHandler messageEncoderHandler = new MessageEncoderHandler();
+
     public override void Init()
     {
         if (Setting == null)
@@ -40,7 +43,7 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
             LogHelper.Info($"启动服务器{ServerType} 开始!");
 
             // UDP server port
-            int port = Setting.TcpPort;
+            /*int port = Setting.TcpPort;
             if (port <= 0)
             {
                 // 默认缺省端口
@@ -49,20 +52,17 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
                 {
                     port = ports[0];
                 }
-            }
+            }*/
 
-            server = new TcpServerMessage(IPAddress.Any, port);
-            server.MessageDecoderHandler = new MessageDecoderHandler();
-            server.Start();
-
-            LogHelper.Info($"服务器端口: {port}");
-
-            // Create a new UDP echo server
             server = new TcpServerMessage(IPAddress.Any, Setting.TcpPort);
-            server.MessageDecoderHandler = new MessageDecoderHandler();
-            // Start the server
+            server.NetWorkChannelHelper = new NetWorkChannelHelper();
+            server.NetWorkChannelHelper.OnError = OnError;
+            server.NetWorkChannelHelper.OnSendMessage = OnSendMessage;
+            server.NetWorkChannelHelper.OnConnected = OnConnected;
+            server.NetWorkChannelHelper.OnDisconnected = OnDisconnected;
+            server.NetWorkChannelHelper.OnReceiveMessage = OnReceiveMessage;
             server.Start();
-            LogHelper.Info($"启动服务器 {ServerType} 结束!");
+            LogHelper.Info($"启动服务器 {ServerType} 端口: {Setting.TcpPort} 结束!");
 
             await AppExitToken;
         }
@@ -78,9 +78,46 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
         LogHelper.Info($"退出服务器成功");
     }
 
+    private byte[] OnSendMessage(IMessage arg)
+    {
+        return this.messageEncoderHandler.Handler(arg);
+    }
+
+    private void OnReceiveMessage(ISession session, byte[] buffer, long offset, long size)
+    {
+        var message = buffer.AsSpan((int)offset, (int)size);
+        var messageObject = this.messageDecoderHandler.Handler(message);
+        if (messageObject is MessageObject msg)
+        {
+            var messageId = msg.MessageId;
+            if (Setting.IsDebug && Setting.IsDebugReceive)
+            {
+                LogHelper.Debug($"---收到消息ID:[{messageId}] ==>消息类型:{msg.GetType()} 消息内容:{messageObject}");
+            }
+        }
+
+        var bytes = Encoding.UTF8.GetBytes(messageObject.ToString());
+        session.Send(bytes);
+    }
+
+    private void OnDisconnected()
+    {
+        LogHelper.Info("网络连接断开");
+    }
+
+    private void OnConnected()
+    {
+        LogHelper.Info("网络连接成功");
+    }
+
+    private void OnError(string obj)
+    {
+        LogHelper.Info("网络连接错误：" + obj);
+    }
+
     public override void Stop(string message = "")
     {
-        Console.Write("Server stopping...");
+        LogHelper.Info("Server stopping...");
         server.Stop();
         LogHelper.Info("Done!");
     }
