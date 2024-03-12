@@ -69,22 +69,22 @@ public abstract class BaseSetting
     /// <summary>
     /// 是否是Debug 模式
     /// </summary>
-    public bool IsDebug { get; init; }
+    public bool IsDebug { get; set; }
 
     /// <summary>
     /// 是否打印发送数据
     /// </summary>
-    public bool IsDebugSend { get; init; }
+    public bool IsDebugSend { get; set; }
 
     /// <summary>
     /// 是否打印接收数据
     /// </summary>
-    public bool IsDebugReceive { get; init; }
+    public bool IsDebugReceive { get; set; }
 
     /// <summary>
     /// 服务器ID
     /// </summary>
-    public int ServerId { get; init; }
+    public int ServerId { get; set; }
 
     /// <summary>
     /// 服务器名称
@@ -94,37 +94,37 @@ public abstract class BaseSetting
     /// <summary>
     /// 本地IP
     /// </summary>
-    public string LocalIp { get; init; }
+    public string LocalIp { get; set; }
 
     /// <summary>
     /// HTTP 响应码
     /// </summary>
-    public string HttpCode { get; init; }
+    public string HttpCode { get; set; }
 
     /// <summary>
     /// Http 地址
     /// </summary>
-    public string HttpUrl { get; init; }
+    public string HttpUrl { get; set; }
 
     /// <summary>
     /// HTTP 端口
     /// </summary>
-    public int HttpPort { get; init; }
+    public int HttpPort { get; set; }
 
     /// <summary>
     /// HTTPS 端口
     /// </summary>
-    public int HttpsPort { get; init; }
+    public int HttpsPort { get; set; }
 
     /// <summary>
     /// WebSocket 端口
     /// </summary>
-    public int WsPort { get; init; }
+    public int WsPort { get; set; }
 
     /// <summary>
     /// WebSocket 加密端口
     /// </summary>
-    public int WssPort { get; init; }
+    public int WssPort { get; set; }
 
     /// <summary>
     /// Wss 使用的证书路径
@@ -134,37 +134,37 @@ public abstract class BaseSetting
     /// <summary>
     /// TCP 端口
     /// </summary>
-    public int TcpPort { get; init; }
+    public int TcpPort { get; set; }
 
     /// <summary>
     /// GRPC 端口
     /// </summary>
-    public int GrpcPort { get; init; }
+    public int GrpcPort { get; set; }
 
     /// <summary>
     /// 数据库 地址
     /// </summary>
-    public string DataBaseUrl { get; init; }
+    public string DataBaseUrl { get; set; }
 
     /// <summary>
     /// 数据库名称
     /// </summary>
-    public string DataBaseName { get; init; }
+    public string DataBaseName { get; set; }
 
     /// <summary>
     /// 语言
     /// </summary>
-    public string Language { get; init; }
+    public string Language { get; set; }
 
     /// <summary>
     /// 数据中心
     /// </summary>
-    public string DataCenter { get; init; }
+    public string DataCenter { get; set; }
 
     /// <summary>
     /// 数据中心地址
     /// </summary>
-    public string CenterUrl { get; init; }
+    public string CenterUrl { get; set; }
 
     /// <summary>
     /// SDK 类型
