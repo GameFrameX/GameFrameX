@@ -14,6 +14,20 @@ namespace Server.Launcher.StartUp;
 internal sealed class AppStartUpDiscovery : AppStartUpBase
 {
     private TcpServerMessage server;
+    public override void Init()
+    {
+        if (Setting == null)
+        {
+            Setting = new AppSetting
+            {
+                ServerId = 3300,
+                ServerType = ServerType.Discovery,
+                TcpPort = 33300
+            };
+        }
+
+        base.Init();
+    }
 
     public override async Task EnterAsync()
     {

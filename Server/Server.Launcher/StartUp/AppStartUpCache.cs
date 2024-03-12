@@ -8,6 +8,22 @@ namespace Server.Launcher.StartUp
     [StartUpTag(ServerType.Cache)]
     internal sealed class AppStartUpCache : AppStartUpBase
     {
+        public override void Init()
+        {
+            if (Setting == null)
+            {
+                Setting = new AppSetting
+                {
+                    ServerId = 5500,
+                    LocalIp = "127.0.0.1",
+                    TcpPort = 25500,
+                    ServerType = ServerType.Cache
+                };
+            }
+
+            base.Init();
+        }
+
         public override async Task EnterAsync()
         {
             try

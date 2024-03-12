@@ -20,27 +20,22 @@ internal sealed class AppStartUpGateway : AppStartUpBase
     IMessageDecoderHandler messageDecoderHandler = new MessageDecoderHandler();
 
     public override async Task EnterAsync()
+    public override void Init()
     {
-        try
+        if (Setting == null)
         {
-            LogHelper.Info($"开始启动服务器{ServerType}");
-            // UDP server address
-            string address = Setting.CenterUrl;
-            // UDP server port
-            int port = Setting.GrpcPort;
-
-            if (port <= 0)
+            Setting = new AppSetting
             {
-                // 默认缺省端口
-                port = 33300;
-            }
+                ServerId = 2000,
+                ServerType = ServerType.Gateway,
+                TcpPort = 22000,
+                GrpcPort = 33300,
+                CenterUrl = "127.0.0.1",
+            };
+        }
 
-            if (address.IsNullOrEmpty())
-            {
-                address = "127.0.0.1";
-            }
-
-            LogHelper.Info($"启动服务器{ServerType} 开始! address: {address}  port: {port}");
+        base.Init();
+    }
 
 
             // Create a new TCP chat client
