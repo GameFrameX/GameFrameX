@@ -1,11 +1,10 @@
 using System.Net.Sockets;
 using System.Text;
 using Server.Log;
-using TcpClient = Server.NetWork.TCPSocket.Base.TcpClient;
 
 namespace Server.NetWork.TCPSocket;
 
-public class TcpClientMessage : TcpClient
+public class TcpClientMessage : Server.NetWork.TCPSocket.Base.TcpClient
 {
     public INetWorkChannelHelper? NetWorkChannelHelper { get; set; }
 
