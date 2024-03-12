@@ -49,19 +49,20 @@ internal sealed class AppStartUpGateway : AppStartUpBase
             LogHelper.Info("开始链接到中心服务器 ...");
             client.Connect();
             LogHelper.Info("链接完成!");
+            TimeSpan delay = TimeSpan.FromSeconds(5);
+            await Task.Delay(delay);
             ReqHeartBeat reqHeartBeat = new ReqHeartBeat();
             while (client.IsConnected)
             {
-                await Task.Delay(5000);
-
                 if (!AppExitToken.IsCompleted && client.IsConnected)
                 {
                     reqHeartBeat.Timestamp = TimeHelper.UnixTimeSeconds();
                     SendMessage(reqHeartBeat);
                 }
+
+                await Task.Delay(delay);
             }
 
-            LogHelper.Info("等待!");
             await AppExitToken;
             Console.Write("全部断开...");
             LogHelper.Info("Done!");

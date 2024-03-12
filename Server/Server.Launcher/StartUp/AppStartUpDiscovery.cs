@@ -51,11 +51,6 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
             LogHelper.Info($"启动服务器 {ServerType} 结束!");
 
             await AppExitToken;
-
-            GlobalSettings.IsAppRunning = true;
-
-            LogHelper.Info("启动完成...");
-            // await GlobalSettings.Instance.AppExitToken;
         }
         catch (Exception e)
         {

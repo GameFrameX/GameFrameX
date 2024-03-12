@@ -10,16 +10,19 @@
         {
             try
             {
-                LogHelper.Info($"开始启动服务器{ServerType}");
-                LogHelper.Info($"launch db service start...");
+                LogHelper.Info($"启动服务器{ServerType}开始");
                 GameDb.Init(new MongoDbServiceConnection());
                 GameDb.Open(Setting.DataBaseUrl, Setting.DataBaseName);
-                LogHelper.Info($"launch db service end...");
-                LogHelper.Info("进入游戏主循环...");
-                LogHelper.Info("***进入游戏主循环***");
+                LogHelper.Info($"启动服务器{ServerType}结束");
                 GlobalSettings.LaunchTime = DateTime.Now;
                 GlobalSettings.IsAppRunning = true;
-                await Setting.AppExitToken;
+                TimeSpan delay = TimeSpan.FromSeconds(5);
+                // while (!AppExitToken.IsCompleted)
+                // {
+                //     await Task.Delay(delay);
+                // }
+
+                await AppExitToken;
             }
             catch (Exception e)
             {

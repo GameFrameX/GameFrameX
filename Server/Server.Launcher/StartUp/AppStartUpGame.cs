@@ -8,7 +8,6 @@ namespace Server.Launcher.StartUp
     // [StartUpTag(ServerType.All)]
     internal sealed class AppStartUpGame : AppStartUpBase
     {
-
         public override async Task EnterAsync()
         {
             try
@@ -49,10 +48,7 @@ namespace Server.Launcher.StartUp
                 GlobalSettings.LaunchTime = DateTime.Now;
                 GlobalSettings.IsAppRunning = true;
                 TimeSpan delay = TimeSpan.FromSeconds(1);
-                while (GlobalSettings.IsAppRunning)
-                {
-                    await Task.Delay(delay);
-                }
+                await AppExitToken;
             }
             catch (Exception e)
             {

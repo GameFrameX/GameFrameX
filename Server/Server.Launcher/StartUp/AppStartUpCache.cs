@@ -8,7 +8,6 @@ namespace Server.Launcher.StartUp
     [StartUpTag(ServerType.Cache)]
     internal sealed class AppStartUpCache : AppStartUpBase
     {
-
         public override async Task EnterAsync()
         {
             try
@@ -20,8 +19,8 @@ namespace Server.Launcher.StartUp
                 LogHelper.Info("***进入游戏主循环***");
                 GlobalSettings.LaunchTime = DateTime.Now;
                 GlobalSettings.IsAppRunning = true;
-                TimeSpan delay = TimeSpan.FromSeconds(1);
-                while (GlobalSettings.IsAppRunning)
+                TimeSpan delay = TimeSpan.FromSeconds(5);
+                while (!AppExitToken.IsCompleted)
                 {
                     await Task.Delay(delay);
                 }
