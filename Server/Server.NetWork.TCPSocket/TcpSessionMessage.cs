@@ -26,7 +26,6 @@ public class TcpSessionMessage : TcpSession
     {
         var message = buffer.AsSpan((int)offset, (int)size);
         var messageObject = MessageDecoderHandler.Handler(message);
-        LogHelper.Info("收到消息:" + messageObject);
         this.Server.UpdateReceiveMessageTime();
     }
 }
