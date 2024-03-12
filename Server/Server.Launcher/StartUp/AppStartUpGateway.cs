@@ -1,5 +1,4 @@
 ﻿using System.Buffers;
-using Server.Extension;
 using Server.Launcher.Message;
 using Server.Launcher.StartUp;
 using Server.NetWork;
@@ -16,10 +15,7 @@ using Server.Utility;
 internal sealed class AppStartUpGateway : AppStartUpBase
 {
     private TcpClientMessage client;
-    IMessageEncoderHandler messageEncoderHandler = new MessageEncoderHandler();
-    IMessageDecoderHandler messageDecoderHandler = new MessageDecoderHandler();
 
-    public override async Task EnterAsync()
     public override void Init()
     {
         if (Setting == null)
@@ -37,9 +33,22 @@ internal sealed class AppStartUpGateway : AppStartUpBase
         base.Init();
     }
 
+    IMessageEncoderHandler messageEncoderHandler = new MessageEncoderHandler();
+    IMessageDecoderHandler messageDecoderHandler = new MessageDecoderHandler();
 
+    public override async Task EnterAsync()
+    {
+        try
+        {
+            LogHelper.Info($"启动服务器{ServerType} 开始! address: {Setting.CenterUrl}  port: {Setting.GrpcPort}");
             // Create a new TCP chat client
-            client = new TcpClientMessage(address, port);
+            client = new TcpClientMessage(Setting.CenterUrl, Setting.GrpcPort);
+            client.NetWorkChannelHelper = new NetWorkChannelHelper();
+            // client.NetWorkChannelHelper.OnError = OnError;
+            // client.NetWorkChannelHelper.OnSendMessage = OnSendMessage;
+            // client.NetWorkChannelHelper.OnConnected = OnConnected;
+            // client.NetWorkChannelHelper.OnDisconnected = OnDisconnected;
+            client.NetWorkChannelHelper.OnReceiveMessage = OnReceiveMessage;
             // Connect the client
             LogHelper.Info("开始链接到中心服务器 ...");
             client.Connect();
@@ -68,6 +77,10 @@ internal sealed class AppStartUpGateway : AppStartUpBase
             AppExitSource.TrySetException(e);
             LogHelper.Info(e);
         }
+    }
+
+    private void OnReceiveMessage(ISession session, byte[] buffer, long offset, long size)
+    {
     }
 
     private void SendMessage(IMessage message)
