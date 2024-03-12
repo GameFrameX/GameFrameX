@@ -17,8 +17,8 @@ class MessageDecoderHandler : IMessageDecoderHandler
         // var messageUniqueData = data.ReadBytes(ref readOffset);
         var messageData = data.ReadBytes(ref readOffset);
         var messageType = ProtoMessageIdHandler.GetReqTypeById(messageId);
-        var messageObject = (IMessage)SerializerHelper.Deserialize(messageData, messageType);
-        LogHelper.Info($"---收到消息ID:[{messageId}] ==>消息类型:{messageType} 消息内容:{messageObject}");
+        var messageObject = (MessageObject)SerializerHelper.Deserialize(messageData, messageType);
+        messageObject.MessageId = messageId;
         return messageObject;
     }
 }
