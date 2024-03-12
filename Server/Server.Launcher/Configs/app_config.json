@@ -17,18 +17,6 @@
   //    "DataBaseName": "gameframex"
   //  },
   {
-    "ServerId": 3300,
-    "ServerType": "Discovery"
-  },
-  {
-    "ServerId": 2000,
-    "ServerType": "Gateway",
-    "ServerName": "Gateway",
-    "TcpPort": 8898,
-    "HttpCode": "inner_httpcode",
-    "HttpPort": 20001
-  },
-  {
     "ServerId": 2000,
     "ServerType": "Router",
     "ServerName": "Router",
@@ -41,12 +29,6 @@
     "WssCertFilePath": "certs/cert.pem",
     "GrpcPort": 3300,
     "CenterUrl": "127.0.0.1"
-  },
-  {
-    "ServerId": 5500,
-    "ServerType": "Cache",
-    "LocalIp": "127.0.0.1",
-    "TcpPort": 25500
   },
   {
     "ServerId": 6000,
