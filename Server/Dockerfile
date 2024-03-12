@@ -5,6 +5,8 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Server.Launcher/Server.Launcher.csproj", "Server.Launcher/"]
 COPY ["Server.Apps/Server.Apps.csproj", "Server.Apps/"]
+COPY ["Server.Cache/Server.Cache.csproj", "Server.Cache/"]
+COPY ["Server.Cache.Memory/Server.Cache.Memory.csproj", "Server.Cache.Memory/"]
 COPY ["Server.Core/Server.Core.csproj", "Server.Core/"]
 COPY ["Server.DBServer/Server.DBServer.csproj", "Server.DBServer/"]
 COPY ["Server.Serialize/Server.Serialize.csproj", "Server.Serialize/"]
