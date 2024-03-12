@@ -5,5 +5,8 @@ namespace Server.NetWork.Messages;
 /// </summary>
 public interface IMessage
 {
+    /// <summary>
+    /// 消息唯一ID
+    /// </summary>
     string UniqueId { get; set; }
 }
