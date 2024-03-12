@@ -17,7 +17,7 @@ namespace Server.Launcher
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                
+
                 NullValueHandling = NullValueHandling.Ignore, // 忽略 null 值
                 // Formatting = Formatting.Indented, // 生成格式化的 JSON
                 MissingMemberHandling = MissingMemberHandling.Ignore, // 忽略缺失的成员
@@ -53,18 +53,8 @@ namespace Server.Launcher
                 {
                     if (keyValuePair.Value.ServerType == appSetting.ServerType)
                     {
-                        var startUp = (IAppStartUp)Activator.CreateInstance(keyValuePair.Key);
-                        if (startUp != null)
-                        {
-                            bool isSuccess = startUp.Init(keyValuePair.Value.ServerType, appSetting, args);
-                            if (isSuccess)
-                            {
-                                // LogHelper.Info($"启动服务器类型：{keyValuePair.Value.ServerType},配置信息：{JsonConvert.SerializeObject(appSetting)}");
-                                var task = AppEnter.Entry(startUp.EnterAsync);
-                                tasks.Add(task);
-                            }
-                        }
-
+                        var task = Start(args, keyValuePair.Key, keyValuePair.Value.ServerType, appSetting);
+                        tasks.Add(task);
                         isFind = true;
                         break;
                     }
@@ -72,11 +62,30 @@ namespace Server.Launcher
 
                 if (isFind == false)
                 {
-                    LogHelper.Error("没有找到对应的服务器类型的启动配置,已跳过=>" + keyValuePair.Value.ServerType);
+                    LogHelper.Error("没有找到对应的服务器类型的启动配置,将以默认配置启动=>" + keyValuePair.Value.ServerType);
+                    var task = Start(args, keyValuePair.Key, keyValuePair.Value.ServerType, null);
+                    tasks.Add(task);
                 }
             }
 
             await Task.WhenAll(tasks);
+        }
+
+        private static Task Start(string[] args, Type appStartUpType, ServerType serverType, BaseSetting setting)
+        {
+            var startUp = (IAppStartUp)Activator.CreateInstance(appStartUpType);
+            if (startUp != null)
+            {
+                bool isSuccess = startUp.Init(serverType, setting, args);
+                if (isSuccess)
+                {
+                    // LogHelper.Info($"启动服务器类型：{keyValuePair.Value.ServerType},配置信息：{JsonConvert.SerializeObject(appSetting)}");
+                    var task = AppEnter.Entry(startUp.EnterAsync);
+                    return task;
+                }
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
