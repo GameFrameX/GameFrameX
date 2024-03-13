@@ -8,19 +8,9 @@ namespace Server.NetWork;
 public interface INetWorkChannelHelper
 {
     /// <summary>
-    /// 发送消息
-    /// </summary>
-    Func<IMessage, byte[]> OnSendMessage { get; set; }
-
-    /// <summary>
-    /// 收到消息
-    /// </summary>
-    Action<ISession, byte[], long, long> OnReceiveMessage { get; set; }
-
-    /// <summary>
     /// 网络连接断开
     /// </summary>
-    Action? OnDisconnected { get; set; }
+    Action<string>? OnDisconnected { get; set; }
 
     /// <summary>
     /// 网络连接成功
