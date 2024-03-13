@@ -23,11 +23,15 @@ namespace Server.NetWork.Messages
             return JsonConvert.SerializeObject(this);
         }
 
-        [ProtoMember(999)] public string UniqueId { get; set; }
+        /// <summary>
+        /// 消息的唯一ID
+        /// </summary>
+        [ProtoMember(999)]
+        public long UniqueId { get; set; }
 
         public MessageObject()
         {
-            UniqueId = Guid.NewGuid().ToString("N");
+            UniqueId = Utility.UtilityIdGenerator.GetNextUniqueId();
         }
     }
 }
