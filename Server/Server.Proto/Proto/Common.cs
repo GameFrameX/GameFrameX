@@ -51,7 +51,7 @@ namespace Server.Proto.Proto
 		///  创建时间
 		/// </summary>
 		[ProtoMember(4)]
-		public DateTime CreateTime { get; set; }
+		public long CreateTime { get; set; }
 
 		/// <summary>
 		///  vip等级
