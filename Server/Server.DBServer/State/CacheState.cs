@@ -78,7 +78,7 @@ namespace Server.DBServer.State
         /// <summary>
         /// 删除时间
         /// </summary>
-        public DateTime DeleteTime { get; set; }
+        public long DeleteTime { get; set; }
 
         /// <summary>
         /// 创建人
@@ -88,7 +88,7 @@ namespace Server.DBServer.State
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public long CreateTime { get; set; }
 
         /// <summary>
         /// 更新次数
@@ -98,6 +98,6 @@ namespace Server.DBServer.State
         /// <summary>
         /// 更新时间
         /// </summary>
-        public DateTime UpdateTime { get; set; }
+        public long UpdateTime { get; set; }
     }
 }
