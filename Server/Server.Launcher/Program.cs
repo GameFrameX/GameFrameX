@@ -28,7 +28,7 @@ namespace Server.Launcher
                 }
             };
             GlobalSettings.Load<AppSetting>($"Configs/app_config.json");
-
+            CacheStateTypeManager.Init();
             ProtoMessageIdHandler.Init();
 
             var types = Assembly.GetEntryAssembly()?.GetTypes();
