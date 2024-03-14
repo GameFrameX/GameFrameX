@@ -18,7 +18,7 @@ namespace Server.DBServer.State
         [BsonId]
         public long Id { get; set; }
 
-        public bool IsModf => IsChanged().isChanged;
+        public bool IsModify => IsChanged().isChanged;
 
 
         public override string ToString()

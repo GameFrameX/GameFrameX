@@ -10,7 +10,7 @@ public interface ICacheState : ISafeDelete, ISafeCreate, ISafeUpdate
     /// <summary>
     /// 是否修改
     /// </summary>
-    bool IsModf { get; }
+    bool IsModify { get; }
 
     /// <summary>
     /// 
