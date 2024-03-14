@@ -13,5 +13,5 @@ public interface ISafeDelete
     /// <summary>
     /// 删除时间
     /// </summary>
-    public DateTime DeleteTime { get; set; }
+    public long DeleteTime { get; set; }
 }

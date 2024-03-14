@@ -13,5 +13,5 @@ public interface ISafeUpdate
     /// <summary>
     /// 更新时间
     /// </summary>
-    public DateTime UpdateTime { get; set; }
+    public long UpdateTime { get; set; }
 }
