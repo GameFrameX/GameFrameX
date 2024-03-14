@@ -13,13 +13,17 @@ public static class CacheStateTypeManager
     /// </summary>
     public static void Init()
     {
-        var types = typeof(AppsHandler).Assembly.GetTypes();
+        var assembly = typeof(AppsHandler).Assembly;
+        BsonClassMapHelper.SetConvention();
+
+        var types = assembly.GetTypes();
         foreach (var type in types)
         {
             var isImplWithInterface = type.IsImplWithInterface(typeof(ICacheState));
             if (isImplWithInterface)
             {
                 hashMap.TryAdd(Utility.Hash.XXHash.Hash32(type.ToString()), type);
+                BsonClassMapHelper.RegisterClass(type);
             }
         }
     }
