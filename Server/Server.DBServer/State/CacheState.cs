@@ -4,8 +4,12 @@ using Server.DBServer.Storage;
 namespace Server.DBServer.State
 {
     [BsonSerializer]
-    public abstract class CacheState : ISafeDelete, ISafeCreate, ISafeUpdate
+    public class CacheState : ICacheState
     {
+        public CacheState()
+        {
+        }
+
         public const string UniqueId = nameof(Id);
 
         /// <summary>
@@ -13,6 +17,9 @@ namespace Server.DBServer.State
         /// </summary>
         [BsonId]
         public long Id { get; set; }
+
+        public bool IsModf => IsChanged().isChanged;
+
 
         public override string ToString()
         {
