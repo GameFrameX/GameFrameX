@@ -10,7 +10,6 @@ global using Server.Core.StartUp;
 global using Server.Core.StartUp.Attributes;
 global using Server.DBServer;
 global using Server.DBServer.DbService.MongoDB;
-global using Server.Log;
 global using Server.Setting;
 global using System.Collections.Concurrent;
 global using System.Net;
