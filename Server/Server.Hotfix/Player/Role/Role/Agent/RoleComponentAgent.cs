@@ -40,7 +40,7 @@ namespace Server.Hotfix.Player.Role.Role.Agent
             SetAutoRecycle(false);
             if (isNewRole)
             {
-                State.CreateTime = DateTime.Now;
+                State.CreateTime = TimeHelper.UnixTimeSeconds();
                 State.Level = 1;
                 State.VipLevel = 1;
                 State.RoleName = new System.Random().Next(1000, 10000).ToString(); //随机给一个
@@ -48,7 +48,7 @@ namespace Server.Hotfix.Player.Role.Role.Agent
                 await GetComponentAgent<BagComponentAgent>();
             }
 
-            State.LoginTime = DateTime.Now;
+            // State.LoginTime = DateTime.Now;
             return BuildLoginMsg();
         }
 
