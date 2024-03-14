@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+﻿/*using System.Linq.Expressions;
 using Server.DBServer.State;
 
 namespace Server.DBServer
@@ -8,8 +8,6 @@ namespace Server.DBServer
     /// </summary>
     public static class GameDb
     {
-        // static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-
         private static IGameDbService _dbServiceImpler;
 
         /// <summary>
@@ -55,7 +53,7 @@ namespace Server.DBServer
         /// <typeparam name="TState">文档的类型</typeparam>
         /// <param name="filter">过滤器表达式</param>
         /// <returns>表示异步操作的任务。任务结果包含文档列表</returns>
-        public static Task<List<TState>> FindListAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        public static Task<List<TState>> FindListAsync<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             return _dbServiceImpler.FindListAsync<TState>(filter);
         }
@@ -66,7 +64,7 @@ namespace Server.DBServer
         /// <typeparam name="TState">文档的类型</typeparam>
         /// <param name="filter">过滤器表达式</param>
         /// <returns>表示异步操作的任务。任务结果包含文档数量</returns>
-        public static Task<long> CountAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        public static Task<long> CountAsync<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             return _dbServiceImpler.CountAsync<TState>(filter);
         }
@@ -77,7 +75,7 @@ namespace Server.DBServer
         /// <typeparam name="TState">文档的类型</typeparam>
         /// <param name="filter">过滤器表达式</param>
         /// <returns>表示异步操作的任务。任务结果包含文档</returns>
-        public static Task<TState> FindAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        public static Task<TState> FindAsync<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             return _dbServiceImpler.FindAsync<TState>(filter);
         }
@@ -89,7 +87,7 @@ namespace Server.DBServer
         /// <param name="id">文档的id</param>
         /// <param name="defaultGetter">一个用于获取默认值的函数，如果指定的文档不存在</param>
         /// <returns>表示异步操作的任务。任务结果包含文档</returns>
-        public static Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : CacheState, new()
+        public static Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : ICacheState, new()
         {
             return _dbServiceImpler.LoadState(id, defaultGetter);
         }
@@ -100,7 +98,7 @@ namespace Server.DBServer
         /// <typeparam name="TState">文档的类型</typeparam>
         /// <param name="state">要更新的文档</param>
         /// <returns>表示异步操作的任务。任务结果包含更新后的文档</returns>
-        public static Task<TState> UpdateAsync<TState>(TState state) where TState : CacheState, new()
+        public static Task<TState> UpdateAsync<TState>(TState state) where TState : ICacheState, new()
         {
             return _dbServiceImpler.UpdateAsync<TState>(state);
         }
@@ -122,7 +120,7 @@ namespace Server.DBServer
         /// <typeparam name="TState">文档的类型</typeparam>
         /// <param name="filter">过滤器表达式</param>
         /// <returns>表示异步操作的任务。任务结果包含删除的文档数量</returns>
-        public static Task<long> DeleteAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        public static Task<long> DeleteAsync<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             return _dbServiceImpler.DeleteAsync<TState>(filter);
         }
@@ -133,7 +131,7 @@ namespace Server.DBServer
         /// <typeparam name="TState">文档的类型</typeparam>
         /// <param name="state">要删除的文档</param>
         /// <returns>表示异步操作的任务。任务结果包含删除的文档数量</returns>
-        public static Task<long> DeleteAsync<TState>(TState state) where TState : CacheState, new()
+        public static Task<long> DeleteAsync<TState>(TState state) where TState : ICacheState, new()
         {
             return _dbServiceImpler.DeleteAsync<TState>(state);
         }
@@ -162,4 +160,4 @@ namespace Server.DBServer
             // }
         }
     }
-}
+}*/
