@@ -1,9 +1,15 @@
-using System.Text;
+using SuperSocket;
 using Server.Launcher.Message;
+using Server.Launcher.PipelineFilter;
 using Server.NetWork;
 using Server.NetWork.Messages;
 using Server.NetWork.TCPSocket;
+using Server.Proto.Proto;
 using Server.ServerManager;
+using Server.Utility;
+using SuperSocket.Channel;
+using SuperSocket.ProtoBase;
+using ListenOptions = SuperSocket.ListenOptions;
 
 namespace Server.Launcher.StartUp;
 
@@ -13,24 +19,10 @@ namespace Server.Launcher.StartUp;
 [StartUpTag(ServerType.Discovery, 0)]
 internal sealed class AppStartUpDiscovery : AppStartUpBase
 {
-    private TcpServerMessage server;
-    readonly IMessageDecoderHandler messageDecoderHandler = new MessageDecoderHandler();
-    readonly IMessageEncoderHandler messageEncoderHandler = new MessageEncoderHandler();
+    private IServer server;
+    // readonly IMessageDecoderHandler messageDecoderHandler = new MessageActorDiscoveryDecoderHandler();
+    readonly MessageActorDiscoveryEncoderHandler messageEncoderHandler = new MessageActorDiscoveryEncoderHandler();
 
-    public override void Init()
-    {
-        if (Setting == null)
-        {
-            Setting = new AppSetting
-            {
-                ServerId = 3300,
-                ServerType = ServerType.Discovery,
-                TcpPort = 33300
-            };
-        }
-
-        base.Init();
-    }
 
     public override async Task EnterAsync()
     {
@@ -54,14 +46,23 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
                 }
             }*/
 
-            server = new TcpServerMessage(IPAddress.Any, Setting.TcpPort);
-            server.NetWorkChannelHelper = new NetWorkChannelHelper();
-            server.NetWorkChannelHelper.OnError = OnError;
-            server.NetWorkChannelHelper.OnSendMessage = OnSendMessage;
-            server.NetWorkChannelHelper.OnConnected = OnConnected;
-            server.NetWorkChannelHelper.OnDisconnected = OnDisconnected;
-            server.NetWorkChannelHelper.OnReceiveMessage = OnReceiveMessage;
-            server.Start();
+            server = SuperSocketHostBuilder.Create<IMessage, MessageObjectPipelineFilter>()
+                .ConfigureSuperSocket(ConfigureSuperSocket)
+                .UseSessionFactory<GameSessionFactory>()
+                .UseClearIdleSession()
+                .UsePackageDecoder<MessageActorDiscoveryDecoderHandler>()
+                .UsePackageEncoder<MessageActorDiscoveryEncoderHandler>()
+                .UseSessionHandler(OnConnected, OnDisconnected)
+                .UsePackageHandler(PackageHandler)
+                // .ConfigureErrorHandler((s, v) =>
+                // {
+                // })
+                // .UseMiddleware<InProcSessionContainerMiddleware>()
+                .UseInProcSessionContainer()
+                .BuildAsServer();
+
+            await server.StartAsync();
+
             LogHelper.Info($"启动服务器 {ServerType} 端口: {Setting.TcpPort} 结束!");
 
             await AppExitToken;
@@ -74,19 +75,13 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
 
         // Stop the server
         LogHelper.Info($"退出服务器开始");
-        server.Stop();
+        await server.StopAsync();
         LogHelper.Info($"退出服务器成功");
     }
 
-    private byte[] OnSendMessage(IMessage arg)
-    {
-        return this.messageEncoderHandler.Handler(arg);
-    }
 
-    private void OnReceiveMessage(ISession session, byte[] buffer, long offset, long size)
+    private async ValueTask PackageHandler(IAppSession session, IMessage messageObject)
     {
-        var message = buffer.AsSpan((int)offset, (int)size);
-        var messageObject = this.messageDecoderHandler.Handler(message);
         if (messageObject is MessageObject msg)
         {
             var messageId = msg.MessageId;
@@ -96,29 +91,51 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
             }
         }
 
-        var bytes = Encoding.UTF8.GetBytes(messageObject.ToString());
-        session.Send(bytes);
+        // 发送
+        var response = new RespActorHeartBeat()
+        {
+            Timestamp = TimeHelper.UnixTimeSeconds()
+        };
+        await session.SendAsync(messageEncoderHandler, response);
     }
 
-    private void OnDisconnected()
-    {
-        LogHelper.Info("网络连接断开");
-    }
 
-    private void OnConnected()
+    private ValueTask OnConnected(IAppSession appSession)
     {
         LogHelper.Info("网络连接成功");
+        // NamingServiceManager.Instance.Add();
+        return ValueTask.CompletedTask;
     }
 
-    private void OnError(string obj)
+    private ValueTask OnDisconnected(object sender, CloseEventArgs args)
     {
-        LogHelper.Info("网络连接错误：" + obj);
+        return ValueTask.CompletedTask;
     }
 
     public override void Stop(string message = "")
     {
         LogHelper.Info("Server stopping...");
-        server.Stop();
+        server.StopAsync();
         LogHelper.Info("Done!");
+    }
+
+    private void ConfigureSuperSocket(ServerOptions options)
+    {
+        options.AddListener(new ListenOptions { Ip = IPAddress.Any.ToString(), Port = Setting.TcpPort });
+    }
+
+    public override void Init()
+    {
+        if (Setting == null)
+        {
+            Setting = new AppSetting
+            {
+                ServerId = 3300,
+                ServerType = ServerType.Discovery,
+                TcpPort = 33300
+            };
+        }
+
+        base.Init();
     }
 }

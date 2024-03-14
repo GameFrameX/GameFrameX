@@ -1,5 +1,7 @@
 ﻿using System.Buffers;
+using System.Timers;
 using Server.Launcher.Message;
+using Server.Launcher.PipelineFilter;
 using Server.Launcher.StartUp;
 using Server.NetWork;
 using Server.NetWork.Messages;
@@ -7,6 +9,9 @@ using Server.NetWork.TCPSocket;
 using Server.Proto;
 using Server.Proto.Proto;
 using Server.Utility;
+using SuperSocket.Client;
+using SuperSocket.ClientEngine;
+using SuperSocket.ProtoBase;
 
 /// <summary>
 /// 网关服务器
@@ -14,7 +19,94 @@ using Server.Utility;
 [StartUpTag(ServerType.Gateway)]
 internal sealed class AppStartUpGateway : AppStartUpBase
 {
-    private TcpClientMessage client;
+    private AsyncTcpSession client;
+    IMessageEncoderHandler messageEncoderHandler = new MessageActorGatewayEncoderHandler();
+    IMessageDecoderHandler messageDecoderHandler = new MessageActorGatewayDecoderHandler();
+    ReqActorHeartBeat reqHeartBeat = new ReqActorHeartBeat();
+
+    public override async Task EnterAsync()
+    {
+        try
+        {
+            LogHelper.Info($"启动服务器{ServerType} 开始! address: {Setting.CenterUrl}  port: {Setting.GrpcPort}");
+
+            client = new AsyncTcpSession();
+            client.Connected += ClientOnConnected;
+            client.Closed += ClientOnClosed;
+            client.DataReceived += ClientOnDataReceived;
+
+
+            LogHelper.Info("开始链接到中心服务器 ...");
+            client.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
+            LogHelper.Info("链接完成!");
+            TimeSpan delay = TimeSpan.FromSeconds(5);
+            await Task.Delay(delay);
+
+            var timer = new System.Timers.Timer(5000);
+            timer.Elapsed += TimerOnElapsed;
+            timer.Enabled = true;
+            timer.Start();
+
+            await AppExitToken;
+            Console.Write("全部断开...");
+            LogHelper.Info("Done!");
+        }
+        catch (Exception e)
+        {
+            Stop(e.Message);
+            AppExitSource.TrySetException(e);
+            LogHelper.Info(e);
+        }
+    }
+
+    private void TimerOnElapsed(object sender, ElapsedEventArgs e)
+    {
+        //心跳包
+        if (client.IsConnected)
+        {
+            reqHeartBeat.Timestamp = TimeHelper.UnixTimeSeconds();
+            reqHeartBeat.UniqueId = UtilityIdGenerator.GetNextUniqueId();
+            SendMessage(reqHeartBeat);
+        } //断线重连
+        else if (!client.IsConnected)
+        {
+            client.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
+        }
+    }
+
+    private void ClientOnDataReceived(object sender, DataEventArgs e)
+    {
+        Span<byte> span = e.Data;
+
+        var message = span.Slice(e.Offset, e.Length);
+        var package = messageDecoderHandler.Handler(message);
+        if (Setting.IsDebug && Setting.IsDebugReceive)
+        {
+            LogHelper.Debug($"---收到消息 ==>消息类型:{package.GetType()} 消息内容:{package}");
+        }
+    }
+
+    private void ClientOnConnected(object sender, EventArgs e)
+    {
+    }
+
+    private void ClientOnClosed(object sender, EventArgs eventArgs)
+    {
+        LogHelper.Info("网络连接断开");
+    }
+
+    private void SendMessage(IMessage message)
+    {
+        var span = messageEncoderHandler.Handler(message);
+        if (Setting.IsDebug && Setting.IsDebugSend)
+        {
+            LogHelper.Debug($"---发送消息ID:[{ProtoMessageIdHandler.GetReqMessageIdByType(message.GetType())}] ==>消息类型:{message.GetType()} 消息内容:{message}");
+        }
+
+        client.TrySend(span);
+        ArrayPool<byte>.Shared.Return(span);
+    }
+
 
     public override void Init()
     {
@@ -31,104 +123,5 @@ internal sealed class AppStartUpGateway : AppStartUpBase
         }
 
         base.Init();
-    }
-
-    IMessageEncoderHandler messageEncoderHandler = new MessageEncoderHandler();
-    IMessageDecoderHandler messageDecoderHandler = new MessageDecoderHandler();
-
-    public override async Task EnterAsync()
-    {
-        try
-        {
-            LogHelper.Info($"启动服务器{ServerType} 开始! address: {Setting.CenterUrl}  port: {Setting.GrpcPort}");
-            // Create a new TCP chat client
-            client = new TcpClientMessage(Setting.CenterUrl, Setting.GrpcPort);
-            client.NetWorkChannelHelper = new NetWorkChannelHelper();
-            client.NetWorkChannelHelper.OnError = OnError;
-            client.NetWorkChannelHelper.OnSendMessage = OnSendMessage;
-            client.NetWorkChannelHelper.OnConnected = OnConnected;
-            client.NetWorkChannelHelper.OnDisconnected = OnDisconnected;
-            client.NetWorkChannelHelper.OnReceiveMessage = OnReceiveMessage;
-            // Connect the client
-            LogHelper.Info("开始链接到中心服务器 ...");
-            client.Connect();
-            LogHelper.Info("链接完成!");
-            TimeSpan delay = TimeSpan.FromSeconds(5);
-            await Task.Delay(delay);
-            ReqHeartBeat reqHeartBeat = new ReqHeartBeat();
-            while (client.IsConnected)
-            {
-                if (!AppExitToken.IsCompleted && client.IsConnected)
-                {
-                    reqHeartBeat.Timestamp = TimeHelper.UnixTimeSeconds();
-                    SendMessage(reqHeartBeat);
-                }
-
-                await Task.Delay(delay);
-            }
-
-            await AppExitToken;
-            Console.Write("全部断开...");
-            LogHelper.Info("Done!");
-        }
-        catch (Exception e)
-        {
-            Stop(e.Message);
-            AppExitSource.TrySetException(e);
-            LogHelper.Info(e);
-        }
-    }
-
-    private byte[] OnSendMessage(IMessage message)
-    {
-        message.UniqueId = Guid.NewGuid().ToString("N");
-        var span = messageEncoderHandler.Handler(message);
-        if (Setting.IsDebug && Setting.IsDebugSend)
-        {
-            LogHelper.Debug($"---发送消息ID:[{ProtoMessageIdHandler.GetReqMessageIdByType(message.GetType())}] ==>消息类型:{message.GetType()} 消息内容:{message}");
-        }
-
-        // client.Send(span);
-        // ArrayPool<byte>.Shared.Return(span);
-
-        return span;
-    }
-
-    private void OnDisconnected()
-    {
-        LogHelper.Info("网络连接断开");
-    }
-
-    private void OnConnected()
-    {
-        LogHelper.Info("网络连接成功");
-    }
-
-    private void OnError(string obj)
-    {
-        LogHelper.Info("网络连接错误：" + obj);
-    }
-
-    private void OnReceiveMessage(ISession session, byte[] buffer, long offset, long size)
-    {
-    }
-
-    private void SendMessage(IMessage message)
-    {
-        message.UniqueId = Guid.NewGuid().ToString("N");
-        var span = messageEncoderHandler.Handler(message);
-        if (Setting.IsDebug && Setting.IsDebugSend)
-        {
-            LogHelper.Debug($"---发送消息ID:[{ProtoMessageIdHandler.GetReqMessageIdByType(message.GetType())}] ==>消息类型:{message.GetType()} 消息内容:{message}");
-        }
-
-        client.Send(span);
-        ArrayPool<byte>.Shared.Return(span);
-    }
-
-    public override void Stop(string message = "")
-    {
-        base.Stop(message);
-        client.DisconnectAndStop();
     }
 }
