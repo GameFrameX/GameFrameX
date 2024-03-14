@@ -16,6 +16,73 @@ namespace Server.Proto
     {
         private static readonly BidirectionalDictionary<int, Type> ReqDictionary = new BidirectionalDictionary<int, Type>();
         private static readonly BidirectionalDictionary<int, Type> RespDictionary = new BidirectionalDictionary<int, Type>();
+        private static readonly BidirectionalDictionary<int, Type> RequestActorDictionary = new BidirectionalDictionary<int, Type>();
+        private static readonly BidirectionalDictionary<int, Type> ResponseActorDictionary = new BidirectionalDictionary<int, Type>();
+
+        #region Actor
+
+        /// <summary>
+        /// 根据消息ID获取请求的类型
+        /// </summary>
+        /// <param name="messageId">消息ID</param>
+        /// <returns>请求的类型</returns>
+        public static Type GetRequestActorTypeById(int messageId)
+        {
+            RequestActorDictionary.TryGetValue(messageId, out var value);
+            return value;
+        }
+
+        /// <summary>
+        /// 根据类型获取请求消息ID
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>请求消息ID</returns>
+        public static int GetRequestActorMessageIdByType(Type type)
+        {
+            RequestActorDictionary.TryGetKey(type, out var value);
+            return value;
+        }
+
+
+        /// <summary>
+        /// 根据消息ID获取响应的类型
+        /// </summary>
+        /// <param name="messageId">消息ID</param>
+        /// <returns>响应的类型</returns>
+        public static Type GetResponseActorTypeById(int messageId)
+        {
+            ResponseActorDictionary.TryGetValue(messageId, out var value);
+            return value;
+        }
+
+        /// <summary>
+        /// 根据类型获取响应消息ID
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>响应消息ID</returns>
+        public static int GetResponseActorMessageIdByType(Type type)
+        {
+            ResponseActorDictionary.TryGetKey(type, out var value);
+            return value;
+        }
+
+        #endregion
+
+
+        public static int GetMessageIdByType(Type type)
+        {
+            if (ReqDictionary.TryGetKey(type, out var value))
+            {
+                return value;
+            }
+
+            if (RespDictionary.TryGetKey(type, out value))
+            {
+                return value;
+            }
+
+            return 0;
+        }
 
 
         /// <summary>
@@ -28,6 +95,7 @@ namespace Server.Proto
             ReqDictionary.TryGetValue(messageId, out var value);
             return value;
         }
+
 
         /// <summary>
         /// 根据类型获取请求消息ID
@@ -88,19 +156,41 @@ namespace Server.Proto
                     if (type.IsImplWithInterface(typeof(IRequestMessage)))
                     {
                         // 请求
-                        if (!ReqDictionary.TryAdd(messageIdHandler.MessageId, type))
+                        if (type.IsImplWithInterface(typeof(IActorRequestMessage)) && messageIdHandler.MessageId > 100_0000)
                         {
-                            ReqDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
-                            LogHelper.Error($"请求Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            if (!RequestActorDictionary.TryAdd(messageIdHandler.MessageId, type))
+                            {
+                                RequestActorDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
+                                LogHelper.Error($"请求Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            }
+                        }
+                        else
+                        {
+                            if (!ReqDictionary.TryAdd(messageIdHandler.MessageId, type))
+                            {
+                                ReqDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
+                                LogHelper.Error($"请求Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            }
                         }
                     }
                     else if (type.IsImplWithInterface(typeof(IResponseMessage)))
                     {
                         // 返回
-                        if (!RespDictionary.TryAdd(messageIdHandler.MessageId, type))
+                        if (type.IsImplWithInterface(typeof(IActorResponseMessage)) && messageIdHandler.MessageId > 100_0000)
                         {
-                            RespDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
-                            LogHelper.Error($"返回Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            if (!ResponseActorDictionary.TryAdd(messageIdHandler.MessageId, type))
+                            {
+                                ResponseActorDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
+                                LogHelper.Error($"返回Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            }
+                        }
+                        else
+                        {
+                            if (!RespDictionary.TryAdd(messageIdHandler.MessageId, type))
+                            {
+                                RespDictionary.TryGetValue(messageIdHandler.MessageId, out var value);
+                                LogHelper.Error($"返回Id重复==>当前ID:{messageIdHandler.MessageId},已有ID类型:{value.FullName}");
+                            }
                         }
                     }
                 }
