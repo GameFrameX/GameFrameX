@@ -51,7 +51,7 @@ namespace Server.Core.Timer
 
                 var startTime = DateTime.Now;
 
-                await GameDb.TimerSave();
+                // await GameDb.TimerSave();
 
                 var cost = (DateTime.Now - startTime).TotalMilliseconds;
                 LogHelper.Info($"定时回存完成 耗时: {cost:f4}ms");
@@ -102,8 +102,8 @@ namespace Server.Core.Timer
         {
             working = false;
             await LoopTask;
-            await GameDb.SaveAll();
-            GameDb.Close();
+            // await GameDb.SaveAll();
+            // GameDb.Close();
             LogHelper.Info($"停止全局定时完成");
         }
     }
