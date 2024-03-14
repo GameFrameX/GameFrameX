@@ -50,7 +50,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// </summary>
         /// <typeparam name="TState">文档的类型。</typeparam>
         /// <returns>指定类型的MongoDB集合。</returns>
-        private IMongoCollection<TState> GetCollection<TState>() where TState : CacheState, new()
+        private IMongoCollection<TState> GetCollection<TState>() where TState : ICacheState, new()
         {
             var collectionName = typeof(TState).Name;
             IMongoCollection<TState>? collection = CurrentDatabase.GetCollection<TState>(collectionName);
@@ -64,7 +64,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <param name="id">要加载的缓存状态的ID。</param>
         /// <param name="defaultGetter">默认值获取器。</param>
         /// <returns>加载的缓存状态。</returns>
-        public async Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : CacheState, new()
+        public async Task<TState> LoadState<TState>(long id, Func<TState> defaultGetter = null) where TState : ICacheState, new()
         {
             var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, id);
 
@@ -92,7 +92,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <typeparam name="TState">缓存状态的类型。</typeparam>
         /// <param name="filter">自定义查询表达式。</param>
         /// <returns>默认的查询表达式。</returns>
-        private static Expression<Func<TState, bool>> GetDefaultFindExpression<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        private static Expression<Func<TState, bool>> GetDefaultFindExpression<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             Expression<Func<TState, bool>> expression = m => m.IsDeleted == false;
             if (filter != null)
@@ -109,7 +109,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <typeparam name="TState">缓存状态的类型。</typeparam>
         /// <param name="filter">查询条件。</param>
         /// <returns>满足条件的缓存状态列表。</returns>
-        public async Task<List<TState>> FindListAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        public async Task<List<TState>> FindListAsync<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             var result = new List<TState>();
             var collection = GetCollection<TState>();
@@ -128,7 +128,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <typeparam name="TState">缓存状态的类型。</typeparam>
         /// <param name="filter">查询条件。</param>
         /// <returns>满足条件的缓存状态。</returns>
-        public async Task<TState> FindAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        public async Task<TState> FindAsync<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             var collection = GetCollection<TState>();
             var findExpression = GetDefaultFindExpression(filter);
@@ -145,7 +145,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <param name="filter">查询条件</param>
         /// <typeparam name="TState"></typeparam>
         /// <returns></returns>
-        public async Task<long> CountAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        public async Task<long> CountAsync<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             var collection = GetCollection<TState>();
             var newFilter = GetDefaultFindExpression(filter);
@@ -159,7 +159,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <param name="filter">查询条件</param>
         /// <typeparam name="TState"></typeparam>
         /// <returns></returns>
-        public async Task<long> DeleteAsync<TState>(Expression<Func<TState, bool>> filter) where TState : CacheState, new()
+        public async Task<long> DeleteAsync<TState>(Expression<Func<TState, bool>> filter) where TState : ICacheState, new()
         {
             // var newFilter = Builders<TState>.Filter.Where(filter);
             // var collectionName = typeof(TState).Name;
@@ -176,7 +176,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// </summary>
         /// <param name="state"></param>
         /// <typeparam name="TState"></typeparam>
-        public async Task<long> DeleteAsync<TState>(TState state) where TState : CacheState, new()
+        public async Task<long> DeleteAsync<TState>(TState state) where TState : ICacheState, new()
         {
             var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, state.Id);
             var collection = GetCollection<TState>();
@@ -191,7 +191,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// </summary>
         /// <param name="state"></param>
         /// <typeparam name="TState"></typeparam>
-        public async Task AddAsync<TState>(TState state) where TState : CacheState, new()
+        public async Task AddAsync<TState>(TState state) where TState : ICacheState, new()
         {
             var collection = GetCollection<TState>();
             state.CreateTime = DateTime.UtcNow;
@@ -203,7 +203,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// </summary>
         /// <param name="states"></param>
         /// <typeparam name="TState"></typeparam>
-        public async Task AddListAsync<TState>(List<TState> states) where TState : CacheState, new()
+        public async Task AddListAsync<TState>(List<TState> states) where TState : ICacheState, new()
         {
             var collection = GetCollection<TState>();
             var cacheStates = states.ToList();
@@ -221,7 +221,7 @@ namespace Server.DBServer.DbService.MongoDB
         /// <param name="state"></param>
         /// <typeparam name="TState"></typeparam>
         /// <returns></returns>
-        public async Task<TState> UpdateAsync<TState>(TState state) where TState : CacheState, new()
+        public async Task<TState> UpdateAsync<TState>(TState state) where TState : ICacheState, new()
         {
             // var (isChanged, data) = state.IsChanged();
             // if (isChanged)
