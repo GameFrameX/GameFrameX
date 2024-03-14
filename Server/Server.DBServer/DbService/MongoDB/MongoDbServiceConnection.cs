@@ -180,7 +180,7 @@ namespace Server.DBServer.DbService.MongoDB
         {
             var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, state.Id);
             var collection = GetCollection<TState>();
-            state.DeleteTime = DateTime.UtcNow;
+            state.DeleteTime = Utility.TimeHelper.UnixTimeSeconds();
             state.IsDeleted = true;
             var result = await collection.ReplaceOneAsync(filter, state, ReplaceOptions);
             return result.ModifiedCount;
@@ -194,7 +194,7 @@ namespace Server.DBServer.DbService.MongoDB
         public async Task AddAsync<TState>(TState state) where TState : ICacheState, new()
         {
             var collection = GetCollection<TState>();
-            state.CreateTime = DateTime.UtcNow;
+            state.CreateTime = Utility.TimeHelper.UnixTimeSeconds();
             await collection.InsertOneAsync(state);
         }
 
@@ -209,7 +209,7 @@ namespace Server.DBServer.DbService.MongoDB
             var cacheStates = states.ToList();
             foreach (var cacheState in cacheStates)
             {
-                cacheState.CreateTime = DateTime.UtcNow;
+                cacheState.CreateTime = Utility.TimeHelper.UnixTimeSeconds();
             }
 
             await collection.InsertManyAsync(cacheStates);
@@ -227,7 +227,7 @@ namespace Server.DBServer.DbService.MongoDB
             // if (isChanged)
             {
                 // var cacheState = BsonSerializer.Deserialize<TState>(data);
-                state.UpdateTime = DateTime.UtcNow;
+                state.UpdateTime = Utility.TimeHelper.UnixTimeSeconds();
                 state.UpdateCount++;
                 var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, state.Id);
                 var collection = GetCollection<TState>();
