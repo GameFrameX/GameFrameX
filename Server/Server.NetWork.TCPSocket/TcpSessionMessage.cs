@@ -1,44 +1,26 @@
-using System.Buffers;
-using System.Net.Sockets;
-using System.Text;
-using Server.Extension;
-using Server.Log;
-using Server.NetWork.TCPSocket.Base;
-using Server.Serialize.Serialize;
+using SuperSocket.Channel;
+using SuperSocket.Server;
 
 namespace Server.NetWork.TCPSocket;
 
-public class TcpSessionMessage : TcpSession
+public class GameTcpSession : AppSession
 {
-    public INetWorkChannelHelper? NetWorkChannelHelper { get; }
+    private INetWorkChannelHelper? NetWorkChannelHelper { get; }
 
-    public TcpSessionMessage(TcpServerMessage server, INetWorkChannelHelper? netWorkChannelHelper) : base(server)
+    public GameTcpSession(INetWorkChannelHelper? netWorkChannelHelper)
     {
         NetWorkChannelHelper = netWorkChannelHelper;
     }
 
-    protected override void OnConnected()
+    protected override ValueTask OnSessionClosedAsync(CloseEventArgs e)
     {
-        string message = "Hello from TCP chat! Please send a message or '!' to disconnect the client!";
-        SendAsync(message);
+        NetWorkChannelHelper?.OnDisconnected?.Invoke(e.Reason.ToString());
+        return base.OnSessionClosedAsync(e);
+    }
+
+    protected override ValueTask OnSessionConnectedAsync()
+    {
         NetWorkChannelHelper?.OnConnected?.Invoke();
-    }
-
-    protected override void OnReceived(byte[] buffer, long offset, long size)
-    {
-        NetWorkChannelHelper?.OnReceiveMessage?.Invoke(this, buffer, offset, size);
-        this.Server.UpdateReceiveMessageTime();
-    }
-
-    public override bool Disconnect()
-    {
-        NetWorkChannelHelper?.OnDisconnected?.Invoke();
-        return base.Disconnect();
-    }
-
-    protected override void OnError(SocketError error)
-    {
-        base.OnError(error);
-        NetWorkChannelHelper?.OnError?.Invoke(error.ToString());
+        return base.OnSessionConnectedAsync();
     }
 }
