@@ -89,7 +89,7 @@ namespace Server.Core.Comps
 
         static StateComponent()
         {
-            StateComponent.AddShutdownSaveFunc(SaveAll);
+            // StateComponent.AddShutdownSaveFunc(SaveAll);
         }
 
         public override async Task Active()
@@ -117,7 +117,7 @@ namespace Server.Core.Comps
         {
             try
             {
-                await GameDb.UpdateAsync(State);
+                // await GameDb.UpdateAsync(State);
             }
             catch (Exception e)
             {
@@ -127,22 +127,23 @@ namespace Server.Core.Comps
 
         public async Task ReadStateAsync()
         {
-            State = await GameDb.LoadState<TState>(ActorId);
+            /*State = await GameDb.LoadState<TState>(ActorId);
             // if (GlobalSettings.DBModel == (int)DbModel.Mongodb)
             {
                 stateDic.TryRemove(State.Id, out _);
                 stateDic.TryAdd(State.Id, State);
-            }
+            }*/
         }
 
-        public Task WriteStateAsync()
+        /*public Task WriteStateAsync()
         {
             return GameDb.UpdateAsync(State);
-        }
+        }*/
 
 
         #region 仅DBModel.Mongodb调用
 
+        /*
         const int ONCE_SAVE_COUNT = 500;
 
         public static async Task SaveAll(bool shutdown, bool force = false)
@@ -230,7 +231,7 @@ namespace Server.Core.Comps
                     }
                 }
             }
-        }
+        }*/
 
 
         // public static async Task<MongoState> FindAsync<TState>(FilterDefinition<BsonDocument> filter, int limit = 0)
