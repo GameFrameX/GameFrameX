@@ -116,7 +116,7 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
         options.AddListener(new ListenOptions { Ip = IPAddress.Any.ToString(), Port = Setting.TcpPort });
     }
 
-    public override void Init()
+    protected override void Init()
     {
         if (Setting == null)
         {

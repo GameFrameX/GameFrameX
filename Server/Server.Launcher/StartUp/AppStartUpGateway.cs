@@ -93,7 +93,7 @@ internal sealed class AppStartUpGateway : AppStartUpBase
     }
 
 
-    public override void Init()
+    protected override void Init()
     {
         if (Setting == null)
         {

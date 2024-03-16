@@ -8,7 +8,7 @@ public abstract class AppStartUpBase : IAppStartUp
     protected readonly TaskCompletionSource<string> AppExitSource = new TaskCompletionSource<string>();
     public Task<string> AppExitToken => AppExitSource.Task;
 
-    public virtual void Init()
+    protected virtual void Init()
     {
     }
 
