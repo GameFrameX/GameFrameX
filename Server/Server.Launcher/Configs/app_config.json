@@ -16,20 +16,20 @@
   //    "DataBaseUrl": "mongodb+srv://gameframex:f9v42aU9DVeFNfAF@gameframex.8taphic.mongodb.net/?retryWrites=true&w=majority",
   //    "DataBaseName": "gameframex"
   //  },
-  {
-    "ServerId": 2000,
-    "ServerType": "Router",
-    "ServerName": "Router",
-    "LocalIp": "127.0.0.1",
-    "TcpPort": 22000,
-    "HttpCode": "inner_httpcode",
-    "HttpPort": 20001,
-    "WsPort": 25001,
-    "WssPort": 0,
-    "WssCertFilePath": "certs/cert.pem",
-    "GrpcPort": 3300,
-    "CenterUrl": "127.0.0.1"
-  },
+//  {
+//    "ServerId": 2000,
+//    "ServerType": "Router",
+//    "ServerName": "Router",
+//    "LocalIp": "127.0.0.1",
+//    "TcpPort": 22000,
+//    "HttpCode": "inner_httpcode",
+//    "HttpPort": 20001,
+//    "WsPort": 25001,
+//    "WssPort": 0,
+//    "WssCertFilePath": "certs/cert.pem",
+//    "GrpcPort": 3300,
+//    "CenterUrl": "127.0.0.1"
+//  },
   {
     "ServerId": 6000,
     "ServerType": "DataBase",
