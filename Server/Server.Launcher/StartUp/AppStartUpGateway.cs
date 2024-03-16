@@ -38,7 +38,7 @@ internal sealed class AppStartUpGateway : AppStartUpBase
         }
         catch (Exception e)
         {
-            Stop(e.Message);
+            await Stop(e.Message);
             AppExitSource.TrySetException(e);
             LogHelper.Info(e);
         }
