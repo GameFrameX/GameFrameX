@@ -2,7 +2,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-
 using Server.DBServer.State;
 using Server.Extension;
 using Server.Log;
@@ -191,11 +190,13 @@ namespace Server.DBServer.DbService.MongoDB
         /// </summary>
         /// <param name="state"></param>
         /// <typeparam name="TState"></typeparam>
-        public async Task AddAsync<TState>(TState state) where TState : ICacheState, new()
+        public async Task<ReplaceOneResult> AddAsync<TState>(TState state) where TState : ICacheState, new()
         {
             var collection = GetCollection<TState>();
             state.CreateTime = Utility.TimeHelper.UnixTimeSeconds();
-            await collection.InsertOneAsync(state);
+            var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, state.Id);
+            var result = await collection.ReplaceOneAsync(filter, state, ReplaceOptions);
+            return result;
         }
 
         /// <summary>
