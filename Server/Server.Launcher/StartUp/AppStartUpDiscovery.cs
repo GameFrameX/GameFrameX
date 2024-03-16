@@ -12,6 +12,7 @@ namespace Server.Launcher.StartUp;
 internal sealed class AppStartUpDiscovery : AppStartUpBase
 {
     private IServer server;
+
     // readonly IMessageDecoderHandler messageDecoderHandler = new MessageActorDiscoveryDecoderHandler();
     readonly MessageActorDiscoveryEncoderHandler messageEncoderHandler = new MessageActorDiscoveryEncoderHandler();
 
@@ -46,10 +47,6 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
                 .UsePackageEncoder<MessageActorDiscoveryEncoderHandler>()
                 .UseSessionHandler(OnConnected, OnDisconnected)
                 .UsePackageHandler(PackageHandler)
-                // .ConfigureErrorHandler((s, v) =>
-                // {
-                // })
-                // .UseMiddleware<InProcSessionContainerMiddleware>()
                 .UseInProcSessionContainer()
                 .BuildAsServer();
 
@@ -104,10 +101,10 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
         return ValueTask.CompletedTask;
     }
 
-    public override void Stop(string message = "")
+    public override async Task Stop(string message = "")
     {
         LogHelper.Info("Server stopping...");
-        server.StopAsync();
+        await server.StopAsync();
         LogHelper.Info("Done!");
     }
 
