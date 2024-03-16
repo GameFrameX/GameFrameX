@@ -3,13 +3,16 @@ using Server.DBServer.Storage;
 
 namespace Server.DBServer.State
 {
-    [BsonSerializer]
+    [BsonIgnoreExtraElements(true, Inherited = true)]
     public class CacheState : ICacheState
     {
         public CacheState()
         {
         }
 
+        /// <summary>
+        /// 唯一ID。给DB用的
+        /// </summary>
         public const string UniqueId = nameof(Id);
 
         /// <summary>
