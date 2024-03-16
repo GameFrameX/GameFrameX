@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using Server.DBServer.State;
-using Server.DBServer.Storage;
 
 namespace Server.DBServer;
 
@@ -77,7 +76,7 @@ public interface IGameDbService
     /// <param name="state"></param>
     /// <typeparam name="TState"></typeparam>
     /// <returns></returns>
-    public Task AddAsync<TState>(TState state) where TState : ICacheState, new();
+    public Task<long> AddAsync<TState>(TState state) where TState : ICacheState, new();
 
     /// <summary>
     /// 保存数据

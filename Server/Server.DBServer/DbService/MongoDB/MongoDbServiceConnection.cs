@@ -190,13 +190,13 @@ namespace Server.DBServer.DbService.MongoDB
         /// </summary>
         /// <param name="state"></param>
         /// <typeparam name="TState"></typeparam>
-        public async Task<ReplaceOneResult> AddAsync<TState>(TState state) where TState : ICacheState, new()
+        public async Task<long> AddAsync<TState>(TState state) where TState : ICacheState, new()
         {
             var collection = GetCollection<TState>();
             state.CreateTime = Utility.TimeHelper.UnixTimeSeconds();
             var filter = Builders<TState>.Filter.Eq(CacheState.UniqueId, state.Id);
             var result = await collection.ReplaceOneAsync(filter, state, ReplaceOptions);
-            return result;
+            return result.ModifiedCount;
         }
 
         /// <summary>
