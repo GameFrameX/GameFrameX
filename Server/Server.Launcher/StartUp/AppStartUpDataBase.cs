@@ -22,20 +22,7 @@ namespace Server.Launcher.StartUp
                 // GameDb.Init(new MongoDbServiceConnection());
                 dbService.Open(Setting.DataBaseUrl, Setting.DataBaseName);
                 // GameDb.Open(Setting.DataBaseUrl, Setting.DataBaseName);
-
-                server = SuperSocketHostBuilder.Create<ICacheState>()
-                    .ConfigureSuperSocket(ConfigureSuperSocket)
-                    .UseSessionFactory<GameSessionFactory>()
-                    .UseClearIdleSession()
-                    .UsePipelineFilter<CacheStatePipelineFilter>()
-                    .UsePackageDecoder<MessageActorDataBaseDecoderHandler>()
-                    // .UsePackageEncoder<MessageActorEncoderHandler>()
-                    // .UseSessionHandler(OnConnected, OnDisconnected)
-                    .UsePackageHandler(MessagePackageHandler)
-                    .UseInProcSessionContainer()
-                    .BuildAsServer();
-
-                await server.StartAsync();
+                await StartServer();
                 GlobalSettings.LaunchTime = DateTime.Now;
                 GlobalSettings.IsAppRunning = true;
                 LogHelper.Info($"启动服务器{ServerType}结束");
@@ -51,6 +38,23 @@ namespace Server.Launcher.StartUp
             dbService.Close();
             await server.StopAsync();
             LogHelper.Info($"退出服务器成功");
+        }
+
+        private async Task StartServer()
+        {
+            server = SuperSocketHostBuilder.Create<ICacheState>()
+                .ConfigureSuperSocket(ConfigureSuperSocket)
+                .UseSessionFactory<GameSessionFactory>()
+                .UseClearIdleSession()
+                .UsePipelineFilter<CacheStatePipelineFilter>()
+                .UsePackageDecoder<MessageActorDataBaseDecoderHandler>()
+                // .UsePackageEncoder<MessageActorEncoderHandler>()
+                // .UseSessionHandler(OnConnected, OnDisconnected)
+                .UsePackageHandler(MessagePackageHandler)
+                .UseInProcSessionContainer()
+                .BuildAsServer();
+
+            await server.StartAsync();
         }
 
         private async ValueTask MessagePackageHandler(IAppSession session, ICacheState cacheState)
