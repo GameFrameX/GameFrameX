@@ -80,20 +80,6 @@ namespace Server.Launcher.StartUp
         {
         }
 
-        private ValueTask PackageHandler(EasyClient<IMessage> sender, ICacheState package)
-        {
-            // if (package is MessageObject msg)
-            {
-                var messageId = package.Id;
-                if (Setting.IsDebug && Setting.IsDebugReceive)
-                {
-                    LogHelper.Debug($"---收到消息 ==>消息内容:{package}");
-                }
-            }
-
-            return ValueTask.CompletedTask;
-        }
-
         private async ValueTask CacheServerPackageHandler(IAppSession session, ICacheState cacheState)
         {
             if (Setting.IsDebug && Setting.IsDebugReceive)
