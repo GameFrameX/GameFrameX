@@ -1,5 +1,3 @@
-using Server.Utility;
-
 namespace Server.Launcher.StartUp;
 
 public abstract class AppStartUpBase : IAppStartUp

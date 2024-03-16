@@ -1,19 +1,4 @@
-﻿using System.Buffers;
-using System.Timers;
-using Server.Launcher.Message;
-using Server.Launcher.PipelineFilter;
-using Server.Launcher.StartUp;
-using Server.NetWork;
-using Server.NetWork.Messages;
-using Server.NetWork.TCPSocket;
-using Server.Proto;
-using Server.Proto.Proto;
-using Server.Utility;
-using SuperSocket.Client;
-using SuperSocket.ClientEngine;
-using SuperSocket.ProtoBase;
-
-/// <summary>
+﻿/// <summary>
 /// 网关服务器
 /// </summary>
 [StartUpTag(ServerType.Gateway)]
