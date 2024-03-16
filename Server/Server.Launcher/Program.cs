@@ -46,6 +46,7 @@ namespace Server.Launcher
 
             var sortedStartUpTypes = startUpTypes.OrderBy(m => m.Value.Priority);
             List<Task> tasks = new();
+            LogHelper.Info($"----------------------------开始启动服务器啦------------------------------");
             var appSettings = GlobalSettings.GetSettings<AppSetting>();
             foreach (var keyValuePair in sortedStartUpTypes)
             {
@@ -105,7 +106,9 @@ namespace Server.Launcher
                 if (isSuccess)
                 {
                     // LogHelper.Info($"启动服务器类型：{keyValuePair.Value.ServerType},配置信息：{JsonConvert.SerializeObject(appSetting)}");
+                    LogHelper.Info($"----------------------------START-----{serverType}------------------------------");
                     var task = AppEnter.Entry(startUp.EnterAsync);
+                    LogHelper.Info($"-----------------------------END------{serverType}------------------------------");
                     return task;
                 }
             }
