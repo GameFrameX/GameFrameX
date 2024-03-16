@@ -167,6 +167,16 @@ public abstract class BaseSetting
     public string CenterUrl { get; set; }
 
     /// <summary>
+    /// DB 服务器地址
+    /// </summary>
+    public string DBUrl { get; set; }
+
+    /// <summary>
+    /// DB 服务器端口
+    /// </summary>
+    public int DbPort { get; set; }
+
+    /// <summary>
     /// SDK 类型
     /// </summary>
     public int SDKType { get; set; }
