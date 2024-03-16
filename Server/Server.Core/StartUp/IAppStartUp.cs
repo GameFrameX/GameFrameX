@@ -28,5 +28,5 @@ public interface IAppStartUp
     /// 终止服务器
     /// </summary>
     /// <param name="message">终止原因</param>
-    void Stop(string message = "");
+    Task Stop(string message = "");
 }
