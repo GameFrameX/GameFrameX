@@ -121,14 +121,19 @@ internal sealed class AppStartUpRouter : AppStartUpBase
             .ConfigureSuperSocket(ConfigureSuperSocket)
             .UseSessionFactory<GameSessionFactory>()
             .UseClearIdleSession()
-            .UsePackageDecoder<MessageActorDiscoveryDecoderHandler>()
-            .UsePackageEncoder<MessageActorDiscoveryEncoderHandler>()
+            .UsePackageDecoder<MessageRouterDecoderHandler>()
+            // .UsePackageEncoder<MessageEncoderHandler>()
             .UseSessionHandler(OnConnected, OnDisconnected)
-            .UsePackageHandler(PackageHandler)
+            .UsePackageHandler(ClientPackageHandler, ClientErrorHandler)
             .UseInProcSessionContainer()
             .BuildAsServer();
 
         await server.StartAsync();
+    }
+
+    private ValueTask<bool> ClientErrorHandler(IAppSession appSession, PackageHandlingException<IMessage> exception)
+    {
+        return ValueTask.FromResult(false);
     }
 
     private void ConfigureWebServer(HostBuilderContext context, IConfigurationBuilder builder)
@@ -142,9 +147,9 @@ internal sealed class AppStartUpRouter : AppStartUpBase
         await ValueTask.CompletedTask;
     }
 
-    readonly MessageActorDiscoveryEncoderHandler messageEncoderHandler = new MessageActorDiscoveryEncoderHandler();
+    readonly MessageRouterEncoderHandler messageEncoderHandler = new MessageRouterEncoderHandler();
 
-    private async ValueTask PackageHandler(IAppSession session, IMessage messageObject)
+    private async ValueTask ClientPackageHandler(IAppSession session, IMessage messageObject)
     {
         if (messageObject is MessageObject msg)
         {
@@ -156,7 +161,7 @@ internal sealed class AppStartUpRouter : AppStartUpBase
         }
 
         // 发送
-        var response = new RespActorHeartBeat()
+        var response = new RespHeartBeat()
         {
             Timestamp = TimeHelper.UnixTimeSeconds()
         };
