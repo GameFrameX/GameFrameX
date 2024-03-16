@@ -1,9 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using Server.Launcher.PipelineFilter;
 using Server.NetWork.TCPSocket;
 using SuperSocket.Channel;
 using ErrorEventArgs = SuperSocket.ClientEngine.ErrorEventArgs;
 using Timer = System.Timers.Timer;
+using SuperSocket.WebSocket.Server;
+using SuperSocket.ClientEngine;
+using SuperSocket.WebSocket;
 
 /// <summary>
 /// 路由服务器.最后启动。
@@ -21,26 +26,13 @@ internal sealed class AppStartUpRouter : AppStartUpBase
     /// </summary>
     IServer server;
 
-    /// <summary>
-    /// 重连
-    /// </summary>
-    Timer reconnectionTimer;
-
-    /// <summary>
-    /// 心跳
-    /// </summary>
-    private Timer heartBeatTimer;
 
     public override async Task EnterAsync()
     {
         try
         {
             LogHelper.Info($"开始启动服务器{ServerType}");
-            heartBeatTimer = new System.Timers.Timer(5000);
-            heartBeatTimer.Elapsed += HeartBeatTimerOnElapsed;
 
-            reconnectionTimer = new System.Timers.Timer(5000);
-            reconnectionTimer.Elapsed += ReconnectionTimerOnElapsed;
 
             await StartServer();
 
@@ -50,19 +42,21 @@ internal sealed class AppStartUpRouter : AppStartUpBase
             await Task.Delay(delay);
             if (client.IsConnected)
             {
-                heartBeatTimer.Start();
+                HeartBeatTimer.Start();
             }
 
             await AppExitToken;
-            Console.Write("全部断开...");
-            heartBeatTimer.Close();
-            reconnectionTimer.Close();
+            LogHelper.Info("全部断开...");
+            HeartBeatTimer.Close();
+            ReconnectionTimer.Close();
+            await webSocketServer.StopAsync();
             await server.StopAsync();
             client.Close();
             LogHelper.Info("Done!");
         }
         catch (Exception e)
         {
+            await Stop(e.Message);
         }
     }
 
@@ -71,20 +65,12 @@ internal sealed class AppStartUpRouter : AppStartUpBase
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void ReconnectionTimerOnElapsed(object sender, ElapsedEventArgs e)
+    protected override void ReconnectionTimerOnElapsed(object sender, ElapsedEventArgs e)
     {
         // 重连到网关服务器
         client.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
     }
 
-    /// <summary>
-    /// 心跳定时器
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void HeartBeatTimerOnElapsed(object sender, ElapsedEventArgs e)
-    {
-    }
 
     private void StartClient()
     {
@@ -99,9 +85,9 @@ internal sealed class AppStartUpRouter : AppStartUpBase
 
     private void ClientOnError(object sender, ErrorEventArgs e)
     {
-        LogHelper.Error("和网关服务器链接链接失败!.下一次重连时间:" + DateTime.Now.AddMilliseconds(reconnectionTimer.Interval));
+        LogHelper.Error("和网关服务器链接链接失败!.下一次重连时间:" + DateTime.Now.AddMilliseconds(ReconnectionTimer.Interval));
         // 和网关服务器链接失败，开启重连
-        reconnectionTimer.Start();
+        ReconnectionTimer.Start();
     }
 
     private void ClientOnDataReceived(object sender, DataEventArgs e)
@@ -113,21 +99,24 @@ internal sealed class AppStartUpRouter : AppStartUpBase
     {
         LogHelper.Info("和网关服务器链接链接断开!");
         // 和网关服务器链接断开，开启重连
-        reconnectionTimer.Start();
+        ReconnectionTimer.Start();
     }
 
     private void ClientOnConnected(object sender, EventArgs e)
     {
         LogHelper.Info("和网关服务器链接链接成功!");
         // 和网关服务器链接成功，关闭重连
-        reconnectionTimer.Stop();
+        ReconnectionTimer.Stop();
         // 开启和网关服务器的心跳
-        heartBeatTimer.Start();
+        HeartBeatTimer.Start();
     }
 
+    private IHost webSocketServer;
 
     private async Task StartServer()
     {
+        webSocketServer = WebSocketHostBuilder.Create().UseWebSocketMessageHandler(WebSocketMessageHandler).ConfigureAppConfiguration((ConfigureWebServer)).Build();
+        await webSocketServer.StartAsync();
         server = SuperSocketHostBuilder.Create<IMessage, MessageObjectPipelineFilter>()
             .ConfigureSuperSocket(ConfigureSuperSocket)
             .UseSessionFactory<GameSessionFactory>()
@@ -140,6 +129,17 @@ internal sealed class AppStartUpRouter : AppStartUpBase
             .BuildAsServer();
 
         await server.StartAsync();
+    }
+
+    private void ConfigureWebServer(HostBuilderContext context, IConfigurationBuilder builder)
+    {
+        builder.AddInMemoryCollection(new Dictionary<string, string>()
+            { { "serverOptions:name", "TestServer" }, { "serverOptions:listeners:0:ip", "Any" }, { "serverOptions:listeners:0:port", Setting.WsPort.ToString() } });
+    }
+
+    private async ValueTask WebSocketMessageHandler(WebSocketSession session, WebSocketPackage message)
+    {
+        await ValueTask.CompletedTask;
     }
 
     readonly MessageActorDiscoveryEncoderHandler messageEncoderHandler = new MessageActorDiscoveryEncoderHandler();
@@ -184,8 +184,9 @@ internal sealed class AppStartUpRouter : AppStartUpBase
 
     public override async Task Stop(string message = "")
     {
-        heartBeatTimer.Close();
-        reconnectionTimer.Close();
+        HeartBeatTimer.Close();
+        ReconnectionTimer.Close();
+        await webSocketServer.StopAsync();
         await server.StopAsync();
         client.Close();
         await base.Stop(message);
@@ -200,6 +201,8 @@ internal sealed class AppStartUpRouter : AppStartUpBase
                 ServerId = 1000,
                 ServerType = ServerType.Router,
                 TcpPort = 21000,
+                WsPort = 21100,
+                WssPort = 21200,
                 // 网关配置
                 GrpcPort = 22000,
                 CenterUrl = "127.0.0.1",
