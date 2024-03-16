@@ -2,17 +2,19 @@
 using Server.DBServer.State;
 using Server.Launcher.PipelineFilter;
 using Server.NetWork.TCPSocket;
+using ErrorEventArgs = SuperSocket.ClientEngine.ErrorEventArgs;
 
 namespace Server.Launcher.StartUp
 {
     /// <summary>
     /// 游戏数据缓存
     /// </summary>
-    // [StartUpTag(ServerType.Cache)]
+    [StartUpTag(ServerType.Cache)]
     internal sealed class AppStartUpCache : AppStartUpBase
     {
         private IServer server;
-        IEasyClient<ICacheState> client;
+        AsyncTcpSession databaseClient;
+        AsyncTcpSession discoveryClient;
         MessageActorDataBaseEncoderHandler messageActorDataBaseEncoderHandler = new MessageActorDataBaseEncoderHandler();
 
         public override async Task EnterAsync()
@@ -21,7 +23,8 @@ namespace Server.Launcher.StartUp
             {
                 LogHelper.Info($"开始启动服务器{ServerType}");
                 await StartServer();
-                await StartClient();
+                StartDiscoveryClient();
+                StartDataBaseClient();
                 GlobalSettings.LaunchTime = DateTime.Now;
                 GlobalSettings.IsAppRunning = true;
                 LogHelper.Info($"启动服务器{ServerType}结束");
@@ -37,32 +40,116 @@ namespace Server.Launcher.StartUp
             LogHelper.Info($"退出服务器成功");
         }
 
-        private async Task StartClient()
-        {
-            var messageObjectPipelineFilter = new CacheStatePipelineFilter
-            {
-                Decoder = new MessageActorDataBaseDecoderHandler()
-            };
+        #region DataBaseClient
 
-            client = new EasyClient<ICacheState>(messageObjectPipelineFilter).AsClient();
-            client.Closed += ClientOnClosed;
-            // client.PackageHandler += PackageHandler;
-            await client.ConnectAsync(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
-            client.StartReceive();
-            // 5 秒发送一次心跳
-            var timer = new System.Timers.Timer(5000);
-            timer.Elapsed += TimerOnElapsed;
-            timer.Enabled = true;
-            timer.Start();
+        private void StartDataBaseClient()
+        {
+            databaseClient = new AsyncTcpSession();
+            databaseClient.Connected += DataBaseDatabaseClientOnConnected;
+            databaseClient.Closed += DataBaseDatabaseClientOnClosed;
+            databaseClient.Error += DataBaseDatabaseClientOnError;
+            databaseClient.DataReceived += DataBaseDatabaseClientOnDataReceived;
+            LogHelper.Info("开始链接到DB服务器 ...");
+            ConnectToDataBase();
         }
 
-        private void TimerOnElapsed(object sender, ElapsedEventArgs e)
+        private void ConnectToDataBase()
+        {
+            databaseClient.Connect(new IPEndPoint(IPAddress.Parse(Setting.DBUrl), Setting.DbPort));
+        }
+
+        private void DataBaseDatabaseClientOnError(object sender, ErrorEventArgs e)
+        {
+            LogHelper.Error("和DB服务器链接链接失败!.下一次重连时间:" + DateTime.Now.AddMilliseconds(ReconnectionTimer.Interval));
+            // 和网关服务器链接失败，开启重连
+            ReconnectionTimer.Start();
+            ConnectToDataBase();
+        }
+
+        private void DataBaseDatabaseClientOnDataReceived(object sender, DataEventArgs e)
+        {
+            LogHelper.Info("收到DB服务器返回的消息!" + e);
+        }
+
+        private void DataBaseDatabaseClientOnClosed(object sender, EventArgs e)
+        {
+            LogHelper.Info("和DB服务器链接链接断开!");
+            // 和网关服务器链接断开，开启重连
+            ReconnectionTimer.Start();
+            ConnectToDataBase();
+        }
+
+        private void DataBaseDatabaseClientOnConnected(object sender, EventArgs e)
+        {
+            LogHelper.Info("和DB服务器链接链接成功!");
+            // 和网关服务器链接成功，关闭重连
+            ReconnectionTimer.Stop();
+            // 开启和网关服务器的心跳
+            HeartBeatTimer.Start();
+        }
+
+        protected override void HeartBeatTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             //心跳包
             var message = new PlayerState();
             var bytes = messageActorDataBaseEncoderHandler.Handler(message);
-            client.SendAsync(bytes);
+            databaseClient.TrySend(bytes);
         }
+
+        #endregion
+
+        #region Discovery
+
+        private void StartDiscoveryClient()
+        {
+            discoveryClient = new AsyncTcpSession();
+            discoveryClient.Connected += DiscoveryClientOnConnected;
+            discoveryClient.Closed += DiscoveryClientOnClosed;
+            discoveryClient.Error += DiscoveryClientOnError;
+            discoveryClient.DataReceived += DiscoveryClientOnDataReceived;
+            LogHelper.Info("开始链接到中心服务器 ...");
+            ConnectToDiscovery();
+        }
+
+        private void ConnectToDiscovery()
+        {
+            discoveryClient.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
+        }
+
+        private void DiscoveryClientOnError(object sender, ErrorEventArgs e)
+        {
+            LogHelper.Error("和中心服务器链接链接失败!.下一次重连时间:" + DateTime.Now.AddMilliseconds(ReconnectionTimer.Interval));
+            // 和网关服务器链接失败，开启重连
+            ReconnectionTimer.Start();
+            ConnectToDiscovery();
+        }
+
+        private void DiscoveryClientOnDataReceived(object sender, DataEventArgs e)
+        {
+            LogHelper.Info("收到中心服务器返回的消息!" + e);
+        }
+
+        private void DiscoveryClientOnClosed(object sender, EventArgs e)
+        {
+            LogHelper.Info("和中心服务器链接链接断开!");
+            // 和网关服务器链接断开，开启重连
+            ReconnectionTimer.Start();
+            ConnectToDiscovery();
+        }
+
+        private void DiscoveryClientOnConnected(object sender, EventArgs e)
+        {
+            LogHelper.Info("和中心服务器链接链接成功!");
+            // 和网关服务器链接成功，关闭重连
+            ReconnectionTimer.Stop();
+            // 开启和网关服务器的心跳
+            HeartBeatTimer.Start();
+        }
+
+        #endregion
+
+
+        #region Server
 
         private async Task StartServer()
         {
@@ -76,9 +163,6 @@ namespace Server.Launcher.StartUp
             await server.StartAsync();
         }
 
-        private void ClientOnClosed(object sender, EventArgs e)
-        {
-        }
 
         private async ValueTask CacheServerPackageHandler(IAppSession session, ICacheState cacheState)
         {
@@ -105,6 +189,8 @@ namespace Server.Launcher.StartUp
             options.AddListener(new ListenOptions { Ip = IPAddress.Any.ToString(), Port = Setting.TcpPort });
         }
 
+        #endregion
+
         protected override void Init()
         {
             if (Setting == null)
@@ -115,9 +201,12 @@ namespace Server.Launcher.StartUp
                     LocalIp = "127.0.0.1",
                     TcpPort = 25500,
                     ServerType = ServerType.Cache,
-                    // DB 配置
+                    // 中心服 配置
                     CenterUrl = "127.0.0.1",
-                    GrpcPort = 26000
+                    GrpcPort = 33300,
+                    // DB 配置
+                    DBUrl = "127.0.0.1",
+                    DbPort = 26000
                 };
             }
 
