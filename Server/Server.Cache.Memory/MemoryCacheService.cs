@@ -1,19 +1,27 @@
-﻿using Server.DBServer.State;
+﻿using System.Collections.Concurrent;
+using Server.DBServer.State;
 
 namespace Server.Cache.Memory;
 
 public sealed class MemoryCacheService : ICache
 {
-    private readonly Dictionary<string, CacheEntry> _cache = new Dictionary<string, CacheEntry>();
+    private readonly ConcurrentDictionary<string, CacheEntry> cache = new ConcurrentDictionary<string, CacheEntry>();
+
+    public async Task SetAsync(long key, CacheState value)
+    {
+        cache[key.ToString()] = new CacheEntry { Value = value, Key = value.Id.ToString() };
+        await Task.CompletedTask;
+    }
 
     public async Task SetAsync(string key, CacheState value)
     {
-        _cache[key] = new CacheEntry { Value = value };
+        cache[key] = new CacheEntry { Value = value, Key = value.Id.ToString() };
+        await Task.CompletedTask;
     }
 
     public async Task<CacheState> GetAsync(string key)
     {
-        if (_cache.TryGetValue(key, out var entry))
+        if (cache.TryGetValue(key, out var entry))
         {
             return entry.Value;
         }
@@ -34,33 +42,48 @@ public sealed class MemoryCacheService : ICache
 
     public async Task RemoveAsync(string key)
     {
-        _cache.Remove(key);
+        cache.TryRemove(key, out _);
+        await Task.CompletedTask;
     }
 
     public async Task<bool> ContainsAsync(string key)
     {
-        return _cache.ContainsKey(key);
+        return cache.ContainsKey(key);
     }
 
     public async Task FlushAsync()
     {
-        _cache.Clear();
+        cache.Clear();
+
+        await Task.CompletedTask;
     }
 
     public async Task RefreshAsync(string key)
     {
         // 实现刷新逻辑，例如更新过期时间
+
+        await Task.CompletedTask;
+    }
+
+    public Task<CacheState> GetFirstAsync()
+    {
+        return Task.FromResult(cache.Values.First().Value);
+    }
+
+    public bool Remove(CacheState value)
+    {
+        return cache.TryRemove(value.Id.ToString(), out _);
     }
 
     // 同步方法实现
     public void Set(string key, CacheState value)
     {
-        _cache[key] = new CacheEntry { Value = value };
+        cache[key] = new CacheEntry { Value = value };
     }
 
     public object Get(string key)
     {
-        if (_cache.TryGetValue(key, out var entry))
+        if (cache.TryGetValue(key, out var entry))
         {
             return entry.Value;
         }
@@ -80,17 +103,17 @@ public sealed class MemoryCacheService : ICache
 
     public void Remove(string key)
     {
-        _cache.Remove(key);
+        cache.TryRemove(key, out _);
     }
 
     public bool Contains(string key)
     {
-        return _cache.ContainsKey(key);
+        return cache.ContainsKey(key);
     }
 
     public void Flush()
     {
-        _cache.Clear();
+        cache.Clear();
     }
 
     public void Refresh(string key)

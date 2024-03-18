@@ -14,6 +14,7 @@ public interface ICache
     void Refresh(string key); // 刷新过期策略，而不移除缓存
 
     // 异步方法
+    Task SetAsync(long key, CacheState value);
     Task SetAsync(string key, CacheState value);
     Task<CacheState> GetAsync(string key);
     Task<bool> TryGetAsync(string key, out CacheState value);
@@ -21,4 +22,8 @@ public interface ICache
     Task<bool> ContainsAsync(string key);
     Task FlushAsync();
     Task RefreshAsync(string key);
+
+    Task<CacheState> GetFirstAsync();
+    
+    bool Remove(CacheState value);
 }

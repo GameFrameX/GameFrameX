@@ -92,6 +92,11 @@ public abstract class BaseSetting
     public string ServerName { get; protected set; }
 
     /// <summary>
+    /// 保存数据间隔
+    /// </summary>
+    public int SaveDataInterval { get; set; } = 5000;
+
+    /// <summary>
     /// 本地IP
     /// </summary>
     public string LocalIp { get; set; }

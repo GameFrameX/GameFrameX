@@ -1,8 +1,12 @@
 ﻿using Server.Apps.Player.Player.Component;
+using Server.Apps.Server.Heart.Entity;
+using Server.Cache;
+using Server.Cache.Memory;
 using Server.DBServer.State;
 using Server.Launcher.PipelineFilter;
 using Server.NetWork.TCPSocket;
 using ErrorEventArgs = SuperSocket.ClientEngine.ErrorEventArgs;
+using Timer = System.Timers.Timer;
 
 namespace Server.Launcher.StartUp
 {
@@ -16,15 +20,21 @@ namespace Server.Launcher.StartUp
         AsyncTcpSession databaseClient;
         AsyncTcpSession discoveryClient;
         MessageActorDataBaseEncoderHandler messageActorDataBaseEncoderHandler = new MessageActorDataBaseEncoderHandler();
+        private ICache cacheService;
 
         public override async Task EnterAsync()
         {
             try
             {
                 LogHelper.Info($"开始启动服务器{ServerType}");
+                cacheService = new MemoryCacheService();
                 await StartServer();
                 StartDiscoveryClient();
                 StartDataBaseClient();
+                Timer saveTimer = new Timer();
+                saveTimer.Elapsed += SaveTimerOnElapsed;
+                saveTimer.Interval = Setting.SaveDataInterval <= 0 ? 5000 : Setting.SaveDataInterval;
+                saveTimer.AutoReset = true;
                 GlobalSettings.LaunchTime = DateTime.Now;
                 GlobalSettings.IsAppRunning = true;
                 LogHelper.Info($"启动服务器{ServerType}结束");
@@ -36,8 +46,18 @@ namespace Server.Launcher.StartUp
                 LogHelper.Fatal(e);
             }
 
-            LogHelper.Info($"退出服务器开始");
-            LogHelper.Info($"退出服务器成功");
+            await Stop();
+        }
+
+        private async void SaveTimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            var cacheState = await cacheService.GetFirstAsync();
+            var bytes = messageActorDataBaseEncoderHandler.Handler(cacheState);
+            bool isSuccess = databaseClient.TrySend(bytes);
+            if (isSuccess)
+            {
+                cacheService.Remove(cacheState);
+            }
         }
 
         #region DataBaseClient
@@ -91,8 +111,8 @@ namespace Server.Launcher.StartUp
         protected override void HeartBeatTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             //心跳包
-            var message = new PlayerState();
-            var bytes = messageActorDataBaseEncoderHandler.Handler(message);
+            var heartBeatState = new HeartBeatState();
+            var bytes = messageActorDataBaseEncoderHandler.Handler(heartBeatState);
             databaseClient.TrySend(bytes);
         }
 
@@ -166,15 +186,24 @@ namespace Server.Launcher.StartUp
 
         private async ValueTask CacheServerPackageHandler(IAppSession session, ICacheState cacheState)
         {
-            if (Setting.IsDebug && Setting.IsDebugReceive)
+            // 这个要对数据进行缓存处理。定时存档和拉取
+            if (cacheState is HeartBeatState heartBeatState)
             {
-                LogHelper.Debug($"---收到存储消息， 消息内容:{cacheState}");
+                // 收到了心跳消息。
+                return;
             }
 
-            // 这个要对数据进行缓存处理。定时存档和拉取
             if (cacheState is CacheState saveCacheState)
             {
-                // await dbService.AddAsync(saveCacheState);
+                // var messageBuffer = messageActorDataBaseEncoderHandler.Handler(saveCacheState);
+                // bool isSuccess = databaseClient.TrySend(messageBuffer);
+                // 存档到缓存中
+                await cacheService.SetAsync(saveCacheState.Id, saveCacheState);
+            }
+
+            if (Setting.IsDebug && Setting.IsDebugReceive)
+            {
+                LogHelper.Debug($"---收到缓存消息， 消息内容:{cacheState}");
             }
 
             await ValueTask.CompletedTask;
@@ -191,6 +220,16 @@ namespace Server.Launcher.StartUp
 
         #endregion
 
+        public override async Task Stop(string message = "")
+        {
+            this.discoveryClient.Close();
+            ReconnectionTimer.Close();
+            HeartBeatTimer.Close();
+            databaseClient.Close();
+            await server.StopAsync();
+            await base.Stop(message);
+        }
+
         protected override void Init()
         {
             if (Setting == null)
@@ -201,6 +240,7 @@ namespace Server.Launcher.StartUp
                     LocalIp = "127.0.0.1",
                     TcpPort = 25500,
                     ServerType = ServerType.Cache,
+                    SaveDataInterval = 5000,
                     // 中心服 配置
                     CenterUrl = "127.0.0.1",
                     GrpcPort = 33300,
