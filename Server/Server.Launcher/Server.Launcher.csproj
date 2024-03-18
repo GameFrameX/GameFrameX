@@ -33,6 +33,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Server.Apps\Server.Apps.csproj" />
+        <ProjectReference Include="..\Server.Cache.Memory\Server.Cache.Memory.csproj" />
+        <ProjectReference Include="..\Server.Cache\Server.Cache.csproj" />
         <ProjectReference Include="..\Server.Config\Server.Config.csproj" />
         <ProjectReference Include="..\Server.Core\Server.Core.csproj" />
         <ProjectReference Include="..\Server.DBServer\Server.DBServer.csproj" />
