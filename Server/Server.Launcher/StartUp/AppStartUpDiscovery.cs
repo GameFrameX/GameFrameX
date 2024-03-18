@@ -81,31 +81,32 @@ internal sealed class AppStartUpDiscovery : AppStartUpBase
         }
 
         // 发送
-        var response = new RespActorHeartBeat()
-        {
-            Timestamp = TimeHelper.UnixTimeSeconds()
-        };
-        await session.SendAsync(messageEncoderHandler, response);
+        // var response = new RespActorHeartBeat()
+        // {
+        //     Timestamp = TimeHelper.UnixTimeSeconds()
+        // };
+        // await session.SendAsync(messageEncoderHandler, response);
     }
 
 
     private ValueTask OnConnected(IAppSession appSession)
     {
-        LogHelper.Info("网络连接成功");
+        LogHelper.Info("有外部客户端网络连接到中心服务器成功" + "。链接信息：SessionID:" + appSession.SessionID + " RemoteEndPoint:" + appSession.RemoteEndPoint);
         // NamingServiceManager.Instance.Add();
         return ValueTask.CompletedTask;
     }
 
     private ValueTask OnDisconnected(object sender, CloseEventArgs args)
     {
+        LogHelper.Info("有外部客户端从中心服务器断开。链接信息：断开原因:" + args.Reason);
         return ValueTask.CompletedTask;
     }
 
     public override async Task Stop(string message = "")
     {
-        LogHelper.Info("Server stopping...");
+        LogHelper.Info($"{ServerType} Server stopping...");
         await server.StopAsync();
-        LogHelper.Info("Done!");
+        LogHelper.Info($"{ServerType} Server Done!");
     }
 
     private void ConfigureSuperSocket(ServerOptions options)
