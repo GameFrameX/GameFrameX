@@ -1,4 +1,5 @@
-﻿using Server.DBServer.State;
+﻿using Server.Apps.Server.Heart.Entity;
+using Server.DBServer.State;
 using Server.Launcher.PipelineFilter;
 using Server.NetWork.TCPSocket;
 
@@ -19,12 +20,8 @@ namespace Server.Launcher.StartUp
             {
                 LogHelper.Info($"启动服务器{ServerType}开始");
                 dbService = new MongoDbServiceConnection();
-                // GameDb.Init(new MongoDbServiceConnection());
                 dbService.Open(Setting.DataBaseUrl, Setting.DataBaseName);
-                // GameDb.Open(Setting.DataBaseUrl, Setting.DataBaseName);
                 await StartServer();
-                GlobalSettings.LaunchTime = DateTime.Now;
-                GlobalSettings.IsAppRunning = true;
                 LogHelper.Info($"启动服务器{ServerType}结束");
                 await AppExitToken;
             }
@@ -45,7 +42,7 @@ namespace Server.Launcher.StartUp
             server = SuperSocketHostBuilder.Create<ICacheState>()
                 .ConfigureSuperSocket(ConfigureSuperSocket)
                 .UseSessionFactory<GameSessionFactory>()
-                .UseClearIdleSession()
+                .UseClearIdleSession() // 清除空闲连接
                 .UsePipelineFilter<CacheStatePipelineFilter>()
                 .UsePackageDecoder<MessageActorDataBaseDecoderHandler>()
                 // .UsePackageEncoder<MessageActorEncoderHandler>()
@@ -59,6 +56,12 @@ namespace Server.Launcher.StartUp
 
         private async ValueTask MessagePackageHandler(IAppSession session, ICacheState cacheState)
         {
+            if (cacheState is HeartBeatState heartBeatState)
+            {
+                // 收到了心跳消息。
+                return;
+            }
+
             if (Setting.IsDebug && Setting.IsDebugReceive)
             {
                 LogHelper.Debug($"---收到存储消息， 消息内容:{cacheState}");
@@ -68,8 +71,6 @@ namespace Server.Launcher.StartUp
             {
                 await dbService.AddAsync(saveCacheState);
             }
-
-
             // 发送
             // var response = new RespActorHeartBeat()
             // {
