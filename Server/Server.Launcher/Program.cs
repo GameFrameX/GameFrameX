@@ -26,6 +26,11 @@ namespace Server.Launcher
             Console.WriteLine();
             Console.WriteLine();
             var serverType = Environment.GetEnvironmentVariable("ServerType");
+            if (serverType != null)
+            {
+                Console.WriteLine("启动的服务器类型 ServerType: " + serverType);
+            }
+
             LoggerHandler.Start();
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
