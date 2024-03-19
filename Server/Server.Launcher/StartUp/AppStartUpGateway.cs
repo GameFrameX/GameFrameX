@@ -18,7 +18,7 @@ internal sealed class AppStartUpGateway : AppStartUpBase
     {
         try
         {
-            LogHelper.Info($"启动服务器{ServerType} 开始! address: {Setting.LocalIp}  port: {Setting.TcpPort}");
+            LogHelper.Info($"启动服务器{Setting.ServerType} 开始! address: {Setting.LocalIp}  port: {Setting.TcpPort}");
             await StartServer();
             client = new AsyncTcpSession();
             client.Connected += ClientOnConnected;
