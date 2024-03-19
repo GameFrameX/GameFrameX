@@ -1,13 +1,80 @@
 ﻿services:
-  server.launcher:
+  # build:   docker build -t registry.cn-shenzhen.aliyuncs.com/gameframex/server.launcher:1.0.0 .
+  server.discovery:
     image: registry.cn-shenzhen.aliyuncs.com/gameframex/server.launcher:1.0.0
-    build:
-      context: .
-      dockerfile: Dockerfile
+    container_name: discovery
+    networks:
+      - backend
+    #    build:
+    #      context: .
+    #      dockerfile: Dockerfile
+    ports:
+      - 33300:33300
+    environment:
+      - ServerType=Discovery
+  server.database:
+    image: registry.cn-shenzhen.aliyuncs.com/gameframex/server.launcher:1.0.0
+    container_name: database
+    networks:
+      - backend
+    ports:
+      - 26000:26000
+    environment:
+      - ServerType=DataBase
+  server.cache:
+    image: registry.cn-shenzhen.aliyuncs.com/gameframex/server.launcher:1.0.0
+    container_name: cache
+    networks:
+      - backend
+    ports:
+      - 25500:25500
+    environment:
+      - ServerType=Cache  
+  server.gateway:
+    image: registry.cn-shenzhen.aliyuncs.com/gameframex/server.launcher:1.0.0
+    container_name: gateway
+    networks:
+      - backend
+    ports:
+      - 22000:22000
+    environment:
+      - ServerType=Gateway
+  server.router:
+    image: registry.cn-shenzhen.aliyuncs.com/gameframex/server.launcher:1.0.0
+    container_name: router
+    networks:
+      - frontend
+      - backend
+    ports:
+      - 21200:21200 # WSS
+      - 21100:21100 # WS
+      - 21000:21000 # TCP
+    environment:
+      - ServerType=Router
+  server.game:
+    image: registry.cn-shenzhen.aliyuncs.com/gameframex/server.launcher:1.0.0
+    container_name: game
+    #    build:
+    #      context: .
+    #      dockerfile: Dockerfile
     ports:
       - 20001:20001
       - 8898:8898
       - 25001:25001
+    environment:
+      - ServerType=DataBase
+    networks:
+      - frontend
+      - backend
     volumes:
       - "./running/hotfix:/app/hotfix"
       - "./running/json:/app/json"
+networks:
+  frontend:
+    # Use a custom driver
+    name: gameframex-frontend
+    driver: bridge
+  backend:
+    # Use a custom driver which takes special options
+    name: gameframex-backend
+    driver: bridge
