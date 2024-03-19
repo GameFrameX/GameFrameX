@@ -248,6 +248,11 @@ namespace Server.Launcher.StartUp
                     DBUrl = "127.0.0.1",
                     DbPort = 26000
                 };
+                if (PlatformRuntimeHelper.IsLinux)
+                {
+                    Setting.CenterUrl = "discovery";
+                    Setting.DBUrl = "database";
+                }
             }
 
             base.Init();

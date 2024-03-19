@@ -193,6 +193,10 @@ internal sealed class AppStartUpGateway : AppStartUpBase
                 GrpcPort = 33300,
                 CenterUrl = "127.0.0.1",
             };
+            if (PlatformRuntimeHelper.IsLinux)
+            {
+                Setting.CenterUrl = "discovery";
+            }
         }
 
         base.Init();

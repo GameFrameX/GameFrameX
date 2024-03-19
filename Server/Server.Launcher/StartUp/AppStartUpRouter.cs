@@ -215,6 +215,10 @@ internal sealed class AppStartUpRouter : AppStartUpBase
                 GrpcPort = 22000,
                 CenterUrl = "127.0.0.1",
             };
+            if (PlatformRuntimeHelper.IsLinux)
+            {
+                Setting.CenterUrl = "gateway";
+            }
         }
 
         base.Init();
