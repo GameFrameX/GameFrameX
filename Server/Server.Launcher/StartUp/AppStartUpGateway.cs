@@ -27,7 +27,7 @@ internal sealed class AppStartUpGateway : AppStartUpBase
             client.Error += ClientOnError;
 
             LogHelper.Info("开始链接到中心服务器 ...");
-            client.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
+            ConnectToDiscovery();
             LogHelper.Info("链接完成!");
             TimeSpan delay = TimeSpan.FromSeconds(5);
             await Task.Delay(delay);
@@ -128,7 +128,7 @@ internal sealed class AppStartUpGateway : AppStartUpBase
 
     private void ConnectToDiscovery()
     {
-        client.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
+        client.Connect(new DnsEndPoint(Setting.CenterUrl, Setting.GrpcPort));
     }
 
     private void ClientOnDataReceived(object sender, DataEventArgs e)
