@@ -1,10 +1,12 @@
 using System.Buffers;
+using Microsoft.IO;
 using ProtoBuf.Meta;
 
 namespace Server.Serialize.Serialize
 {
     public static class SerializerHelper
     {
+        private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager();
         /// <summary>
         /// 序列化对象
         /// </summary>
@@ -13,7 +15,7 @@ namespace Server.Serialize.Serialize
         /// <returns></returns>
         public static byte[] Serialize<T>(T value)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (var memoryStream = manager.GetStream())
             {
                 ProtoBuf.Serializer.Serialize(memoryStream, value);
                 return memoryStream.ToArray();
@@ -47,7 +49,7 @@ namespace Server.Serialize.Serialize
         /// <returns></returns>
         public static object Deserialize(byte[] data, Type type)
         {
-            using (var memoryStream = new MemoryStream(data))
+            using (var memoryStream = manager.GetStream())
             {
                 return ProtoBuf.Serializer.Deserialize(type, memoryStream);
             }
