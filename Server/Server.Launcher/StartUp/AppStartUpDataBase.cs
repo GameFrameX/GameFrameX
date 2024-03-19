@@ -31,10 +31,7 @@ namespace Server.Launcher.StartUp
                 LogHelper.Fatal(e);
             }
 
-            LogHelper.Info($"退出服务器开始");
-            dbService.Close();
-            await server.StopAsync();
-            LogHelper.Info($"退出服务器成功");
+            await Stop();
         }
 
         private async Task StartServer()
@@ -86,6 +83,15 @@ namespace Server.Launcher.StartUp
         private void ConfigureSuperSocket(ServerOptions options)
         {
             options.AddListener(new ListenOptions { Ip = IPAddress.Any.ToString(), Port = Setting.TcpPort });
+        }
+
+        public override async Task Stop(string message = "")
+        {
+            LogHelper.Info($"退出服务器开始");
+            dbService.Close();
+            await server.StopAsync();
+            LogHelper.Info($"退出服务器成功");
+            await base.Stop(message);
         }
 
         protected override void Init()
