@@ -133,7 +133,7 @@ namespace Server.Launcher.StartUp
 
         private void ConnectToDiscovery()
         {
-            discoveryClient.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
+            discoveryClient.Connect(new DnsEndPoint(Setting.CenterUrl, Setting.GrpcPort));
         }
 
         private void DiscoveryClientOnError(object sender, ErrorEventArgs e)
