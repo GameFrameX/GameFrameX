@@ -68,9 +68,12 @@ internal sealed class AppStartUpRouter : AppStartUpBase
     protected override void ReconnectionTimerOnElapsed(object sender, ElapsedEventArgs e)
     {
         // 重连到网关服务器
-        client.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
+        ConnectToGateWay();
     }
-
+    private void ConnectToGateWay()
+    {
+        client.Connect(new DnsEndPoint(Setting.CenterUrl, Setting.GrpcPort));
+    }
 
     private void StartClient()
     {
@@ -80,7 +83,7 @@ internal sealed class AppStartUpRouter : AppStartUpBase
         client.Error += ClientOnError;
         client.DataReceived += ClientOnDataReceived;
         LogHelper.Info("开始链接到网关服务器 ...");
-        client.Connect(new IPEndPoint(IPAddress.Parse(Setting.CenterUrl), Setting.GrpcPort));
+        ConnectToGateWay();
     }
 
     private void ClientOnError(object sender, ErrorEventArgs e)
