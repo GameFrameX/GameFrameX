@@ -53,7 +53,7 @@ namespace Server.Launcher.StartUp
 
         private async ValueTask MessagePackageHandler(IAppSession session, ICacheState cacheState)
         {
-            if (cacheState is HeartBeatState heartBeatState)
+            if (cacheState is HeartBeatState _)
             {
                 // 收到了心跳消息。
                 return;
