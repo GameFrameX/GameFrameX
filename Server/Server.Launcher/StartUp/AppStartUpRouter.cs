@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Text;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using Server.Launcher.PipelineFilter;
 using Server.NetWork.TCPSocket;
 using SuperSocket.Channel;
 using ErrorEventArgs = SuperSocket.ClientEngine.ErrorEventArgs;
-using Timer = System.Timers.Timer;
 using SuperSocket.WebSocket.Server;
-using SuperSocket.ClientEngine;
 using SuperSocket.WebSocket;
+using CloseReason = SuperSocket.Channel.CloseReason;
 
 /// <summary>
 /// 路由服务器.最后启动。
@@ -70,6 +69,7 @@ internal sealed class AppStartUpRouter : AppStartUpBase
         // 重连到网关服务器
         ConnectToGateWay();
     }
+
     private void ConnectToGateWay()
     {
         client.Connect(new DnsEndPoint(Setting.CenterUrl, Setting.GrpcPort));
@@ -147,6 +147,31 @@ internal sealed class AppStartUpRouter : AppStartUpBase
 
     private async ValueTask WebSocketMessageHandler(WebSocketSession session, WebSocketPackage message)
     {
+        if (message.OpCode != OpCode.Binary)
+        {
+            await session.CloseAsync(CloseReason.ProtocolError);
+        }
+
+        //
+        var bytes = message.Data;
+        var buffer = bytes.ToArray();
+        StringBuilder stringBuilder = new StringBuilder();
+        foreach (var b in buffer)
+        {
+            stringBuilder.Append(b + " ");
+        }
+
+        LogHelper.Info("收到消息字节：" + stringBuilder);
+        // var messageObject = messageEncoderHandler.Handler(bytes);
+        // if (messageObject is MessageObject msg)
+        // {
+        //     var messageId = msg.MessageId;
+        //     if (Setting.IsDebug && Setting.IsDebugReceive)
+        //     {
+        //         LogHelper.Debug($"---收到消息ID:[{messageId}] ==>消息类型:{msg.GetType()} 消息内容:{messageObject}");
+        //     }
+        // }
+
         await ValueTask.CompletedTask;
     }
 
