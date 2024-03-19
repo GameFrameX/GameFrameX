@@ -14,6 +14,17 @@ namespace Server.Launcher
         static async Task Main(string[] args)
         {
             Console.WriteLine("启动参数：" + string.Join(" ", args));
+
+            Console.WriteLine("当前环境变量START---------------------");
+            var environmentVariables = Environment.GetEnvironmentVariables();
+            foreach (var environmentVariable in environmentVariables)
+            {
+                Console.WriteLine($"{environmentVariable}");
+            }
+
+            Console.WriteLine("当前环境变量END---------------------");
+            Console.WriteLine();
+            Console.WriteLine();
             var serverType = Environment.GetEnvironmentVariable("ServerType");
             LoggerHandler.Start();
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
