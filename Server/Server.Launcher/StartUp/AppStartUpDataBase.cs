@@ -18,11 +18,11 @@ namespace Server.Launcher.StartUp
         {
             try
             {
-                LogHelper.Info($"启动服务器{ServerType}开始");
+                LogHelper.Info($"启动服务器{Setting.ServerType}开始");
                 dbService = new MongoDbServiceConnection();
                 dbService.Open(Setting.DataBaseUrl, Setting.DataBaseName);
                 await StartServer();
-                LogHelper.Info($"启动服务器{ServerType}结束");
+                LogHelper.Info($"启动服务器{Setting.ServerType}结束");
                 await AppExitToken;
             }
             catch (Exception e)
