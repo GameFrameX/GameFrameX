@@ -75,7 +75,7 @@ namespace Server.Launcher.StartUp
 
         private void ConnectToDataBase()
         {
-            databaseClient.Connect(new IPEndPoint(IPAddress.Parse(Setting.DBUrl), Setting.DbPort));
+            databaseClient.Connect(new DnsEndPoint(Setting.DBUrl, Setting.DbPort));
         }
 
         private void DataBaseDatabaseClientOnError(object sender, ErrorEventArgs e)
