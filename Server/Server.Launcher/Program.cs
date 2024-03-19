@@ -48,21 +48,43 @@ namespace Server.Launcher
             List<Task> tasks = new();
             LogHelper.Info($"----------------------------开始启动服务器啦------------------------------");
             var appSettings = GlobalSettings.GetSettings<AppSetting>();
-            foreach (var keyValuePair in sortedStartUpTypes)
+            if (serverType != null && Enum.TryParse(serverType, out ServerType serverTypeValue))
             {
-                bool isFind = false;
-                if (serverType != null)
+                var startKv = sortedStartUpTypes.FirstOrDefault(m => m.Value.ServerType == serverTypeValue);
+                if (startKv.Value != null)
                 {
+                    var appSetting = appSettings.FirstOrDefault(m => m.ServerType == serverTypeValue);
+                    if (appSetting != null)
+                    {
+                        LogHelper.Error("从配置文件中找到对应的服务器类型的启动配置,将以配置启动=>" + startKv.Value.ServerType);
+                        var task = Start(args, startKv.Key, startKv.Value.ServerType, appSetting);
+                        tasks.Add(task);
+                    }
+                    else
+                    {
+                        LogHelper.Error("没有找到对应的服务器类型的启动配置,将以默认配置启动=>" + startKv.Value.ServerType);
+                        var task = Start(args, startKv.Key, startKv.Value.ServerType, null);
+                        tasks.Add(task);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var keyValuePair in sortedStartUpTypes)
+                {
+                    bool isFind = false;
+
                     foreach (var appSetting in appSettings)
                     {
-                        if (serverType == appSetting.ServerType.ToString())
+                        if (keyValuePair.Value.ServerType == appSetting.ServerType)
                         {
-                            var task = Start(args, keyValuePair.Key, keyValuePair.Value.ServerType, appSetting);
+                            var task = Start(args, keyValuePair.Key, appSetting.ServerType, appSetting);
                             tasks.Add(task);
                             isFind = true;
                             break;
                         }
                     }
+
 
                     if (isFind == false)
                     {
@@ -70,27 +92,6 @@ namespace Server.Launcher
                         var task = Start(args, keyValuePair.Key, keyValuePair.Value.ServerType, null);
                         tasks.Add(task);
                     }
-
-                    break;
-                }
-
-                foreach (var appSetting in appSettings)
-                {
-                    if (keyValuePair.Value.ServerType == appSetting.ServerType)
-                    {
-                        var task = Start(args, keyValuePair.Key, keyValuePair.Value.ServerType, appSetting);
-                        tasks.Add(task);
-                        isFind = true;
-                        break;
-                    }
-                }
-
-
-                if (isFind == false)
-                {
-                    LogHelper.Error("没有找到对应的服务器类型的启动配置,将以默认配置启动=>" + keyValuePair.Value.ServerType);
-                    var task = Start(args, keyValuePair.Key, keyValuePair.Value.ServerType, null);
-                    tasks.Add(task);
                 }
             }
 
