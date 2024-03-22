@@ -8,7 +8,7 @@ message ReqBagInfo { // IRequestMessage 100
 
 // 返回背包数据
 message ResBagInfo { // IResponseMessage 100
-	map<int32,long> ItemDic = 1;
+	map<int32,int64> ItemDic = 1;
 }
 
 // 请求背包数据 
@@ -33,5 +33,5 @@ message ReqSellItem { // IRequestMessage 103
 
 // 出售道具
 message ResItemChange { // IResponseMessage 103
-	map<int32,long> ItemDic = 1; // 变化的道具
+	map<int32,int64> ItemDic = 1; // 变化的道具
 }

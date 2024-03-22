@@ -12,7 +12,7 @@ message UserInfo {
 	string RoleName = 1; // 角色名
 	int64 RoleId = 2; // 角色ID
 	int32 Level = 3; // 角色等级
-  DateTime CreateTime = 4; // 创建时间
+  int64 CreateTime = 4; // 创建时间
   int32 VipLevel = 5; // vip等级
 }
 
