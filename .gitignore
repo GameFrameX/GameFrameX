@@ -30,3 +30,4 @@ docker/redis/apps/datadir
 Unity/HybridCLRData
 Unity/Builds
 Unity/Logs
+Unity/Android_Symbols
