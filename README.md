@@ -1,16 +1,30 @@
-![LOGO](https://picss.sunbangyan.cn/2023/10/12/yrt8ap.png)
 
-# 介绍：
+GameFrameX是一款全面的集成式游戏开发框架，提供了从前端到后端的完整解决方案。该框架支持包括Unity、Cocos Creator、LayaBox、和Godot等多种主流游戏开发平台，确保开发者能够为不同的目标平台打造精美的游戏体验。
 
-集成了`客户端`和`服务器`和`客户端后台`和`服务器后台`的内容
+此外，GameFrameX拥有多进程服务器的支持，并且集成了Docker的自动化构建和部署，大大简化了游戏发布和维护过程。无论是在客户端管理、运维管理、数据管理，还是游戏数据的具体运营方面，GameFrameX都提供了强有力的后台支持，使得监控、优化和更新游戏变得前所未有的简单。
+
+游戏团队通过GameFrameX能够实现资源的高效分配和管理，加快开发周期，降低运营成本，并且最终增强玩家的游戏体验。整合了先进的技术和易用的界面，GameFrameX为游戏开发和运营的各个环节提供了高效、灵活且可扩展的解决方案，让游戏从构想到上线，再到生命周期管理都成为一件轻松愉快的事情。
+
+GameFrameX不仅是一套综合性的游戏开发与运维框架，它也将数据管理和流程自动化提升至新的高度。该框架旨在通过使用MongoDB作为游戏数据库，提供了高性能、灵活的数据存储方案，这确保了大规模和复杂数据的快速读写能力，极大地增强了游戏的扩展性和稳定性。
+
+在数据表的导入方面，GameFrameX采用了LuBan工具，它自动化并优化了数据表的处理流程，极大提高了开发效率，并且保证了数据的准确性和一致性。
+
+为了满足后台管理的需求，GameFrameX选择了MySQL数据库，提供了一个稳固和可靠的后端管理系统。结合MongoDB和MySQL，GameFrameX在数据解决方案上实现了多样性和功能性的平衡，以满足不同场景下的业务需要。
+
+关于自动化构建和部署，GameFrameX通过支持Docker技术，让应用的打包、分发变得更加高效和标准化，确保了在不同环境下软件能够以同样的方式运行。此外，GameFrameX还整合了Codeup代码托管平台的自动构建系统，允许通过`tag`标签触发构建过程，进一步实现了代码变更的连贯性管理及自动化部署，减少了人工干预，提升了运维效率。
+
+GameFrameX为游戏开发者提供了一个强大的技术生态，将数据库管理、后台服务、自动化构建和部署融于一体，使游戏的开发、运营和维护实现流水线式高效协作，为开发者提供了无与伦比的便捷与保障。
+
+> 以上介绍通过GPT4生成
+
+# 开发进度：
+
+请关注 Projects
 
 > 正在开发中...
 
-> 有意见或建议发Issue或发消息
-
-# `注意`!!! `注意` !!! `注意` !!!
-
-开发期,随时可能变化结构。
+# 服务器（从 `geekserver` 修改而来.）
+    https://github.com/AlianBlank/GameFrameX.Server
 
 # 管理后台
     https://github.com/AlianBlank/GameFrameX.Admin
@@ -19,15 +33,13 @@
 
 # 服务器[Server]功能：
 
-### 服务器  从 `geekserver` 修改而来.
-
 ### 导表  从 `LuBan` 修改而来
 
 ### 数据库使用 `MongoDB`
 
 # 客户端
 ## Unity
-    https://github.com/AlianBlank/GameFrameX/tree/main/Unity
+    https://github.com/AlianBlank/GameFrameX.Unity
 ## Laya Box
     https://github.com/AlianBlank/GameFrameX.LayaBox
 ## Cocos Creator
@@ -35,29 +47,6 @@
 ##  Godot
     https://github.com/AlianBlank/GameFrameX.Godot
 
-## `Unity` 集成功能
-
-|        组件名称        |                  介绍                   |   来源   | 链接地址                                                                 |
-|:------------------:|:-------------------------------------:|:------:|:---------------------------------------------------------------------|
-|   GameFramework    |                 客户端框架                 | GitHub | https://github.com/AlianBlank/GameFrameX                             |
-|      YooAsset      |       打包(修改后，不支持`Addressable`)        | GitHub | https://github.com/AlianBlank/com.tuyoogame.yooasset                 |
-|      UniTask       |             异步Await/Async             | GitHub | https://github.com/AlianBlank/com.cysharp.unitask                    |
-|    FairyGUI UI     |                  编辑器                  | GitHub | https://github.com/AlianBlank/com.fairygui.unity                     |
-|      ProtoBuf      |                 通讯协议                  | GitHub | https://github.com/AlianBlank/com.google.protobuf                    |
-|    MessagePack     |                 通讯协议                  | GitHub | https://github.com/AlianBlank/com.neuecc.messagepack                 |
-|     HybridCLR      |                  热更新                  | GitHub | https://github.com/focus-creative-games/hybridclr                    |
-|        XLua        |                  热更新                  | GitHub | https://github.com/AlianBlank/com.tencent.xlua                       |
-|   GameAnalytics    |                数据统计和分析                | GitHub | 还没上传                                                                 |
-|       Sentry       |                错误上报和处理                | GitHub | https://github.com/AlianBlank/io.sentry.unity                        |
-|      LitJson       |           JSON序列化工具（马三修改版本）           | GitHub | https://github.com/AlianBlank/com.xincger.litjson                    |
-|     logViewer      |                 日志查看器                 | GitHub | https://github.com/AlianBlank/com.sharelib.logviewer                 |
-|      DoTween       |                 动画插件                  | GitHub | https://github.com/AlianBlank/com.demigiant.dotween                  |
-|     Animancer      |           动画状态机插件（再也不用连线了）            | GitHub | 还没上传                                                                 |
-|      BestHTTP      |           最强的HTTP协议实现.没有之一            | GitHub | https://github.com/AlianBlank/com.benedicht.besthttp                 |
-| OperationClipBoard |             代码设置和获取粘贴板的值              | GitHub | https://github.com/AlianBlank/com.alianblank.blankoperationclipboard |
-|     GetChannel     |           渠道获取.集成了基础的渠道获取方式           | GitHub | https://github.com/AlianBlank/com.alianblank.blankgetchannel         |
-|     ReadAssets     | 使用File的方式直接读取Android只读目录下的文件.再也不用WWW了 | GitHub | https://github.com/AlianBlank/com.alianblank.readassets              |
-|   FindReference2   |         最强查找Unity资源引用的插件没有之一          | GitHub | https://github.com/AlianBlank/com.vietlabs.fr2                       |
 
 # 交流方式(建议。需求。BUG)
 
@@ -71,7 +60,7 @@
 
 QQ群：467608841
 
-# Doc
+# Doc (没空写-.-)
 
 文档地址 : https://www.yuque.com/alianblank/gameframex
 
