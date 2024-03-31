@@ -1,0 +1,57 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Luban.Core/1.0.0": {
+        "dependencies": {
+          "NLog": "5.2.2",
+          "Scriban": "5.7.0"
+        },
+        "runtime": {
+          "Luban.Core.dll": {}
+        }
+      },
+      "NLog/5.2.2": {
+        "runtime": {
+          "lib/netstandard2.0/NLog.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.2.2.1914"
+          }
+        }
+      },
+      "Scriban/5.7.0": {
+        "runtime": {
+          "lib/net7.0/Scriban.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.7.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Luban.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NLog/5.2.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-r6Q9740g29gTwmTWlsgdIFm0mhNsfNZmbvWKX/Fxmi8X89ZrpUowHM2T2X1lP7RVpND+ef+XnfKL5g6Q1iNGXA==",
+      "path": "nlog/5.2.2",
+      "hashPath": "nlog.5.2.2.nupkg.sha512"
+    },
+    "Scriban/5.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sSjmrKmvin85FDVb2W63IDkUK5BgKY+ZnuCuwF8KRfcREB9f3dJZA58TgV052vzYxadlro4kAZv4jBP1tonaaQ==",
+      "path": "scriban/5.7.0",
+      "hashPath": "scriban.5.7.0.nupkg.sha512"
+    }
+  }
+}

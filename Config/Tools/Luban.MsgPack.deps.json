@@ -1,0 +1,141 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Luban.MsgPack/1.0.0": {
+        "dependencies": {
+          "Luban.Core": "1.0.0",
+          "MessagePack": "2.6.100-alpha"
+        },
+        "runtime": {
+          "Luban.MsgPack.dll": {}
+        }
+      },
+      "MessagePack/2.6.100-alpha": {
+        "dependencies": {
+          "MessagePack.Annotations": "2.6.100-alpha",
+          "Microsoft.NET.StringTools": "17.4.0",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/MessagePack.dll": {
+            "assemblyVersion": "2.6.0.0",
+            "fileVersion": "2.6.100.28020"
+          }
+        }
+      },
+      "MessagePack.Annotations/2.6.100-alpha": {
+        "runtime": {
+          "lib/netstandard2.0/MessagePack.Annotations.dll": {
+            "assemblyVersion": "2.6.0.0",
+            "fileVersion": "2.6.100.28020"
+          }
+        }
+      },
+      "Microsoft.NET.StringTools/17.4.0": {
+        "dependencies": {
+          "System.Memory": "4.5.5",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "runtime": {
+          "lib/net7.0/Microsoft.NET.StringTools.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "17.4.0.51802"
+          }
+        }
+      },
+      "NLog/5.2.2": {
+        "runtime": {
+          "lib/netstandard2.0/NLog.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.2.2.1914"
+          }
+        }
+      },
+      "Scriban/5.7.0": {
+        "runtime": {
+          "lib/net7.0/Scriban.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.7.0.0"
+          }
+        }
+      },
+      "System.Memory/4.5.5": {},
+      "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
+      "Luban.Core/1.0.0": {
+        "dependencies": {
+          "NLog": "5.2.2",
+          "Scriban": "5.7.0"
+        },
+        "runtime": {
+          "Luban.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Luban.MsgPack/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MessagePack/2.6.100-alpha": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gAyxBDzMDLWVg8GGP3YS4M2WnpglwcZzEld9HEsqVYNsTtVELZidINr/TTxVyfnHXxyEiZy04czZDdq8Q02hQw==",
+      "path": "messagepack/2.6.100-alpha",
+      "hashPath": "messagepack.2.6.100-alpha.nupkg.sha512"
+    },
+    "MessagePack.Annotations/2.6.100-alpha": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hl8OTk87/i4nMHtBasV+GRQe8g3tze3l6NGYmL4XOQwCATKLAFAIKRbaxxWAPo0wk26UPqJ7oC+Lg8fLQNWLAQ==",
+      "path": "messagepack.annotations/2.6.100-alpha",
+      "hashPath": "messagepack.annotations.2.6.100-alpha.nupkg.sha512"
+    },
+    "Microsoft.NET.StringTools/17.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-06T6Hqfs3JDIaBvJaBRFFMIdU7oE0OMab5Xl8LKQjWPxBQr3BgVFKMQPTC+GsSEuYREWmK6g5eOd7Xqd9p1YCA==",
+      "path": "microsoft.net.stringtools/17.4.0",
+      "hashPath": "microsoft.net.stringtools.17.4.0.nupkg.sha512"
+    },
+    "NLog/5.2.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-r6Q9740g29gTwmTWlsgdIFm0mhNsfNZmbvWKX/Fxmi8X89ZrpUowHM2T2X1lP7RVpND+ef+XnfKL5g6Q1iNGXA==",
+      "path": "nlog/5.2.2",
+      "hashPath": "nlog.5.2.2.nupkg.sha512"
+    },
+    "Scriban/5.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sSjmrKmvin85FDVb2W63IDkUK5BgKY+ZnuCuwF8KRfcREB9f3dJZA58TgV052vzYxadlro4kAZv4jBP1tonaaQ==",
+      "path": "scriban/5.7.0",
+      "hashPath": "scriban.5.7.0.nupkg.sha512"
+    },
+    "System.Memory/4.5.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw==",
+      "path": "system.memory/4.5.5",
+      "hashPath": "system.memory.4.5.5.nupkg.sha512"
+    },
+    "System.Runtime.CompilerServices.Unsafe/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg==",
+      "path": "system.runtime.compilerservices.unsafe/6.0.0",
+      "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+    },
+    "Luban.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
