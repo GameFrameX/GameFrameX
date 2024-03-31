@@ -16,9 +16,9 @@
 	<var name="ROTATOR" value="6"/> vector3
 	
 	<var name="NAME" value="7"/>
-	<var name="CLASS" value="8"/> type name
+	<var name="CLASS1" value="8"/> type name
 	
-	<var name="ENUM" value="9"/>
+	<var name="ENUM1" value="9"/>
 	<var name="OBJECT" value="10"/>
 </enum>
 
@@ -84,7 +84,7 @@
 </bean>
 
 <bean name="KeyQueryOperator">
-	<bean name="IsSet"/>
+	<bean name="IsSet2"/>
 	<bean name="IsNotSet"/> 这两个类型只对 bool,class,enum,name,object,rotator,vector 有效
 	
 	<bean name="BinaryOperator">

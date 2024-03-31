@@ -282,7 +282,6 @@
         <var name="id" type="int"/>
         <var name="x1" type="int#ref=test.TbDemoGroup_C" group="c"/> 默认属于所有分组c,s,e
         <var name="x2" type="int#ref=test.TbDemoGroup_S" group="s"/>属于 c 分组
-        <var name="x3" type="int#ref=test.TbDemoGroup_E" group="e"/>属于s分组
         <var name="x4" type="int" group="c,s"/>属于c,s分组
         <var name="x5" type="InnerGroup"/>
     </bean>
@@ -291,7 +290,6 @@
     
     <table name="TbDemoGroup_C" value="DemoGroup" group="c" input="test/demo_group.xlsx"/> 此表只属于c分组
     <table name="TbDemoGroup_S" value="DemoGroup" group="s" input="test/demo_group.xlsx"/> 此表只属于s分组
-    <table name="TbDemoGroup_E" value="DemoGroup" group="e" input="test/demo_group.xlsx"/> 此表只属于e分组
     
     <bean name="TestGlobal">
         <var name="unlock_equip" type="int"/>
@@ -325,7 +323,7 @@
         <var name="x1_2" type="int#ref=test.TbTestBeRef"/> var中的ref属性纯粹是语法糖，理论上只应该如x2那样定义在type里
         <var name="x2" type="int#ref=test_ref_group2"/>
         <var name="x3" type="int#ref=test_ref_group"/>
-		<var name="x4" type="int#ref=tag.TbTestTag"/>
+		<var name="x4" type="int#ref=tag.TbTestTag?"/>
         
         <var name="a1" type="array,(int#ref=test.TbTestBeRef)"/>
         <var name="a2" type="array,(int#ref=test.TbTestBeRef)"/>
@@ -507,8 +505,9 @@
         <var name="res" type="string#path=unity"/>
     </bean>
     <table name="TbPath" value="Path" input="test/path.xlsx"/>
+
+    <!--table name="TbMultiDimensionCollection" value="MultiDimensitionCollection" readSchemaFromFile="1" input="test/multi_dimension.xlsx"/-->
  
-    
     <!--table name="TbTestExternalType" value="TestExternalType" define_from_file="1" input="test/external_type.xlsx"/-->
     
     <bean name="TestMapper">
