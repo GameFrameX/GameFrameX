@@ -4,28 +4,52 @@ using Luban;
 public partial class {{__name}}
 {
     {{~for table in __tables ~}}
-{{~if table.comment != '' ~}}
+    {{~if table.comment != '' ~}}
     /// <summary>
     /// {{escape_comment table.comment}}
     /// </summary>
-{{~end~}}
-    public {{table.full_name}} {{format_property_name __code_style table.name}} {get; }
     {{~end~}}
+    public {{table.full_name}} {{format_property_name __code_style table.name}} { private set; get; }
+    {{~end~}}
+    private System.Collections.Generic.Dictionary<string, IDataTable> _tables;
+    public System.Collections.Generic.IEnumerable<IDataTable> DataTables => _tables.Values;
+    public IDataTable GetDataTable(string tableName) => _tables.TryGetValue(tableName, out var v) ? v : null;
 
-    public {{__name}}(System.Func<string, ByteBuf> loader)
+    public async Cysharp.Threading.Tasks.UniTask LoadAsync(System.Func<string, Cysharp.Threading.Tasks.UniTask<ByteBuf>> loader)
     {
+        TablesMemory.BeginRecord();
+
+        _tables = new System.Collections.Generic.Dictionary<string, IDataTable>();
+        var loadTasks = new System.Collections.Generic.List<Cysharp.Threading.Tasks.UniTask>();
+
         {{~for table in __tables ~}}
-        {{format_property_name __code_style table.name}} = new {{table.full_name}}(loader("{{table.output_data_file}}"));
+        {{format_property_name __code_style table.name}} = new {{table.full_name}}(() => loader("{{table.output_data_file}}"));
+        loadTasks.Add({{format_property_name __code_style table.name}}.LoadAsync());
+        _tables.Add("{{table.full_name}}", {{format_property_name __code_style table.name}});
         {{~end~}}
-        ResolveRef();
+
+        await Cysharp.Threading.Tasks.UniTask.WhenAll(loadTasks);
+
+        Refresh();
+
+        TablesMemory.EndRecord();
     }
-    
+
     private void ResolveRef()
     {
         {{~for table in __tables ~}}
         {{format_property_name __code_style table.name}}.ResolveRef(this);
         {{~end~}}
+        PostResolveRef();
     }
-}
 
+    public void Refresh()
+    {
+        PostInit();
+        ResolveRef();
+    }
+
+    partial void PostInit();
+    partial void PostResolveRef();
+}
 {{namespace_with_grace_end __namespace}}
