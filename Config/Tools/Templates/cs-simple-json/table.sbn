@@ -128,7 +128,7 @@ using SimpleJSON;
             PostInit();
         }
     
-        public System.Collections.Generic.List<{{declaring_type_name __value_type}}> DataList => DataList;
+        //public System.Collections.Generic.List<{{declaring_type_name __value_type}}> DataList => DataList;
         {{~if __table.is_union_index~}}
         public {{declaring_type_name __value_type}} Get({{table_param_def_list}}) => _dataMapUnion.TryGetValue(({{table_param_name_list}}), out {{declaring_type_name __value_type}} __v) ? __v : null;
         {{~else if !__table.index_list.empty? ~}}
