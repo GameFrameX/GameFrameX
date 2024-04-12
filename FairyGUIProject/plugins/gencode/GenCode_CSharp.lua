@@ -29,6 +29,8 @@ local CreateTemplate = [[
 local FUITemplate = [[using FairyGUI;
 using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
+using GameFrameX.Entity.Runtime;
+using GameFrameX.FairyGUI.Runtime;
 using GameFrameX.Runtime;
 
 namespace {namespaceName}
@@ -106,6 +108,7 @@ __DISPOSE__
 local FUIPackageTemplate = [[using FairyGUI;
 using FairyGUI.Utils;
 using Cysharp.Threading.Tasks;
+using GameFrameX.Entity.Runtime;
 
 namespace {namespaceName}
 {
