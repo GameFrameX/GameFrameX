@@ -1,5 +1,5 @@
 using LuBan.Runtime;
-using GameFrameX.Runtime;
+using GameFrameX.Config.Runtime;
 using SimpleJSON;
 
 {{namespace_with_grace_begin __namespace}}
