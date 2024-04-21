@@ -27,9 +27,26 @@ namespace Proto2CS.Editor
             }
         }
 
+        static  Dictionary<string, int> msgCode = new Dictionary<string, int>();
+
         static void RunGen(string namespaceName, string inputPath, string outputPath, bool isServer = false)
         {
-            string csPath = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(inputPath) + ".cs");
+            msgCode.Clear();
+
+            var fileName = Path.GetFileNameWithoutExtension(inputPath);
+            var range = fileName.Split('-');
+            int startCode = 0;
+            int endCode = 99999;
+            if(range.Length == 3)
+            {
+                startCode = int.Parse( range[1].Trim());
+                endCode = int.Parse(range[2].Trim());
+                fileName = range[0].Trim();
+            }
+           
+
+            string csPath = Path.Combine(outputPath, fileName + ".cs");
+
 
             string s = File.ReadAllText(inputPath);
 
@@ -88,12 +105,44 @@ namespace Proto2CS.Editor
                     string parentClass = "";
                     isMsgStart = true;
                     string msgName = newline.Split(Utility.splitChars, StringSplitOptions.RemoveEmptyEntries)[1];
-                    string[] ss = newline.Split(new[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    //记录下成对消息opcode 。  但是子名称不能包含 _ 
+                    var arr = msgName.Split("_");
+                    var subName = "";
+                    if(arr.Length>1)
+                    {
+                        subName = arr[1].Trim();
+                        if(!msgCode.ContainsKey(subName)) //名称相同的 成对消息 opcode相同 。 否则递增
+                        {
+                            msgCode[subName] = startCode++;
+                        }
+                    }
+                    
+
+                    //根据名字规则决定是什么接口  
+                    //C2S IRequestMessage
+                    //S2C IResponseMessage
+                    //S2S IActorMessage 
+
+                    if (msgName.StartsWith("C2S_"))
+                    {
+                        parentClass = "IRequestMessage";
+                    }
+                    else if(msgName.StartsWith("S2C_"))
+                    {
+                        parentClass = "IResponseMessage";
+                    }
+                    else if(msgName.StartsWith("S2S_"))
+                    {
+                        parentClass = "IActorMessage";
+                    }
+
+                   /* string[] ss = newline.Split(new[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (ss.Length == 2)
                     {
                         parentClass = ss[1].Trim();
-                    }
+                    }*/
 
                     // if (isServer)
                     {
@@ -112,16 +161,24 @@ namespace Proto2CS.Editor
                         sb.Append($"\tpublic partial class {msgName} : MessageObject");
                     }
 
+
                     if (parentClass == "IActorMessage" || parentClass.Contains("IRequestMessage") || parentClass.Contains("IResponseMessage"))
                     {
                         // if (isServer)
                         {
-                            var parentCsList = parentClass.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                            /*var parentCsList = parentClass.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                             if (parentCsList.Length > 1)
                             {
                                 sb.Append($", {parentCsList[0]}\n");
                                 sb.Replace("######", $"[MessageTypeHandler({parentCsList[1]})]");
+                            }*/
+
+                            if(parentClass == "IRequestMessage" || parentClass == "IResponseMessage")
+                            {
+                                sb.Append($", {parentClass}\n");
+                                sb.Replace("######", $"[MessageTypeHandler({msgCode[subName]})]");
                             }
+
                         }
                     }
                     // else if (parentClass != "")
@@ -150,12 +207,15 @@ namespace Proto2CS.Editor
                     string parentClass = "";
                     isMsgStart = true;
                     string msgName = newline.Split(Utility.splitChars, StringSplitOptions.RemoveEmptyEntries)[1];
-                    string[] ss = newline.Split(new[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
+
+
+
+                    /*string[] ss = newline.Split(new[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (ss.Length == 2)
                     {
                         parentClass = ss[1].Trim();
-                    }
+                    }*/
 
                     sb.Append($"\tpublic enum {msgName}");
 
