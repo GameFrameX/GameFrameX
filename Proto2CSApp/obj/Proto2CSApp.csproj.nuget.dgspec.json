@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\WORK\\EHYGAME\\GameFrameX\\ProtoToolsApp\\Proto2CSApp.csproj": {}
+    "D:\\WORK\\GameFrameX\\Proto2CSApp\\Proto2CSApp.csproj": {}
   },
   "projects": {
-    "D:\\WORK\\EHYGAME\\GameFrameX\\ProtoToolsApp\\Proto2CSApp.csproj": {
+    "D:\\WORK\\GameFrameX\\Proto2CSApp\\Proto2CSApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WORK\\EHYGAME\\GameFrameX\\ProtoToolsApp\\Proto2CSApp.csproj",
+        "projectUniqueName": "D:\\WORK\\GameFrameX\\Proto2CSApp\\Proto2CSApp.csproj",
         "projectName": "Proto2CSApp",
-        "projectPath": "D:\\WORK\\EHYGAME\\GameFrameX\\ProtoToolsApp\\Proto2CSApp.csproj",
+        "projectPath": "D:\\WORK\\GameFrameX\\Proto2CSApp\\Proto2CSApp.csproj",
         "packagesPath": "C:\\Users\\BambomTan\\.nuget\\packages\\",
-        "outputPath": "D:\\WORK\\EHYGAME\\GameFrameX\\ProtoToolsApp\\obj\\",
+        "outputPath": "D:\\WORK\\GameFrameX\\Proto2CSApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
