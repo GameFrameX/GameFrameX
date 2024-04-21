@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ProtoToolsApp": {
+        "commandName": "Project",
+        "commandLineArgs": "\"./../../../../Protobuf\" \"client\" \"./../../../../Unity/Assets/Hotfix/Proto\" \"Hotfix.Proto\""
+    }
+  }
+}
