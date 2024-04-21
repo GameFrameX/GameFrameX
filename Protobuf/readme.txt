@@ -1,3 +1,5 @@
+bat 使用。  先打开Proto2CSApp 运行生成exe.
+
 Proto文件名称规则：
  	文件名-协议开始-协议结束.proto
 	示例：BattleMessage-1000-2000.proto
