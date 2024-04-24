@@ -7,9 +7,5 @@
     <Nullable>enable</Nullable>
 
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Proto\" />
-  </ItemGroup>
 	
 </Project>

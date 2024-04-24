@@ -8,11 +8,11 @@ namespace GameFrameX
     {
         private static IProtoGenerateHelper ProtoGenerateHelper;
         static string protoPath = "";
-         static string filePath = "";
+        static string filePath = "";
         static string namespaceStr = "";
+
         private static int Main(string[] args)
         {
-           
             // 检查是否传递了足够的参数
             if (args.Length < 4)
             {
@@ -22,12 +22,12 @@ namespace GameFrameX
 
             // 解析参数
             protoPath = args[0];
-            string mode = args[1].ToLower();  // 将模式参数转为小写，以便比较
+            string mode = args[1].ToLower(); // 将模式参数转为小写，以便比较
             filePath = args[2];
             namespaceStr = args[3];
 
             // 验证模式参数是否正确
-            if (mode != "server" && mode != "client")
+            if (!Enum.TryParse<ModeType>(mode, true, out var modeType))
             {
                 Console.WriteLine("错误：第二个参数必须是 'server' 或 'client'");
                 return 0;
@@ -45,22 +45,30 @@ namespace GameFrameX
             Console.WriteLine($"运行模式: {mode}");
             Console.WriteLine($"文件路径: {filePath}");
 
-            ProtoGenerateHelper = new ProtoBuffHelper();
-
-            // 根据模式进行不同的操作
-            switch (mode)
+            if (!Directory.Exists(filePath))
             {
-                case "server":
-
-                    ProtoGenerateHelper.Run(protoPath, filePath, namespaceStr, true);
-
-                    break;
-                case "client":
-                    ProtoGenerateHelper.Run(protoPath, filePath, namespaceStr);
-                    break;
+                Directory.CreateDirectory(filePath);
             }
 
-            return 1;
+            var types = typeof(IProtoGenerateHelper).Assembly.GetTypes();
+            foreach (var type in types)
+            {
+                var attrs = type.GetCustomAttributes(typeof(ModeAttribute), true);
+                if (attrs?.Length > 0 && (attrs[0] is ModeAttribute modeAttribute) && modeAttribute.Mode == modeType)
+                {
+                    ProtoGenerateHelper = (IProtoGenerateHelper)Activator.CreateInstance(type);
+                    break;
+                }
+            }
+
+            var files = Directory.GetFiles(protoPath, "*.proto", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                var operationCodeInfo = MessageHelper.Parse(File.ReadAllText(file), Path.GetFileNameWithoutExtension(file), filePath);
+                ProtoGenerateHelper?.Run(operationCodeInfo, filePath, Path.GetFileNameWithoutExtension(file));
+            }
+
+            return 0;
         }
     }
 }

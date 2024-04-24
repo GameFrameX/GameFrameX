@@ -12,6 +12,6 @@ namespace Proto2CS.Editor
         /// <param name="outputPath">输出目录</param>
         /// <param name="namespaceName">命名空间</param>
         /// <param name="isServer">是否是生成服务器</param>
-        void Run(string inputPath, string outputPath, string namespaceName = "GFXHotfix", bool isServer = false);
+        void Run(OperationCodeInfoList inputPath, string outputPath, string namespaceName = "GFXHotfix");
     }
 }
