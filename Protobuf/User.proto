@@ -1,8 +1,8 @@
 syntax = "proto3";
-package user;
-
+package User;
+option start = 300;
 // 请求登录
-message ReqLogin { // IRequestMessage 10
+message ReqLogin { 
 	string UserName = 1;
 	string Platform = 2;
 	int32 SdkType = 3;
@@ -12,7 +12,7 @@ message ReqLogin { // IRequestMessage 10
 }
 
 // 请求登录返回
-message RespLogin { // IResponseMessage 10
+message RespLogin { 
 	int32 Code = 1;
 	UserInfo UserInfo = 2;
 }
@@ -23,7 +23,7 @@ message RespErrorCode {
 	string Desc = 2; // 错误描述（不为0时有效）
 }
 
-message RespPrompt { // IResponseMessage 200
+message RespPrompt { 
 	int32 Type = 1; // 提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）
 	string Content = 2; // 提示内容
 }

@@ -1,6 +1,6 @@
 syntax = "proto3";
-package common;
-
+package Common;
+option start = 200;
 // 返回码
 enum ResultCode {
 	Success = 0; //成功

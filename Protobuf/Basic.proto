@@ -1,20 +1,11 @@
 syntax = "proto3";
 package Basic;
-
+option start = 1;
 // 请求心跳
-message ReqHeartBeat { // IRequestMessage 1
+message ReqHeartBeat {
   int64 Timestamp = 1; // 时间戳
 }
 // 返回心跳
-message RespHeartBeat { // IResponseMessage 1
-  int64 Timestamp = 1; // 时间戳
-}
-
-// 请求心跳
-message ReqActorHeartBeat { // IActorRequestMessage 1000001
-  int64 Timestamp = 1; // 时间戳
-}
-// 返回心跳
-message RespActorHeartBeat { // IActorResponseMessage 1000001
+message RespHeartBeat {
   int64 Timestamp = 1; // 时间戳
 }
