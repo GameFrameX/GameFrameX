@@ -225,9 +225,9 @@ local function genCode(handler)
             if memberInfo.res ~= nil then
                 if memberInfo.res.owner.name ~= handler.pkg.name then -- 判断是不是本包的资源
                     local memberResName = memberInfo.res.name; -- 获取跨包的组件名称
-					if IsCustomComponent(classes, typeName) then -- 判断是不是自定义类型组件
-						typeName = memberResName; -- 替换类型名称为跨包的组件名称
-					end
+		    if IsCustomComponent(classes, typeName) then -- 判断是不是自定义类型组件
+			typeName = memberResName; -- 替换类型名称为跨包的组件名称
+		    end
                     isWhetherToCrossPackages = true;
                 end
             end
