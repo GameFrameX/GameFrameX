@@ -225,7 +225,9 @@ local function genCode(handler)
             if memberInfo.res ~= nil then
                 if memberInfo.res.owner.name ~= handler.pkg.name then -- 判断是不是本包的资源
                     local memberResName = memberInfo.res.name; -- 获取跨包的组件名称
-                    typeName = memberResName; -- 替换类型名称为跨包的组件名称
+		    if IsCustomComponent(classes, typeName) then -- 判断是不是自定义类型组件
+			typeName = memberResName; -- 替换类型名称为跨包的组件名称
+		    end
                     isWhetherToCrossPackages = true;
                 end
             end
@@ -239,9 +241,9 @@ local function genCode(handler)
 
             if memberInfo.group == 0 then
                 -- 判断是不是自定义类型组件 和跨包引用
-                if IsCustomComponent(classes, typeName) or isWhetherToCrossPackages then
+                if IsCustomComponent(classes, typeName) and isWhetherToCrossPackages then
                     table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = ' .. typeName .. '.Create(com.GetChild("' ..
-                        memberInfoName .. '"), this);'); -- 如果是自定义类型组件或跨包引用，则插入Awake表
+                        memberInfoName .. '"), this);'); -- 如果是自定义类型组件且是跨包引用，则插入Awake表
                 else
                     table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = (' .. typeName .. ')com.GetChild("' ..
                         memberInfoName .. '");'); -- 否则插入Awake表
