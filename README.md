@@ -104,6 +104,10 @@ QQ群：467608841
 
 [bambom](https://github.com/bambom)
 
+## FairyGUI
+
+[PlayerYF](https://github.com/PlayerYF)
+
 # 免责声明
 
 所有插件均来自互联网.请各位使用时自行付费.如果以上插件涉及侵权.请发email.本人将移除.谢谢
