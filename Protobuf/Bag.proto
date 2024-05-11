@@ -2,36 +2,43 @@ syntax = "proto3";
 package Bag;
 option start = 100;
 // 请求背包数据
-message ReqBagInfo {
+message ReqBagInfo
+{
 
 }
 
 // 返回背包数据
-message ResBagInfo {
-	map<int32,int64> ItemDic = 1;
+message RespBagInfo
+{
+  map<int32, int64> ItemDic = 1;
 }
 
-// 请求背包数据 
-message ReqComposePet {
-	int32 FragmentId = 1; // 碎片id
+// 请求合成宠物
+message ReqComposePet
+{
+  int32 FragmentId = 1; // 碎片id
 }
 
-// 返回背包数据 
-message ResComposePet { 
-	int32 PetId = 1; // 合成宠物的Id
+// 返回合成宠物
+message RespComposePet
+{
+  int32 PetId = 1; // 合成宠物的Id
 }
 
-// 请求背包数据
-message ReqUseItem {
-	int32 ItemId = 1; // 道具id
+// 请求使用道具
+message ReqUseItem
+{
+  int32 ItemId = 1; // 道具id
 }
 
 // 出售道具
-message ReqSellItem {
-	int32 ItemId = 1; // 道具id
+message ReqSellItem
+{
+  int32 ItemId = 1; // 道具id
 }
 
 // 出售道具
-message ResItemChange {
-	map<int32,int64> ItemDic = 1; // 变化的道具
+message RespItemChange
+{
+  map<int32, int64> ItemDic = 1; // 变化的道具
 }

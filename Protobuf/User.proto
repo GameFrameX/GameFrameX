@@ -2,28 +2,32 @@ syntax = "proto3";
 package User;
 option start = 300;
 // 请求登录
-message ReqLogin { 
-	string UserName = 1;
-	string Platform = 2;
-	int32 SdkType = 3;
-	string SdkToken = 4;
-	string Device = 5;
-	string Password = 6; // 密码
+message ReqLogin
+{
+  string UserName = 1;
+  string Platform = 2;
+  int32 SdkType = 3;
+  string SdkToken = 4;
+  string Device = 5;
+  string Password = 6; // 密码
 }
 
 // 请求登录返回
-message RespLogin { 
-	int32 Code = 1;
-	UserInfo UserInfo = 2;
+message RespLogin
+{
+  int32 Code = 1;
+  UserInfo UserInfo = 2;
 }
 
 // 客户端每次请求都会回复错误码
-message RespErrorCode {
-	int64 ErrCode = 1; // 0:表示无错误
-	string Desc = 2; // 错误描述（不为0时有效）
+message RespErrorCode
+{
+  int64 ErrCode = 1; // 0:表示无错误
+  string Desc = 2; // 错误描述（不为0时有效）
 }
 
-message RespPrompt { 
-	int32 Type = 1; // 提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）
-	string Content = 2; // 提示内容
+message RespPrompt
+{
+  int32 Type = 1; // 提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）
+  string Content = 2; // 提示内容
 }

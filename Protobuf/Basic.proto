@@ -2,10 +2,12 @@ syntax = "proto3";
 package Basic;
 option start = 1;
 // 请求心跳
-message ReqHeartBeat {
+message ReqHeartBeat
+{
   int64 Timestamp = 1; // 时间戳
 }
 // 返回心跳
-message RespHeartBeat {
+message RespHeartBeat
+{
   int64 Timestamp = 1; // 时间戳
 }
