@@ -5,6 +5,10 @@
     <component id="aneks9g" name="UIAnnouncement.xml" path="/Scene/" exported="true"/>
     <component id="aneks9i" name="UIAnnouncementContent.xml" path="/Scene/"/>
     <component id="xsvis9l" name="UILoginButton.xml" path="/Widget/"/>
+    <component id="i3dbs9m" name="UIPlayerList.xml" path="/Scene/" exported="true"/>
+    <component id="i3dbs9n" name="UIPlayerListItem.xml" path="/Scene/" exported="true"/>
+    <component id="i3dbs9o" name="UIPlayerListItemLoginButton.xml" path="/Scene/"/>
+    <component id="i3dbs9p" name="UIPlayerCreate.xml" path="/Scene/" exported="true"/>
   </resources>
   <publish name="" genCode="true"/>
 </packageDescription>

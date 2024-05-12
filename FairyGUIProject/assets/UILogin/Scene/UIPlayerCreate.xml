@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1080,1920">
+  <displayList>
+    <graph id="n7_i3db" name="n7" xy="0,0" size="1080,1920" type="rect" fillColor="#543399ff">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n2_i3db" name="n2" xy="180,801" size="766,161" type="rect" lineSize="0" fillColor="#ff1e1d1b" corner="3"/>
+    <text id="n3_i3db" name="UserName" xy="195,820" size="668,123" font="ui://f59y7iy8ghno32" fontSize="44" color="#dedede" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" autoClearText="true" text="gameframex" input="true" prompt="点击输入"/>
+    <text id="n4_i3db" name="n4" xy="495,694" size="172,56" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="角色名称"/>
+    <text id="n5_i3db" name="n5" xy="465,496" pivot="0.5,0.5" size="204,66" font="ui://f59y7iy8ghno32" fontSize="50" color="#e1c399" align="center" vAlign="middle" text="创建角色"/>
+    <component id="n6_i3db" name="enter" src="xsvis9l" fileName="Widget/UILoginButton.xml" xy="300,1453">
+      <Button title="创建角色"/>
+    </component>
+    <text id="n8_i3db" name="ErrorText" xy="275,1049" pivot="1,0" size="529,103" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="center" vAlign="middle" letterSpacing="-1" autoSize="shrink" autoClearText="true" text=""/>
+  </displayList>
+</component>

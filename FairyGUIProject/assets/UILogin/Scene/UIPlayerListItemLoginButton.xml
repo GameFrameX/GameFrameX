@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="167,168">
+  <displayList>
+    <graph id="n4_i3db" name="n4" xy="0,0" size="167,168" type="rect"/>
+    <richtext id="n5_i3db" name="n5" xy="24,32" size="112,100" fontSize="39" align="center" vAlign="middle" autoSize="none" bold="true" text="登录"/>
+  </displayList>
+</component>

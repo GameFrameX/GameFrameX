@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1080,1920">
+  <displayList>
+    <list id="n0_i3db" name="player_list" xy="90,164" size="900,1282" overflow="scroll" lineGap="10" defaultItem="ui://f011l0h9i3dbs9n" align="center" autoClearItems="true">
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+      <item/>
+    </list>
+  </displayList>
+</component>
