@@ -1,10 +1,17 @@
 syntax = "proto3";
 package Bag;
 option start = 100;
+
+enum BagType
+{
+  Default = 0; // 默认
+  Pet = 1; // 宠物
+}
+
 // 请求背包数据
 message ReqBagInfo
 {
-  
+  BagType BagType = 1; // 背包类型
 }
 
 // 返回背包数据

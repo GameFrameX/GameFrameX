@@ -52,6 +52,8 @@ message PlayerInfo
   string Name = 2; // 角色名
   uint32 Level = 3; // 角色等级
   int32 State = 4; // 角色状态
+  uint32 Avatar = 5; // 角色头像
+  uint64 CurrentExp = 6; // 角色当前经验
 }
 
 
@@ -65,10 +67,8 @@ message ReqPlayerLogin
 message RespPlayerLogin
 {
   int32 Code = 1;
-  string RoleName = 2; // 账号名
-  int64 Id = 3; // 账号ID
-  uint32 Level = 4; // 账号等级
-  int64 CreateTime = 5; // 创建时间
+  int64 CreateTime = 2; // 创建时间  
+  PlayerInfo PlayerInfo = 3; // 角色信息
 }
 
 // 客户端每次请求都会回复错误码
