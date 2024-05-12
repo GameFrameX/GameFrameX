@@ -9,6 +9,8 @@
     <component id="i3dbs9n" name="UIPlayerListItem.xml" path="/Scene/" exported="true"/>
     <component id="i3dbs9o" name="UIPlayerListItemLoginButton.xml" path="/Scene/"/>
     <component id="i3dbs9p" name="UIPlayerCreate.xml" path="/Scene/" exported="true"/>
+    <image id="i3dbs9q" name="Button BG.png" path="/Images/"/>
+    <image id="ob7as9r" name="Background.png" path="/Images/"/>
   </resources>
   <publish name="" genCode="true"/>
 </packageDescription>

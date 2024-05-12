@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="1080,1920">
+<component size="1920,1080">
   <displayList>
-    <graph id="n24_nmd0" name="bg" xy="110,324" pivot="0.5,0" size="860,1080" type="rect" lineSize="0"/>
-    <component id="n15_nmd0" name="EnterButton" src="qew11i" fileName="Widget/UILauncherEnterButton.xml" xy="300,1208">
+    <graph id="n24_nmd0" name="bg" xy="0,0" pivot="0.5,0" size="1920,1080" alpha="0.6" type="rect" lineSize="0" fillColor="#ff000000"/>
+    <image id="n29_i3db" name="n29" src="i3db1k" fileName="Images/Background.png" xy="198,92" size="1524,895"/>
+    <component id="n15_nmd0" name="EnterButton" src="qew11i" fileName="Widget/UILauncherEnterButton.xml" xy="720,830">
       <Button title="确定"/>
     </component>
-    <component id="n27_anek" name="TextContent" src="qew11f" fileName="Scene/UILauncherUpgradeContent.xml" xy="140,369" size="800,800"/>
+    <component id="n27_anek" name="TextContent" src="qew11f" fileName="Scene/UILauncherUpgradeContent.xml" xy="294,185" size="1332,640"/>
   </displayList>
 </component>

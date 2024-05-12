@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="1080,1920">
+<component size="1920,1080">
   <displayList>
-    <component id="n0_xws7" name="bag_button" src="xws71" fileName="BagButton.xml" xy="64,198"/>
+    <loader id="n4_ob7a" name="bg" xy="0,0" size="1920,1080" url="ui://q9u97yzfob7a2" align="center" vAlign="middle" fill="scale">
+      <relation target="" sidePair="width-width,height-height"/>
+    </loader>
+    <component id="n0_xws7" name="bag_button" src="xws71" fileName="BagButton.xml" xy="1253,946" size="119,100">
+      <Button title="背包"/>
+    </component>
+    <loader id="n1_ob7a" name="player_icon" xy="51,36" size="164,164" align="center" vAlign="middle" fill="scale"/>
+    <text id="n2_ob7a" name="player_name" xy="238,45" size="376,61" fontSize="30" autoSize="none" text=""/>
+    <text id="n3_ob7a" name="player_level" xy="236,126" size="376,61" fontSize="30" autoSize="none" text=""/>
   </displayList>
 </component>
