@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1080,1920">
+  <displayList>
+    <component id="n0_xws7" name="bag_button" src="xws71" fileName="BagButton.xml" xy="64,198"/>
+  </displayList>
+</component>

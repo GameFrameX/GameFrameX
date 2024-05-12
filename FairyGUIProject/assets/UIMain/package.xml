@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="q9u97yzf">
+  <resources>
+    <component id="xws70" name="UIMain.xml" path="/" exported="true"/>
+    <component id="xws71" name="BagButton.xml" path="/"/>
+  </resources>
+  <publish name="" genCode="true"/>
+</packageDescription>
