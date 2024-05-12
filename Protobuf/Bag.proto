@@ -4,7 +4,7 @@ option start = 100;
 // 请求背包数据
 message ReqBagInfo
 {
-  int64 Timestamp = 1; // 时间戳
+  
 }
 
 // 返回背包数据
