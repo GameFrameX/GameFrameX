@@ -1,0 +1,2 @@
+dotnet.exe ./Tools/Luban.dll --target server --dataTarget bin --codeTarget cs-bin --xargs outputDataDir=../Server//Server.Config/Json  --xargs outputCodeDir=../Server//Server.Config/Config --conf ./Luban.conf
+pause
