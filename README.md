@@ -123,6 +123,10 @@ QQ群：467608841
 
 [PlayerYF](https://github.com/PlayerYF)
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=AlianBlank/GameFrameX,AlianBlank/GameFrameX.Unity,AlianBlank/GameFrameX.Server,AlianBlank/GameFrameX.Admin&type=Date)](https://star-history.com/embed?secret=Z2hwX0l1VlJVYlE0RUhIZE9hS2pVZ21ISVozNFNNSUdETDMycmZEWQ==#AlianBlank/GameFrameX&AlianBlank/GameFrameX.Unity&AlianBlank/GameFrameX.Server&AlianBlank/GameFrameX.Admin&Date)
+
 # 免责声明
 
 所有插件均来自互联网.请各位使用时自行付费.如果以上插件涉及侵权.请发email.本人将移除.谢谢
