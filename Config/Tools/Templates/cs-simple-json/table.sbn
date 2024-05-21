@@ -55,8 +55,8 @@ using SimpleJSON;
             {
                 {{declaring_type_name __value_type}} _v;
                 {{deserialize '_v' '_ele' __value_type}}
-                DataList.Add(_v);                
-                {{~if __key_type.type_name != 'string' ~}}      
+                DataList.Add(_v);
+                {{~if __key_type.type_name != 'string' ~}}
                 LongDataMaps.Add(_v.{{format_property_name __code_style __table.index_field.name}}, _v);
                 {{~end~}}
                 StringDataMaps.Add(_v.{{format_property_name __code_style __table.index_field.name}}.ToString(), _v);
