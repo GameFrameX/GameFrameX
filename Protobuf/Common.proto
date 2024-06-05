@@ -1,6 +1,7 @@
 syntax = "proto3";
 package Common;
 option start = 200;
+option module = 1;
 // 返回码
 enum ResultCode
 {

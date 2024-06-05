@@ -1,6 +1,7 @@
 syntax = "proto3";
 package Bag;
 option start = 100;
+option module = 100;
 
 enum BagType
 {
