@@ -35,23 +35,18 @@ using SimpleJSON;
     {{~end~}}
     public partial class {{__name}} : BaseDataTable<{{declaring_type_name __value_type}}>
     {
-        {{~if __table.is_map_table ~}}
-        //private readonly System.Collections.Generic.Dictionary<{{declaring_type_name __key_type}}, {{declaring_type_name __value_type}}> _dataMap;
-        //private readonly System.Collections.Generic.List<{{declaring_type_name __value_type}}> _dataList;
         private readonly System.Func<System.Threading.Tasks.Task<JSONNode>> _loadFunc;        
         public {{__name}}(System.Func<System.Threading.Tasks.Task<JSONNode>> loadFunc)
+        {{~if __table.is_map_table ~}}        
         {
             _loadFunc = loadFunc;
-            //_dataMap = new System.Collections.Generic.Dictionary<{{declaring_type_name __key_type}}, {{declaring_type_name __value_type}}>();
-            //_dataList = new System.Collections.Generic.List<{{declaring_type_name __value_type}}>();
         }
-    
         public override async System.Threading.Tasks.Task LoadAsync()
         {
-            JSONNode _json = await _loadFunc();
-            //_dataMap.Clear();
+            var jsonNode = await _loadFunc();
+            StringDataMaps.Clear();
             DataList.Clear();
-            foreach(JSONNode _ele in _json.Children)
+            foreach(var _ele in jsonNode.Children)
             {
                 {{declaring_type_name __value_type}} _v;
                 {{deserialize '_v' '_ele' __value_type}}
@@ -75,7 +70,15 @@ using SimpleJSON;
                 value.ResolveRef(tables);
             }
         }
-    
+
+        public void TranslateText(System.Func<string, string, string> translator)
+        {
+            foreach(var v in DataList)
+            {
+                v.TranslateText(translator);
+            }
+        }
+
         {{~else if __table.is_list_table ~}}
         {{~if __table.is_union_index~}}
         private {{table_union_map_type_name}} _dataMapUnion;
@@ -102,7 +105,7 @@ using SimpleJSON;
         {
             JSONNode _json = await _loadFunc();
             DataList.Clear();
-            foreach(JSONNode _ele in _json.Children)
+            foreach(var _ele in _json.Children)
             {
                 {{declaring_type_name __value_type}} _v;
                 {{deserialize '_v' '_ele' __value_type}}
@@ -144,6 +147,15 @@ using SimpleJSON;
                 _v.ResolveRef(tables);
             }
         }
+
+        public void TranslateText(System.Func<string, string, string> translator)
+        {
+            foreach(var v in DataList)
+            {
+                v.TranslateText(translator);
+            }
+        }
+
         {{~else~}}
     
         private {{declaring_type_name __value_type}} _data;
@@ -176,8 +188,15 @@ using SimpleJSON;
         {
             _data.ResolveRef(tables);
         }
+
+        public void TranslateText(System.Func<string, string, string> translator)
+        {
+            _data.TranslateText(translator);
+        }    
         {{~end~}}
-    
+
+
+
         partial void PostInit();
     }
 {{namespace_with_grace_end __namespace_with_top_module}}

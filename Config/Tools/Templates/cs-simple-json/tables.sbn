@@ -40,6 +40,13 @@ using SimpleJSON;
             Refresh();
         }
     
+        public void SetTranslateText(System.Func<string, string, string> translator)
+        {
+            {{~for table in __tables ~}}
+            {{format_property_name __code_style table.name}}.TranslateText(translator);
+            {{~end~}}
+        }
+
         private void ResolveRef()
         {
             {{~for table in __tables ~}}
