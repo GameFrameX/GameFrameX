@@ -1,3 +1,4 @@
+using System;
 using LuBan.Runtime;
 using GameFrameX.Config.Runtime;
 using SimpleJSON;
@@ -22,9 +23,23 @@ using SimpleJSON;
             m_ConfigComponent = configComponent;
             configComponent.RemoveAllConfigs();
         }
-    
+
+        /// <summary>
+        /// 是否加载完成
+        /// </summary>
+        public bool IsLoaded { get; private set; }
+
+        /// <summary>
+        /// 异步加载配置文件
+        /// </summary>
+        /// <param name="loader">加载器</param>
         public async System.Threading.Tasks.Task LoadAsync(System.Func<string, System.Threading.Tasks.Task<JSONNode>> loader)
         {
+            if (IsLoaded)
+            {
+                return;
+            }
+            IsLoaded = false;
             m_ConfigComponent.RemoveAllConfigs();
             var loadTasks = new System.Collections.Generic.List<System.Threading.Tasks.Task>();
     
@@ -38,10 +53,20 @@ using SimpleJSON;
             await System.Threading.Tasks.Task.WhenAll(loadTasks);
     
             Refresh();
+            IsLoaded = true;
         }
-    
+
+        /// <summary>
+        /// 设置本地化的适配器
+        /// </summary>
+        /// <param name="translator">适配器对象</param>
+        /// <exception cref="InvalidOperationException">如果未加载完成将抛出此异常</exception>
         public void SetTranslateText(System.Func<string, string, string> translator)
         {
+            if (IsLoaded == false)
+            {
+                throw new InvalidOperationException("Table is not loaded!");
+            }
             {{~for table in __tables ~}}
             {{format_property_name __code_style table.name}}.TranslateText(translator);
             {{~end~}}
