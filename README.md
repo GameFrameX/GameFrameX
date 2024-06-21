@@ -107,6 +107,10 @@ QQ群：467608841
 
 文档地址 : https://www.yuque.com/alianblank/gameframex
 
+# 赞赏一下呗
+
+![wechat.jpg](Docs/imgs/wechat.jpg)
+
 # 使用案例
 
 | 游戏名称   | 链接地址                                       | 上线时间       |
