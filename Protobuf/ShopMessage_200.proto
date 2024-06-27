@@ -1,7 +1,6 @@
 syntax = "proto3";
 package ShopMessage;
-option start = 1701;
-option module = 17;
+option module = 200;
 //==============================商店===========================
 //获取商品列表
 message C2S_GetShopItemList

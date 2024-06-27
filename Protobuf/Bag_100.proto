@@ -1,8 +1,6 @@
 syntax = "proto3";
 package Bag;
-option start = 100;
 option module = 100;
-
 enum BagType
 {
   Default = 0; // 默认
@@ -20,11 +18,7 @@ message RespBagInfo
 {
   map<int32, int64> ItemDic = 1;
 }
-// 通知背包数据变化
-message NotifyBagInfoChanged
-{
-  map<int32, int64> ItemDic = 1;
-}
+
 // 请求合成宠物
 message ReqComposePet
 {
