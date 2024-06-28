@@ -19,6 +19,12 @@ message RespBagInfo
   map<int32, int64> ItemDic = 1;
 }
 
+// 通知背包数据变化
+message NotifyBagInfoChanged
+{
+  map<int32, int64> ItemDic = 1;
+}
+
 // 请求合成宠物
 message ReqComposePet
 {
