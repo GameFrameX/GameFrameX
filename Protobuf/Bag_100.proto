@@ -22,7 +22,7 @@ message RespBagInfo
 // 通知背包数据变化
 message NotifyBagInfoChanged
 {
-  map<int32, int64> ItemDic = 1;
+  map<int32, int64> ItemDic = 1; // 变化的道具，key:道具id，value:数量
 }
 
 // 请求合成宠物

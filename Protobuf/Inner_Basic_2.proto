@@ -1,0 +1,3 @@
+syntax = "proto3";
+package Inner_Basic;
+option module = 2;
