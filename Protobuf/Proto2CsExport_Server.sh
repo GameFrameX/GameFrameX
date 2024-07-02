@@ -4,7 +4,7 @@
 cd -P ../Tools/ProtoExport/bin/Debug/net8.0
 
 # 启动应用程序，并将其放入后台执行
-dotnet ProtoExport.dll -mode server -inputPath ./../../../../../Protobuf -outputPath ./../../../../../Server/GameFrameX.Proto/Proto -namespaceName GameFrameX.Proto.Proto -isGenerateErrorCode true &
+dotnet ProtoExport.dll --mode server --inputPath ./../../../../../Protobuf --outputPath ./../../../../../Server/GameFrameX.Proto/Proto --namespaceName GameFrameX.Proto.Proto --isGenerateErrorCode true &
 
 # 输出提示信息
 echo "Press any key to continue . . ."
