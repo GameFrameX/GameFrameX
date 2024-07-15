@@ -1,5 +1,5 @@
 using System.Text.Json;
-using GameFrameX.Config.Core;
+using GameFrameX.Core.Config;
 {{
     key_type = __table.key_ttype
     value_type =  __table.value_ttype
