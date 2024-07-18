@@ -103,9 +103,9 @@ GameFrameX/ 项目根目录.可以根据自己的项目修改
 
 QQ群：467608841
 
-# Doc (没空写-.-)
+# Doc (已经在写了,别催了!-_-!)
 
-文档地址 : https://www.yuque.com/alianblank/gameframex
+文档地址 : https://gameframex.doc.alianblank.com
 
 # 赞赏一下呗
 
