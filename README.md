@@ -19,33 +19,33 @@ GameFrameX为游戏开发者提供了一个强大的技术生态，将数据库�
 
 # 服务器（从 `geekserver` 修改而来.）
 
-    https://github.com/AlianBlank/GameFrameX.Server
+    https://github.com/GameFrameX/GameFrameX.Server
 
 # 管理后台
 
-    https://github.com/AlianBlank/GameFrameX.Admin
+    https://github.com/GameFrameX/GameFrameX.Admin
 
 # 工具集
 
-    https://github.com/AlianBlank/GameFrameX.Tools
+    https://github.com/GameFrameX/GameFrameX.Tools
 
 # 客户端
 
 ## Unity
 
-    https://github.com/AlianBlank/GameFrameX.Unity
+    https://github.com/GameFrameX/GameFrameX.Unity
 
 ## Laya Box
 
-    https://github.com/AlianBlank/GameFrameX.LayaBox
+    https://github.com/GameFrameX/GameFrameX.LayaBox
 
 ## Cocos Creator
 
-    https://github.com/AlianBlank/GameFrameX.CocosCreator
+    https://github.com/GameFrameX/GameFrameX.CocosCreator
 
 ## Godot
 
-    https://github.com/AlianBlank/GameFrameX.Godot
+    https://github.com/GameFrameX/GameFrameX.Godot
 
 目录结构要求：由于项目基本上都是使用相对目录的方式。请不要乱放文件夹
 
@@ -81,10 +81,10 @@ GameFrameX/ 项目根目录.可以根据自己的项目修改
 3. 执行以下命令
 
     ```shell
-    git clone https://github.com/AlianBlank/GameFrameX.git
-    git clone https://github.com/AlianBlank/GameFrameX.Server.git ./GameFrameX/Server
-    git clone https://github.com/AlianBlank/GameFrameX.Tools.git ./GameFrameX/Tools
-    git clone https://github.com/AlianBlank/GameFrameX.Unity.git ./GameFrameX/Unity
+    git clone https://github.com/GameFrameX/GameFrameX.git
+    git clone https://github.com/GameFrameX/GameFrameX.Server.git ./GameFrameX/Server
+    git clone https://github.com/GameFrameX/GameFrameX.Tools.git ./GameFrameX/Tools
+    git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
     
     ```
 
