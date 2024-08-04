@@ -63,10 +63,10 @@ GameFrameX/ 项目根目录.可以根据自己的项目修改
 │ ├── Server.XXX # 服务器文件夹开始
 │ ├── ... # 服务器解决方案文件夹列表
 │ └── Server.XXX # 服务器文件夹结束
-├── Laya/ # Laya客户端文件夹。请从  https://github.com/AlianBlank/GameFrameX.LayaBox  Clone 到此目录下
-├── CocosCreator/ # CocosCreator客户端文件夹。请从  https://github.com/AlianBlank/GameFrameX.CocosCreator  Clone 到此目录下
-├── Godot/ # Godot客户端文件夹。请从  https://github.com/AlianBlank/GameFrameX.Godot  Clone 到此目录下
-├── Unity/ # Unity客户端文件夹。请从  https://github.com/AlianBlank/GameFrameX.Unity  Clone 到此目录下
+├── Laya/ # Laya客户端文件夹。请从  https://github.com/GameFrameX/GameFrameX.LayaBox  Clone 到此目录下
+├── CocosCreator/ # CocosCreator客户端文件夹。请从  https://github.com/GameFrameX/GameFrameX.CocosCreator  Clone 到此目录下
+├── Godot/ # Godot客户端文件夹。请从  https://github.com/GameFrameX/GameFrameX.Godot  Clone 到此目录下
+├── Unity/ # Unity客户端文件夹。请从  https://github.com/GameFrameX/GameFrameX.Unity  Clone 到此目录下
 │ ├── Assets/ # Unity客户端文件夹
 │ ├── Packages/ # Unity客户端文件夹
 │ ├── ProjectSettings/ # Unity项目设置文件夹
@@ -129,7 +129,7 @@ QQ群：467608841
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=AlianBlank/GameFrameX,AlianBlank/GameFrameX.Unity,AlianBlank/GameFrameX.Server,AlianBlank/GameFrameX.Admin&type=Date)](https://star-history.com/embed?secret=Z2hwX0l1VlJVYlE0RUhIZE9hS2pVZ21ISVozNFNNSUdETDMycmZEWQ==#AlianBlank/GameFrameX&AlianBlank/GameFrameX.Unity&AlianBlank/GameFrameX.Server&AlianBlank/GameFrameX.Admin&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=AlianBlank/GameFrameX,AlianBlank/GameFrameX.Unity,AlianBlank/GameFrameX.Server,AlianBlank/GameFrameX.Admin&type=Date)](https://star-history.com/embed?secret=Z2hwX0l1VlJVYlE0RUhIZE9hS2pVZ21ISVozNFNNSUdETDMycmZEWQ==#GameFrameX/GameFrameX&GameFrameX/GameFrameX.Unity&GameFrameX/GameFrameX.Server&GameFrameX/GameFrameX.Admin&Date)
 
 # 免责声明
 
