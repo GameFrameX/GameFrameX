@@ -156,14 +156,6 @@ QQ群：467608841
 </table>
 <!-- readme: contributors -end -->
 
-## Tools
-
-[bambom](https://github.com/bambom)
-
-## FairyGUI
-
-[PlayerYF](https://github.com/PlayerYF)
-
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=AlianBlank/GameFrameX,AlianBlank/GameFrameX.Unity,AlianBlank/GameFrameX.Server,AlianBlank/GameFrameX.Admin&type=Date)](https://star-history.com/embed?secret=Z2hwX0l1VlJVYlE0RUhIZE9hS2pVZ21ISVozNFNNSUdETDMycmZEWQ==#GameFrameX/GameFrameX&GameFrameX/GameFrameX.Unity&GameFrameX/GameFrameX.Server&GameFrameX/GameFrameX.Admin&Date)
