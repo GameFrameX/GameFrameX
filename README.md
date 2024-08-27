@@ -119,6 +119,9 @@ QQ群：467608841
 
 # 贡献名单
 
+<!-- readme: contributors -start -->
+<!-- readme: contributors -end -->
+
 ## Tools
 
 [bambom](https://github.com/bambom)
