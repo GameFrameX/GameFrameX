@@ -11,7 +11,7 @@ using GameFrameX.Config;
         /// {{escape_comment table.comment}}
         /// </summary>
         {{~end~}}
-        public {{table.full_name}} {{format_property_name __code_style table.name}} { private set; get; }
+        internal {{table.full_name}} {{format_property_name __code_style table.name}} { private set; get; }
         {{~end~}}
     
         private ConfigComponent m_ConfigComponent;
