@@ -21,9 +21,11 @@ GameFrameX为游戏开发者提供了一个强大的技术生态，将数据库�
 
     https://github.com/GameFrameX/GameFrameX.Server
 
-# 管理后台
+# 管理后台(部分源码已不开放)
 
     https://github.com/GameFrameX/GameFrameX.Admin
+
+[`演示站点 https://game.admin.web.vue.alianblank.com`](https://game.admin.web.vue.alianblank.com/)
 
 # 工具集
 
