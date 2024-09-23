@@ -175,7 +175,7 @@ local function genCode(handler)
 
     namespaceName = "Hotfix.UI"; -- 命名空间名称为"Hotfix.UI"
     if string.find(exportCodePath, "Unity/Assets/Scripts") then
-        namespaceName = "Game.Model"; -- 如果导出路径包含"Unity/Assets/Scripts"，则命名空间名称为"Game.Model"
+        namespaceName = "Unity.Startup"; -- 如果导出路径包含"Unity/Assets/Scripts"，则命名空间名称为"Unity.Startup"
     end
     -- CollectClasses(stripeMemeber, stripeClass, fguiNamespace)
     local classes = handler:CollectClasses(settings.ignoreNoname, settings.ignoreNoname, nil) -- 收集类信息（忽略无名称的类）
