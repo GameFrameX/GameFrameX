@@ -30,7 +30,8 @@ local FUITemplate = [[using FairyGUI;
 using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
 using GameFrameX.Entity.Runtime;
-using GameFrameX.FairyGUI.Runtime;
+using GameFrameX.UI.Runtime;
+using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
 
 namespace {namespaceName}
