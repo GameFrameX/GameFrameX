@@ -9,17 +9,17 @@ local CreateTemplate = [[
             UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
         }
 
-        public static {className} CreateInstance(object userData = null)
+        public static {className} CreateInstance()
         {
-            return new {className}(CreateGObject(), userData);
+            return Create(CreateGObject());
         }
 
-        public static UniTask<{className}> CreateInstanceAsync(Entity domain, object userData = null)
+        public static UniTask<{className}> CreateInstanceAsync(Entity domain)
         {
             UniTaskCompletionSource<{className}> tcs = new UniTaskCompletionSource<{className}>();
             CreateGObjectAsync((go) =>
             {
-                tcs.TrySetResult(new {className}(go, userData));
+                tcs.TrySetResult(Create(go));
             });
             return tcs.Task;
         }
@@ -50,9 +50,9 @@ namespace {namespaceName}
 __PROPERTY__
 
 __CREATETEMPLATE__
-        public static {className} Create(GObject go, object userData = null)
+        public static {className} Create(GObject go)
         {
-            return new {className}(go, userData);
+            return new {className}(go);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ __DISPOSE__
             self = null;            
         }
 
-        private {className}(GObject gObject, object userData) : base(gObject, userData)
+        private {className}(GObject gObject) : base(gObject)
         {
             // Awake(gObject);
         }
@@ -244,7 +244,7 @@ local function genCode(handler)
                 -- 判断是不是自定义类型组件 和跨包引用
                 if IsCustomComponent(classes, typeName) then
                     table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = ' .. typeName .. '.Create(com.GetChild("' ..
-                        memberInfoName .. '"), this);'); -- 如果是自定义类型组件且是跨包引用，则插入Awake表
+                        memberInfoName .. '"));'); -- 如果是自定义类型组件且是跨包引用，则插入Awake表
                 else
                     table.insert(AwakeTable, '\t\t\t\t' .. varName .. ' = (' .. typeName .. ')com.GetChild("' ..
                         memberInfoName .. '");'); -- 否则插入Awake表
