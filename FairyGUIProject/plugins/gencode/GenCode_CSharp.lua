@@ -33,6 +33,7 @@ using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
+using UnityEngine;
 
 namespace {namespaceName}
 {
@@ -52,7 +53,10 @@ __PROPERTY__
 __CREATETEMPLATE__
         public static {className} Create(GObject go)
         {
-            return new {className}(go);
+            var fui = go.displayObject.gameObject.GetOrAddComponent<{className}>();
+            fui?.SetGObject(go);
+            fui?.InitView();
+            return fui;
         }
 
         /// <summary>
