@@ -11,7 +11,7 @@ local CreateTemplate = [[
 
         public static {className} CreateInstance(object userData = null)
         {
-            return Create(CreateGObject(), userData);
+            return new {className}(CreateGObject(), userData);
         }
 
         public static UniTask<{className}> CreateInstanceAsync(Entity domain, object userData = null)
@@ -19,7 +19,7 @@ local CreateTemplate = [[
             UniTaskCompletionSource<{className}> tcs = new UniTaskCompletionSource<{className}>();
             CreateGObjectAsync((go) =>
             {
-                tcs.TrySetResult(Create(go, userData));
+                tcs.TrySetResult(new {className}(go, userData));
             });
             return tcs.Task;
         }
@@ -33,7 +33,6 @@ using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
-using UnityEngine;
 
 namespace {namespaceName}
 {
@@ -53,8 +52,7 @@ __PROPERTY__
 __CREATETEMPLATE__
         public static {className} Create(GObject go, object userData = null)
         {
-            var fui = go.displayObject.gameObject.GetOrAddComponent<{className}>();
-            return fui;
+            return new {className}(go, userData);
         }
 
         /// <summary>
