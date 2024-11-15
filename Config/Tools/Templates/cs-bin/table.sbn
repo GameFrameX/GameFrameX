@@ -98,7 +98,8 @@ using GameFrameX.Config.Runtime;
         public {{__name}}(System.Func<System.Threading.Tasks.Task<ByteBuf>> loadFunc)
         {
             _loadFunc = loadFunc;
-            _dataList = new System.Collections.Generic.List<{{declaring_type_name value_type}}>();
+            // _dataList = new System.Collections.Generic.List<{{declaring_type_name value_type}}>();
+            _dataList = DataList;
             {{~if __table.is_union_index~}}
             _dataMapUnion = new {{table_union_map_type_name}}();
             {{~else if !__table.index_list.empty?~}}
@@ -138,7 +139,7 @@ using GameFrameX.Config.Runtime;
             PostInit();
         }
 
-        public System.Collections.Generic.List<{{declaring_type_name value_type}}> DataList => _dataList;
+        // public System.Collections.Generic.List<{{declaring_type_name value_type}}> DataList => _dataList;
         {{~if __table.is_union_index~}}
         public {{declaring_type_name value_type}} Get({{table_param_def_list}}) => _dataMapUnion.TryGetValue(({{table_param_name_list}}), out {{declaring_type_name value_type}} __v) ? __v : null;
         {{~else if !__table.index_list.empty? ~}}
