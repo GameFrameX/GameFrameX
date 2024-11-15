@@ -108,7 +108,7 @@ using GameFrameX.Config.Runtime;
             {{~end~}}
         }
 
-        public async System.Threading.Tasks.Task LoadAsync()
+        public override async System.Threading.Tasks.Task LoadAsync()
         {
             ByteBuf _buf = await _loadFunc();
             _dataList.Clear();
@@ -175,7 +175,7 @@ using GameFrameX.Config.Runtime;
             _loadFunc = loadFunc;
         }
 
-        public async System.Threading.Tasks.Task LoadAsync()
+        public override async System.Threading.Tasks.Task LoadAsync()
         {
             ByteBuf _buf = await _loadFunc();
             int n = _buf.ReadSize();
