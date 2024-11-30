@@ -26,7 +26,9 @@ local CreateTemplate = [[
 ]]
 
 ---@type string UI代码模板
-local FUITemplate = [[using FairyGUI;
+local FUITemplate = [[
+#if ENABLE_UI_FAIRYGUI
+using FairyGUI;
 using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
 using GameFrameX.Entity.Runtime;
@@ -108,9 +110,12 @@ __DISPOSE__
             // Awake(gObject);
         }
     }
-}]]
+}
+#endif]]
 ---@type string UI包资源模板
-local FUIPackageTemplate = [[using FairyGUI;
+local FUIPackageTemplate = [[
+#if ENABLE_UI_FAIRYGUI
+using FairyGUI;
 using FairyGUI.Utils;
 using Cysharp.Threading.Tasks;
 using GameFrameX.Entity.Runtime;
@@ -121,7 +126,8 @@ namespace {namespaceName}
 __PKGNAMES__
 __RES__
     }
-}]]
+}
+#endif]]
 
 --- 将输入字符串按指定分隔符分割成数组
 ---@param input: 输入的字符串
