@@ -1,16 +1,4 @@
 <module name="">
-    <enum name="AudioType">
-        <var name="UNKNOWN" value="0"/>
-        <var name="ACC" value="1"/>
-        <var name="AIFF" value="2"/>
-        <mapper target="client" codeTarget="cs-bin,cs-simple-json">
-            <option name="type" value="UnityEngine.AudioType"/>
-        </mapper>
-        <mapper target="server" codeTarget="cs-bin,cs-dotnet-json">
-            <option name="type" value="CustomAudioType"/>
-        </mapper>
-    </enum>
-
     <bean name="vec2" valueType="1" sep="," group="*">
         <var name="x" type="float"/>
         <var name="y" type="float"/>

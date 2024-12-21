@@ -1,9 +1,0 @@
-[
-    {"key":"/apple", "en":"apple", "zh":"苹果"},
-    {"key":"/abc", "en":"apple", "zh":"苹果"},
-    {"key":"/def", "en":"apple", "zh":"苹果"},
-    {"key":"key_name", "en":"apple", "zh":"苹果"},
-    {"key":"test/a", "en":"apple", "zh":"苹果"},
-    {"key":"name", "en":"apple", "zh":"苹果"},
-    {"key":"/banana", "en":"banana", "zh":"香蕉"}
-]
