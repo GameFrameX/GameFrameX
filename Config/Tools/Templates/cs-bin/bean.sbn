@@ -128,7 +128,7 @@ end
             // Localization Key Begin
             {{~ for field in export_fields ~}}
             {{~if field.type =='text'~}}
-            {{field.name}}_Localization_Key = {{field.name}};
+            {{format_property_name __code_style field.name}}_Localization_Key = {{format_property_name __code_style field.name}};
             {{~end~}}
             {{~end~}}
             // Localization Key End
@@ -163,7 +163,7 @@ end
         /// {{escape_comment field.comment}} 的多语言Key
         /// </summary>
         {{~end~}}
-        public readonly string {{field.name}}_Localization_Key;
+        public readonly string {{format_property_name __code_style field.name}}_Localization_Key;
         {{~end~}}
         {{~if can_generate_ref field~}}
         public {{declaring_type_name (get_ref_type field)}} {{get_ref_name field}} { private set; get; }
@@ -199,7 +199,7 @@ end
             {{~end~}}
             {{~ for field in export_fields ~}}
             {{~if field.type =='text'~}}
-            {{field.name}} = translator({{field.name}}_Localization_Key, {{field.name}});
+            {{format_property_name __code_style field.name}} = translator({{format_property_name __code_style field.name}}_Localization_Key, {{format_property_name __code_style field.name}});
             {{~end~}}
             {{~end~}}
         }
