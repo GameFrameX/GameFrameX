@@ -107,7 +107,15 @@ QQ群：467608841
 
 # Doc (已经在写了,别催了!-_-!)
 
+所有站点内容一致，不存在内容不一致的情况
+
 文档地址 : https://gameframex.doc.alianblank.com
+
+备用文档地址 : https://gameframex-docs.pages.dev
+
+备用文档地址 : https://gameframex.doc.cloudflare.alianblank.com
+
+备用文档地址 : https://gameframex.doc.vercel.alianblank.com
 
 # 赞赏一下呗
 
