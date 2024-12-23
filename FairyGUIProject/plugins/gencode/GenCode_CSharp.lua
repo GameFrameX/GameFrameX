@@ -116,16 +116,12 @@ __DISPOSE__
 ---@type string UI包资源模板
 local FUIPackageTemplate = [[
 #if ENABLE_UI_FAIRYGUI
-using FairyGUI;
-using FairyGUI.Utils;
-using Cysharp.Threading.Tasks;
-using GameFrameX.Entity.Runtime;
 
 namespace {namespaceName}
 {
-    public static partial class FUIPackage {
+    public static partial class FUIPackage
+    {
 __PKGNAMES__
-__RES__
     }
 }
 #endif]]
@@ -298,28 +294,14 @@ local function genCode(handler)
     packageTempleteString = string.gsub(packageTempleteString, '{namespaceName}', namespaceName) -- 替换命名空间名称
 
     table.insert(pkgNamesTable, '\t\tpublic const string ' .. codePkgName .. ' = "' .. codePkgName .. '";'); -- 插入包名表
-    for i = 0, classCnt - 1 do
-        local classInfo = classes[i];
-        table.insert(pkgNamesTable,
-            '\t\tpublic const string ' .. codePkgName .. '_' .. classInfo.resName .. ' = "ui://' .. codePkgName .. '/' ..
-                classInfo.resName .. '";'); -- 插入包名表
-    end
+    -- for i = 0, classCnt - 1 do
+    --     local classInfo = classes[i];
+    --     table.insert(pkgNamesTable,'\t\tpublic const string ' .. codePkgName .. '_' .. classInfo.resName .. ' = "ui://' .. codePkgName .. '/' .. classInfo.resName .. '";'); -- 插入包名表
+    -- end
     pkgNamesStr = table.concat(pkgNamesTable, '\n'); -- 包名字符串连接
     packageTempleteString = string.gsub(packageTempleteString, '__PKGNAMES__', pkgNamesStr) -- 替换包名字符串
 
     local binderName = 'Package' .. codePkgName; -- 绑定器名称
-
-    local resStr = ""; -- 资源字符串
-    if codePkgName == 'UIRes' then
-        resStr = "\n\n \t\t/**************** res uri *****************/ \n\n" -- 如果包名为'UIRes'，则添加资源URI注释
-        -- local itemsCnt = handler.items.Count;
-        -- for i = 0, itemsCnt - 1 do
-        --    local item = handler.items[i];
-        --    resStr = resStr .. '\t\tpublic const string Res_' .. item.type .. '_' .. item.name .. ' = "' .. item:GetURL() .. '"; \n'
-        -- end
-    end
-
-    packageTempleteString = string.gsub(packageTempleteString, '__RES__', resStr) -- 替换资源字符串
     writer:writeln(packageTempleteString); -- 写入包模板字符串
     writer:save(exportCodeComponentPath .. '/' .. binderName .. '.cs'); -- 保存包绑定器文件
 end
