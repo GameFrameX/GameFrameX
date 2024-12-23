@@ -66,11 +66,12 @@ __CREATETEMPLATE__
         /// </summary>
         public static {className} GetFormPool(GObject go)
         {
-            var fui =  go.Get<{className}>();
-            if(fui == null)
+            var fui = go.Get<{className}>();
+            if (fui == null)
             {
                 fui = Create(go);
             }
+
             fui.IsFromPool = true;
             return fui;
         }
@@ -86,7 +87,7 @@ __CREATETEMPLATE__
             self.Add(this);
             {comAdd}
             var com = GObject.asCom;
-            if(com != null)
+            if (com != null)
             {
 __AWAKE__
             }
