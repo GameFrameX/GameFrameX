@@ -1,3 +1,7 @@
+<div align="center">
+    <a href="https://trendshift.io/repositories/7536" target="_blank"><img src="https://trendshift.io/api/badge/repositories/7536" alt="GameFrameX%2FGameFrameX | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+</div>
+
 GameFrameX是一款全面的集成式游戏开发框架，提供了从前端到后端的完整解决方案。该框架支持包括Unity、Cocos Creator、LayaBox、和Godot等多种主流游戏开发平台，确保开发者能够为不同的目标平台打造精美的游戏体验。
 
 此外，GameFrameX拥有多进程服务器的支持，并且集成了Docker的自动化构建和部署，大大简化了游戏发布和维护过程。无论是在客户端管理、运维管理、数据管理，还是游戏数据的具体运营方面，GameFrameX都提供了强有力的后台支持，使得监控、优化和更新游戏变得前所未有的简单。
