@@ -11,3 +11,9 @@ message NotifyHeartBeat
 {
   int64 Timestamp = 1; // 时间戳
 }
+
+// 通知客户端服务器人数已达上限
+message NotifyServerFullyLoaded
+{
+  
+}
