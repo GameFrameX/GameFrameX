@@ -36,3 +36,23 @@ message AddressBook
 {
   repeated Person People = 1;
 }
+
+// 操作错误代码
+enum OperationStatusCode
+{
+  Ok = 0;// 成功
+  ConfigErr = 1;// 配置表错误
+  ParamErr = 2;// 客户端传递参数错误
+  CostNotEnough = 3;// 消耗不足
+  Forbidden = 4;// 未开通服务
+  NotFound = 5;// 不存在
+  HasExist = 6;// 已经存在
+  AccountCannotBeNull = 7;// 账号不存在或为空
+  Unprocessable = 8;// 无法执行数据库修改
+  UnknownPlatform = 9;// 未知平台
+  Notice = 10;// 正常通知
+  FuncNotOpen = 11;// 功能未开启，主消息屏蔽
+  Other = 12;// 其他
+  InternalServerError = 13; // 内部服务错误
+  ServerFullyLoaded = 14; // 通知客户端服务器人数已达上限
+}
