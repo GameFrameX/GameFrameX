@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="200,125" extention="Button">
+  <controller name="button" pages="0,up,1,down" selected="1"/>
+  <displayList>
+    <image id="n0_dsha" name="normal" src="dsha2k" fileName="资源/bg/图层1_54.png" pkg="ats3vms3" xy="0,0" size="200,125">
+      <gearDisplay controller="button" pages="0,2"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <image id="n1_dsha" name="select" src="dsha2j" fileName="资源/bg/图层1_6.png" pkg="ats3vms3" xy="-2,0" size="203,124">
+      <gearDisplay controller="button" pages="1,3"/>
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <text id="n2_dsha" name="title" xy="0,0" size="200,125" fontSize="40" align="center" vAlign="middle" ubb="true" autoSize="none" bold="true" singleLine="true" text="">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+    <loader id="n3_dsha" name="icon" xy="0,0" size="200,125" align="center" vAlign="middle">
+      <relation target="" sidePair="width-width,height-height"/>
+    </loader>
+  </displayList>
+  <Button mode="Radio"/>
+</component>

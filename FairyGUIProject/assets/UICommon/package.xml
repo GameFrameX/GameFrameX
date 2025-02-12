@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="ats3vms3">
+  <resources>
+    <image id="vq444" name="is_normal.png" path="/资源/" exported="true"/>
+    <image id="vq445" name="is_select.png" path="/资源/" exported="true"/>
+    <image id="flr46" name="图层1_698.png" path="/资源/button/" exported="true" scale="9grid" scale9grid="30,28,60,16"/>
+    <image id="flr47" name="图层1_124.png" path="/资源/button/" exported="true"/>
+    <image id="flr48" name="图层1_131.png" path="/资源/button/" exported="true" scale="9grid" scale9grid="36,14,72,28"/>
+    <image id="flr49" name="dialog_bg.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="208,188,420,91"/>
+    <image id="flr4b" name="content_bg1.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="102,44,11,17"/>
+    <image id="flr4c" name="图层1_409.png" path="/资源/button/" exported="true"/>
+    <component id="flr4d" name="UICloseButton.xml" path="/组件/button/" exported="true"/>
+    <image id="flr4e" name="treasure1.png" path="/资源/treasure/" exported="true"/>
+    <image id="flr4f" name="treasure1.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="161,54,14,108"/>
+    <image id="flr4g" name="treaitembg.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="36,23,72,18"/>
+    <image id="flr4h" name="treabg.png" path="/资源/bg/" exported="true"/>
+    <image id="flr4i" name="diamond.png" path="/资源/treasure/" exported="true"/>
+    <image id="flr4j" name="gift.png" path="/资源/title/" exported="true"/>
+    <image id="flr4l" name="info.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="41,40,82,80"/>
+    <font id="flr4m" name="RedNumberFont.fnt" path="/字体/" exported="true"/>
+    <image id="flr4n" name="4.png" path="/资源/font/" exported="true"/>
+    <image id="flr4o" name="0.png" path="/资源/font/" exported="true"/>
+    <image id="flr4p" name="9.png" path="/资源/font/" exported="true"/>
+    <image id="flr4q" name="7.png" path="/资源/font/" exported="true"/>
+    <image id="flr4r" name="6.png" path="/资源/font/" exported="true"/>
+    <image id="flr4s" name="5.png" path="/资源/font/" exported="true"/>
+    <image id="flr4t" name="8.png" path="/资源/font/" exported="true"/>
+    <image id="flr4u" name="..png" path="/资源/font/" exported="true"/>
+    <image id="flr4v" name="1.png" path="/资源/font/" exported="true"/>
+    <image id="flr4w" name="2.png" path="/资源/font/" exported="true"/>
+    <image id="flr4x" name="3.png" path="/资源/font/" exported="true"/>
+    <image id="flr4y" name="y4.png" path="/资源/font/" exported="true"/>
+    <image id="flr4z" name="y1.png" path="/资源/font/" exported="true"/>
+    <image id="flr410" name="y9.png" path="/资源/font/" exported="true"/>
+    <image id="flr411" name="y7.png" path="/资源/font/" exported="true"/>
+    <image id="flr412" name="y6.png" path="/资源/font/" exported="true"/>
+    <image id="flr413" name="y0.png" path="/资源/font/" exported="true"/>
+    <image id="flr414" name="y5.png" path="/资源/font/" exported="true"/>
+    <image id="flr415" name="y8.png" path="/资源/font/" exported="true"/>
+    <image id="flr416" name="y2.png" path="/资源/font/" exported="true"/>
+    <image id="flr417" name="y3.png" path="/资源/font/" exported="true"/>
+    <image id="flr418" name="y..png" path="/资源/font/" exported="true"/>
+    <font id="flr419" name="YellowNumberFont.fnt" path="/字体/" exported="true"/>
+    <image id="flr41c" name="wrap_1.png" path="/资源/avatar/" exported="true"/>
+    <image id="flr41d" name="info_bar.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="50,22,100,44"/>
+    <image id="flr41e" name="info_toggle_normal.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="50,18,100,35"/>
+    <image id="flr41f" name="info_toggle_select.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="50,24,100,35"/>
+    <image id="flr41g" name="content_bg.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="180,24,360,48"/>
+    <image id="flr41h" name="code_normal.png" path="/资源/button/" exported="true"/>
+    <image id="flr41i" name="code_select.png" path="/资源/button/" exported="true"/>
+    <image id="flr41j" name="dialog_bg2.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="210,130,370,21"/>
+    <component id="flr41k" name="UIYellowCheckButton.xml" path="/组件/button/" exported="true"/>
+    <image id="e6bx1l" name="cup1.png" path="/资源/cup/" exported="true"/>
+    <image id="e6bx1m" name="bar.png" path="/资源/slider/" exported="true" scale="9grid" scale9grid="21,9,42,8"/>
+    <image id="e6bx1n" name="bg.png" path="/资源/slider/" exported="true" scale="9grid" scale9grid="45,17,90,34"/>
+    <component id="e6bx1o" name="UIYellowProgresssBar.xml" path="/组件/" exported="true"/>
+    <image id="e6bx1p" name="list_item_bg.png" path="/资源/list/" exported="true" scale="9grid" scale9grid="63,45,126,90"/>
+    <image id="e6bx1q" name="button1.png" path="/资源/button/" exported="true" scale="9grid" scale9grid="27,29,54,58"/>
+    <image id="e6bx1r" name="goods_bg1.png" path="/资源/goods/" exported="true"/>
+    <image id="e6bx1s" name="category_bg.png" path="/资源/category/" exported="true" scale="9grid" scale9grid="15,14,30,28"/>
+    <component id="srah1v" name="UIDialogWithoutButton.xml" path="/组件/Dialog/" exported="true"/>
+    <image id="w4oz1y" name="pointer.png" path="/资源/icon/" exported="true"/>
+    <image id="w4oz1z" name="button_2.png" path="/资源/button/" exported="true"/>
+    <image id="rnzi20" name="back.png" path="/资源/icon/" exported="true"/>
+    <component id="rnzid" name="UIBackButton.xml" path="/组件/button/" exported="true"/>
+    <image id="hpg422" name="fight.png" path="/资源/icon/" exported="true"/>
+    <image id="hpg425" name="start.png" path="/资源/icon/" exported="true"/>
+    <image id="hpg426" name="water.png" path="/资源/hero/" exported="true"/>
+    <component id="hpg42c" name="switch_btn.xml" path="/组件/button/" exported="true"/>
+    <image id="hpg42f" name="switch_no.png" path="/资源/button/" exported="true"/>
+    <image id="hpg42g" name="switch_yes.png" path="/资源/button/" exported="true"/>
+    <image id="dsha2h" name="图层1_636.png" path="/资源/button/" exported="true" scale="9grid" scale9grid="31,19,62,38"/>
+    <image id="dsha2i" name="图层1_697.png" path="/资源/button/" scale="9grid" scale9grid="33,25,46,22"/>
+    <image id="dsha2j" name="图层1_6.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="27,16,54,32"/>
+    <image id="dsha2k" name="图层1_54.png" path="/资源/bg/" exported="true" scale="9grid" scale9grid="26,16,52,32"/>
+    <component id="iopl2l" name="UIDialogMessageBox.xml" path="/组件/Dialog/" exported="true"/>
+    <component id="iopl2m" name="UIWhiteCheckButton.xml" path="/组件/button/" exported="true"/>
+    <component id="iopl2n" name="UIBlueCheckButton.xml" path="/组件/button/" exported="true"/>
+    <component id="oo3b2o" name="UIYellowSingleButton.xml" path="/组件/button/" exported="true"/>
+    <component id="oo3b2p" name="UIYellowNormalButton.xml" path="/组件/button/" exported="true"/>
+    <component id="oo3b2q" name="UIBlueSingleButton.xml" path="/组件/button/" exported="true"/>
+    <component id="oo3b2r" name="UIBlueNormalButton.xml" path="/组件/button/" exported="true"/>
+    <component id="oo3b2s" name="UIWhiteSingleButton.xml" path="/组件/button/" exported="true"/>
+    <component id="oo3b2t" name="UIWhiteNormalButton.xml" path="/组件/button/" exported="true"/>
+    <image id="l50q8" name="图层1_2.png" path="/资源/goods/" exported="true"/>
+    <component id="72ce2u" name="UIGoodItem.xml" path="/组件/Goods/" exported="true"/>
+  </resources>
+  <publish name="" genCode="true"/>
+</packageDescription>

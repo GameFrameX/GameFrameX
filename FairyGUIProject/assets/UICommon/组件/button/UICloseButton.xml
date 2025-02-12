@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="80,80" pivot="0.5,0.5" extention="Button" initName="close_button">
+  <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
+  <displayList>
+    <image id="n0_flr4" name="n0" src="flr4c" fileName="资源/button/图层1_409.png" xy="0,0" size="80,80">
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+  </displayList>
+  <Button mode="Check" downEffect="scale" downEffectValue=".9"/>
+</component>
