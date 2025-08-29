@@ -85,7 +85,6 @@ using GameFrameX.Config.Runtime;
         }
 
         {{~else if __table.is_list_table ~}}
-        private readonly System.Collections.Generic.List<{{declaring_type_name value_type}}> _dataList;
         {{~if __table.is_union_index~}}
         private {{table_union_map_type_name}} _dataMapUnion;
         {{~else if !__table.index_list.empty?~}}
@@ -98,7 +97,6 @@ using GameFrameX.Config.Runtime;
         public {{__name}}(System.Func<System.Threading.Tasks.Task<ByteBuf>> loadFunc)
         {
             _loadFunc = loadFunc;
-            _dataList = new System.Collections.Generic.List<{{declaring_type_name value_type}}>();
             {{~if __table.is_union_index~}}
             _dataMapUnion = new {{table_union_map_type_name}}();
             {{~else if !__table.index_list.empty?~}}
@@ -108,19 +106,19 @@ using GameFrameX.Config.Runtime;
             {{~end~}}
         }
 
-        public async System.Threading.Tasks.Task LoadAsync()
+        public override async System.Threading.Tasks.Task LoadAsync()
         {
             ByteBuf _buf = await _loadFunc();
-            _dataList.Clear();
+            DataList.Clear();
             for(int n = _buf.ReadSize() ; n > 0 ; --n)
             {
                 {{declaring_type_name value_type}} _v;
                 {{deserialize '_buf' '_v' value_type}}
-                _dataList.Add(_v);
+                DataList.Add(_v);
             }
             {{~if __table.is_union_index~}}
             _dataMapUnion.Clear();
-            foreach(var _v in _dataList)
+            foreach(var _v in DataList)
             {
                 _dataMapUnion.Add(({{table_key_list "_v"}}), _v);
             }
@@ -128,7 +126,7 @@ using GameFrameX.Config.Runtime;
             {{~for idx in __table.index_list~}}
             _dataMap_{{idx.index_field.name}}.Clear();
             {{~end~}}
-            foreach(var _v in _dataList)
+            foreach(var _v in DataList)
             {
                 {{~for idx in __table.index_list~}}
                 _dataMap_{{idx.index_field.name}}.Add(_v.{{format_property_name __code_style idx.index_field.name}}, _v);
@@ -138,7 +136,6 @@ using GameFrameX.Config.Runtime;
             PostInit();
         }
 
-        public System.Collections.Generic.List<{{declaring_type_name value_type}}> DataList => _dataList;
         {{~if __table.is_union_index~}}
         public {{declaring_type_name value_type}} Get({{table_param_def_list}}) => _dataMapUnion.TryGetValue(({{table_param_name_list}}), out {{declaring_type_name value_type}} __v) ? __v : null;
         {{~else if !__table.index_list.empty? ~}}
@@ -149,7 +146,7 @@ using GameFrameX.Config.Runtime;
 
         public void ResolveRef({{__manager_name}} tables)
         {
-            foreach(var _v in _dataList)
+            foreach(var _v in DataList)
             {
                 _v.ResolveRef(tables);
             }
