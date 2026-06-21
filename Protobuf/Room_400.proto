@@ -36,12 +36,37 @@ enum RoomChangeType
   Reset = 8; // 重置
 }
 
+// 通用房间玩家在线状态
+enum RoomPlayerOnlineStatus
+{
+  OnlineUnknown = 0; // 未知
+  Online = 1; // 在线
+  Reconnecting = 2; // 断线重连中
+  Offline = 3; // 离线
+}
+
+// 通用房间玩家状态
+enum RoomPlayerStatus
+{
+  PlayerStatusNone = 0; // 无状态
+  Idle = 1; // 等待中
+  ReadyInRoom = 2; // 可开始
+  InGame = 3; // 游戏中
+  Submitted = 4; // 已提交操作
+  SettlingInRoom = 5; // 结算中
+  SettledInRoom = 6; // 已结算
+}
+
 // 通用房间玩家信息
 message RoomPlayerInfo
 {
   int64 RoleId = 1; // 玩家ID
   int32 SeatIndex = 2; // 座位索引
   bool IsOwner = 3; // 是否房主
+  string Name = 4; // 玩家昵称
+  uint32 Avatar = 5; // 头像ID
+  RoomPlayerOnlineStatus OnlineStatus = 6; // 在线状态
+  RoomPlayerStatus PlayerStatus = 7; // 房间内状态
 }
 
 // 通用房间信息
