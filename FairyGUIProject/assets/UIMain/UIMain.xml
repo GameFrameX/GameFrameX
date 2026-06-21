@@ -7,6 +7,9 @@
     <component id="n0_xws7" name="bag_button" src="xws71" fileName="BagButton.xml" xy="1253,946" size="119,100">
       <Button title="背包"/>
     </component>
+    <component id="n5_xws7" name="room_button" src="xws71" fileName="BagButton.xml" xy="1394,946" size="119,100">
+      <Button title="房间"/>
+    </component>
     <loader id="n1_ob7a" name="player_icon" xy="51,36" size="164,164" align="center" vAlign="middle" fill="scale"/>
     <text id="n2_ob7a" name="player_name" xy="238,45" size="376,61" fontSize="30" autoSize="none" text=""/>
     <text id="n3_ob7a" name="player_level" xy="236,126" size="376,61" fontSize="30" autoSize="none" text=""/>

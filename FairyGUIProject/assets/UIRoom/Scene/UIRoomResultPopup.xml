@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080">
+  <displayList>
+    <graph id="n0_result" name="mask" xy="0,0" size="1920,1080" alpha="0.68" type="rect" lineSize="0" fillColor="#ff000000">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <graph id="n1_result" name="window_bg" xy="610,236" size="700,608" type="rect" lineSize="2" lineColor="#ff4c5b73" fillColor="#ff141a24" corner="8">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </graph>
+    <text id="n2_result" name="title_text" xy="660,282" size="600,54" fontSize="38" color="#ffffffff" align="center" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="本局结算"/>
+    <text id="n3_result" name="result_text" xy="660,356" size="600,72" fontSize="44" color="#ffffffff" align="center" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="平局"/>
+    <text id="n4_result" name="round_text" xy="660,438" size="600,34" fontSize="22" color="#ffcbd6e6" align="center" vAlign="middle" autoSize="none" singleLine="true" text="第 1 局"/>
+    <graph id="n5_result" name="self_bg" xy="674,510" size="250,128" type="rect" lineSize="2" lineColor="#ff334055" fillColor="#ff1b222e" corner="8"/>
+    <graph id="n6_result" name="opponent_bg" xy="996,510" size="250,128" type="rect" lineSize="2" lineColor="#ff334055" fillColor="#ff1b222e" corner="8"/>
+    <text id="n7_result" name="self_name_text" xy="696,526" size="206,30" fontSize="21" color="#ffffffff" align="center" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="我"/>
+    <text id="n8_result" name="opponent_name_text" xy="1018,526" size="206,30" fontSize="21" color="#ffffffff" align="center" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="对手"/>
+    <text id="n9_result" name="self_gesture_text" xy="696,574" size="206,42" fontSize="30" color="#ffffffff" align="center" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="石头"/>
+    <text id="n10_result" name="opponent_gesture_text" xy="1018,574" size="206,42" fontSize="30" color="#ffffffff" align="center" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="剪刀"/>
+    <component id="n11_result" name="restart_button" src="btn001" fileName="Widget/UIRoomButton.xml" xy="746,722" size="160,56">
+      <Button title="再来一局"/>
+    </component>
+    <component id="n12_result" name="close_button" src="btn001" fileName="Widget/UIRoomButton.xml" xy="1014,722" size="160,56">
+      <Button title="关闭"/>
+    </component>
+  </displayList>
+</component>
