@@ -2,151 +2,166 @@
     <a href="https://trendshift.io/repositories/7536" target="_blank"><img src="https://trendshift.io/api/badge/repositories/7536" alt="GameFrameX%2FGameFrameX | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </div>
 
-这是开发分支
+# 🎮 GameFrameX 是个啥？
 
-GameFrameX是一款全面的集成式游戏开发框架，提供了从前端到后端的完整解决方案。该框架支持包括Unity、Cocos Creator、LayaBox、和Godot等多种主流游戏开发平台，确保开发者能够为不同的目标平台打造精美的游戏体验。
+一句话：**一套帮你把游戏「从点子 → 做出来 → 上线运营」全包圆的开源工具箱。**
 
-此外，GameFrameX拥有多进程服务器的支持，并且集成了Docker的自动化构建和部署，大大简化了游戏发布和维护过程。无论是在客户端管理、运维管理、数据管理，还是游戏数据的具体运营方面，GameFrameX都提供了强有力的后台支持，使得监控、优化和更新游戏变得前所未有的简单。
+做游戏，真正费劲的往往不是「画个角色、写个技能」，而是把这些零碎拼到一块儿：
 
-游戏团队通过GameFrameX能够实现资源的高效分配和管理，加快开发周期，降低运营成本，并且最终增强玩家的游戏体验。整合了先进的技术和易用的界面，GameFrameX为游戏开发和运营的各个环节提供了高效、灵活且可扩展的解决方案，让游戏从构想到上线，再到生命周期管理都成为一件轻松愉快的事情。
+- 玩家的存档存哪儿？怎么读出来？
+- 多人联机的时候，服务器怎么转发消息？
+- 道具、关卡、等级这些数据谁来管，策划改了怎么办？
+- 上线之后，怎么看数据、怎么管玩家、怎么发新版本？
 
-GameFrameX不仅是一套综合性的游戏开发与运维框架，它也将数据管理和流程自动化提升至新的高度。该框架旨在通过使用MongoDB作为游戏数据库，提供了高性能、灵活的数据存储方案，这确保了大规模和复杂数据的快速读写能力，极大地增强了游戏的扩展性和稳定性。
+这些「脏活累活」，GameFrameX 都替你干好了，你只管专心琢磨「我的游戏好不好玩」。
 
-在数据表的导入方面，GameFrameX采用了LuBan工具，它自动化并优化了数据表的处理流程，极大提高了开发效率，并且保证了数据的准确性和一致性。
+支持这些主流引擎：**Unity、Cocos Creator、LayaAir（LayaBox）、Godot** —— 你用哪个，它都吃得下。
 
-为了满足后台管理的需求，GameFrameX选择了MySQL数据库，提供了一个稳固和可靠的后端管理系统。结合MongoDB和MySQL，GameFrameX在数据解决方案上实现了多样性和功能性的平衡，以满足不同场景下的业务需要。
+---
 
-关于自动化构建和部署，GameFrameX通过支持Docker技术，让应用的打包、分发变得更加高效和标准化，确保了在不同环境下软件能够以同样的方式运行。此外，GameFrameX还整合了Codeup代码托管平台的自动构建系统，允许通过`tag`
-标签触发构建过程，进一步实现了代码变更的连贯性管理及自动化部署，减少了人工干预，提升了运维效率。
+# 🧰 它能帮你省掉哪些麻烦？
 
-GameFrameX为游戏开发者提供了一个强大的技术生态，将数据库管理、后台服务、自动化构建和部署融于一体，使游戏的开发、运营和维护实现流水线式高效协作，为开发者提供了无与伦比的便捷与保障。
+| 你本来要自己折腾的事 | GameFrameX 直接给你准备好了 |
+|---|---|
+| 从零写一套联机服务器 | 现成的高性能服务器（.NET 写的，能扛多人同时在线） |
+| 数据到底怎么存 | 玩家数据存 MongoDB（读写得快），后台数据存 MySQL（稳） |
+| Excel 配置手动搬到代码里 | 用 LuBan 一键把 Excel 变成代码和数据 |
+| 客户端和服务器「对暗号」 | 用 ProtoBuf 统一协议，改一处、两端同步 |
+| 上线后两眼一抹黑 | 自带管理后台网页，看数据 / 管玩家 / 发配置 |
+| 部署服务器头大 | 用 Docker 一键打包部署，省心 |
 
+> 说白了：**一个人也能像一个小团队那样，把一款联网游戏做出来、并且运营下去。**
 
-# 服务器（从 `geekserver` 修改而来.）
+---
 
-    https://github.com/GameFrameX/GameFrameX.Server
+# 👤 适合谁用？
 
-# 管理后台(部分源码已不开放)
+- 想做**联网 / 网游**、但被「服务器怎么搞」卡住的独立开发者
+- 想快速搭个**游戏原型**验证点子的小团队
+- 想完整学一遍「客户端 + 服务器 + 后台」全流程的学习者
 
-    https://github.com/GameFrameX/GameFrameX.Admin
+---
 
-[`演示站点 https://game.admin.web.vue.alianblank.com`](https://game.admin.web.vue.alianblank.com/)
+# 🗺️ 这堆仓库都是干嘛的？（仓库地图）
 
-# 工具集
+GameFrameX 是个「全家桶」，但全家桶里每道菜都装在**各自独立的仓库**里（方便单独维护、单独升级）。先看这张表建立全局印象：
 
-    https://github.com/GameFrameX/GameFrameX.Tools
+| 仓库 | 通俗说就是… | 地址 |
+|---|---|---|
+| 🏠 **主仓库（就是这儿）** | 「厨房平面图」——告诉你所有零件该放哪个文件夹 | https://github.com/GameFrameX/GameFrameX |
+| 🌐 **服务器** | 游戏的大脑，管联机、存档、战斗逻辑（基于 GeekServer 演化而来） | https://github.com/GameFrameX/GameFrameX.Server |
+| 📊 **配置表（LuBan）** | 用 Excel 填游戏数据（道具 / 关卡 / 等级…），一键生成代码 | https://github.com/GameFrameX/GameFrameX.Config |
+| 📡 **通讯协议（ProtoBuf）** | 客户端和服务器「说话的规矩」，定义双方互通的消息 | https://github.com/GameFrameX/GameFrameX.Protobuf |
+| 🎨 **UI 工程（FairyGUI）** | 用 FairyGUI 编辑器画游戏界面的源工程 | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
+| 🛠️ **工具集** | 一些辅助小工具 | https://github.com/GameFrameX/GameFrameX.Tools |
+| 💻 **管理后台** | 上线后管数据、管玩家的网页（部分源码不开源） | https://github.com/GameFrameX/GameFrameX.Admin |
 
-# 配置表（LuBan）
+后台在线演示 👉 https://game.admin.web.vue.alianblank.com
 
-    https://github.com/GameFrameX/GameFrameX.Config
+## 🎮 客户端（四选一即可，用哪个下哪个）
 
-# 通讯协议（ProtoBuf）
+| 引擎 | 地址 |
+|---|---|
+| Unity | https://github.com/GameFrameX/GameFrameX.Unity |
+| Cocos Creator | https://github.com/GameFrameX/GameFrameX.CocosCreator |
+| LayaAir（LayaBox） | https://github.com/GameFrameX/GameFrameX.LayaBox |
+| Godot | https://github.com/GameFrameX/GameFrameX.Godot |
 
-    https://github.com/GameFrameX/GameFrameX.Protobuf
+---
 
-# UI 工程（FairyGUI）
+# 📁 文件夹为什么不能乱放？
 
-    https://github.com/GameFrameX/GameFrameX.FairyGUIProject
+> ⚠️ **重点**：这套框架是**靠相对路径**找文件的，就像家里的插座位置——你把服务器从 `Server/` 挪到 `MyServer/`，整条链路就找不着北了。
 
-# 客户端
-
-## Unity
-
-    https://github.com/GameFrameX/GameFrameX.Unity
-
-## Laya Box
-
-    https://github.com/GameFrameX/GameFrameX.LayaBox
-
-## Cocos Creator
-
-    https://github.com/GameFrameX/GameFrameX.CocosCreator
-
-## Godot
-
-    https://github.com/GameFrameX/GameFrameX.Godot
-
-目录结构要求：由于项目基本上都是使用相对目录的方式。请不要乱放文件夹
+所以请按下面的结构，把各仓库**放到它该在的文件夹**里：
 
 ```
-GameFrameX/ 项目根目录.可以根据自己的项目修改
-├── Config/  # 配置表放置目录。请从 https://github.com/GameFrameX/GameFrameX.Config Clone 到此目录下。使用的`LuBan` 导表方案 https://github.com/focus-creative-games/luban
-├── docker/  # Docker本地运行目录
-├── Docs/ # 文档相关内容。目前是GeekServer的原始文档
-├── FairyGUIProject/ # FairyGUI 项目目录。请从 https://github.com/GameFrameX/GameFrameX.FairyGUIProject Clone 到此目录下。
-├── Protobuf/ # 前后端或后端之前的通讯协议定义文件。采用ProtoBuf 描述文件。请从 https://github.com/GameFrameX/GameFrameX.Protobuf Clone 到此目录下。
-├── Server/ # 游戏服务器解决方案文件夹。请从  https://github.com/GameFrameX/GameFrameX.Server  Clone 到此目录下
-│ ├── Server.XXX # 服务器文件夹开始
-│ ├── ... # 服务器解决方案文件夹列表
-│ └── Server.XXX # 服务器文件夹结束
-├── Laya/ # Laya客户端文件夹。请从  https://github.com/GameFrameX/GameFrameX.LayaBox  Clone 到此目录下
-├── CocosCreator/ # CocosCreator客户端文件夹。请从  https://github.com/GameFrameX/GameFrameX.CocosCreator  Clone 到此目录下
-├── Godot/ # Godot客户端文件夹。请从  https://github.com/GameFrameX/GameFrameX.Godot  Clone 到此目录下
-├── Unity/ # Unity客户端文件夹。请从  https://github.com/GameFrameX/GameFrameX.Unity  Clone 到此目录下
-│ ├── Assets/ # Unity客户端文件夹
-│ ├── Packages/ # Unity客户端文件夹
-│ ├── ProjectSettings/ # Unity项目设置文件夹
-│ └── UserSettings/ # Unity项目用户设置文件夹
-└── LICENSE # 许可证文件
+GameFrameX/                  # 项目根目录（名字可改）
+├── Config/                  # ← 把 GameFrameX.Config 放这里（Excel 配置 + LuBan 导表）
+├── Protobuf/                # ← 把 GameFrameX.Protobuf 放这里（通讯协议）
+├── FairyGUIProject/         # ← 把 GameFrameX.FairyGUIProject 放这里（UI 编辑工程）
+├── Server/                  # ← 把 GameFrameX.Server 放这里（游戏服务器）
+├── Unity/                   # ← 把 GameFrameX.Unity 放这里（Unity 客户端，按需换成别的引擎）
+│   ├── Assets/              #    Unity 资源目录
+│   ├── Packages/            #    Unity 包
+│   ├── ProjectSettings/     #    Unity 工程设置
+│   └── UserSettings/        #    Unity 用户设置
+├── Tools/                   # ← 把 GameFrameX.Tools 放这里（辅助工具）
+├── docker/                  # Docker 本地运行环境（MongoDB / Redis 等）
+├── Docs/                    # 文档（目前主要是 GeekServer 的原始文档）
+└── LICENSE.md               # 开源许可证
 ```
 
-# 开始使用
+> 想换别的客户端引擎？把 `Unity/` 换成对应名字即可（`Laya/`、`CocosCreator/`、`Godot/`），规则一样。
 
-1. 创建本地项目文件夹
-2. 开启`cmd`或`shell`,cd 到本地存放目录
-3. 执行以下命令
+---
 
-    ```shell
-    git clone https://github.com/GameFrameX/GameFrameX.git
-    git clone https://github.com/GameFrameX/GameFrameX.Server.git ./GameFrameX/Server
-    git clone https://github.com/GameFrameX/GameFrameX.Tools.git ./GameFrameX/Tools
-    git clone https://github.com/GameFrameX/GameFrameX.Config.git ./GameFrameX/Config
-    git clone https://github.com/GameFrameX/GameFrameX.Protobuf.git ./GameFrameX/Protobuf
-    git clone https://github.com/GameFrameX/GameFrameX.FairyGUIProject.git ./GameFrameX/FairyGUIProject
-    git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
-    
-    ```
+# 🚀 从零开始，手把手跑起来
 
-4. 进入`Config`目录执行 LuBan 导表脚本，生成客户端与服务端的配置代码及数据（详见 `GameFrameX.Config` 仓库说明）
-5. 进入`Protobuf`目录执行协议导出脚本，生成各端通讯协议代码（详见 `GameFrameX.Protobuf` 仓库说明）
-6. 如需，可打开`Tools`项目编译（详见 `GameFrameX.Tools` 仓库说明）
-7. 打开`Unity`项目和`Server`直接启动即可食用。
+**准备工作**：先装好 [Git](https://git-scm.com/)。
 
-# 交流方式(建议。需求。BUG)
+**第 1 步**：新建一个文件夹放项目，打开终端（Windows 用 cmd / PowerShell，Mac / Linux 用终端），`cd` 进去。
 
-<!-- <div  align="center">    
+**第 2 步**：把「厨房平面图」下下来：
 
-<img src="images/wechat_group.png" width = "226" height = "290" alt=""/>
+```shell
+git clone https://github.com/GameFrameX/GameFrameX.git
+```
 
-<img src="images/qq_group.png" width = "226" height = "290" alt=""/>
+这会生成一个 `GameFrameX/` 文件夹，里面就是项目骨架。
 
-</div> -->
+**第 3 步**：把各零件放到 `GameFrameX/` 里**对应的文件夹**（下面以 Unity 为例；用别的引擎就把最后一行换成对应地址）：
 
-QQ群：467608841
+```shell
+git clone https://github.com/GameFrameX/GameFrameX.Server.git ./GameFrameX/Server
+git clone https://github.com/GameFrameX/GameFrameX.Config.git ./GameFrameX/Config
+git clone https://github.com/GameFrameX/GameFrameX.Protobuf.git ./GameFrameX/Protobuf
+git clone https://github.com/GameFrameX/GameFrameX.FairyGUIProject.git ./GameFrameX/FairyGUIProject
+git clone https://github.com/GameFrameX/GameFrameX.Tools.git ./GameFrameX/Tools
+git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
+```
 
-# Doc (已经在写了,别催了!-_-!)
+> 这几行的意思就是「把 XX 仓库的内容，下到 XX 文件夹里」。**文件夹名千万别改**。
 
-`所有站点内容一致，不存在内容不一致的情况`
+**第 4 步（生成配置代码）**：进 `Config/` 目录，跑里面的 LuBan 导表脚本，把 Excel 变成客户端和服务器都能用的代码与数据。具体命令看 👉 [`GameFrameX.Config`](https://github.com/GameFrameX/GameFrameX.Config) 的说明。
 
-文档地址 : https://gameframex.doc.alianblank.com
+**第 5 步（生成协议代码）**：进 `Protobuf/` 目录，跑协议导出脚本，生成各端收发消息用的代码。具体命令看 👉 [`GameFrameX.Protobuf`](https://github.com/GameFrameX/GameFrameX.Protobuf) 的说明。
 
-备用文档地址 : https://gameframex-docs.pages.dev
+**第 6 步（可选）**：需要的话打开 `Tools/` 编译一下辅助工具，看 👉 [`GameFrameX.Tools`](https://github.com/GameFrameX/GameFrameX.Tools) 的说明。
 
-备用文档地址 : https://gameframex.doc.cloudflare.alianblank.com
+**第 7 步（开跑！）**：用 Unity 打开 `Unity/` 工程，启动 `Server/` 里的服务器，就能跑起来体验了 🎉
 
-备用文档地址 : https://gameframex.doc.vercel.alianblank.com
+---
 
-# 赞赏一下呗
+# 💬 交流 & 反馈（建议、需求、BUG）
+
+QQ 群：**467608841**
+
+# 📖 文档（真在写了，别催 😅）
+
+> 所有站点内容一致，挑一个能打开的用就行。
+
+- 主站：https://gameframex.doc.alianblank.com
+- 备用 1：https://gameframex-docs.pages.dev
+- 备用 2：https://gameframex.doc.cloudflare.alianblank.com
+- 备用 3：https://gameframex.doc.vercel.alianblank.com
+
+---
+
+# ☕ 请作者喝杯咖啡
 
 ![wechat.jpg](Docs/imgs/wechat.jpg)
 
-# 使用案例
+# 🎯 谁在用 GameFrameX？
 
-| 游戏名称   | 链接地址                                       | 上线时间       |
-|:-------|:-------------------------------------------|------------|
+| 游戏名称 | 上线渠道 | 上线时间 |
+|:---|:---|:---|
 | 深夜的烧烤店 | [TapTap](https://www.taptap.cn/app/384964) | 2024-04-15 |
+| 连续黑白 | 抖音、快手、支付宝、鸿蒙、TapTap、iOS 等 | 2024-11 |
 
-# 贡献名单
+> 用 GameFrameX 做出上线作品了？欢迎提 PR 或 issue 补充到上表，一起把名单做大 🙌
+
+# 👥 贡献名单
 
 <!-- readme: contributors -start -->
 <table>
@@ -196,14 +211,12 @@ QQ群：467608841
 
 [![Star History Chart](https://api.star-history.com/svg?repos=GameFrameX/GameFrameX,GameFrameX/GameFrameX.Unity,GameFrameX/GameFrameX.Server,GameFrameX/GameFrameX.Admin&type=Date)](https://star-history.com/embed?secret=Z2hwX0l1VlJVYlE0RUhIZE9hS2pVZ21ISVozNFNNSUdETDMycmZEWQ==#GameFrameX/GameFrameX&GameFrameX/GameFrameX.Unity&GameFrameX/GameFrameX.Server&GameFrameX/GameFrameX.Admin&Date)
 
-# 免责声明
+# 📜 免责声明
 
-所有插件均来自互联网.请各位使用时自行付费.如果以上插件涉及侵权.请发email.本人将移除.谢谢
+所有插件均来自互联网，使用时请自行付费。如有侵权请发 email，本人会移除，谢谢。
 
-该项目不得用于当地法律不允许的使用范围.如果使用.本人或本组织将不承认和承担任何的法律责任和条款约束.
+该项目不得用于当地法律不允许的范围。技术本无罪，错的是滥用技术的人。
 
-技术本无罪,错的是滥用技术的人
+# 💎 赞助商
 
-# 赞助商
-
-[RoutinAI](https://routin.ai/) 是一个企业级统一的 LLM API 网关，提供一个单一且类型安全的接口，访问来自 GPT、Claude 和 Gemini 系列的超过 100 个领先大语言模型（例如 gpt-5.4、claude-opus-4-6、gemini-3.1-pro-preview）等更多模型。它通过提供零延迟的边缘路由、无需改动代码即可无缝切换模型、统一计费，以及以支出上限和访问策略进行集中治理，消除了管理多个 AI 供应商的复杂性。
+[AITKPARTY](https://aitkparty.com/) 是一个 AI 大模型 API 中转聚合服务，基于开源项目 New API 搭建，提供统一接口让开发者便捷地访问主流大语言模型，省去自行对接多家模型供应商的麻烦。
