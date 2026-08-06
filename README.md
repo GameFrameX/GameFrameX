@@ -24,7 +24,7 @@
 | 你本来要自己折腾的事 | GameFrameX 直接给你准备好了 |
 |---|---|
 | 从零写一套联机服务器 | 现成的高性能服务器（.NET 写的，能扛多人同时在线） |
-| 数据到底怎么存 | 玩家数据存 MongoDB（读写得快），后台数据存 MySQL（稳） |
+| 数据到底怎么存 | 玩家数据存 MongoDB（读写得快），后台数据存 PostgreSQL（稳） |
 | Excel 配置手动搬到代码里 | 用 LuBan 一键把 Excel 变成代码和数据 |
 | 客户端和服务器「对暗号」 | 用 ProtoBuf 统一协议，改一处、两端同步 |
 | 上线后两眼一抹黑 | 自带管理后台网页，看数据 / 管玩家 / 发配置 |
@@ -87,7 +87,7 @@ GameFrameX/                  # 项目根目录（名字可改）
 │   ├── ProjectSettings/     #    Unity 工程设置
 │   └── UserSettings/        #    Unity 用户设置
 ├── Tools/                   # ← 把 GameFrameX.Tools 放这里（辅助工具）
-├── docker/                  # Docker 本地运行环境（MongoDB / Redis 等）
+├── docker/                  # Docker 本地运行环境（MongoDB / PostgreSQL）
 ├── Docs/                    # 文档（目前主要是 GeekServer 的原始文档）
 └── LICENSE.md               # 开源许可证
 ```
