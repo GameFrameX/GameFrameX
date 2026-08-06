@@ -1,1 +1,0 @@
-https://gameframex.doc.alianblank.com/protobuf/require

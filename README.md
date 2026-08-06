@@ -36,6 +36,18 @@ GameFrameX为游戏开发者提供了一个强大的技术生态，将数据库�
 
     https://github.com/GameFrameX/GameFrameX.Tools
 
+# 配置表（LuBan）
+
+    https://github.com/GameFrameX/GameFrameX.Config
+
+# 通讯协议（ProtoBuf）
+
+    https://github.com/GameFrameX/GameFrameX.Protobuf
+
+# UI 工程（FairyGUI）
+
+    https://github.com/GameFrameX/GameFrameX.FairyGUIProject
+
 # 客户端
 
 ## Unity
@@ -58,15 +70,12 @@ GameFrameX为游戏开发者提供了一个强大的技术生态，将数据库�
 
 ```
 GameFrameX/ 项目根目录.可以根据自己的项目修改
-├── Config/  # 配置表放置目录。使用的`LuBan` 导表方案 https://github.com/focus-creative-games/luban
-│ ├── Defines/ # LuBan 的常量定义配置文件目录
-│ ├── Excels/ # 核心配置表文件夹。所有的Excel配置文件存放目录
-│ └── luban.conf/ # Luban 配置文件。如需修改。请查阅LuBan文档.链接：https://github.com/focus-creative-games/luban
+├── Config/  # 配置表放置目录。请从 https://github.com/GameFrameX/GameFrameX.Config Clone 到此目录下。使用的`LuBan` 导表方案 https://github.com/focus-creative-games/luban
 ├── docker/  # Docker本地运行目录
 ├── Docs/ # 文档相关内容。目前是GeekServer的原始文档
-├── FairyGUIProject/ # FairyGUI 项目目录。如果不需要可删除。
-├── Protobuf/ # 前后端或后端之前的通讯协议定义文件。采用ProtoBuf 描述文件。
-├── Server/ # 游戏服务器解决方案文件夹。请从  https://github.com/AlianBlank/GameFrameX.Server  Clone 到此目录下
+├── FairyGUIProject/ # FairyGUI 项目目录。请从 https://github.com/GameFrameX/GameFrameX.FairyGUIProject Clone 到此目录下。
+├── Protobuf/ # 前后端或后端之前的通讯协议定义文件。采用ProtoBuf 描述文件。请从 https://github.com/GameFrameX/GameFrameX.Protobuf Clone 到此目录下。
+├── Server/ # 游戏服务器解决方案文件夹。请从  https://github.com/GameFrameX/GameFrameX.Server  Clone 到此目录下
 │ ├── Server.XXX # 服务器文件夹开始
 │ ├── ... # 服务器解决方案文件夹列表
 │ └── Server.XXX # 服务器文件夹结束
@@ -91,12 +100,17 @@ GameFrameX/ 项目根目录.可以根据自己的项目修改
     git clone https://github.com/GameFrameX/GameFrameX.git
     git clone https://github.com/GameFrameX/GameFrameX.Server.git ./GameFrameX/Server
     git clone https://github.com/GameFrameX/GameFrameX.Tools.git ./GameFrameX/Tools
+    git clone https://github.com/GameFrameX/GameFrameX.Config.git ./GameFrameX/Config
+    git clone https://github.com/GameFrameX/GameFrameX.Protobuf.git ./GameFrameX/Protobuf
+    git clone https://github.com/GameFrameX/GameFrameX.FairyGUIProject.git ./GameFrameX/FairyGUIProject
     git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
     
     ```
 
-4. 打开`Tools`项目,编译一下。他目前是用来导出协议的
-5. 打开`Unity`项目和`Server`直接启动即可食用。
+4. 进入`Config`目录执行 LuBan 导表脚本，生成客户端与服务端的配置代码及数据（详见 `GameFrameX.Config` 仓库说明）
+5. 进入`Protobuf`目录执行协议导出脚本，生成各端通讯协议代码（详见 `GameFrameX.Protobuf` 仓库说明）
+6. 如需，可打开`Tools`项目编译（详见 `GameFrameX.Tools` 仓库说明）
+7. 打开`Unity`项目和`Server`直接启动即可食用。
 
 # 交流方式(建议。需求。BUG)
 
@@ -180,7 +194,7 @@ QQ群：467608841
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=AlianBlank/GameFrameX,AlianBlank/GameFrameX.Unity,AlianBlank/GameFrameX.Server,AlianBlank/GameFrameX.Admin&type=Date)](https://star-history.com/embed?secret=Z2hwX0l1VlJVYlE0RUhIZE9hS2pVZ21ISVozNFNNSUdETDMycmZEWQ==#GameFrameX/GameFrameX&GameFrameX/GameFrameX.Unity&GameFrameX/GameFrameX.Server&GameFrameX/GameFrameX.Admin&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=GameFrameX/GameFrameX,GameFrameX/GameFrameX.Unity,GameFrameX/GameFrameX.Server,GameFrameX/GameFrameX.Admin&type=Date)](https://star-history.com/embed?secret=Z2hwX0l1VlJVYlE0RUhIZE9hS2pVZ21ISVozNFNNSUdETDMycmZEWQ==#GameFrameX/GameFrameX&GameFrameX/GameFrameX.Unity&GameFrameX/GameFrameX.Server&GameFrameX/GameFrameX.Admin&Date)
 
 # 免责声明
 

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<packageDescription id="qecztwbp">
-  <resources>
-    <component id="5euk0" name="UILoadingScene.xml" path="/Scene/" exported="true"/>
-    <component id="5euk1" name="UILoadingCenterBox.xml" path="/Widget/"/>
-  </resources>
-  <publish name="" genCode="true"/>
-</packageDescription>
