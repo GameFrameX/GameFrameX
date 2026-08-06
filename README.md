@@ -96,9 +96,22 @@ GameFrameX/                  # 项目根目录（名字可改）
 
 ---
 
-# 🚀 从零开始，手把手跑起来
+# 🔧 先把环境准备好
 
-**准备工作**：先装好 [Git](https://git-scm.com/)。
+开始前，请先装好下面这些（点链接去官网下）：
+
+| 要装的东西 | 版本 | 干啥用 | 哪里下 |
+|---|---|---|---|
+| **Git** | 任意新版 | 拉取各个仓库的代码 | https://git-scm.com/ |
+| **.NET SDK** | **10.0 或以上** | 编译运行服务器、跑 LuBan 导表工具 | https://dotnet.microsoft.com/download |
+| **Unity 编辑器** | **2019.4.40f1**（兼容 2019.4+） | 打开、运行 Unity 客户端 | https://unity.com/download |
+| **Docker**（可选但推荐） | 任意新版 | 一键启动本地数据库 MongoDB / PostgreSQL | https://www.docker.com/ |
+
+> 💡 服务器和导表工具都依赖 **.NET 10.0**，这是最关键的版本要求，一定装对。
+
+---
+
+# 🚀 从零开始，手把手跑起来
 
 **第 1 步**：新建一个文件夹放项目，打开终端（Windows 用 cmd / PowerShell，Mac / Linux 用终端），`cd` 进去。
 
@@ -123,13 +136,26 @@ git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
 
 > 这几行的意思就是「把 XX 仓库的内容，下到 XX 文件夹里」。**文件夹名千万别改**。
 
-**第 4 步（生成配置代码）**：进 `Config/` 目录，跑里面的 LuBan 导表脚本，把 Excel 变成客户端和服务器都能用的代码与数据。具体命令看 👉 [`GameFrameX.Config`](https://github.com/GameFrameX/GameFrameX.Config) 的说明。
+**第 4 步（启动本地数据库）**：装了 Docker 的话，分别进两个目录把 MongoDB 和 PostgreSQL 起起来（服务器连 MongoDB、后台连 PostgreSQL）：
 
-**第 5 步（生成协议代码）**：进 `Protobuf/` 目录，跑协议导出脚本，生成各端收发消息用的代码。具体命令看 👉 [`GameFrameX.Protobuf`](https://github.com/GameFrameX/GameFrameX.Protobuf) 的说明。
+```shell
+cd GameFrameX/docker/mongo && docker compose up -d
+cd ../postgres && docker compose up -d
+```
 
-**第 6 步（可选）**：需要的话打开 `Tools/` 编译一下辅助工具，看 👉 [`GameFrameX.Tools`](https://github.com/GameFrameX/GameFrameX.Tools) 的说明。
+启动成功后这样连：
+- MongoDB：`mongodb://admin:admin@localhost:27017`
+- PostgreSQL：`localhost:5432`，账号 `postgres` / 密码 `postgres`，初始库 `gameframex`
 
-**第 7 步（开跑！）**：用 Unity 打开 `Unity/` 工程，启动 `Server/` 里的服务器，就能跑起来体验了 🎉
+> ⚠️ 以上账号密码是本地开发默认值，要和 `Server` / `Admin` 里的连接配置对齐才能连上。
+
+**第 5 步（生成配置代码）**：进 `Config/` 目录，跑里面的 LuBan 导表脚本，把 Excel 变成客户端和服务器都能用的代码与数据。具体命令看 👉 [`GameFrameX.Config`](https://github.com/GameFrameX/GameFrameX.Config) 的说明。
+
+**第 6 步（生成协议代码）**：进 `Protobuf/` 目录，跑协议导出脚本，生成各端收发消息用的代码。具体命令看 👉 [`GameFrameX.Protobuf`](https://github.com/GameFrameX/GameFrameX.Protobuf) 的说明。
+
+**第 7 步（可选）**：需要的话打开 `Tools/` 编译一下辅助工具，看 👉 [`GameFrameX.Tools`](https://github.com/GameFrameX/GameFrameX.Tools) 的说明。
+
+**第 8 步（开跑！）**：用 Unity 打开 `Unity/` 工程，启动 `Server/` 里的服务器，就能跑起来体验了 🎉
 
 ---
 
