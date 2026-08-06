@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  postgresql:
+    image: postgres
+    container_name: postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gameframex
+
+networks:
+  default:
+    name: gameframex

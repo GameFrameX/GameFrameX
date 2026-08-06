@@ -22,10 +22,10 @@ Tools/Geek.MsgPackTool-src/.idea
 Server/**/bin
 Unity/.cache.meta
 docker/mongo/database
+docker/postgres/database
 Unity/Packages/packages-lock.json
 Unity/Unity.sln.DotSettings.user
 Unity/Unity.sln
-docker/redis/apps/datadir
 .DS_Store
 Unity/HybridCLRData
 Unity/Builds
