@@ -2,128 +2,130 @@
     <a href="https://trendshift.io/repositories/7536" target="_blank"><img src="https://trendshift.io/api/badge/repositories/7536" alt="GameFrameX%2FGameFrameX | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </div>
 
-# 🎮 GameFrameX 是个啥？
+[简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | **English** | [日本語](README.ja.md) | [한국어](README.ko.md)
 
-一句话：**一套帮你把游戏「从点子 → 做出来 → 上线运营」全包圆的开源工具箱。**
+# 🎮 What exactly is GameFrameX?
 
-做游戏，真正费劲的往往不是「画个角色、写个技能」，而是把这些零碎拼到一块儿：
+In one sentence: **an open-source toolbox that helps you take a game all the way "from idea → built → live and running."**
 
-- 玩家的存档存哪儿？怎么读出来？
-- 多人联机的时候，服务器怎么转发消息？
-- 道具、关卡、等级这些数据谁来管，策划改了怎么办？
-- 上线之后，怎么看数据、怎么管玩家、怎么发新版本？
+When you make a game, the really hard part usually isn't "drawing a character or coding a skill" — it's stitching all those pieces together:
 
-这些「脏活累活」，GameFrameX 都替你干好了，你只管专心琢磨「我的游戏好不好玩」。
+- Where do player save files live? How do you read them back?
+- In a multiplayer game, how does the server forward messages?
+- Who manages items, levels, and progression data? What happens when a designer changes something?
+- After launch, how do you read the data, manage players, and ship new versions?
 
-支持这些主流引擎：**Unity、Cocos Creator、LayaAir（LayaBox）、Godot** —— 你用哪个，它都吃得下。
+All that heavy lifting is already done for you by GameFrameX — you just focus on the fun part: "is my game actually fun?"
+
+It supports the major engines: **Unity, Cocos Creator, LayaAir (LayaBox), Godot** — whichever you use, it fits.
 
 ---
 
-# 🧰 它能帮你省掉哪些麻烦？
+# 🧰 What headaches does it save you?
 
-| 你本来要自己折腾的事 | GameFrameX 直接给你准备好了 |
+| What you'd otherwise DIY | What GameFrameX hands you out of the box |
 |---|---|
-| 从零写一套联机服务器 | 现成的高性能服务器（.NET 写的，能扛多人同时在线） |
-| 数据到底怎么存 | 玩家数据存 MongoDB（读写得快），后台数据存 PostgreSQL（稳） |
-| Excel 配置手动搬到代码里 | 用 LuBan 一键把 Excel 变成代码和数据 |
-| 客户端和服务器「对暗号」 | 用 ProtoBuf 统一协议，改一处、两端同步 |
-| 上线后两眼一抹黑 | 自带管理后台网页，看数据 / 管玩家 / 发配置 |
-| 部署服务器头大 | 用 Docker 一键打包部署，省心 |
+| Writing a multiplayer server from scratch | A ready-to-go high-performance server (written in .NET, built to handle many concurrent players) |
+| Figuring out how to store data | Player data goes to MongoDB (fast reads/writes), backend data goes to PostgreSQL (rock-solid) |
+| Hand-carrying Excel configs into code | LuBan turns Excel into code and data in one click |
+| Client and server "speaking the same language" | ProtoBuf unifies the protocol — change it once, both sides sync |
+| Flying blind after launch | A built-in admin web panel for reading data / managing players / pushing configs |
+| Server deployment giving you a headache | One-click packaging and deployment with Docker, hassle-free |
 
-> 说白了：**一个人也能像一个小团队那样，把一款联网游戏做出来、并且运营下去。**
-
----
-
-# 👤 适合谁用？
-
-- 想做**联网 / 网游**、但被「服务器怎么搞」卡住的独立开发者
-- 想快速搭个**游戏原型**验证点子的小团队
-- 想完整学一遍「客户端 + 服务器 + 后台」全流程的学习者
+> Plain and simple: **even a solo developer can build and run an online game like a small team would.**
 
 ---
 
-# 🗺️ 这堆仓库都是干嘛的？（仓库地图）
+# 👤 Who is it for?
 
-GameFrameX 是个「全家桶」，但全家桶里每道菜都装在**各自独立的仓库**里（方便单独维护、单独升级）。先看这张表建立全局印象：
+- Indie developers who want to make **online / multiplayer games** but are stuck on "how do I even do the server?"
+- Small teams that want to quickly spin up a **game prototype** to validate an idea
+- Learners who want to go through the full "client + server + backend" pipeline end-to-end
 
-| 仓库 | 通俗说就是… | 地址 |
+---
+
+# 🗺️ What are all these repos for? (Repo map)
+
+GameFrameX is a "bundle", but each dish in the bundle lives in **its own separate repo** (so you can maintain and upgrade them independently). Start with this table to get the big picture:
+
+| Repo | In plain terms… | URL |
 |---|---|---|
-| 🏠 **主仓库（就是这儿）** | 「厨房平面图」——告诉你所有零件该放哪个文件夹 | https://github.com/GameFrameX/GameFrameX |
-| 🌐 **服务器** | 游戏的大脑，管联机、存档、战斗逻辑（基于 GeekServer 演化而来） | https://github.com/GameFrameX/GameFrameX.Server |
-| 📊 **配置表（LuBan）** | 用 Excel 填游戏数据（道具 / 关卡 / 等级…），一键生成代码 | https://github.com/GameFrameX/GameFrameX.Config |
-| 📡 **通讯协议（ProtoBuf）** | 客户端和服务器「说话的规矩」，定义双方互通的消息 | https://github.com/GameFrameX/GameFrameX.Protobuf |
-| 🎨 **UI 工程（FairyGUI）** | 用 FairyGUI 编辑器画游戏界面的源工程 | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
-| 🛠️ **工具集** | 一些辅助小工具 | https://github.com/GameFrameX/GameFrameX.Tools |
-| 💻 **管理后台** | 上线后管数据、管玩家的网页（部分源码不开源） | https://github.com/GameFrameX/GameFrameX.Admin |
+| 🏠 **Main repo (you are here)** | The "kitchen floor plan" — tells you which folder each piece belongs in | https://github.com/GameFrameX/GameFrameX |
+| 🌐 **Server** | The game's brain: handles multiplayer, saves, and combat logic (evolved from GeekServer) | https://github.com/GameFrameX/GameFrameX.Server |
+| 📊 **Config tables (LuBan)** | Fill in game data (items / levels / progression…) in Excel, generate code in one click | https://github.com/GameFrameX/GameFrameX.Config |
+| 📡 **Protocol (ProtoBuf)** | The "rules of conversation" between client and server; defines the messages both sides exchange | https://github.com/GameFrameX/GameFrameX.Protobuf |
+| 🎨 **UI project (FairyGUI)** | The source project for designing game UI in the FairyGUI editor | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
+| 🛠️ **Tools** | assorted helper utilities | https://github.com/GameFrameX/GameFrameX.Tools |
+| 💻 **Admin backend** | The web panel for managing data and players after launch (some source code is not open) | https://github.com/GameFrameX/GameFrameX.Admin |
 
-后台在线演示 👉 https://game.admin.web.vue.alianblank.com
+Live admin demo 👉 https://game.admin.web.vue.alianblank.com
 
-## 🎮 客户端（四选一即可，用哪个下哪个）
+## 🎮 Client (pick one — download the one you use)
 
-| 引擎 | 地址 |
+| Engine | URL |
 |---|---|
 | Unity | https://github.com/GameFrameX/GameFrameX.Unity |
 | Cocos Creator | https://github.com/GameFrameX/GameFrameX.CocosCreator |
-| LayaAir（LayaBox） | https://github.com/GameFrameX/GameFrameX.LayaBox |
+| LayaAir (LayaBox) | https://github.com/GameFrameX/GameFrameX.LayaBox |
 | Godot | https://github.com/GameFrameX/GameFrameX.Godot |
 
 ---
 
-# 📁 文件夹为什么不能乱放？
+# 📁 Why can't I just put folders wherever I want?
 
-> ⚠️ **重点**：这套框架是**靠相对路径**找文件的，就像家里的插座位置——你把服务器从 `Server/` 挪到 `MyServer/`，整条链路就找不着北了。
+> ⚠️ **Important**: this framework locates files **by relative path** — kind of like the outlets in your house. Move the server from `Server/` to `MyServer/` and the whole chain loses its bearings.
 
-所以请按下面的结构，把各仓库**放到它该在的文件夹**里：
+So please follow the structure below and **place each repo in the folder it belongs in**:
 
 ```
-GameFrameX/                  # 项目根目录（名字可改）
-├── Config/                  # ← 把 GameFrameX.Config 放这里（Excel 配置 + LuBan 导表）
-├── Protobuf/                # ← 把 GameFrameX.Protobuf 放这里（通讯协议）
-├── FairyGUIProject/         # ← 把 GameFrameX.FairyGUIProject 放这里（UI 编辑工程）
-├── Server/                  # ← 把 GameFrameX.Server 放这里（游戏服务器）
-├── Unity/                   # ← 把 GameFrameX.Unity 放这里（Unity 客户端，按需换成别的引擎）
-│   ├── Assets/              #    Unity 资源目录
-│   ├── Packages/            #    Unity 包
-│   ├── ProjectSettings/     #    Unity 工程设置
-│   └── UserSettings/        #    Unity 用户设置
-├── Tools/                   # ← 把 GameFrameX.Tools 放这里（辅助工具）
-├── docker/                  # Docker 本地运行环境（MongoDB / PostgreSQL）
-├── Docs/                    # 文档（目前主要是 GeekServer 的原始文档）
-└── LICENSE.md               # 开源许可证
+GameFrameX/                  # Project root directory (name can be changed)
+├── Config/                  # ← Put GameFrameX.Config here (Excel configs + LuBan export)
+├── Protobuf/                # ← Put GameFrameX.Protobuf here (communication protocol)
+├── FairyGUIProject/         # ← Put GameFrameX.FairyGUIProject here (UI editing project)
+├── Server/                  # ← Put GameFrameX.Server here (game server)
+├── Unity/                   # ← Put GameFrameX.Unity here (Unity client; swap for another engine if needed)
+│   ├── Assets/              #    Unity assets folder
+│   ├── Packages/            #    Unity packages
+│   ├── ProjectSettings/     #    Unity project settings
+│   └── UserSettings/        #    Unity user settings
+├── Tools/                   # ← Put GameFrameX.Tools here (auxiliary tools)
+├── docker/                  # Docker local runtime environment (MongoDB / PostgreSQL)
+├── Docs/                    # Documentation (currently mostly GeekServer's original docs)
+└── LICENSE.md               # Open-source license
 ```
 
-> 想换别的客户端引擎？把 `Unity/` 换成对应名字即可（`Laya/`、`CocosCreator/`、`Godot/`），规则一样。
+> Want to switch to a different client engine? Just replace `Unity/` with the matching name (`Laya/`, `CocosCreator/`, `Godot/`) — same rule applies.
 
 ---
 
-# 🔧 先把环境准备好
+# 🔧 Get your environment ready first
 
-开始前，请先装好下面这些（点链接去官网下）：
+Before you start, install the following (click the links to download from the official sites):
 
-| 要装的东西 | 版本 | 干啥用 | 哪里下 |
+| What to install | Version | What it's for | Where to get it |
 |---|---|---|---|
-| **Git** | 任意新版 | 拉取各个仓库的代码 | https://git-scm.com/ |
-| **.NET SDK** | **10.0 或以上** | 编译运行服务器、跑 LuBan 导表工具 | https://dotnet.microsoft.com/download |
-| **Unity 编辑器** | **2019.4.40f1**（兼容 2019.4+） | 打开、运行 Unity 客户端 | https://unity.com/download |
-| **Docker**（可选但推荐） | 任意新版 | 一键启动本地数据库 MongoDB / PostgreSQL | https://www.docker.com/ |
+| **Git** | any recent version | Pulling the code for each repo | https://git-scm.com/ |
+| **.NET SDK** | **10.0 or above** | Compiling/running the server, running the LuBan export tool | https://dotnet.microsoft.com/download |
+| **Unity editor** | **2019.4.40f1** (compatible with 2019.4+) | Opening and running the Unity client | https://unity.com/download |
+| **Docker** (optional but recommended) | any recent version | Spinning up local MongoDB / PostgreSQL databases with one click | https://www.docker.com/ |
 
-> 💡 服务器和导表工具都依赖 **.NET 10.0**，这是最关键的版本要求，一定装对。
+> 💡 Both the server and the export tool depend on **.NET 10.0** — this is the most critical version requirement, so make sure you get it right.
 
 ---
 
-# 🚀 从零开始，手把手跑起来
+# 🚀 From zero to running, step by step
 
-**第 1 步**：新建一个文件夹放项目，打开终端（Windows 用 cmd / PowerShell，Mac / Linux 用终端），`cd` 进去。
+**Step 1**: Create a folder for the project, open a terminal (cmd / PowerShell on Windows, Terminal on Mac / Linux), and `cd` into it.
 
-**第 2 步**：把「厨房平面图」下下来：
+**Step 2**: Pull down the "kitchen floor plan":
 
 ```shell
 git clone https://github.com/GameFrameX/GameFrameX.git
 ```
 
-这会生成一个 `GameFrameX/` 文件夹，里面就是项目骨架。
+This creates a `GameFrameX/` folder containing the project skeleton.
 
-**第 3 步**：把各零件放到 `GameFrameX/` 里**对应的文件夹**（下面以 Unity 为例；用别的引擎就把最后一行换成对应地址）：
+**Step 3**: Place each component into its **matching folder** inside `GameFrameX/` (the example below uses Unity; for other engines, swap the last line for the matching URL):
 
 ```shell
 git clone https://github.com/GameFrameX/GameFrameX.Server.git ./GameFrameX/Server
@@ -134,60 +136,60 @@ git clone https://github.com/GameFrameX/GameFrameX.Tools.git ./GameFrameX/Tools
 git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
 ```
 
-> 这几行的意思就是「把 XX 仓库的内容，下到 XX 文件夹里」。**文件夹名千万别改**。
+> These lines just mean "download repo X into folder X." **Do not rename the folders.**
 
-**第 4 步（启动本地数据库）**：装了 Docker 的话，分别进两个目录把 MongoDB 和 PostgreSQL 起起来（服务器连 MongoDB、后台连 PostgreSQL）：
+**Step 4 (Start the local databases)**: If you have Docker installed, go into the two directories and spin up MongoDB and PostgreSQL (the server talks to MongoDB, the admin backend talks to PostgreSQL):
 
 ```shell
 cd GameFrameX/docker/mongo && docker compose up -d
 cd ../postgres && docker compose up -d
 ```
 
-启动成功后这样连：
-- MongoDB：`mongodb://admin:admin@localhost:27017`
-- PostgreSQL：`localhost:5432`，账号 `postgres` / 密码 `postgres`，初始库 `gameframex`
+Once they're running, connect like this:
+- MongoDB: `mongodb://admin:admin@localhost:27017`
+- PostgreSQL: `localhost:5432`, username `postgres` / password `postgres`, initial database `gameframex`
 
-> ⚠️ 以上账号密码是本地开发默认值，要和 `Server` / `Admin` 里的连接配置对齐才能连上。
+> ⚠️ The credentials above are the local development defaults — they need to match the connection settings in `Server` / `Admin` for things to connect.
 
-**第 5 步（生成配置代码）**：进 `Config/` 目录，跑里面的 LuBan 导表脚本，把 Excel 变成客户端和服务器都能用的代码与数据。具体命令看 👉 [`GameFrameX.Config`](https://github.com/GameFrameX/GameFrameX.Config) 的说明。
+**Step 5 (Generate config code)**: Go into the `Config/` directory and run the LuBan export script inside to turn Excel into code and data that both the client and the server can use. See the 👉 [`GameFrameX.Config`](https://github.com/GameFrameX/GameFrameX.Config) instructions for the exact commands.
 
-**第 6 步（生成协议代码）**：进 `Protobuf/` 目录，跑协议导出脚本，生成各端收发消息用的代码。具体命令看 👉 [`GameFrameX.Protobuf`](https://github.com/GameFrameX/GameFrameX.Protobuf) 的说明。
+**Step 6 (Generate protocol code)**: Go into the `Protobuf/` directory and run the protocol export script to generate the message code used by each side. See the 👉 [`GameFrameX.Protobuf`](https://github.com/GameFrameX/GameFrameX.Protobuf) instructions for the exact commands.
 
-**第 7 步（可选）**：需要的话打开 `Tools/` 编译一下辅助工具，看 👉 [`GameFrameX.Tools`](https://github.com/GameFrameX/GameFrameX.Tools) 的说明。
+**Step 7 (Optional)**: If you need them, open `Tools/` and compile the auxiliary utilities — see the 👉 [`GameFrameX.Tools`](https://github.com/GameFrameX/GameFrameX.Tools) instructions.
 
-**第 8 步（开跑！）**：用 Unity 打开 `Unity/` 工程，启动 `Server/` 里的服务器，就能跑起来体验了 🎉
-
----
-
-# 💬 交流 & 反馈（建议、需求、BUG）
-
-QQ 群：**467608841**
-
-# 📖 文档（真在写了，别催 😅）
-
-> 所有站点内容一致，挑一个能打开的用就行。
-
-- 主站：https://gameframex.doc.alianblank.com
-- 备用 1：https://gameframex-docs.pages.dev
-- 备用 2：https://gameframex.doc.cloudflare.alianblank.com
-- 备用 3：https://gameframex.doc.vercel.alianblank.com
+**Step 8 (Run it!)**: Open the `Unity/` project in Unity, start the server in `Server/`, and you're up and running 🎉
 
 ---
 
-# ☕ 请作者喝杯咖啡
+# 💬 Chat & feedback (suggestions, feature requests, bugs)
+
+QQ group: **467608841**
+
+# 📖 Documentation (it's genuinely being written, no rushing me 😅)
+
+> All mirror sites have the same content — just pick whichever one opens for you.
+
+- Main site: https://gameframex.doc.alianblank.com
+- Mirror 1: https://gameframex-docs.pages.dev
+- Mirror 2: https://gameframex.doc.cloudflare.alianblank.com
+- Mirror 3: https://gameframex.doc.vercel.alianblank.com
+
+---
+
+# ☕ Buy the author a coffee
 
 ![wechat.jpg](Docs/imgs/wechat.jpg)
 
-# 🎯 谁在用 GameFrameX？
+# 🎯 Who's using GameFrameX?
 
-| 游戏名称 | 上线渠道 | 上线时间 |
+| Game | Launch channel | Launch date |
 |:---|:---|:---|
-| 深夜的烧烤店 | [TapTap](https://www.taptap.cn/app/384964) | 2024-04-15 |
-| 连续黑白 | 抖音、快手、支付宝、鸿蒙、TapTap、iOS 等 | 2024-11 |
+| 深夜的烧烤店 (Late-Night BBQ Joint) | [TapTap](https://www.taptap.cn/app/384964) | 2024-04-15 |
+| 连续黑白 (Continuous Black & White) | Douyin, Kuaishou, Alipay, HarmonyOS, TapTap, iOS, etc. | 2024-11 |
 
-> 用 GameFrameX 做出上线作品了？欢迎提 PR 或 issue 补充到上表，一起把名单做大 🙌
+> Shipped a game built with GameFrameX? Feel free to open a PR or issue to add it to the list above — let's grow it together 🙌
 
-# 👥 贡献名单
+# 👥 Contributors
 
 <!-- readme: contributors -start -->
 <table>
@@ -237,12 +239,12 @@ QQ 群：**467608841**
 
 [![Star History Chart](https://api.star-history.com/svg?repos=GameFrameX/GameFrameX,GameFrameX/GameFrameX.Unity,GameFrameX/GameFrameX.Server,GameFrameX/GameFrameX.Admin&type=Date)](https://star-history.com/embed?secret=Z2hwX0l1VlJVYlE0RUhIZE9hS2pVZ21ISVozNFNNSUdETDMycmZEWQ==#GameFrameX/GameFrameX&GameFrameX/GameFrameX.Unity&GameFrameX/GameFrameX.Server&GameFrameX/GameFrameX.Admin&Date)
 
-# 📜 免责声明
+# 📜 Disclaimer
 
-所有插件均来自互联网，使用时请自行付费。如有侵权请发 email，本人会移除，谢谢。
+All plugins come from the internet; please pay for them yourself when using them. If anything here infringes your rights, send an email and I'll remove it — thank you.
 
-该项目不得用于当地法律不允许的范围。技术本无罪，错的是滥用技术的人。
+This project may not be used for anything prohibited by your local laws. Technology itself is innocent; what's wrong is the people who abuse it.
 
-# 💎 赞助商
+# 💎 Sponsor
 
-[AITKPARTY](https://aitkparty.com/) 是一个 AI 大模型 API 中转聚合服务，基于开源项目 New API 搭建，提供统一接口让开发者便捷地访问主流大语言模型，省去自行对接多家模型供应商的麻烦。
+[AITKPARTY](https://aitkparty.com/) is an AI large-model API aggregator and relay service, built on the open-source project New API. It offers a unified interface so developers can easily tap into mainstream large language models — saving you the trouble of integrating multiple model providers yourself.
