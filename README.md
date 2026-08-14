@@ -217,6 +217,13 @@ QQ group: **467608841**
                 </a>
             </td>
             <td align="center">
+                <a href="https://github.com/PingouinFerreux">
+                    <img src="https://avatars.githubusercontent.com/u/212632237?v=4" width="100;" alt="PingouinFerreux"/>
+                    <br />
+                    <sub><b>PingouinFerreux</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/PlayerYF">
                     <img src="https://avatars.githubusercontent.com/u/56374327?v=4" width="100;" alt="PlayerYF"/>
                     <br />
