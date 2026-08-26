@@ -4,6 +4,38 @@
 
 [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | **English** | [日本語](README.ja.md) | [한국어](README.ko.md)
 
+## Quick Start
+
+Download this repo any way you like (git clone / Code → Download ZIP / mirror sites) — you always get the complete, runnable project. No extra pulls needed.
+
+| Component | Version | Purpose |
+|------|------|------|
+| .NET SDK | 8.0+ | Run the server in `Server/` (Foundation dependency is restored automatically via NuGet, internet required) |
+| Unity | 2021.3+ | Open the client in `Unity/` (first import needs internet to fetch Packages) |
+| Docker (optional) | - | `cd Server && docker-compose up` to start MongoDB in one command |
+| LayaAir (optional) | - | Open the `LayaBox/` client |
+
+Run the server:
+
+    dotnet run --project Server/GameFrameX.Launcher --ServerType=Game --ServerId=1000 --APMPort=29090
+
+### Sub-repo index
+
+This repo is an **aggregated release repo** (auto-synced daily from the source repos below). ⚠️ Direct edits will be overwritten by the next sync — please open PRs / Issues in the corresponding source repo:
+
+| Directory | Source repo |
+|------|--------|
+| `Unity/` | GameFrameX/GameFrameX.Unity |
+| `Server/` | GameFrameX/GameFrameX.Server |
+| `LayaBox/` | GameFrameX/GameFrameX.LayaBox |
+| `Tools/` | GameFrameX/GameFrameX.Tools |
+| `Config/` | GameFrameX/GameFrameX.Config |
+| `Protobuf/` | GameFrameX/GameFrameX.Protobuf |
+| `FairyGUIProject/` | GameFrameX/GameFrameX.FairyGUIProject |
+| (not aggregated) | GameFrameX/GameFrameX.Foundation (NuGet package repo) · GameFrameX/GameFrameX.Docs (docs site) |
+
+---
+
 # 🎮 What exactly is GameFrameX?
 
 In one sentence: **an open-source toolbox that helps you take a game all the way "from idea → built → live and running."**

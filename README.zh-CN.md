@@ -4,6 +4,38 @@
 
 **简体中文** | [繁體中文](README.zh-TW.md) | [English](README.md) | [日本語](README.ja.md) | [한국어](README.ko.md)
 
+## 快速开始
+
+任何方式下载本仓库（git clone / Code → Download ZIP / 镜像站下载）都是完整项目，无需额外拉取。
+
+| 组件 | 版本 | 用途 |
+|------|------|------|
+| .NET SDK | 8.0+ | 运行服务器 `Server/`（Foundation 依赖经 NuGet 自动还原，需联网） |
+| Unity | 2021.3+ | 打开客户端 `Unity/`（首次导入需联网拉取 Package） |
+| Docker（可选） | - | `cd Server && docker-compose up` 一键起 MongoDB |
+| LayaAir（可选） | - | 打开 `LayaBox/` 客户端 |
+
+运行服务器：
+
+    dotnet run --project Server/GameFrameX.Launcher --ServerType=Game --ServerId=1000 --APMPort=29090
+
+### 子仓库索引
+
+本仓库为**聚合发布仓**（每日自动同步下列源仓库），⚠️ 直接改动会在下次同步被覆盖，PR / Issue 请前往对应源仓库：
+
+| 目录 | 源仓库 |
+|------|--------|
+| `Unity/` | GameFrameX/GameFrameX.Unity |
+| `Server/` | GameFrameX/GameFrameX.Server |
+| `LayaBox/` | GameFrameX/GameFrameX.LayaBox |
+| `Tools/` | GameFrameX/GameFrameX.Tools |
+| `Config/` | GameFrameX/GameFrameX.Config |
+| `Protobuf/` | GameFrameX/GameFrameX.Protobuf |
+| `FairyGUIProject/` | GameFrameX/GameFrameX.FairyGUIProject |
+| （不聚合） | GameFrameX/GameFrameX.Foundation（NuGet 发包仓）· GameFrameX/GameFrameX.Docs（文档站） |
+
+---
+
 # 🎮 GameFrameX 是个啥？
 
 一句话：**一套帮你把游戏「从点子 → 做出来 → 上线运营」全包圆的开源工具箱。**

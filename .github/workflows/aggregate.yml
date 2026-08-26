@@ -1,0 +1,27 @@
+name: Aggregate Sub Repos
+
+on:
+  schedule:
+    - cron: "0 18 * * *"   # 每天 UTC 18 点（北京时间凌晨 2 点，GitHub 调度可能延迟）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Configure git (脚本内 commit 需要，须在同步前配置)
+        run: |
+          git config user.name  "gameframex-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git lfs install   # 防 Tools 仓 LFS 文件被静默检出为 pointer 文本
+      - name: Sync all sub repos
+        run: bash scripts/aggregate-sync.sh
+      - name: Smoke test（失败则不推送）
+        run: dotnet build Server/Server.sln -c Release
+      - name: Push
+        run: git push
