@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1080,1920">
+  <displayList>
+    <loader id="n2_srah" name="n2" xy="0,0" size="1080,1920" url="ui://xnc0qo2eflr49" align="center" vAlign="middle" fill="scaleFree">
+      <relation target="" sidePair="width-width,height-height"/>
+    </loader>
+    <component id="n3_srah" name="close_icon" src="flr4d" fileName="Components/close_icon.xml" xy="938,30" size="80,80">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
+  </displayList>
+</component>

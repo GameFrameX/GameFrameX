@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1080,1920" bgColor="#00ff00">
+  <displayList>
+    <graph id="n0_jfft" name="n0" xy="0,0" size="1080,1920" type="rect" fillColor="#3899ccff"/>
+    <richtext id="n1_jfft" name="n1" xy="290,1860" size="500,60" fontSize="35" align="center" vAlign="middle" autoSize="none" text="Loading..."/>
+  </displayList>
+</component>

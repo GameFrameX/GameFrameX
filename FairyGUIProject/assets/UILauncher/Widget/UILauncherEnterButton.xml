@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="480,128" extention="Button">
+  <displayList>
+    <image id="n58_vl2e" name="icon" src="qew11h" fileName="Images/UI_icon_btn_green.png" xy="0,0">
+      <relation target="" sidePair="width-width,height-height"/>
+    </image>
+    <text id="n59_vl2e" name="title" xy="188,31" pivot="0.5,0.5" size="104,66" font="ui://f59y7iy8ghno32" fontSize="50" color="#ffffff" align="center" vAlign="middle" shadowColor="#000000" shadowOffset="0,2" singleLine="true" text="确定">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </text>
+  </displayList>
+  <Button downEffect="dark" downEffectValue=".8"/>
+</component>

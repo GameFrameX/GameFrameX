@@ -1,0 +1,16 @@
+
+.vs/
+.idea
+/database
+bin
+**/obj
+**/bin
+.DS_Store
+*.user
+docs/_site
+running
+gfx-doc
+.codegraph
+CLAUDE.md
+AGENTS.md
+.claude

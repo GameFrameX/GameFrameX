@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <RootNamespace>GameFrameX.ProtoExport</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- 构建产物（Debug/Release 均同）直接输出到同级 Protobuf/Tools/ 目录，供 Proto2*Export 脚本调用。
+         路径相对本 csproj 文件定位，任何人把 Tools + Protobuf 克隆到同级目录即可工作。
+         使用 OutputPath（而非 OutDir）以避免被 SDK 默认 output-paths target 覆盖。 -->
+    <OutputPath>$(MSBuildThisFileDirectory)../../Protobuf/Tools/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GameFrameX.Foundation.Options" Version="2.8.3" />
+  </ItemGroup>	
+</Project>

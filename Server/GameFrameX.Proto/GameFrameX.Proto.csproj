@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>10</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GameFrameX.NetWork" Version="1.13.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Proto\" />
+    </ItemGroup>
+
+</Project>

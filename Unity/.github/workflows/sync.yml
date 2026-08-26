@@ -1,0 +1,24 @@
+name: Sync Github To Image (External)
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+  #schedule:
+    # 定时任务，每天 UTC 时间 0 点运行
+    #- cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    # 引用外部仓库的可重用工作流
+    # 格式: {owner}/{repo}/.github/workflows/{filename}@{ref}
+    uses: GameFrameX/public-github-actions/.github/workflows/sync.yml@main
+    with:
+      # 传递参数给外部工作流
+      target_branch: ${{ github.ref_name }}
+      repository_name: ${{ github.repository }}
+    # 组织级别已配置密钥，可以使用 inherit 继承所有密钥
+    secrets: inherit

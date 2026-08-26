@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080" bgColor="#00ff00">
+  <controller name="IsUpgrade" exported="true" pages="0,No,1,Yes" selected="0"/>
+  <controller name="IsDownload" pages="0,No,1,Yes" selected="0"/>
+  <displayList>
+    <loader id="n14_iwzd" name="bg" xy="0,0" size="1920,1080" url="ui://u7deosq0i3db1j" align="center" vAlign="middle" fill="scale">
+      <relation target="" sidePair="width-width,height-height"/>
+    </loader>
+    <text id="n10_iwzd" name="TipText" xy="287,976" pivot="0.5,0.5" size="1346,49" font="ui://f59y7iy8ghno32" fontSize="36" color="#cccccc" align="center" autoSize="shrink" strokeColor="#2f1708" strokeSize="2" autoClearText="true" text="正在下载游戏资源  30%  (128MB)">
+      <relation target="" sidePair="width-width,center-center,bottom-bottom"/>
+    </text>
+    <component id="n12_iwzd" name="ProgressBar" src="mw8e3" fileName="Widget/UILoadingMainProgressBar.xml" xy="0,1040" size="1920,40">
+      <gearDisplay controller="IsDownload" pages="1"/>
+      <relation target="" sidePair="width-width,center-center,bottom-bottom"/>
+      <ProgressBar max="100"/>
+    </component>
+    <component id="n13_iwzd" name="upgrade" src="qew11e" fileName="Scene/UILauncherUpgrade.xml" xy="0,0">
+      <gearDisplay controller="IsUpgrade" pages="1"/>
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </component>
+  </displayList>
+</component>

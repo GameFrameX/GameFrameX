@@ -1,0 +1,38 @@
+using Luban;
+
+{{namespace_with_grace_begin __namespace}}
+public partial class {{__name}}
+{
+    {{~for table in __tables ~}}
+    {{~if table.comment != '' ~}}
+    /// <summary>
+    /// {{escape_comment table.comment}}
+    /// </summary>
+    {{~end~}}
+    internal {{table.full_name}} {{format_property_name __code_style table.name}} { private set; get; }
+    {{~end~}}
+
+    public {{__name}}()
+    {
+        TablesMemory.BeginRecord();
+
+        {{~for table in __tables ~}}
+        {{format_property_name __code_style table.name}} = new {{table.full_name}}();
+        {{~end~}}
+
+        PostInit();
+        ResolveRef();
+
+        TablesMemory.EndRecord();
+    }
+
+    private void ResolveRef()
+    {
+        {{~for table in __tables ~}}
+        {{format_property_name __code_style table.name}}.ResolveRef(this);
+        {{~end~}}
+    }
+
+    partial void PostInit();
+}
+{{namespace_with_grace_end __namespace}}

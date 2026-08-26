@@ -1,0 +1,85 @@
+syntax = "proto3";
+package User;
+option module = 300;
+// 请求账号登录
+message ReqLogin
+{
+  string UserName = 1;
+  string Platform = 2;
+  int32 SdkType = 3;
+  string SdkToken = 4;
+  string Device = 5;
+  string Password = 6; // 密码
+}
+
+// 请求账号登录返回
+message RespLogin
+{
+  int32 Code = 1;
+  string RoleName = 2; // 账号名
+  int64 Id = 3; // 账号ID
+  uint32 Level = 4; // 账号等级
+  int64 CreateTime = 5; // 创建时间
+}
+
+// 请求角色创建
+message ReqPlayerCreate
+{
+  int64 Id = 1; // 账号ID  
+  string Name = 2; // 角色名
+}
+
+// 请求角色创建返回
+message RespPlayerCreate
+{
+   PlayerInfo PlayerInfo = 1; // 角色信息
+}
+
+// 请求角色列表
+message ReqPlayerList
+{
+  int64 Id = 1; // 账号ID
+}
+// 请求角色列表返回
+message RespPlayerList
+{
+  repeated PlayerInfo PlayerList = 1; // 角色列表
+}
+
+message PlayerInfo
+{
+  int64 Id = 1; // 角色ID
+  string Name = 2; // 角色名
+  uint32 Level = 3; // 角色等级
+  int32 State = 4; // 角色状态
+  uint32 Avatar = 5; // 角色头像
+  uint64 CurrentExp = 6; // 角色当前经验
+}
+
+
+// 请求玩家登录
+message ReqPlayerLogin
+{
+  int64 Id = 1; // 角色ID
+}
+
+// 请求玩家登录返回
+message RespPlayerLogin
+{
+  int32 Code = 1;
+  int64 CreateTime = 2; // 创建时间  
+  PlayerInfo PlayerInfo = 3; // 角色信息
+}
+
+// 客户端每次请求都会回复错误码
+message RespErrorCode
+{
+  int64 ErrCode = 1; // 0:表示无错误
+  string Desc = 2; // 错误描述（不为0时有效）
+}
+
+message RespPrompt
+{
+  int32 Type = 1; // 提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）
+  string Content = 2; // 提示内容
+}

@@ -1,0 +1,33 @@
+syntax = "proto3";
+package Common;
+option module = 20;
+
+// 返回码
+enum ResultCode
+{
+  Success = 0; // 成功
+  Failed = 1; // 失败
+}
+
+// 操作错误代码（客户端与服务器之间的业务错误码）
+enum OperationStatusCode
+{
+  Ok = 0; // 成功
+  ConfigErr = 1; // 配置表错误
+  ParamErr = 2; // 客户端传递参数错误
+  CostNotEnough = 3; // 消耗不足
+  Forbidden = 4; // 未开通服务
+  NotFound = 5; // 不存在
+  HasExist = 6; // 已经存在
+  AccountCannotBeNull = 7; // 账号不存在或为空
+  Unprocessable = 8; // 无法执行数据库修改
+  UnknownPlatform = 9; // 未知平台
+  Notice = 10; // 正常通知
+  FuncNotOpen = 11; // 功能未开启，主消息屏蔽
+  Other = 12; // 其他
+  InternalServerError = 13; // 内部服务错误
+  ServerFullyLoaded = 14; // 通知客户端服务器人数已达上限
+  Unsupported = 15; // 不支持的操作（如未实现的奖励类型路由）
+  InvalidReward = 16; // 奖励参数非法
+  PartialSuccess = 17; // 部分成功（多项发放中仅部分成功）
+}

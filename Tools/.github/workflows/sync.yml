@@ -1,0 +1,14 @@
+name: Sync Github To Mirror
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    uses: GameFrameX/public-github-actions/.github/workflows/sync.yml@main
+    with:
+      target_branch: ${{ github.ref_name }}
+      repository_name: ${{ github.repository }}
+    secrets: inherit

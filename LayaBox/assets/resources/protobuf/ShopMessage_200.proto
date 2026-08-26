@@ -1,0 +1,129 @@
+syntax = "proto3";
+package ShopMessage;
+option module = 200;
+//==============================商店===========================
+//获取商品列表
+message C2S_GetShopItemList
+{
+  int32 RpcId = 90;
+  int32 shopType = 1;        //商店类型
+}
+
+message S2C_GetShopItemList
+{
+  int32 RpcId = 90;
+  int32 Error = 91;
+  string Message = 92;
+
+  int32 shopType = 1;        //商店类型
+  int32 pageId = 2;          //分页号（分页号如果为-1，则将该商店中的所有物品都推送给前端）
+  //repeated ShopGood shopGoods = 3;    //货品列表
+
+  int32 maxFreeRfsTimes = 4;    //免费总刷新次数
+  int32 maxCurrencyRfsTimes = 5;  //货币总刷新次数
+  int32 maxAdsRfsTimes = 6;    //广告总刷新次数
+  //repeated Item currencyRfsTimes = 7;	//货币刷新消耗
+  int64 nextRefreshTime = 8;    //下次刷新时间
+  //ShopRefreshType rfsType = 9;
+}
+
+//获取限购列表
+message C2S_GetLimitList
+{
+  int32 RpcId = 90;
+
+  int32 shopType = 1;    //商店类型
+  int64 playerId = 2;    //玩家id
+  int32 pageId = 3;    //分页号（分页号如果为-1，则将该商店中的所有限购物品都推送给前端）
+}
+
+//存储数据
+message S2C_GetLimitList
+{
+  int32 RpcId = 90;
+  int32 Error = 91;
+  string Message = 92;
+
+  int32 shopType = 1;                //商店类型
+  int64 playerId = 2;                //玩家id
+  // repeated ShopLimitData limitList = 3;   //购买存储数据
+  int32 freeRfsTimes = 4;  //免费刷新次数
+  int32 currencyRfsTimes = 5;  //货币刷新次数
+  int32 adsRfsTimes = 6;  //广告刷新次数
+  int64 refreshedTime = 7; //刷新时间标识 判断当前周期内是否刷新过 now - rfstime > 24
+}
+
+//=========================广告支付============================
+
+//获取商品列表
+message C2S_GetShopPaymentList
+{
+  int32 RpcId = 90;
+
+  //PaymentType shopType = 1;        		//商店类型
+
+}
+
+message S2C_GetShopPaymentList
+{
+  int32 RpcId = 90;
+  int32 Error = 91;
+  string Message = 92;
+
+  //PaymentType shopType = 1;        		//商店类型
+  repeated PaymentGood goods = 2; //货物类型
+  int64 nextRefreshTime = 14;    //下次刷新时间
+}
+
+//获取限购列表
+message C2S_GetPaymentList
+{
+  int32 RpcId = 90;
+
+  //PaymentType shopType = 1;    //商店类型
+  int64 playerId = 2;    //玩家id
+  int32 pageId = 3;    //分页号（分页号如果为-1，则将该商店中的所有限购物品都推送给前端）
+}
+
+//存储数据
+message S2C_GetPaymentList
+{
+  int32 RpcId = 90;
+  int32 Error = 91;
+  string Message = 92;
+
+  //PaymentType shopType = 1;                //商店类型
+  int64 playerId = 2;                //玩家id
+  repeated PaymentData dataList = 3;   //购买存储数据
+  int64 refreshedTime = 4; //刷新时间标识 判断当前周期内是否刷新过 now - rfstime > 24
+}
+
+
+//===============================数据结构==============================
+
+
+message PaymentGood
+{
+  int32 goodIndex = 1;  //货物id
+  //PaymentType type = 2; //商店类型
+
+  //PaymentGetType getType = 3;		//物品获取类型
+  int32 maxAdsCount = 4;      //广告获取最大广告次数
+  //AdsAddType adsAddType = 5;  	//广告奖励递增类型
+  int32 adsAddNumber = 6;      //广告递增数值参数
+  int32 onlineTime = 7;      //在线时长获取时间(分钟)	
+  repeated string timelogin = 8;  //时间段登陆
+  //Item itemInfo = 9;				//货物id
+  bool banned = 10;        //是否下架
+  int32 sortId = 11;        //排序id
+  //PaymentShowType showType = 121;	//icon显示类型
+  int32 quality = 13;        //显示品阶
+  string name = 14;        //名称
+}
+
+message PaymentData
+{
+  int32 goodIndex = 1;  //货物id
+  //PaymentType type = 2; //商店类型
+  int32 getNum = 3;    //已经获取的次数
+}

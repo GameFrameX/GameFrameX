@@ -1,0 +1,13 @@
+syntax = "proto3";
+package Basic;
+option module = 10;
+// 请求心跳
+message ReqHeartBeat
+{
+  int64 Timestamp = 1; // 时间戳
+}
+// 服务器通知心跳结果，因为有些业务需要对心跳结果做处理所以不做成RPC的方式处理
+message NotifyHeartBeat
+{
+  int64 Timestamp = 1; // 时间戳
+}

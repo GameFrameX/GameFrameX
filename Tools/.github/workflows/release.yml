@@ -1,0 +1,14 @@
+name: Publish Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  release:
+    uses: GameFrameX/public-github-actions/.github/workflows/publish-dotnet-release.yml@main
+    with:
+      dotnet_version: "10.0.x"
+      docker_image_name: "gameframex-tools"
+    secrets: inherit

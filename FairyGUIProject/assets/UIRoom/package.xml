@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="rpsroom1">
+  <resources>
+    <component id="panel1" name="UIRoomPanel.xml" path="/Scene/" exported="true"/>
+    <component id="listp1" name="UIRoomListPanel.xml" path="/Scene/" exported="true"/>
+    <component id="battl1" name="UIRoomBattlePanel.xml" path="/Scene/" exported="true"/>
+    <component id="reslt1" name="UIRoomResultPopup.xml" path="/Scene/" exported="true"/>
+    <component id="roomi1" name="UIRoomListItem.xml" path="/Widget/" exported="true"/>
+    <component id="playi1" name="UIRoomPlayerItem.xml" path="/Widget/" exported="true"/>
+    <component id="gesti1" name="UIGestureButton.xml" path="/Widget/" exported="true"/>
+    <component id="btn001" name="UIRoomButton.xml" path="/Widget/"/>
+  </resources>
+  <publish name="" genCode="true"/>
+</packageDescription>

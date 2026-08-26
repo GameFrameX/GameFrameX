@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>11</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <ApplicationIcon />
+        <StartupObject />
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <OutputPath>..\bin\app_debug\hotfix</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <OutputPath>..\bin\app\hotfix</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\GameFrameX.Apps\GameFrameX.Apps.csproj" />
+        <ProjectReference Include="..\GameFrameX.Launcher\GameFrameX.Launcher.csproj" />
+        <ProjectReference Include="..\GameFrameX.Architecture.Analyzers\GameFrameX.Architecture.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GameFrameX.Core" Version="1.13.0" />
+      <PackageReference Include="GameFrameX.Hotfix.WrapperGenerator" Version="1.13.0" PrivateAssets="all" />
+      <PackageReference Include="GameFrameX.SuperSocket.ClientEngine" Version="1.2.0" />
+    </ItemGroup>
+
+    <!-- 暴露 internal 给测试工程：供 MailCampaignRegistryTests 调用 ResetForTest 隔离进程内 registry 状态（SelfCheck 工程移除后改由 xunit 承担自检）。 -->
+    <ItemGroup>
+      <InternalsVisibleTo Include="GameFrameX.Hotfix.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Logic\" />
+    </ItemGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--如需磁盘上生成文件打开以下注释-->
+    <!--<PropertyGroup>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>-->
+
+    <Target Name="CleanSourceGeneratedFiles" AfterTargets="Clean">
+        <RemoveDir Directories="$(BaseIntermediateOutputPath)\GeneratedFiles" />
+    </Target>
+
+</Project>

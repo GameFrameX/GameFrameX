@@ -1,0 +1,379 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:res="using:ProtoExporterGUI.Resources"
+        xmlns:models="using:ProtoExporterGUI.Models"
+        mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="720"
+        x:Class="ProtoExporterGUI.Views.MainWindow"
+        Width="720"
+        Height="720"
+        MinWidth="600"
+        MinHeight="600"
+        CanResize="True"
+        WindowState="Normal"
+        Icon="/Assets/logo.png"
+        Title="{Binding Instance.WindowTitle, Source={x:Static res:Localization.Instance}}"
+        RequestedThemeVariant="Dark">
+
+    <!--
+        设计说明:
+        - DockPanel 分三段:Header(顶部 app bar) / Content(可滚动表单) / Footer(粘性操作区 + 日志)。
+        - 颜色全部走 Avalonia FluentTheme semantic token,无任何硬编码 hex。
+        - 字段按 Mode 动态可见:Namespace/UsingStatements 仅在 C# / C++ / Go 模式显示,
+          ImportPath 仅在 TypeScript / Lua 模式显示(由 code-behind UpdateModeSpecificVisibility 控制)。
+        - Section 用 Border + 浅描边包裹,形成「卡片」分组,提升扫描效率。
+        - 间距统一 8dp 网格(4 / 8 / 12 / 16 / 24),保证节奏感。
+    -->
+
+    <Window.Resources>
+        <!-- 卡片容器:圆角 + 浅描边 + 比窗体略亮的填充色 -->
+        <Style x:Key="SectionCard" Selector="Border.sectionCard">
+            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="16,12" />
+        </Style>
+
+        <!-- Section 标题:小号 + 字间距 + 次级前景色 -->
+        <Style x:Key="SectionHeader" Selector="TextBlock.sectionHeader">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+
+        <!-- 字段标签:固定宽度以保持左对齐,字色稍弱于标题 -->
+        <Style x:Key="FieldLabel" Selector="TextBlock.fieldLabel">
+            <Setter Property="Width" Value="120" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+        </Style>
+
+        <!-- helper text:说明当前选项的含义或模式限制 -->
+        <Style x:Key="HelperText" Selector="TextBlock.helperText">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            <Setter Property="Margin" Value="0,4,0,0" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <!-- 次操作按钮(帮助等):透明底 + 主题强调色文字 -->
+        <Style x:Key="SubtleButton" Selector="Button.subtle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorLight1}" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+
+        <!-- 顶部 app bar:左侧标题 + 副标题,右侧语言选择 -->
+        <Border DockPanel.Dock="Top"
+                Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="20,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Instance.WindowTitle, Source={x:Static res:Localization.Instance}}"
+                               FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+                    <TextBlock Text="{Binding Instance.AppSubtitle, Source={x:Static res:Localization.Instance}}"
+                               FontSize="11"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                               Margin="0,2,0,0" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Instance.Language, Source={x:Static res:Localization.Instance}}"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                               Margin="0,0,8,0" />
+                    <ComboBox Name="LanguageSelector" Width="140"
+                              VerticalAlignment="Center"
+                              SelectionChanged="LanguageSelector_OnSelectionChanged" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 底部粘性操作区 + 日志(Expander,出错自动展开) -->
+        <Border DockPanel.Dock="Bottom"
+                Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="20,12">
+
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+
+                <!-- 主操作行:导出(主) + 帮助(次) -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto">
+                    <TextBlock Grid.Column="0"
+                               VerticalAlignment="Center"
+                               FontSize="12"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                               Text="{Binding Instance.ExportHint, Source={x:Static res:Localization.Instance}}" />
+                    <Button Grid.Column="1"
+                            Classes="subtle"
+                            Click="HelpButton_OnClick"
+                            Content="{Binding Instance.Help, Source={x:Static res:Localization.Instance}}"
+                            VerticalAlignment="Center" />
+                    <Button Grid.Column="2"
+                            Name="ExportButton"
+                            Click="Button_OnClick"
+                            Content="{Binding Instance.Export, Source={x:Static res:Localization.Instance}}"
+                            Classes="accent"
+                            VerticalAlignment="Center"
+                            MinWidth="120"
+                            Height="36"
+                            Margin="12,0,0,0"
+                            FontWeight="SemiBold" />
+                </Grid>
+
+                <!-- 日志:可折叠,失败时由 code-behind 自动展开 -->
+                <Expander Name="LogExpander"
+                          Grid.Row="1"
+                          IsExpanded="True"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch">
+                    <Expander.Header>
+                        <TextBlock Text="{Binding Instance.LogTitle, Source={x:Static res:Localization.Instance}}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                    </Expander.Header>
+                    <Border Background="{DynamicResource SystemControlBackgroundChromeBlackHighBrush}"
+                            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="12,8"
+                            MinHeight="80"
+                            MaxHeight="180">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <TextBlock Name="ErrorLog"
+                                       FontFamily="Consolas,Menlo,Monaco,monospace"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"
+                                       TextWrapping="NoWrap" />
+                        </ScrollViewer>
+                    </Border>
+                </Expander>
+            </Grid>
+        </Border>
+
+        <!-- 中间:可滚动的表单 -->
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="20,16">
+            <StackPanel Spacing="16">
+
+                <!-- 模式选择:作为主要决策放在最上方,字号略大 -->
+                <StackPanel>
+                    <TextBlock Classes="sectionHeader" Text="{Binding Instance.GroupExportType, Source={x:Static res:Localization.Instance}}" />
+                    <ComboBox Name="Mode"
+                              HorizontalAlignment="Stretch"
+                              ToolTip.Tip="{Binding Instance.ModeTip, Source={x:Static res:Localization.Instance}}"
+                              SelectedIndex="1"
+                              SelectionChanged="Mode_OnSelectionChanged">
+                        <ComboBoxItem>Server</ComboBoxItem>
+                        <ComboBoxItem>Unity</ComboBoxItem>
+                        <ComboBoxItem>Godot</ComboBoxItem>
+                        <ComboBoxItem>TypeScript</ComboBoxItem>
+                        <ComboBoxItem>C++</ComboBoxItem>
+                        <ComboBoxItem>Lua</ComboBoxItem>
+                        <ComboBoxItem>Go</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- 路径组:输入 + 输出 -->
+                <Border Classes="sectionCard">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="sectionHeader" Text="{Binding Instance.GroupPaths, Source={x:Static res:Localization.Instance}}" />
+
+                        <!-- 协议目录 -->
+                        <Grid ColumnDefinitions="120,*,Auto">
+                            <TextBlock Grid.Column="0" Classes="fieldLabel"
+                                       Text="{Binding Instance.InputPath, Source={x:Static res:Localization.Instance}}" />
+                            <TextBox Grid.Column="1" Name="InputPath"
+                                     VerticalAlignment="Center"
+                                     ToolTip.Tip="{Binding Instance.InputPathTip, Source={x:Static res:Localization.Instance}}" />
+                            <Button Grid.Column="2" Name="BrowseInputPath"
+                                    Click="BrowseInputPath_OnClick"
+                                    Content="{Binding Instance.Browse, Source={x:Static res:Localization.Instance}}"
+                                    Margin="8,0,0,0"
+                                    MinWidth="80" />
+                        </Grid>
+
+                        <!-- 输出目录 -->
+                        <Grid ColumnDefinitions="120,*,Auto">
+                            <TextBlock Grid.Column="0" Classes="fieldLabel"
+                                       Text="{Binding Instance.OutputPath, Source={x:Static res:Localization.Instance}}" />
+                            <TextBox Grid.Column="1" Name="OutputPath"
+                                     VerticalAlignment="Center"
+                                     ToolTip.Tip="{Binding Instance.OutputPathTip, Source={x:Static res:Localization.Instance}}" />
+                            <Button Grid.Column="2" Name="BrowseOutputPath"
+                                    Click="BrowseOutputPath_OnClick"
+                                    Content="{Binding Instance.Browse, Source={x:Static res:Localization.Instance}}"
+                                    Margin="8,0,0,0"
+                                    MinWidth="80" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 代码生成组:按模式动态显示 Namespace/Using/ImportPath -->
+                <Border Classes="sectionCard">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="sectionHeader" Text="{Binding Instance.GroupGeneration, Source={x:Static res:Localization.Instance}}" />
+
+                        <!-- 命名空间:C# / C++ / Go 模式使用 -->
+                        <StackPanel Name="NameSpaceRow">
+                            <Grid ColumnDefinitions="120,*">
+                                <TextBlock Grid.Column="0" Classes="fieldLabel"
+                                           Text="{Binding Instance.Namespace, Source={x:Static res:Localization.Instance}}" />
+                                <TextBox Grid.Column="1" Name="NameSpace"
+                                         VerticalAlignment="Center"
+                                         ToolTip.Tip="{Binding Instance.NamespaceTip, Source={x:Static res:Localization.Instance}}" />
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Using 语句:C# / C++ / Go 模式使用 -->
+                        <StackPanel Name="UsingStatementsRow">
+                            <TextBlock Classes="fieldLabel"
+                                       Text="{Binding Instance.UsingStatements, Source={x:Static res:Localization.Instance}}"
+                                       HorizontalAlignment="Left"
+                                       Margin="0,0,0,4" />
+                            <TextBox Name="UsingStatements"
+                                     Height="96"
+                                     AcceptsReturn="True"
+                                     TextWrapping="NoWrap"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                     FontFamily="Consolas,Menlo,Monaco,monospace"
+                                     FontSize="12" />
+                            <TextBlock Classes="helperText"
+                                       Text="{Binding Instance.UsingStatementsHint, Source={x:Static res:Localization.Instance}}" />
+                        </StackPanel>
+
+                        <!-- import 路径前缀:TypeScript / Lua 模式使用 -->
+                        <StackPanel Name="ImportPathRow">
+                            <Grid ColumnDefinitions="120,*">
+                                <TextBlock Grid.Column="0" Classes="fieldLabel"
+                                           Text="{Binding Instance.ImportPath, Source={x:Static res:Localization.Instance}}" />
+                                <TextBox Grid.Column="1" Name="ImportPath"
+                                         VerticalAlignment="Center"
+                                         ToolTip.Tip="{Binding Instance.ImportPathTip, Source={x:Static res:Localization.Instance}}" />
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- 注释校验级别 -->
+                        <Grid ColumnDefinitions="120,*">
+                            <TextBlock Grid.Column="0" Classes="fieldLabel"
+                                       Text="{Binding Instance.RequireComments, Source={x:Static res:Localization.Instance}}" />
+                            <ComboBox Grid.Column="1" Name="RequireComments"
+                                      HorizontalAlignment="Stretch"
+                                      ToolTip.Tip="{Binding Instance.RequireCommentsTip, Source={x:Static res:Localization.Instance}}"
+                                      SelectedIndex="0">
+                                <ComboBoxItem>none</ComboBoxItem>
+                                <ComboBoxItem>container</ComboBoxItem>
+                                <ComboBoxItem>member</ComboBoxItem>
+                                <ComboBoxItem>all</ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
+
+                        <!-- 布尔开关组:每个选项独占一行,语义分组清晰 -->
+                        <StackPanel Orientation="Vertical" Spacing="8" Margin="0,4,0,0">
+                            <CheckBox Name="IsGenerateErrorCode"
+                                      Content="{Binding Instance.GenerateErrorCode, Source={x:Static res:Localization.Instance}}"
+                                      ToolTip.Tip="{Binding Instance.GenerateErrorCodeTip, Source={x:Static res:Localization.Instance}}"
+                                      IsChecked="True" />
+                            <CheckBox Name="IsGenerateDescription"
+                                      Content="{Binding Instance.GenerateDescription, Source={x:Static res:Localization.Instance}}"
+                                      ToolTip.Tip="{Binding Instance.GenerateDescriptionTip, Source={x:Static res:Localization.Instance}}" />
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <CheckBox Name="IsServer"
+                                          Content="{Binding Instance.IsServer, Source={x:Static res:Localization.Instance}}"
+                                          ToolTip.Tip="{Binding Instance.IsServerTip, Source={x:Static res:Localization.Instance}}" />
+                                <TextBlock Name="ServerModeHint" Classes="helperText"
+                                           VerticalAlignment="Center"
+                                           Text="{Binding Instance.ServerModeHint, Source={x:Static res:Localization.Instance}}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Border>
+
+                <!-- 子 ID lock 状态组:只读观测面板。数据来自 MessageIdLockStore.Load,不参与导出决策 -->
+                <Border Classes="sectionCard">
+                    <StackPanel Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Grid.Column="0" Classes="sectionHeader" VerticalAlignment="Center"
+                                       Text="{Binding Instance.GroupLockStatus, Source={x:Static res:Localization.Instance}}" />
+                            <Button Grid.Column="1"
+                                    Name="LockRefreshButton"
+                                    Click="LockRefreshButton_OnClick"
+                                    Content="{Binding Instance.LockRefresh, Source={x:Static res:Localization.Instance}}"
+                                    Classes="subtle"
+                                    VerticalAlignment="Center" />
+                        </Grid>
+
+                        <!-- lock 文件路径 + 存在状态文字 -->
+                        <Grid ColumnDefinitions="120,*,Auto">
+                            <TextBlock Grid.Column="0" Classes="fieldLabel"
+                                       VerticalAlignment="Top"
+                                       Text="{Binding Instance.LockFilePath, Source={x:Static res:Localization.Instance}}" />
+                            <TextBlock Grid.Column="1" Name="LockPathText"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Grid.Column="2" Name="LockStateText"
+                                       Margin="8,0,0,0"
+                                       VerticalAlignment="Top"
+                                       FontSize="11"
+                                       FontWeight="SemiBold" />
+                        </Grid>
+
+                        <!-- 最后修改时间 -->
+                        <Grid ColumnDefinitions="120,*">
+                            <TextBlock Grid.Column="0" Classes="fieldLabel"
+                                       Text="{Binding Instance.LockFileLastWrite, Source={x:Static res:Localization.Instance}}" />
+                            <TextBlock Grid.Column="1" Name="LockLastWriteText"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+                        </Grid>
+
+                        <!-- 逐模块统计表:模块号 / 模块名 / 消息数 / 墓碑数 -->
+                        <StackPanel Name="LockTableSection" Spacing="4">
+                            <Grid ColumnDefinitions="80,*,100,100" Margin="0,0,0,4">
+                                <TextBlock Grid.Column="0" Name="LockModuleHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="1" Name="LockModuleNameHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="2" Name="LockMessageCountHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="3" Name="LockRetiredCountHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
+                            </Grid>
+                            <ItemsControl Name="LockModuleList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:LockModuleRow">
+                                        <Grid ColumnDefinitions="80,*,100,100" Margin="0,2">
+                                            <TextBlock Grid.Column="0" Text="{Binding ModuleKey}" FontFamily="Consolas,Menlo,Monaco,monospace" />
+                                            <TextBlock Grid.Column="1" Text="{Binding ModuleName}" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Grid.Column="2" Text="{Binding MessageCount}" />
+                                            <TextBlock Grid.Column="3" Text="{Binding RetiredCount}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                        <!-- 占位/错误提示:表格 section 隐藏时仍需可见,故放在其外 -->
+                        <TextBlock Name="LockPlaceholderRow" Classes="helperText" TextWrapping="Wrap" />
+
+                        <!-- 导出结束后的本次变更提示:从日志解析,不重新计算 -->
+                        <TextBlock Name="LockSummaryText" Classes="helperText" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </DockPanel>
+</Window>

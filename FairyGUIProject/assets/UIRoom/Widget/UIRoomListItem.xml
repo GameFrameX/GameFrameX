@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="520,92" extention="Button">
+  <displayList>
+    <graph id="n0_room" name="bg" xy="0,0" size="520,92" type="rect" lineSize="2" lineColor="#ff465263" fillColor="#ff222732" corner="8">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_room" name="room_name" xy="18,12" size="290,30" fontSize="24" color="#ffffffff" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="#1 猜拳房间"/>
+    <text id="n2_room" name="room_status" xy="18,50" size="270,24" fontSize="20" color="#ffc5cfde" vAlign="middle" autoSize="none" singleLine="true" text="等待中 1/2"/>
+    <component id="n3_room" name="join_button" src="btn001" fileName="Widget/UIRoomButton.xml" xy="382,19" size="108,54">
+      <Button title="加入"/>
+      <relation target="" sidePair="right-right"/>
+    </component>
+  </displayList>
+  <Button downEffect="scale" downEffectValue=".96"/>
+</component>

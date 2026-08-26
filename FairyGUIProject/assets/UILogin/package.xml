@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="f011l0h9">
+  <resources>
+    <component id="nmd0c" name="UILogin.xml" path="/Scene/" exported="true"/>
+    <component id="aneks9g" name="UIAnnouncement.xml" path="/Scene/" exported="true"/>
+    <component id="aneks9i" name="UIAnnouncementContent.xml" path="/Scene/"/>
+    <component id="xsvis9l" name="UILoginButton.xml" path="/Widget/"/>
+    <component id="i3dbs9m" name="UIPlayerList.xml" path="/Scene/" exported="true"/>
+    <component id="i3dbs9n" name="UIPlayerListItem.xml" path="/Scene/" exported="true"/>
+    <component id="i3dbs9o" name="UIPlayerListItemLoginButton.xml" path="/Scene/"/>
+    <component id="i3dbs9p" name="UIPlayerCreate.xml" path="/Scene/" exported="true"/>
+    <image id="i3dbs9q" name="Button BG.png" path="/Images/"/>
+    <image id="ob7as9r" name="Background.png" path="/Images/"/>
+  </resources>
+  <publish name="" genCode="true"/>
+</packageDescription>

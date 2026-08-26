@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1920,1080">
+  <displayList>
+    <graph id="n34_jfft" name="n34" xy="0,0" size="1920,1080" type="rect" fillColor="#543399ff"/>
+    <text id="n23_nmd0" name="n23" xy="889,155" pivot="0.5,0.5" size="104,66" font="ui://f59y7iy8ghno32" fontSize="50" color="#e1c399" align="center" vAlign="middle" text="登录"/>
+    <text id="n30_xsvi" name="ErrorText" xy="695,694" pivot="1,0" size="529,46" font="ui://f59y7iy8udcb2" fontSize="28" color="#f56236" align="center" vAlign="middle" letterSpacing="-1" autoSize="shrink" singleLine="true" autoClearText="true" text=""/>
+    <component id="n32_jfft" name="enter" src="xsvis9l" fileName="Widget/UILoginButton.xml" xy="720,844"/>
+    <image id="n16_nmd0" name="n16" src="i3dbs9q" fileName="Images/Button BG.png" xy="577,385" size="766,97" group="n35_i3db"/>
+    <text id="n17_nmd0" name="UserName" xy="592,404" size="716,59" group="n35_i3db" font="ui://f59y7iy8ghno32" fontSize="44" color="#dedede" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" text="gameframex" input="true" prompt="点击输入"/>
+    <image id="n18_nmd0" name="n18" src="i3dbs9q" fileName="Images/Button BG.png" xy="577,565" size="766,97" group="n35_i3db"/>
+    <text id="n19_nmd0" name="Password" xy="592,585" size="716,59" group="n35_i3db" fontSize="44" color="#dedede" vAlign="middle" letterSpacing="-1" autoSize="none" strokeColor="#000000" strokeSize="2" singleLine="true" text="123456" input="true" prompt="点击输入" password="true"/>
+    <text id="n20_nmd0" name="n20" xy="430,405" size="130,56" group="n35_i3db" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="账户名"/>
+    <text id="n21_nmd0" name="n21" xy="472,585" size="88,56" group="n35_i3db" font="ui://f59y7iy8ghno32" fontSize="42" color="#d1c7ba" text="密码"/>
+    <group id="n35_i3db" name="n35" xy="430,385" size="913,277"/>
+  </displayList>
+</component>

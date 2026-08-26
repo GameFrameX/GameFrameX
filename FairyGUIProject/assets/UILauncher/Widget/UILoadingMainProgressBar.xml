@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1080,40" extention="ProgressBar">
+  <displayList>
+    <graph id="n0_l1g1" name="n0" xy="0,0" size="1080,40" type="rect" lineSize="0" lineColor="#ffa0a0a0" fillColor="#ff1a1915"/>
+    <graph id="n1_l1g1" name="bar" xy="0,0" size="1080,40" type="rect" lineSize="0" fillColor="#fffec786"/>
+  </displayList>
+  <ProgressBar/>
+</component>

@@ -1,0 +1,83 @@
+using Luban;
+{{
+    key_type = __table.key_ttype
+    value_type =  __table.value_ttype
+
+    func index_type_name
+        ret (declaring_type_name $0.type)
+    end
+
+    func table_union_map_type_name
+        ret 'System.Collections.Generic.Dictionary<(' + (array.each __table.index_list @index_type_name | array.join ', ') + '), ' + (declaring_type_name value_type)  + '>'
+    end
+
+    func table_key_list
+        varName = $0
+        indexList = __table.index_list |array.each do; ret varName + '.' + (format_property_name __code_style $0.index_field.name); end;
+        ret array.join indexList ', '
+    end
+
+    func table_data_list
+        dataList = __records |array.each do; ret (apply_value $0); end
+        ret array.join dataList ',\n'
+    end
+}}
+{{namespace_with_grace_begin __namespace_with_top_module}}
+{{~if __table.comment != '' ~}}
+/// <summary>
+/// {{escape_comment __table.comment}}
+/// </summary>
+{{~end~}}
+public partial class {{__name}}
+{
+    {{~if __table.is_map_table ~}}
+    public {{__name}}()
+    {
+        _dataList = new System.Collections.Generic.List<{{declaring_type_name value_type}}> ()
+        {
+            {{table_data_list}}
+        };
+        _dataMap = new System.Collections.Generic.Dictionary<{{declaring_type_name key_type}}, {{declaring_type_name value_type}}> (_dataList.Count);
+        foreach(var _v in _dataList)
+        {
+            _dataMap.Add(_v.{{format_property_name __code_style __table.index_field.name}}, _v);
+        }
+        PostInit();
+    }
+
+    {{~else if __table.is_list_table ~}}
+    public {{__name}}()
+    {
+        _dataList = new System.Collections.Generic.List<{{declaring_type_name value_type}}> ()
+        {
+            {{table_data_list}}
+        };
+        {{~if __table.is_union_index~}}
+        _dataMapUnion = new {{table_union_map_type_name}} (_dataList.Count);
+        foreach(var _v in _dataList)
+        {
+            _dataMapUnion.Add(({{table_key_list "_v"}}), _v);
+        }
+        {{~else if !__table.index_list.empty?~}}
+        {{~for idx in __table.index_list~}}
+        _dataMap_{{idx.index_field.name}} = new System.Collections.Generic.Dictionary<{{declaring_type_name idx.type}}, {{declaring_type_name value_type}}> (_dataList.Count);
+        {{~end~}}
+        foreach(var _v in _dataList)
+        {
+            {{~for idx in __table.index_list~}}
+            _dataMap_{{idx.index_field.name}}.Add(_v.{{format_property_name __code_style idx.index_field.name}}, _v);
+            {{~end~}}
+        }
+        {{~end~}}
+        PostInit();
+    }
+    {{~else~}}
+
+    public {{__name}}()
+    {
+        _data = {{table_data_list}};
+        PostInit();
+    }
+    {{~end~}}
+}
+{{namespace_with_grace_end __namespace_with_top_module}}

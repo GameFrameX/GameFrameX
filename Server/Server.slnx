@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+    <File Path="Dockerfile" />
+    <File Path="logo.png" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="GameFrameX.Launcher\GameFrameX.Launcher.csproj" />
+  <Project Path="GameFrameX.Hotfix.Tests/GameFrameX.Hotfix.Tests.csproj" />
+  <Project Path="GameFrameX.Hotfix\GameFrameX.Hotfix.csproj" />
+  <Project Path="GameFrameX.Architecture.Analyzers/GameFrameX.Architecture.Analyzers.csproj" />
+  <Project Path="GameFrameX.Config\GameFrameX.Config.csproj" />
+  <Project Path="GameFrameX.Proto\GameFrameX.Proto.csproj" />
+  <Project Path="GameFrameX.Apps\GameFrameX.Apps.csproj" />
+</Solution>

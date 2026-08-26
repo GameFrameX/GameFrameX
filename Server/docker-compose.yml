@@ -1,0 +1,148 @@
+services:
+  mongodb:
+    image: mongo                                    # MongoDB 数据库镜像
+    container_name: mongodb                         # 容器名称
+    ports:
+      - "27017:27017"                               # MongoDB 默认端口
+    volumes:
+      - ./running/database:/data/db                 # 数据持久化目录
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin            # 数据库 root 用户名
+      - MONGO_INITDB_ROOT_PASSWORD=admin            # 数据库 root 密码
+    networks:
+      - gameframex
+  gameframex:
+    build:
+      context: .                                    # 构建上下文目录
+      dockerfile: Dockerfile                        # Dockerfile 路径
+    image: gameframex/server.launcher:1.0.0.0       # 镜像名称及版本
+    container_name: gameframex                      # 容器名称
+    ports:
+      # APM 端口
+      - "29090:29090"
+      # TCP 端口
+      - "29100:29100"
+      # WebSocket 端口
+      - "29110:29110"
+      # HTTP 端口
+      - "28080:28080"
+    environment:
+      # ========== 基础服务配置 ==========
+      - ServerType=Game                             # 服务器类型。单进程传单值(如 Game)，多进程传逗号分隔值(如 Game,Social,Chat)
+      - ServerId=1000                               # 服务器ID。合服时需确保不同服使用相同 ServerId
+      # - IsSingleMode=false                        # 是否单进程模式，默认值 false（多进程模式）
+      # - ServerInstanceId=0                        # 服务器实例ID，用于区分同一服务器的不同实例，默认值 0
+
+      # ========== 网络配置 ==========
+      - InnerPort=29100                             # 内部网络通信端口，默认值 8888
+      - OuterPort=29100                             # 外部客户端连接端口
+      # - InnerHost=0.0.0.0                         # 内部网络通信 IP 地址，默认值 0.0.0.0
+      # - OuterHost=0.0.0.0                         # 外部客户端连接 IP 地址，默认值 0.0.0.0
+      # - IsEnableTcp=true                          # 是否启用 TCP 服务，默认值 true
+      # - IsEnableUdp=false                         # 是否启用 UDP 服务，默认值 false
+      # - IsEnableWebSocket=false                   # 是否启用 WebSocket 服务，默认值 false
+      # - NetWorkSendTimeOutSeconds=5               # 网络发送等待超时时间（秒），默认值 5 秒，最小值 1 秒
+
+      # ========== 模块配置 ==========
+      - MinModuleId=10                              # 游戏逻辑服务器处理的最小模块ID，用于模块分片
+      - MaxModuleId=9999                            # 游戏逻辑服务器处理的最大模块ID，用于模块分片
+
+      # ========== HTTP 配置 ==========
+      - HttpPort=28080                              # HTTP 端口，默认值 8080
+      # - IsEnableHttp=true                         # 是否启用 HTTP 服务，默认值 true
+      # - HttpIsDevelopment=false                   # HTTP 是否开发模式（启用 Swagger），默认值 false
+      # - HttpUrl=/game/api/                        # API 接口根路径，必须以 / 开头和结尾，默认值 /game/api/
+      # - HttpsPort=                                # HTTPS 端口
+      # - HttpMaxRequestBodyBytes=1048576           # HTTP 请求体最大字节数，默认值 1MB
+      # - HttpMaxJsonBodyBytes=1048576              # HTTP JSON 请求体最大字节数，默认值 1MB
+      # - HttpMaxProtoBodyBytes=1048576             # HTTP ProtoBuf 请求体最大字节数，默认值 1MB
+      # - HttpRequireSign=false                     # HTTP 是否全局要求签名校验，默认值 false。生产环境可开启
+      # - HttpCorsAllowedOrigins=                   # HTTP CORS 允许的 Origin 白名单，多个值用逗号或分号分隔。生产环境空值时不启用 CORS
+
+      # ========== WebSocket 配置 ==========
+      - WsPort=29110                                # WebSocket 端口，默认值 8889，当 IsEnableWebSocket 为 true 时启用
+      # - WssPort=                                  # WebSocket 加密端口（WSS）
+      # - WssCertFilePath=                          # WSS 使用的 SSL 证书文件路径
+
+      # ========== 数据库配置 ==========
+      - DataBaseUrl=mongodb://admin:admin@mongodb:27017/?authSource=admin  # 数据库连接地址
+      - DataBaseName=gameframex                     # 数据库名称
+      # - DataBasePassword=                         # 数据库密码
+
+      # ========== 非 StartupOptions 配置 ==========
+      - APMPort=29090                               # APM 性能监控端口
+      - DiscoveryCenterIp=127.0.0.1                 # 服务发现中心 IP 地址
+      - DiscoveryCenterPort=10001                   # 服务发现中心端口
+      - HttpCode=inner_httpcode                     # HTTP 内部通信编码
+
+      # ========== OpenTelemetry 配置 ==========
+      # - IsOpenTelemetry=false                     # 是否启用 OpenTelemetry 遥测功能，默认值 false
+      # - MetricsPort=                              # 指标收集服务端口号
+      # - IsOpenTelemetryMetrics=false              # 是否启用指标收集，需 IsOpenTelemetry 为 true，默认值 false
+      # - IsOpenTelemetryTracing=false              # 是否启用分布式追踪，需 IsOpenTelemetry 为 true，默认值 false
+
+      # ========== 消息监控配置 ==========
+      # - IsMonitorMessageTimeOut=false             # 是否打印超时日志，默认值 false
+      # - MonitorMessageTimeOutSeconds=1            # 处理器超时时间（秒），默认值 1 秒，需 IsMonitorMessageTimeOut 为 true
+
+      # ========== 调试配置 ==========
+      # - IsDebug=false                             # 是否启用 Debug 日志模式，默认值 false
+      # - IsDebugSend=false                         # 是否打印发送数据，需 IsDebug 为 true，默认值 false
+      # - IsDebugSendHeartBeat=false                # 是否打印发送的心跳数据，需 IsDebugSend 为 true，默认值 false
+      # - IsDebugReceive=false                      # 是否打印接收数据，需 IsDebug 为 true，默认值 false
+      # - IsDebugReceiveHeartBeat=false             # 是否打印接收的心跳数据，需 IsDebugReceive 为 true，默认值 false
+      # - IsDebugHttp=true                          # HTTP 调试日志总开关，需 IsDebug 为 true，默认值 true
+      # - IsDebugHttpRequest=true                   # 是否打印 HTTP 请求参数日志，需 IsDebugHttp 为 true，默认值 true
+      # - IsDebugHttpResponse=true                  # 是否打印 HTTP 响应结果日志，需 IsDebugHttp 为 true，默认值 true
+
+      # ========== 日志配置 ==========
+      # - LogIsConsole=true                         # 是否输出到控制台，默认值 true
+      # - LogIsWriteToFile=true                     # 是否将日志输出到文件，默认值 true
+      # - LogIsGrafanaLoki=false                    # 是否输出到 GrafanaLoki，默认值 false
+      # - LogGrafanaLokiUrl=http://localhost:3100    # GrafanaLoki 服务地址，默认值 http://localhost:3100
+      # - LogGrafanaLokiUserName=                   # GrafanaLoki 用户名或 Email
+      # - LogGrafanaLokiPassword=                   # GrafanaLoki 密码
+      # - LogRollingInterval=Day                    # 日志滚动间隔，默认值 Day。可选值：Minute / Hour / Day / Month / Year / Infinite
+      # - LogEventLevel=Debug                       # 日志输出级别，默认值 Debug。可选值：Verbose / Debug / Information / Warning / Error / Fatal
+      # - LogIsFileSizeLimit=true                   # 是否限制单个日志文件大小，默认值 true
+      # - LogFileSizeLimitBytes=104857600           # 日志单个文件大小限制（字节），默认值 100MB
+      # - LogRetainedFileCountLimit=31              # 日志文件保留数量限制，默认值 31 个文件
+
+      # ========== 时区配置 ==========
+      # - IsUseTimeZone=false                       # 是否启用自定义时区，默认值 false（使用系统默认时区）
+      # - TimeZone=Asia/Shanghai                    # 服务器时区，默认值 Asia/Shanghai，支持 IANA 标准标识符
+
+      # ========== Actor 配置 ==========
+      # - ActorTimeOut=30000                        # Actor 执行任务超时时间（毫秒），默认值 30000（30 秒）
+      # - ActorQueueTimeOut=30000                   # Actor 执行任务队列超时时间（毫秒），默认值 30000（30 秒）
+      # - ActorRecycleTime=15                       # Actor 空闲回收时间（分钟），默认值 15 分钟，最小值 1 分钟
+
+      # ========== 数据保存配置 ==========
+      # - SaveDataInterval=30000                    # 保存数据间隔（毫秒），默认值 30000（30 秒），最小值 5000（5 秒）
+      # - SaveDataBatchCount=500                    # 保存数据的批量数量，默认值 500
+      # - SaveDataBatchTimeOut=30000                # 保存数据的超时时间（毫秒），默认值 30000（30 秒）
+
+      # ========== ID 生成配置 ==========
+      # - WorkerId=1                                # 雪花 ID 工作节点 ID，默认值 1
+      # - DataCenterId=1                            # 雪花 ID 数据中心 ID，默认值 1
+
+      # ========== 运维标签配置 ==========
+      # - Language=                                 # 语言设置，用于本地化
+      # - DataCenter=                               # 数据中心标识符
+      # - TagName=                                  # 标签名称，用于区分不同环境的服务器，默认值空
+      # - Description=                              # 描述信息，描述服务器用途，默认值空
+      # - Note=                                     # 备注信息，默认值空
+      # - Label=                                    # 标签信息，默认值空
+      # - ClientApiHost=                            # 客户端 API 地址，默认值空
+      # - HubApiHost=                               # Hub API 地址，默认值空
+    networks:
+      - gameframex
+    volumes:
+      - "./running/hotfix:/app/hotfix"              # 热更文件目录
+      - "./running/json:/app/json"                  # JSON 配置目录
+      - "./running/logs:/app/data/logs"             # 日志输出目录
+      - "./running/GameAnalytics:/GameAnalytics"    # 游戏分析数据目录
+networks:
+  gameframex:
+    name: gameframex                                # 网络名称
+    driver: bridge                                  # 网络驱动类型

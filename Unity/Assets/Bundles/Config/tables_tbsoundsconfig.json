@@ -1,0 +1,58 @@
+[
+  {
+    "id": 6400001,
+    "groupName": "BGM",
+    "path": "BGM/voice_bgm_lobby.mp3",
+    "title": "",
+    "characterName": ""
+  },
+  {
+    "id": 6400002,
+    "groupName": "Effect",
+    "path": "Effect/voice_effect_lingdang.wav",
+    "title": "",
+    "characterName": ""
+  },
+  {
+    "id": 6400003,
+    "groupName": "BGM",
+    "path": "BGM/voice_bgm_chenguang.mp3",
+    "title": "",
+    "characterName": ""
+  },
+  {
+    "id": 6400004,
+    "groupName": "BGM",
+    "path": "BGM/voice_bgm_yibian.mp3",
+    "title": "",
+    "characterName": ""
+  },
+  {
+    "id": 6400005,
+    "groupName": "BGM",
+    "path": "BGM/voice_bgm_yingxin.mp3",
+    "title": "",
+    "characterName": ""
+  },
+  {
+    "id": 6400027,
+    "groupName": "Vocal",
+    "path": "Vocal/character_qianxia_chapter_1_youqingzhigui_1.wav",
+    "title": "",
+    "characterName": ""
+  },
+  {
+    "id": 6400028,
+    "groupName": "Vocal",
+    "path": "Vocal/character_qianxia_chapter_1_youqingzhigui_2.wav",
+    "title": "",
+    "characterName": ""
+  },
+  {
+    "id": 6400029,
+    "groupName": "Vocal",
+    "path": "Vocal/character_qianxia_chapter_1_youqingzhigui_3.wav",
+    "title": "",
+    "characterName": ""
+  }
+]

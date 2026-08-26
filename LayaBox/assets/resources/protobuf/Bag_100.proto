@@ -1,0 +1,56 @@
+syntax = "proto3";
+package Bag;
+option module = 100;
+enum BagType
+{
+  Default = 0; // 默认
+  Pet = 1; // 宠物
+}
+
+// 请求背包数据
+message ReqBagInfo
+{
+  BagType BagType = 1; // 背包类型
+}
+
+// 返回背包数据
+message RespBagInfo
+{
+  map<int32, int64> ItemDic = 1;
+}
+
+// 通知背包数据变化
+message NotifyBagInfoChanged
+{
+  map<int32, int64> ItemDic = 1; // 变化的道具，key:道具id，value:数量
+}
+
+// 请求合成宠物
+message ReqComposePet
+{
+  int32 FragmentId = 1; // 碎片id
+}
+
+// 返回合成宠物
+message RespComposePet
+{
+  int32 PetId = 1; // 合成宠物的Id
+}
+
+// 请求使用道具
+message ReqUseItem
+{
+  int32 ItemId = 1; // 道具id
+}
+
+// 出售道具
+message ReqSellItem
+{
+  int32 ItemId = 1; // 道具id
+}
+
+// 出售道具
+message RespItemChange
+{
+  map<int32, int64> ItemDic = 1; // 变化的道具
+}

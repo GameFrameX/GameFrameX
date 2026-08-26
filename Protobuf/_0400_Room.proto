@@ -1,0 +1,158 @@
+syntax = "proto3";
+package Room;
+option module = 400;
+
+// 游戏类型
+enum GameType
+{
+  None = 0; // 未知
+  RockPaperScissors = 1; // 石头剪刀布
+}
+
+// 通用房间状态
+enum RoomStatus
+{
+  None = 0; // 无效状态
+  Waiting = 1; // 等待中
+  Ready = 2; // 可开始
+  Playing = 3; // 游戏中
+  Settling = 4; // 结算中
+  Settled = 5; // 已结算
+  Closed = 6; // 已关闭
+  Disbanded = 7; // 已解散
+}
+
+// 通用房间变更类型
+enum RoomChangeType
+{
+  Created = 0; // 创建
+  Joined = 1; // 加入
+  Left = 2; // 退出
+  Started = 3; // 开始
+  Settling = 4; // 进入结算
+  Settled = 5; // 已结算
+  Closed = 6; // 关闭
+  Disbanded = 7; // 解散
+  Reset = 8; // 重置
+}
+
+// 通用房间玩家在线状态
+enum RoomPlayerOnlineStatus
+{
+  OnlineUnknown = 0; // 未知
+  Online = 1; // 在线
+  Reconnecting = 2; // 断线重连中
+  Offline = 3; // 离线
+}
+
+// 通用房间玩家状态
+enum RoomPlayerStatus
+{
+  PlayerStatusNone = 0; // 无状态
+  Idle = 1; // 等待中
+  ReadyInRoom = 2; // 可开始
+  InGame = 3; // 游戏中
+  Submitted = 4; // 已提交操作
+  SettlingInRoom = 5; // 结算中
+  SettledInRoom = 6; // 已结算
+}
+
+// 通用房间玩家信息
+message RoomPlayerInfo
+{
+  int64 RoleId = 1; // 玩家ID
+  int32 SeatIndex = 2; // 座位索引
+  bool IsOwner = 3; // 是否房主
+  string Name = 4; // 玩家昵称
+  uint32 Avatar = 5; // 头像ID
+  RoomPlayerOnlineStatus OnlineStatus = 6; // 在线状态
+  RoomPlayerStatus PlayerStatus = 7; // 房间内状态
+}
+
+// 通用房间信息
+message RoomInfo
+{
+  int64 RoomId = 1; // 房间ID
+  string Name = 2; // 房间名称
+  GameType GameType = 3; // 游戏类型
+  RoomStatus Status = 4; // 当前状态
+  int32 PlayerCount = 5; // 当前玩家数量
+  int32 MinPlayerCount = 6; // 最少玩家数量
+  int32 MaxPlayerCount = 7; // 最大玩家数量
+  int64 OwnerRoleId = 8; // 房主玩家ID
+  repeated RoomPlayerInfo Players = 9; // 玩家列表
+  int32 Round = 10; // 当前局数
+  int64 CreatedTime = 11; // 创建时间
+  int64 UpdatedTime = 12; // 更新时间
+}
+
+// 请求通用房间列表
+message ReqRoomList
+{
+  GameType GameType = 1; // 游戏类型。None表示全部。
+  bool IncludeClosed = 2; // 是否包含已关闭/已解散房间
+}
+
+// 返回通用房间列表
+message RespRoomList
+{
+  repeated RoomInfo Rooms = 1; // 房间列表
+}
+
+// 请求创建通用房间
+message ReqCreateRoom
+{
+  GameType GameType = 1; // 游戏类型
+  string Name = 2; // 房间名称
+  int32 MinPlayerCount = 3; // 最少玩家数量。不传则使用游戏默认配置。
+  int32 MaxPlayerCount = 4; // 最大玩家数量。不传则使用游戏默认配置。
+}
+
+// 返回创建通用房间
+message RespCreateRoom
+{
+  RoomInfo Room = 1; // 房间信息
+}
+
+// 请求加入通用房间
+message ReqJoinRoom
+{
+  int64 RoomId = 1; // 房间ID
+}
+
+// 返回加入通用房间
+message RespJoinRoom
+{
+  RoomInfo Room = 1; // 房间信息
+}
+
+// 请求退出通用房间
+message ReqLeaveRoom
+{
+  int64 RoomId = 1; // 房间ID
+}
+
+// 返回退出通用房间
+message RespLeaveRoom
+{
+  RoomInfo Room = 1; // 房间信息
+}
+
+// 请求开始通用房间游戏
+message ReqStartRoomGame
+{
+  int64 RoomId = 1; // 房间ID
+}
+
+// 返回开始通用房间游戏
+message RespStartRoomGame
+{
+  RoomInfo Room = 1; // 房间信息
+}
+
+// 通知通用房间变化
+message NotifyRoomChanged
+{
+  RoomChangeType ChangeType = 1; // 变化类型
+  RoomInfo Room = 2; // 房间信息
+}

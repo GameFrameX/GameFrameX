@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="xml:space" type="xsd:string" use="optional" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+
+  <data name="WindowTitle" xml:space="preserve"><value>ProtoExporterGUI</value></data>
+  <data name="ExportType" xml:space="preserve"><value>Export type:</value></data>
+  <data name="Namespace" xml:space="preserve"><value>Namespace:</value></data>
+  <data name="InputPath" xml:space="preserve"><value>Proto file path:</value></data>
+  <data name="OutputPath" xml:space="preserve"><value>Output path:</value></data>
+  <data name="UsingStatements" xml:space="preserve"><value>using statements / includes:</value></data>
+  <data name="ImportPath" xml:space="preserve"><value>import path prefix:</value></data>
+  <data name="RequireComments" xml:space="preserve"><value>Comment validation level:</value></data>
+  <data name="GenerateErrorCode" xml:space="preserve"><value>Generate ErrorCode?</value></data>
+  <data name="GenerateDescription" xml:space="preserve"><value>Generate Description?</value></data>
+  <data name="IsServer" xml:space="preserve"><value>Server mode?</value></data>
+  <data name="ServerModeHint" xml:space="preserve"><value>(includes server-only proto files)</value></data>
+
+  <data name="Export" xml:space="preserve"><value>Export</value></data>
+  <data name="Help" xml:space="preserve"><value>Help</value></data>
+  <data name="Browse" xml:space="preserve"><value>Browse...</value></data>
+  <data name="Language" xml:space="preserve"><value>Language:</value></data>
+
+  <data name="PickInputFolder" xml:space="preserve"><value>Select proto file folder</value></data>
+  <data name="PickOutputFolder" xml:space="preserve"><value>Select output folder</value></data>
+
+  <data name="ErrUnsupportedMode" xml:space="preserve"><value>Unsupported export mode</value></data>
+  <data name="ErrInputPathEmpty" xml:space="preserve"><value>Proto file path must not be empty</value></data>
+  <data name="ErrOutputPathEmpty" xml:space="preserve"><value>Output path must not be empty</value></data>
+  <data name="ErrNamespaceEmpty" xml:space="preserve"><value>Namespace must not be empty</value></data>
+  <data name="ExportSuccess" xml:space="preserve"><value>Export succeeded</value></data>
+  <data name="ExportFailed" xml:space="preserve"><value>Export failed</value></data>
+  <data name="HelpOpenFailed" xml:space="preserve"><value>Cannot open help document, please visit manually</value></data>
+
+  <!-- Added during v2 redesign: section headers, subtitle, helper text -->
+  <data name="AppSubtitle" xml:space="preserve"><value>Protobuf → multi-language code generation</value></data>
+  <data name="ExportHint" xml:space="preserve"><value>Confirm paths and mode before clicking Export</value></data>
+  <data name="LogTitle" xml:space="preserve"><value>Log</value></data>
+  <data name="GroupExportType" xml:space="preserve"><value>Export type</value></data>
+  <data name="GroupPaths" xml:space="preserve"><value>Paths</value></data>
+  <data name="GroupGeneration" xml:space="preserve"><value>Code generation</value></data>
+  <data name="UsingStatementsHint" xml:space="preserve"><value>One per line; stored as | delimited (matches CLI --usingStatements)</value></data>
+
+  <!-- Detailed option tooltips (shown on hover): explain what each toggling option means -->
+  <data name="GenerateErrorCodeTip" xml:space="preserve"><value>When enabled, all response messages (Resp prefix, non-Notify) get an auto-appended ErrorCode field (int, tag 2047); no need to declare it in proto.</value></data>
+  <data name="GenerateDescriptionTip" xml:space="preserve"><value>C# mode only. When enabled, enum values and fields get [System.ComponentModel.Description] attributes for editor/serialization-friendly display.</value></data>
+  <data name="IsServerTip" xml:space="preserve"><value>When enabled, includes server-only protos (filenames ending with -s/_s) and server-internal protos (negative module IDs). Client builds should keep this off.</value></data>
+  <data name="RequireCommentsTip" xml:space="preserve"><value>none=no check; container=message/enum must have a leading comment; member=fields/enum members must have comments; all=both. Fails export if violated.</value></data>
+
+  <!-- Detailed config tooltips (shown on hover): cover mode selection, paths, namespace, import path -->
+  <data name="ModeTip" xml:space="preserve"><value>Target language/platform. Server=server C#; Unity/Godot=client C#; TypeScript=web/minigames; C++=Unreal; Lua=Defold/Solar2D; Go=Go server. Determines namespace, using statements and filter rules.</value></data>
+  <data name="InputPathTip" xml:space="preserve"><value>Directory containing .proto files. Recursively scans all .proto files (including subdirectories). proto3 syntax subset only.</value></data>
+  <data name="OutputPathTip" xml:space="preserve"><value>Output directory for generated code. Cleared and rebuilt on every export (clean build semantics) — do not point at a directory holding other files.</value></data>
+  <data name="NamespaceTip" xml:space="preserve"><value>Namespace/package name for generated code. Required for C# / C++ / Go; ignored by TypeScript (uses proto package name); ignored by Lua.</value></data>
+  <data name="ImportPathTip" xml:space="preserve"><value>TypeScript / Lua modes only. Path prefix for generated import statements, e.g. ../network/ or ./network/.</value></data>
+
+  <!-- Sub-ID lock status panel: observation only, never affects export decisions -->
+  <data name="GroupLockStatus" xml:space="preserve"><value>Sub-ID lock status</value></data>
+  <data name="LockFilePath" xml:space="preserve"><value>Lock file path:</value></data>
+  <data name="LockStateFound" xml:space="preserve"><value>Loaded</value></data>
+  <data name="LockStateNotFound" xml:space="preserve"><value>Not found</value></data>
+  <data name="LockFileLastWrite" xml:space="preserve"><value>Last modified:</value></data>
+  <data name="LockModuleColumn" xml:space="preserve"><value>Module</value></data>
+  <data name="LockModuleNameColumn" xml:space="preserve"><value>Module name</value></data>
+  <data name="LockMessageCountColumn" xml:space="preserve"><value>Messages</value></data>
+  <data name="LockRetiredCountColumn" xml:space="preserve"><value>Retired</value></data>
+  <data name="LockEmptyModules" xml:space="preserve"><value>(lock file contains no module entries)</value></data>
+  <data name="LockRefresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="LockLoadFailed" xml:space="preserve"><value>Failed to read lock file</value></data>
+  <data name="LockSummaryTemplate" xml:space="preserve"><value>Lock changed: {0} module(s), {1} newly assigned</value></data>
+  <data name="LockPathEmpty" xml:space="preserve"><value>Not set (auto-increment mode, no lock file)</value></data>
+</root>

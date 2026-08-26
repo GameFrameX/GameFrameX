@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build-proto:pbjs": "pbjs --dependency protobufjs/minimal.js --target static-module --wrap commonjs --out ./assets/protobuf/protobuf.bundle.js ./../Protobuf/*.proto",
+    "build-proto:pbts": "pbts --main --out ./assets/protobuf/protobuf.bundle.d.ts ./assets/protobuf/protobuf.bundle.js && node ./Tools/wrap-pbts-result.js"
+  }
+}

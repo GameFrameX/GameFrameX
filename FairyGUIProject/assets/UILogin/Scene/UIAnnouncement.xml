@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="2160,1080">
+  <displayList>
+    <graph id="n28_wysz" name="MaskLayer" xy="-1484,-2324" pivot="0.5,0.5" size="1499,5000" alpha="0" type="rect" lineSize="0" fillColor="#02000000">
+      <relation target="" sidePair="width-width,height-height,center-center%,middle-middle%"/>
+    </graph>
+    <component id="n27_anek" name="TextContent" src="aneks9i" fileName="Scene/UIAnnouncementContent.xml" xy="418,259" size="1334,450"/>
+    <text id="n30_ts7x" name="TextTitle" xy="1080,173" pivot="0.5,0.5" anchor="true" size="104,66" font="ui://f59y7iy8ghno32" fontSize="50" color="#e1c399" align="center" text="公告">
+      <relation target="" sidePair="center-center"/>
+    </text>
+  </displayList>
+</component>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="167,168">
+  <displayList>
+    <image id="n4_i3db" name="n4" src="i3dbs9q" fileName="Images/Button BG.png" xy="0,0" size="167,168"/>
+    <richtext id="n5_i3db" name="title" xy="39,55" size="82,53" fontSize="39" color="#cc9933" align="center" vAlign="middle" bold="true" singleLine="true" text="登录">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </richtext>
+  </displayList>
+</component>

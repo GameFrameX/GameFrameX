@@ -1,0 +1,26 @@
+syntax = "proto3";
+package Attribute;
+option module = 310;
+
+// 玩家属性条目，含最终值与 Base/Add/Pct 调试字段
+message PlayerAttributeEntry
+{
+  int32 Type = 1; // 属性编号（AttributeType）
+  int64 Value = 2; // 最终值
+  int64 Base = 3; // 基础值（调试字段）
+  int64 Add = 4; // 加法修正（调试字段）
+  int64 Pct = 5; // 百分比修正，10000 表示 100%（调试字段）
+}
+
+// 玩家属性完整快照（服务端推送，登录后或重连时发送）
+message NotifyPlayerAttributeSync
+{
+  repeated PlayerAttributeEntry Attributes = 1; // 全部最终属性条目
+}
+
+// 单个玩家属性最终值变化（服务端推送增量）
+message NotifyPlayerAttributeChanged
+{
+  int32 Type = 1; // 发生变化的最终属性编号（AttributeType）
+  int64 Value = 2; // 新的最终值
+}

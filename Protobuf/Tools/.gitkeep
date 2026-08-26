@@ -1,0 +1,10 @@
+# 此目录用于存放 ProtoExport 编译产物（ProtoExport.dll、ProtoExport.deps.json、
+# ProtoExport.runtimeconfig.json、GameFrameX.Foundation.Options.dll 等）。
+#
+# 获取产物：
+#   git clone https://github.com/GameFrameX/GameFrameX.Tools.git
+#   cd GameFrameX.Tools/ProtoExport
+#   dotnet build -c Release
+#   cp bin/Release/net10.0/* <本仓库>/Tools/
+#
+# 完整步骤详见仓库根目录 README.md 的「快速开始 / 本地脚本」章节。

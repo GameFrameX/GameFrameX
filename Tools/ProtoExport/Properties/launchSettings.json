@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "ProtoServerToolsApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--mode csharp --isServer true --usingStatements \"using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.NetWork.Abstractions|using GameFrameX.NetWork.Messages\" --isGenerateDescription true --inputPath ./../../../../../Protobuf --outputPath ./../../../../../Server/GameFrameX.Proto/Proto --namespaceName GameFrameX.Proto.Proto --isGenerateErrorCode true"
+    },
+    "ProtoUnityToolsApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--mode csharp --usingStatements \"using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.Network.Runtime\" --inputPath ./../../../../../Protobuf --outputPath ./../../../../../Unity/Assets/Hotfix/Proto --namespaceName Hotfix.Proto --isGenerateErrorCode true"
+    },
+    "ProtoGodotToolsApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--mode csharp --usingStatements \"using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.Network.Runtime\" --inputPath ./../../../../../Protobuf --outputPath ./../../../../../Godot/Proto --namespaceName Proto --isGenerateErrorCode true"
+    },
+    "ProtoTypeScriptToolsApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--mode typescript --inputPath ./../../../../../Protobuf --outputPath ./../../../../../Laya/src/gameframex/protobuf --namespaceName '' --isGenerateErrorCode true"
+    }
+  }
+}

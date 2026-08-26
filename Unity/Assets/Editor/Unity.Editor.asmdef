@@ -1,0 +1,22 @@
+{
+    "name": "Unity.Editor",
+    "rootNamespace": "Unity.Editor",
+    "references": [
+        "YooAsset.Editor",
+        "YooAsset.Runtime",
+        "HybridCLR.Editor",
+        "GameFrameX.Editor",
+        "GameFrameX.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

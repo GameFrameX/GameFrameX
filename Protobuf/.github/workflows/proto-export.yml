@@ -1,0 +1,161 @@
+name: Proto Export
+
+# 触发：任意分支 push + 手动。每次都跑全部 6 种语言导出。
+on:
+  push:
+  workflow_dispatch:
+
+# 同分支新 push 取消旧 run，避免堆积
+concurrency:
+  group: proto-export-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+# Tools 仓库发布好的 ProtoExport 镜像（同时打 latest tag）
+env:
+  IMAGE: gameframex/gameframex-tools:latest
+
+jobs:
+  export:
+    name: Export (${{ matrix.lang }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { lang: csharp-server,  artifact: proto-csharp-server }
+          - { lang: csharp-client,  artifact: proto-csharp-client }
+          - { lang: cpp,            artifact: proto-cpp }
+          - { lang: go,             artifact: proto-go }
+          - { lang: lua,            artifact: proto-lua }
+          - { lang: typescript,     artifact: proto-typescript }
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run ProtoExport via Docker
+        run: |
+          set -euo pipefail
+          # 只把 .proto 放进容器，输入目录挂只读
+          PROTOS="$RUNNER_TEMP/protos"
+          OUT="$RUNNER_TEMP/output"
+          mkdir -p "$PROTOS" "$OUT"
+          cp "$GITHUB_WORKSPACE"/*.proto "$PROTOS/"
+
+          case "${{ matrix.lang }}" in
+            csharp-server)
+              docker run --rm \
+                -v "$PROTOS":/protos:ro \
+                -v "$OUT":/output \
+                "$IMAGE" \
+                --mode csharp --isServer true \
+                --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.NetWork.Abstractions|using GameFrameX.NetWork.Messages" \
+                --isGenerateDescription true \
+                --isGenerateErrorCode true \
+                --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
+              ;;
+            csharp-client)
+              docker run --rm \
+                -v "$PROTOS":/protos:ro \
+                -v "$OUT":/output \
+                "$IMAGE" \
+                --mode csharp \
+                --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.Network.Runtime" \
+                --isGenerateErrorCode true \
+                --inputPath /protos --outputPath /output --namespaceName Hotfix.Proto
+              ;;
+            cpp)
+              docker run --rm \
+                -v "$PROTOS":/protos:ro \
+                -v "$OUT":/output \
+                "$IMAGE" \
+                --mode cpp \
+                --usingStatements "#include <cstdint>|#include <string>|#include <vector>|#include <unordered_map>" \
+                --isGenerateErrorCode true \
+                --namespaceName GameFrameX.Proto \
+                --inputPath /protos --outputPath /output
+              ;;
+            go)
+              docker run --rm \
+                -v "$PROTOS":/protos:ro \
+                -v "$OUT":/output \
+                "$IMAGE" \
+                --mode go \
+                --isGenerateErrorCode true \
+                --namespaceName proto \
+                --inputPath /protos --outputPath /output
+              ;;
+            lua)
+              docker run --rm \
+                -v "$PROTOS":/protos:ro \
+                -v "$OUT":/output \
+                "$IMAGE" \
+                --mode lua \
+                --importPath "./network/" \
+                --isGenerateErrorCode true \
+                --inputPath /protos --outputPath /output
+              ;;
+            typescript)
+              docker run --rm \
+                -v "$PROTOS":/protos:ro \
+                -v "$OUT":/output \
+                "$IMAGE" \
+                --mode typescript \
+                --isGenerateErrorCode true \
+                --inputPath /protos --outputPath /output
+              ;;
+          esac
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ runner.temp }}/output
+          retention-days: 30
+
+  release:
+    name: Publish rolling latest Release
+    needs: export
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Package each language
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          for d in artifacts/*/; do
+            name=$(basename "$d")
+            (cd "$d" && zip -qr "$GITHUB_WORKSPACE/release/${name}.zip" .)
+          done
+          ls -la release
+
+      - name: Publish rolling latest Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest Export (auto)
+          body: |
+            Auto-generated multi-language code from the latest `main` push.
+
+            Commit: ${{ github.sha }}
+
+            Bundles:
+            - `proto-csharp-server.zip` — C# (server)
+            - `proto-csharp-client.zip` — C# (client / Unity / Godot)
+            - `proto-cpp.zip`           — C++
+            - `proto-go.zip`            — Go
+            - `proto-lua.zip`           — Lua
+            - `proto-typescript.zip`    — TypeScript
+          make_latest: true
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

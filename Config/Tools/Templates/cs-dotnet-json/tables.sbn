@@ -1,0 +1,67 @@
+using System.Text.Json;
+using GameFrameX.Core.Config;
+using GameFrameX.Config;
+
+{{namespace_with_grace_begin __namespace}}
+    public partial class {{__name}}
+    {
+        {{~for table in __tables ~}}
+        {{~if table.comment != '' ~}}
+        /// <summary>
+        /// {{escape_comment table.comment}}
+        /// </summary>
+        {{~end~}}
+        internal {{table.full_name}} {{format_property_name __code_style table.name}} { private set; get; }
+        {{~end~}}
+    
+        private ConfigComponent m_ConfigComponent;
+
+        public void Init(ConfigComponent configComponent)
+        {
+            m_ConfigComponent = configComponent;
+            configComponent.RemoveAllConfigs();
+        }
+
+        public async System.Threading.Tasks.Task LoadAsync(System.Func<string, System.Threading.Tasks.Task<JsonElement>> loader)
+        {
+            //m_ConfigComponent.RemoveAllConfigs();
+            var loadTasks = new System.Collections.Generic.List<System.Threading.Tasks.Task>();
+    
+            {{~for table in __tables ~}}
+            {{format_property_name __code_style table.name}} = new {{table.full_name}}(() => loader("{{table.output_data_file}}"));
+            loadTasks.Add({{format_property_name __code_style table.name}}.LoadAsync());
+            m_ConfigComponent.Add(nameof({{table.full_name}}), {{format_property_name __code_style table.name}});
+
+            {{~end~}}
+    
+            await System.Threading.Tasks.Task.WhenAll(loadTasks);
+    
+            Refresh();
+        }
+
+        public {{__name}}()
+        {
+            //TablesMemory.BeginRecord();
+    
+            {{~for table in __tables ~}}
+            // {{format_property_name __code_style table.name}} = new {{table.full_name}}();
+            {{~end~}}
+            //TablesMemory.EndRecord();
+        }
+
+        public void Refresh()
+        {
+            PostInit();
+            ResolveRef();
+        }
+
+        private void ResolveRef()
+        {
+            {{~for table in __tables ~}}
+            {{format_property_name __code_style table.name}}.ResolveRef(this);
+            {{~end~}}
+        }
+    
+        partial void PostInit();
+    }
+{{namespace_with_grace_end __namespace}}

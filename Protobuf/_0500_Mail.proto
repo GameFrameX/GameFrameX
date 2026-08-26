@@ -1,0 +1,137 @@
+syntax = "proto3";
+package Mail;
+option module = 500;
+
+// 邮件业务错误码（6 位 = 模块ID 500 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum MailErrorCode
+{
+  MailNotFound = 500001; // 邮件不存在（或已被删除）
+  MailAlreadyDeleted = 500002; // 邮件已处于删除终态
+  UnclaimedAttachment = 500003; // 存在未领取附件，禁止删除
+  AttachmentNotFound = 500004; // 邮件附件槽位不存在
+  AttachmentAlreadyClaimed = 500005; // 附件已领取（幂等命中）
+  UnclaimableAttachment = 500006; // 附件不可领取（撤回 / 过期已作废）
+}
+
+// 邮件附件视图（含领取状态）。用于邮件列表与读信响应
+message MailAttachmentInfo
+{
+  int32 SlotId = 1; // 附件槽位 ID（邮件内唯一）
+  int32 RewardType = 2; // 奖励类型（0=普通道具，其余为预留路由位）
+  int32 ItemId = 3; // 物品 ID
+  int64 Count = 4; // 数量
+  int32 ClaimStatus = 5; // 领取状态（0=可领，1=已领，2=作废）
+}
+
+// 邮件摘要。用于列表展示
+message MailInfo
+{
+  int64 MailId = 1; // 玩家邮件实例 ID
+  int64 CampaignId = 2; // 来源运营邮件活动 ID
+  int64 CampaignVersion = 3; // 来源发布版本号
+  int32 MailType = 4; // 邮件业务类型（MailType）
+  string Title = 5; // 标题
+  int32 ReadStatus = 6; // 读信状态（0=未读，1=已读）
+  int32 AttachmentStatus = 7; // 附件整体状态（0=无附件，1=不可领，2=部分已领，3=全部已领）
+  int32 MailStatus = 8; // 邮件生命周期状态（MailStatus）
+  int64 CreateTime = 9; // 实例化时间（unix 秒）
+  int64 ExpireTime = 10; // 过期时间（unix 秒）
+  bool HasAttachment = 11; // 是否存在附件
+}
+
+// 单个附件槽位的领取结果（单领 / 一键领取共用）
+message MailClaimedSlot
+{
+  int64 MailId = 1; // 邮件实例 ID
+  int32 SlotId = 2; // 附件槽位 ID
+  int32 RewardType = 3; // 奖励类型（RewardType）
+  int32 ItemId = 4; // 物品 ID
+  int64 Count = 5; // 数量
+  int32 ClaimStatus = 6; // 领取状态（ClaimStatus）
+  bool Success = 7; // 是否发放成功
+}
+
+// 拉取邮件列表请求（触发懒同步）
+message ReqMailList
+{
+  int32 Cursor = 1; // 分页游标（已拉取条数偏移）
+  int32 PageSize = 2; // 每页大小
+}
+
+// 邮件列表响应
+message RespMailList
+{
+  repeated MailInfo Mails = 1; // 邮件摘要列表
+  int32 UnreadCount = 2; // 未读计数
+  bool HasMore = 3; // 是否还有更多
+}
+
+// 读信请求（标记已读，读信幂等）
+message ReqMailRead
+{
+  int64 MailId = 1; // 邮件实例 ID
+}
+
+// 读信响应
+message RespMailRead
+{
+  int64 MailId = 1; // 邮件实例 ID
+  string Title = 2; // 标题
+  string Content = 3; // 正文
+  int32 TemplateId = 4; // 模板 ID（审计用）
+  int64 TemplateVersion = 5; // 模板版本（审计用）
+  int32 ReadStatus = 6; // 读信状态（ReadStatus）
+  int32 MailStatus = 7; // 邮件生命周期状态（MailStatus）
+  repeated MailAttachmentInfo Attachments = 8; // 附件视图列表（含领取状态）
+}
+
+// 删除邮件请求。未领取附件邮件会被拒绝
+message ReqMailDelete
+{
+  int64 MailId = 1; // 邮件实例 ID
+}
+
+// 删除邮件响应
+message RespMailDelete
+{
+  int64 MailId = 1; // 邮件实例 ID
+}
+
+// 邮件变更通知（服务端推送）
+message NotifyMailChanged
+{
+  repeated int64 ChangedMailIds = 1; // 变更邮件实例 ID 列表（新建 / 状态变更）
+  int32 UnreadCount = 2; // 当前未读计数
+}
+
+// 领取单个邮件附件请求
+message ReqMailClaimAttachment
+{
+  int64 MailId = 1; // 邮件实例 ID
+  int32 SlotId = 2; // 附件槽位 ID
+}
+
+// 领取单个邮件附件响应
+message RespMailClaimAttachment
+{
+  int64 MailId = 1; // 邮件实例 ID
+  int32 SlotId = 2; // 附件槽位 ID
+  int32 RewardType = 3; // 奖励类型（RewardType）
+  int32 ItemId = 4; // 物品 ID
+  int64 Count = 5; // 数量
+  int32 ClaimStatus = 6; // 本槽位领取后状态（ClaimStatus）
+  int32 MailStatus = 7; // 邮件生命周期状态（MailStatus）
+  int32 AttachmentStatus = 8; // 附件整体状态（AttachmentStatus）
+}
+
+// 一键领取全部可领附件请求（无参）
+message ReqMailClaimAllAttachment
+{
+}
+
+// 一键领取全部可领附件响应
+message RespMailClaimAllAttachment
+{
+  repeated MailClaimedSlot Slots = 1; // 逐槽位领取结果
+  int32 ClaimedCount = 2; // 成功领取的槽位数
+}

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    默认（中文）资源。运行时通过 LocalizationService 切换 CurrentThread.CurrentUICulture
+    加载对应语言的 Resources.<culture>.resx。新增语言只需新增同名附属程序集 resx。
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="xml:space" type="xsd:string" use="optional" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+
+  <data name="WindowTitle" xml:space="preserve"><value>ProtoExporterGUI 协议导出工具</value></data>
+  <data name="ExportType" xml:space="preserve"><value>导出类型：</value></data>
+  <data name="Namespace" xml:space="preserve"><value>命名空间：</value></data>
+  <data name="InputPath" xml:space="preserve"><value>协议文件路径：</value></data>
+  <data name="OutputPath" xml:space="preserve"><value>导出文件路径：</value></data>
+  <data name="UsingStatements" xml:space="preserve"><value>using 语句 / 引用：</value></data>
+  <data name="ImportPath" xml:space="preserve"><value>import 路径前缀：</value></data>
+  <data name="RequireComments" xml:space="preserve"><value>注释校验级别：</value></data>
+  <data name="GenerateErrorCode" xml:space="preserve"><value>生成错误码？</value></data>
+  <data name="GenerateDescription" xml:space="preserve"><value>生成 Description？</value></data>
+  <data name="IsServer" xml:space="preserve"><value>服务器模式？</value></data>
+  <data name="ServerModeHint" xml:space="preserve"><value>（含服务端专属协议文件）</value></data>
+
+  <data name="Export" xml:space="preserve"><value>导出</value></data>
+  <data name="Help" xml:space="preserve"><value>帮助文档</value></data>
+  <data name="Browse" xml:space="preserve"><value>浏览…</value></data>
+  <data name="Language" xml:space="preserve"><value>语言：</value></data>
+
+  <data name="PickInputFolder" xml:space="preserve"><value>选择协议文件目录</value></data>
+  <data name="PickOutputFolder" xml:space="preserve"><value>选择导出文件目录</value></data>
+
+  <data name="ErrUnsupportedMode" xml:space="preserve"><value>不支持的运行模式</value></data>
+  <data name="ErrInputPathEmpty" xml:space="preserve"><value>协议文件路径不能为空</value></data>
+  <data name="ErrOutputPathEmpty" xml:space="preserve"><value>导出路径不能为空</value></data>
+  <data name="ErrNamespaceEmpty" xml:space="preserve"><value>命名空间不能为空</value></data>
+  <data name="ExportSuccess" xml:space="preserve"><value>导出成功</value></data>
+  <data name="ExportFailed" xml:space="preserve"><value>导出失败</value></data>
+  <data name="HelpOpenFailed" xml:space="preserve"><value>无法打开帮助文档，请手动访问</value></data>
+
+  <!-- 新增:v2 重设计布局时引入的分组/副标题/提示文本 -->
+  <data name="AppSubtitle" xml:space="preserve"><value>Protobuf → 多语言代码生成</value></data>
+  <data name="ExportHint" xml:space="preserve"><value>点击「导出」前请确认路径与模式</value></data>
+  <data name="LogTitle" xml:space="preserve"><value>日志</value></data>
+  <data name="GroupExportType" xml:space="preserve"><value>导出类型</value></data>
+  <data name="GroupPaths" xml:space="preserve"><value>路径</value></data>
+  <data name="GroupGeneration" xml:space="preserve"><value>代码生成</value></data>
+  <data name="UsingStatementsHint" xml:space="preserve"><value>每行一条；数据层以 | 分隔（与 CLI --usingStatements 契约一致）</value></data>
+
+  <!-- 选项详细提示（鼠标悬停显示）：解释每个带问号选项的具体含义 -->
+  <data name="GenerateErrorCodeTip" xml:space="preserve"><value>开启后，所有响应消息（Resp 前缀，非 Notify）会自动追加 ErrorCode 字段（int，tag 2047），无需在 proto 中手动定义。</value></data>
+  <data name="GenerateDescriptionTip" xml:space="preserve"><value>仅 C# 模式有效。开启后，枚举值和字段附带 [System.ComponentModel.Description] 特性，便于在编辑器/序列化场景显示中文说明。</value></data>
+  <data name="IsServerTip" xml:space="preserve"><value>开启后，包含文件名以 -s/_s 结尾的服务端专属协议，以及模块 ID 为负数的服务端间内部协议。客户端构建应关闭此项。</value></data>
+  <data name="RequireCommentsTip" xml:space="preserve"><value>none=不校验；container=message/enum 上方必须有注释；member=字段/枚举成员必须有注释；all=两者都校验。不满足时导出失败。</value></data>
+
+  <!-- 配置项详细提示（鼠标悬停显示）：覆盖模式选择、路径、命名空间、import 路径 -->
+  <data name="ModeTip" xml:space="preserve"><value>选择目标语言/平台。Server=服务端 C#；Unity/Godot=客户端 C#；TypeScript=Web/小游戏；C++=Unreal；Lua=Defold/Solar2D；Go=Go 服务端。不同模式决定命名空间、using 和过滤规则。</value></data>
+  <data name="InputPathTip" xml:space="preserve"><value>.proto 协议文件所在目录。工具会递归扫描所有 .proto 文件（含子目录）。仅支持 proto3 语法子集。</value></data>
+  <data name="OutputPathTip" xml:space="preserve"><value>生成代码的输出目录。每次导出会清空并重建该目录（clean build 语义），请勿指向含其他文件的目录。</value></data>
+  <data name="NamespaceTip" xml:space="preserve"><value>生成代码的命名空间/包名。C# / C++ / Go 模式必填；TypeScript 模式忽略（用 proto package 名）；Lua 模式忽略。</value></data>
+  <data name="ImportPathTip" xml:space="preserve"><value>仅 TypeScript / Lua 模式有效。生成 import 语句的路径前缀，如 ../network/ 或 ./network/。</value></data>
+
+  <!-- 子 ID lock 状态面板：只做观测显示，不参与导出决策 -->
+  <data name="GroupLockStatus" xml:space="preserve"><value>子 ID lock 状态</value></data>
+  <data name="LockFilePath" xml:space="preserve"><value>lock 文件路径：</value></data>
+  <data name="LockStateFound" xml:space="preserve"><value>已加载</value></data>
+  <data name="LockStateNotFound" xml:space="preserve"><value>未找到</value></data>
+  <data name="LockFileLastWrite" xml:space="preserve"><value>最后修改：</value></data>
+  <data name="LockModuleColumn" xml:space="preserve"><value>模块号</value></data>
+  <data name="LockModuleNameColumn" xml:space="preserve"><value>模块名</value></data>
+  <data name="LockMessageCountColumn" xml:space="preserve"><value>消息数</value></data>
+  <data name="LockRetiredCountColumn" xml:space="preserve"><value>墓碑数</value></data>
+  <data name="LockEmptyModules" xml:space="preserve"><value>（lock 文件中暂无模块条目）</value></data>
+  <data name="LockRefresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="LockLoadFailed" xml:space="preserve"><value>lock 文件读取失败</value></data>
+  <data name="LockSummaryTemplate" xml:space="preserve"><value>lock 变更：模块 {0} 个，新增 {1} 条</value></data>
+  <data name="LockPathEmpty" xml:space="preserve"><value>未设置（自增模式，不使用 lock 文件）</value></data>
+</root>

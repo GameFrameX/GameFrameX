@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="160,54" pivot="0.5,0.5" extention="Button">
+  <displayList>
+    <graph id="n0_btn" name="bg" xy="0,0" size="160,54" type="rect" lineSize="2" lineColor="#ff5c6d81" fillColor="#ff2c6f91" corner="6">
+      <relation target="" sidePair="width-width,height-height"/>
+    </graph>
+    <text id="n1_btn" name="title" xy="0,0" size="160,54" fontSize="24" color="#ffffffff" align="center" vAlign="middle" autoSize="none" bold="true" singleLine="true" text="按钮">
+      <relation target="" sidePair="width-width,height-height"/>
+    </text>
+  </displayList>
+  <Button downEffect="scale" downEffectValue=".88"/>
+</component>

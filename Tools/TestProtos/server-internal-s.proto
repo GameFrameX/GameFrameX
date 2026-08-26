@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package ServerInternal;
+
+// 服务端间通讯协议（module < 0）
+option module = -1;
+
+// 请求服务器状态
+message ReqServerStatus
+{
+  string ServerId = 1; // 服务器ID
+}
+
+// 服务器状态响应
+message RespServerStatus
+{
+  bool IsOnline = 1;        // 是否在线
+  int32 OnlineCount = 2;    // 在线人数
+  int64 UptimeSeconds = 3;  // 运行时长（秒）
+}
+
+// 服务器负载通知
+message NotifyServerLoad
+{
+  int32 CpuUsage = 1;  // CPU使用率（百分比）
+  int32 MemoryUsage = 2; // 内存使用率（百分比）
+}

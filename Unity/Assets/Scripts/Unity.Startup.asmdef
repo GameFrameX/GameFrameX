@@ -1,0 +1,41 @@
+{
+    "name": "GameFrameX.Startup.Application",
+    "rootNamespace": "GameFrameX.Startup.Application",
+    "references": [
+        "GameFrameX.Runtime",
+        "GameFrameX.Entry.Runtime",
+        "GameFrameX.GlobalConfig.Runtime",
+        "YooAsset.Runtime",
+        "YooAsset",
+        "UniTask.Runtime",
+        "FairyGUI.Runtime",
+        "BlankGetChannel.Runtime",
+        "HybridCLR.Runtime",
+        "GameFrameX.FairyGUI.Runtime",
+        "GameFrameX.Entity.Runtime",
+        "GameFrameX.Event.Runtime",
+        "GameFrameX.Asset.Runtime",
+        "HybridCLRData",
+        "GameFrameX.UI.Runtime",
+        "GameFrameX.UI.FairyGUI.Runtime",
+        "GameFrameX.UI.UGUI.Runtime",
+        "GameFrameX.ImageCache.Runtime",
+        "GameFrameX.Localization.Runtime",
+        "GameFrameX.Startup.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.code-philosophy.hybridclr",
+            "expression": "",
+            "define": "ENABLE_GAME_FRAME_X_HYBRID_CLR"
+        }
+    ],
+    "noEngineReferences": false
+}

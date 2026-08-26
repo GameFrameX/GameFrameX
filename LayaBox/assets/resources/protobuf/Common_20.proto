@@ -1,0 +1,36 @@
+syntax = "proto3";
+package Common;
+option module = 20;
+// 返回码
+enum ResultCode
+{
+  Success = 0; //成功
+  Failed = 1; //失败
+}
+
+enum PhoneType
+{
+  MOBILE = 0; // 手机
+  HOME = 1;
+  WORK = 2; // 工作号码
+}
+
+message PhoneNumber
+{
+  string number = 1;
+  PhoneType type = 2;
+}
+
+message Person
+{
+  string name = 1;
+  int32 id = 2;  // Unique ID number for this person.
+  string email = 3;
+  repeated PhoneNumber phones = 4;
+}
+
+// Our address book file is just one of these.
+message AddressBook
+{
+  repeated Person people = 1;
+}
