@@ -4,35 +4,33 @@
 
 **简体中文** | [繁體中文](README.zh-TW.md) | [English](README.md) | [日本語](README.ja.md) | [한국어](README.ko.md)
 
-## 快速开始
+## 快速开始（五分钟跑通）
 
-任何方式下载本仓库（git clone / Code → Download ZIP / 镜像站下载）都是完整项目，无需额外拉取。
+**本仓库是完整项目**：git clone、Code → Download ZIP、镜像站下载，任何方式拿到的都直接能跑，无需再拉取别的仓库。
 
 | 组件 | 版本 | 用途 |
 |------|------|------|
-| .NET SDK | 8.0+ | 运行服务器 `Server/`（Foundation 依赖经 NuGet 自动还原，需联网） |
-| Unity | 2021.3+ | 打开客户端 `Unity/`（首次导入需联网拉取 Package） |
-| Docker（可选） | - | `cd Server && docker-compose up` 一键起 MongoDB |
-| LayaAir（可选） | - | 打开 `LayaBox/` 客户端 |
+| **.NET SDK** | **10.0+** | 编译运行服务器（Foundation 依赖经 NuGet 自动还原，首次需联网） |
+| **Unity** | **2019.4.40f1** | 打开客户端 `Unity/`（首次导入需联网拉取 Package） |
+| **Docker** | 任意新版 | 一键启动本地 MongoDB |
 
-运行服务器：
+三步跑通（细节见下方[入门教程](#-入门教程从零到登录进游戏)）：
 
-    dotnet run --project Server/GameFrameX.Launcher --ServerType=Game --ServerId=1000 --APMPort=29090
+```shell
+# 1. 启动本地数据库（MongoDB，账号 admin / admin）
+cd docker/mongo && docker compose up -d
 
-### 子仓库索引
+# 2. 编译并启动服务器（只覆盖数据库连接，其余端口走默认值）
+cd ../../Server && dotnet build
+cd bin/app_debug
+dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27017/?authSource=admin"
 
-本仓库为**聚合发布仓**（每日自动同步下列源仓库），⚠️ 直接改动会在下次同步被覆盖，PR / Issue 请前往对应源仓库：
+# 3. 用 Unity 2019.4.40f1 打开 Unity/ 工程，打开 Assets/Scenes/Launcher.unity，点 Play
+```
 
-| 目录 | 源仓库 |
-|------|--------|
-| `Unity/` | GameFrameX/GameFrameX.Unity |
-| `Server/` | GameFrameX/GameFrameX.Server |
-| `LayaBox/` | GameFrameX/GameFrameX.LayaBox |
-| `Tools/` | GameFrameX/GameFrameX.Tools |
-| `Config/` | GameFrameX/GameFrameX.Config |
-| `Protobuf/` | GameFrameX/GameFrameX.Protobuf |
-| `FairyGUIProject/` | GameFrameX/GameFrameX.FairyGUIProject |
-| （不聚合） | GameFrameX/GameFrameX.Foundation（NuGet 发包仓）· GameFrameX/GameFrameX.Docs（文档站） |
+看到登录界面、能创建角色进入主城，就说明客户端↔服务器全链路通了 🎉
+
+服务器起了没有？浏览器开 `http://localhost:29090/health` 能访问即在线。
 
 ---
 
@@ -76,120 +74,166 @@
 
 ---
 
-# 🗺️ 这堆仓库都是干嘛的？（仓库地图）
+# 📦 仓库结构：为什么下载下来长这样？
 
-GameFrameX 是个「全家桶」，但全家桶里每道菜都装在**各自独立的仓库**里（方便单独维护、单独升级）。先看这张表建立全局印象：
-
-| 仓库 | 通俗说就是… | 地址 |
-|---|---|---|
-| 🏠 **主仓库（就是这儿）** | 「厨房平面图」——告诉你所有零件该放哪个文件夹 | https://github.com/GameFrameX/GameFrameX |
-| 🌐 **服务器** | 游戏的大脑，管联机、存档、战斗逻辑（基于 GeekServer 演化而来） | https://github.com/GameFrameX/GameFrameX.Server |
-| 📊 **配置表（LuBan）** | 用 Excel 填游戏数据（道具 / 关卡 / 等级…），一键生成代码 | https://github.com/GameFrameX/GameFrameX.Config |
-| 📡 **通讯协议（ProtoBuf）** | 客户端和服务器「说话的规矩」，定义双方互通的消息 | https://github.com/GameFrameX/GameFrameX.Protobuf |
-| 🎨 **UI 工程（FairyGUI）** | 用 FairyGUI 编辑器画游戏界面的源工程 | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
-| 🛠️ **工具集** | 一些辅助小工具 | https://github.com/GameFrameX/GameFrameX.Tools |
-| 💻 **管理后台** | 上线后管数据、管玩家的网页（部分源码不开源） | https://github.com/GameFrameX/GameFrameX.Admin |
-
-后台在线演示 👉 https://game.admin.web.vue.alianblank.com
-
-## 🎮 客户端（四选一即可，用哪个下哪个）
-
-| 引擎 | 地址 |
-|---|---|
-| Unity | https://github.com/GameFrameX/GameFrameX.Unity |
-| Cocos Creator | https://github.com/GameFrameX/GameFrameX.CocosCreator |
-| LayaAir（LayaBox） | https://github.com/GameFrameX/GameFrameX.LayaBox |
-| Godot | https://github.com/GameFrameX/GameFrameX.Godot |
-
----
-
-# 📁 文件夹为什么不能乱放？
-
-> ⚠️ **重点**：这套框架是**靠相对路径**找文件的，就像家里的插座位置——你把服务器从 `Server/` 挪到 `MyServer/`，整条链路就找不着北了。
-
-所以请按下面的结构，把各仓库**放到它该在的文件夹**里：
+本仓库是**聚合发布仓**——每天自动把下面 7 个源仓库的最新代码同步到同名文件夹里，所以你下载一次就拿到所有零件，而且**文件夹天生就在正确位置**（配置生成、协议导出都靠相对路径互相找到对方，别改名、别挪位置）：
 
 ```
-GameFrameX/                  # 项目根目录（名字可改）
-├── Config/                  # ← 把 GameFrameX.Config 放这里（Excel 配置 + LuBan 导表）
-├── Protobuf/                # ← 把 GameFrameX.Protobuf 放这里（通讯协议）
-├── FairyGUIProject/         # ← 把 GameFrameX.FairyGUIProject 放这里（UI 编辑工程）
-├── Server/                  # ← 把 GameFrameX.Server 放这里（游戏服务器）
-├── Unity/                   # ← 把 GameFrameX.Unity 放这里（Unity 客户端，按需换成别的引擎）
-│   ├── Assets/              #    Unity 资源目录
-│   ├── Packages/            #    Unity 包
-│   ├── ProjectSettings/     #    Unity 工程设置
-│   └── UserSettings/        #    Unity 用户设置
-├── Tools/                   # ← 把 GameFrameX.Tools 放这里（辅助工具）
-├── docker/                  # Docker 本地运行环境（MongoDB / PostgreSQL）
-├── Docs/                    # 文档（目前主要是 GeekServer 的原始文档）
-└── LICENSE.md               # 开源许可证
+GameFrameX/                   # 项目根目录
+├── Server/                   # 游戏服务器（.NET 10，Actor 模型 + 热更新）
+├── Unity/                    # Unity 客户端工程（含 HybridCLR 热更、YooAsset 资源）
+├── LayaBox/                  # LayaAir 客户端工程（可选客户端）
+├── Config/                   # LuBan 配置表：Excel 在这改，一键生成两端代码
+├── Protobuf/                 # 通讯协议：.proto 在这改，一键导出各端代码
+├── FairyGUIProject/          # UI 编辑工程（FairyGUI 编辑器打开 Game.fairy）
+├── Tools/                    # 辅助工具（协议导出 CLI / GUI）
+├── docker/                   # 本地数据库一键启动（mongo / postgres）
+├── scripts/                  # 聚合同步脚本
+└── README / LICENSE 等
 ```
 
-> 想换别的客户端引擎？把 `Unity/` 换成对应名字即可（`Laya/`、`CocosCreator/`、`Godot/`），规则一样。
+| 目录 | 对应源仓库（改动请去这里提 PR / Issue） |
+|------|------|
+| `Server/` | https://github.com/GameFrameX/GameFrameX.Server |
+| `Unity/` | https://github.com/GameFrameX/GameFrameX.Unity |
+| `LayaBox/` | https://github.com/GameFrameX/GameFrameX.LayaBox |
+| `Config/` | https://github.com/GameFrameX/GameFrameX.Config |
+| `Protobuf/` | https://github.com/GameFrameX/GameFrameX.Protobuf |
+| `FairyGUIProject/` | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
+| `Tools/` | https://github.com/GameFrameX/GameFrameX.Tools |
+
+> ⚠️ **直接改本仓库里的 `Server/`、`Unity/` 等目录是没用的**——每天自动同步会把改动覆盖掉。要改代码、交 PR，请去上表对应的源仓库。
+
+**不聚合的仓库**（按需自取）：
+
+| 仓库 | 说明 |
+|------|------|
+| [GameFrameX.Foundation](https://github.com/GameFrameX/GameFrameX.Foundation) | 服务器底层库，以 NuGet 包形式被 Server 引用（构建时自动还原，无需 clone） |
+| [GameFrameX.Admin](https://github.com/GameFrameX/GameFrameX.Admin) | 管理后台（部分源码不开源），[在线演示](https://game.admin.web.vue.alianblank.com) |
+| [GameFrameX.CocosCreator](https://github.com/GameFrameX/GameFrameX.CocosCreator) / [Godot](https://github.com/GameFrameX/GameFrameX.Godot) | 其他引擎客户端 |
+| [GameFrameX.Docs](https://github.com/GameFrameX/GameFrameX.Docs) | 文档站源码 |
 
 ---
 
-# 🔧 先把环境准备好
+# 🚀 入门教程：从零到登录进游戏
 
-开始前，请先装好下面这些（点链接去官网下）：
+跟着做，大概 10~15 分钟（含 Unity 首次导入时间）。
 
-| 要装的东西 | 版本 | 干啥用 | 哪里下 |
-|---|---|---|---|
-| **Git** | 任意新版 | 拉取各个仓库的代码 | https://git-scm.com/ |
-| **.NET SDK** | **10.0 或以上** | 编译运行服务器、跑 LuBan 导表工具 | https://dotnet.microsoft.com/download |
-| **Unity 编辑器** | **2019.4.40f1**（兼容 2019.4+） | 打开、运行 Unity 客户端 | https://unity.com/download |
-| **Docker**（可选但推荐） | 任意新版 | 一键启动本地数据库 MongoDB / PostgreSQL | https://www.docker.com/ |
-
-> 💡 服务器和导表工具都依赖 **.NET 10.0**，这是最关键的版本要求，一定装对。
-
----
-
-# 🚀 从零开始，手把手跑起来
-
-**第 1 步**：新建一个文件夹放项目，打开终端（Windows 用 cmd / PowerShell，Mac / Linux 用终端），`cd` 进去。
-
-**第 2 步**：把「厨房平面图」下下来：
+## 第 1 步：下载项目
 
 ```shell
 git clone https://github.com/GameFrameX/GameFrameX.git
+cd GameFrameX
 ```
 
-这会生成一个 `GameFrameX/` 文件夹，里面就是项目骨架。
+不想用 git？GitHub 页面点 **Code → Download ZIP**，或从 [gitee 等镜像站](https://gitee.com/GameFrameX/GameFrameX) 下载，效果一样。
 
-**第 3 步**：把各零件放到 `GameFrameX/` 里**对应的文件夹**（下面以 Unity 为例；用别的引擎就把最后一行换成对应地址）：
+## 第 2 步：装环境
+
+| 要装 | 版本 | 哪里下 |
+|---|---|---|
+| **.NET SDK** | **10.0 或以上** | https://dotnet.microsoft.com/download |
+| **Unity 编辑器** | **2019.4.40f1**（Unity Hub → Installs → Install Editor → Archive 里找） | https://unity.com/download |
+| **Docker Desktop** | 任意新版 | https://www.docker.com/ |
+
+> 💡 .NET 10 是服务器和导表工具的硬要求，装错版本后面全卡。
+
+## 第 3 步：启动本地数据库
 
 ```shell
-git clone https://github.com/GameFrameX/GameFrameX.Server.git ./GameFrameX/Server
-git clone https://github.com/GameFrameX/GameFrameX.Config.git ./GameFrameX/Config
-git clone https://github.com/GameFrameX/GameFrameX.Protobuf.git ./GameFrameX/Protobuf
-git clone https://github.com/GameFrameX/GameFrameX.FairyGUIProject.git ./GameFrameX/FairyGUIProject
-git clone https://github.com/GameFrameX/GameFrameX.Tools.git ./GameFrameX/Tools
-git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
+cd docker/mongo
+docker compose up -d
 ```
 
-> 这几行的意思就是「把 XX 仓库的内容，下到 XX 文件夹里」。**文件夹名千万别改**。
+起来的是 MongoDB：`mongodb://admin:admin@localhost:27017`（数据落在 `docker/mongo/database/`）。
 
-**第 4 步（启动本地数据库）**：装了 Docker 的话，分别进两个目录把 MongoDB 和 PostgreSQL 起起来（服务器连 MongoDB、后台连 PostgreSQL）：
+> PostgreSQL（`docker/postgres/`）是给管理后台 Admin 用的，跑本教程用不到，可不启动。
+
+## 第 4 步：编译并启动服务器
 
 ```shell
-cd GameFrameX/docker/mongo && docker compose up -d
-cd ../postgres && docker compose up -d
+cd ../../Server
+dotnet build
+cd bin/app_debug
+dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27017/?authSource=admin"
 ```
 
-启动成功后这样连：
-- MongoDB：`mongodb://admin:admin@localhost:27017`
-- PostgreSQL：`localhost:5432`，账号 `postgres` / 密码 `postgres`，初始库 `gameframex`
+**为什么只传一个参数？** 服务器默认配置（见 `Server/GameFrameX.Launcher/StartUp/AppStartUpGame.cs`）已经开好了全套端口：
 
-> ⚠️ 以上账号密码是本地开发默认值，要和 `Server` / `Admin` 里的连接配置对齐才能连上。
+| 端口 | 用途 |
+|---|---|
+| 29100 | TCP：游戏客户端长连接 |
+| 28080 | HTTP：登录等接口（`/game/api/...`） |
+| 29110 | WebSocket |
+| 29090 | 健康检查 / 性能指标 |
 
-**第 5 步（生成配置代码）**：进 `Config/` 目录，跑里面的 LuBan 导表脚本，把 Excel 变成客户端和服务器都能用的代码与数据。具体命令看 👉 [`GameFrameX.Config`](https://github.com/GameFrameX/GameFrameX.Config) 的说明。
+唯一要覆盖的是 `DataBaseUrl`——默认值连的是演示用公网库，本地开发请指到自己刚起的 MongoDB。
 
-**第 6 步（生成协议代码）**：进 `Protobuf/` 目录，跑协议导出脚本，生成各端收发消息用的代码。具体命令看 👉 [`GameFrameX.Protobuf`](https://github.com/GameFrameX/GameFrameX.Protobuf) 的说明。
+**用 IDE 更简单**：用 Rider / Visual Studio 打开 `Server/Server.slnx`（不支持 `.slnx` 就开 `Server.sln`），启动项目选 `GameFrameX.Launcher`，**Working directory 设为 `Server/bin/app_debug`**，命令行参数留空 → 但要在 `AppStartUpGame.cs` 里把 `DataBaseUrl` 默认值改成本地连接串（改的是聚合仓内的文件，仅本地调试用，见上方同步覆盖说明）。
 
-**第 7 步（可选）**：需要的话打开 `Tools/` 编译一下辅助工具，看 👉 [`GameFrameX.Tools`](https://github.com/GameFrameX/GameFrameX.Tools) 的说明。
+**验证**：浏览器打开 `http://localhost:29090/health`，有响应就是活了。
 
-**第 8 步（开跑！）**：用 Unity 打开 `Unity/` 工程，启动 `Server/` 里的服务器，就能跑起来体验了 🎉
+## 第 5 步：Unity 客户端连接
+
+1. Unity Hub 用 **2019.4.40f1** 打开仓库里的 `Unity/` 文件夹（首次打开会自动拉取 Package，需要联网，耐心等）
+2. 打开场景 `Assets/Scenes/Launcher.unity`
+3. 点 **Play** ▶️
+
+客户端默认连 `127.0.0.1`（TCP 29100 / HTTP 28080），和服务器默认端口正好对上，不需要改任何配置。看到登录界面、创建角色进主城，教程就通关了。
+
+> 换电脑 / 部署到远程服务器时，改这两处：TCP 地址在 `Unity/Assets/Hotfix/UI/Logic/UILogin/UIPlayerList.cs`（`serverIp` / `serverPort`），HTTP 地址在 `Unity/Assets/Hotfix/UI/Logic/UILogin/UILogin.cs` 等（搜 `127.0.0.1:28080`）。
+
+## 想用 LayaAir 客户端？
+
+用 LayaAir IDE 打开 `LayaBox/`，入口 `src/Main.ts`。注意两点：连接地址在 `LayaBox/src/gameframex/nettest.ts`（默认 `ws://127.0.0.1:21100`，与服务器默认 WebSocket 端口 **29110 不一致**，改成一致才能连上）；协议生成用 `Protobuf/Proto2TsExport_LayaBox.sh`。
+
+---
+
+# 🔁 日常开发：改了东西怎么重新生成
+
+下载下来的快照**自带全部生成产物**（配置代码 / 数据、协议代码都已就位），直接就能跑。只有当你改了源头文件，才需要重新生成：
+
+## 改了 Excel 配置（`Config/Excels/Tables/` 下的表）
+
+| 你改了 | 跑哪个 | 产物去哪 |
+|---|---|---|
+| 服务端要读的表 | `cd Config && sh gen-server-bin.sh`（Windows 双击 `gen-server-bin.bat`） | `Server/GameFrameX.Config/` |
+| 客户端要读的表 | `cd Config && sh gen-client-json.sh` | `Unity/Assets/`（代码 + 数据） |
+
+> 表文件名有讲究：`字母-英文名-中文名.xlsx`（如 `D-ItemConfig-道具表-道具-1001.xlsx`），Excel 里前 4 行是表头（`##var` / `##type` / `##group` / 说明），第 5 行起才是数据。完整规则看 [GameFrameX.Config](https://github.com/GameFrameX/GameFrameX.Config)。
+
+## 改了通讯协议（`Protobuf/*.proto`）
+
+导出工具不随仓库分发，先构建一次（聚合仓的目录布局已满足它的输出路径要求）：
+
+```shell
+cd Tools
+dotnet build ProtoExport/ProtoExport.csproj -c Release   # 产物自动落到 ../Protobuf/Tools/
+cd ../Protobuf
+sh Proto2CsExport_Server.sh    # 服务端协议 → Server/GameFrameX.Proto/
+sh Proto2CsExport_Client.sh    # 客户端协议 → Unity/Assets/Hotfix/Proto/
+```
+
+> 协议有硬规则：只支持 proto3；`option module = 10;` 必填；消息必须叫 `Req<名字>` / `Resp<名字>` / `Notify<名字>`；字段编号必须 < 800；禁止嵌套 message。完整规则看 [GameFrameX.Protobuf](https://github.com/GameFrameX/GameFrameX.Protobuf)。
+
+## 改了 UI（FairyGUI）
+
+用 FairyGUI 编辑器（≥5.0）打开 `FairyGUIProject/Game.fairy`，改完 **文件 → 发布，务必勾选「生成代码」**，产物自动写入 `Unity/Assets/`（UI 资源 + C# 绑定代码）。
+
+> 新人最常见问题：发布完 Unity 里报找不到类 → 十有八九是发布时没勾「生成代码」。
+
+---
+
+# ⚠️ 新人常见坑
+
+| 现象 | 原因 & 解法 |
+|---|---|
+| 服务器启动报连不上数据库 | `DataBaseUrl` 没传，默认连的是公网演示库；传第 4 步那条本地连接串 |
+| IDE 里启动就闪退 / 找不到 hotfix | Working directory 没设成 `Server/bin/app_debug`（服务器从「当前目录/hotfix」加载热更程序集） |
+| Unity 首次打开卡在拉包 | 需要联网访问 UPM 私有源（`gameframex.upm.alianblank.uk`）和 gitee（HybridCLR），网络受限会卡住 |
+| 客户端连不上服务器 | 确认端口组对得上：TCP 29100 / HTTP 28080 / WS 29110，服务器日志里有监听列表 |
+| 在本仓库改了代码，第二天没了 | 聚合仓每日同步会覆盖，改动请提交到对应源仓库 |
+| LayaBox 连不上 | `nettest.ts` 默认端口 21100 ≠ 服务器 29110，改成一致 |
 
 ---
 
@@ -210,7 +254,7 @@ QQ 群：**467608841**
 
 # ☕ 请作者喝杯咖啡
 
-![wechat.jpg](Docs/imgs/wechat.jpg)
+![wechat.jpg](https://raw.githubusercontent.com/GameFrameX/GameFrameX/42e755df/Docs/imgs/wechat.jpg)
 
 # 🎯 谁在用 GameFrameX？
 

@@ -4,35 +4,33 @@
 
 [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | **English** | [日本語](README.ja.md) | [한국어](README.ko.md)
 
-## Quick Start
+## Quick Start (running in 5 minutes)
 
-Download this repo any way you like (git clone / Code → Download ZIP / mirror sites) — you always get the complete, runnable project. No extra pulls needed.
+**This repo IS the complete project**: git clone, Code → Download ZIP, or any mirror site — whatever way you download it, it runs as-is. No extra pulls needed.
 
 | Component | Version | Purpose |
 |------|------|------|
-| .NET SDK | 8.0+ | Run the server in `Server/` (Foundation dependency is restored automatically via NuGet, internet required) |
-| Unity | 2021.3+ | Open the client in `Unity/` (first import needs internet to fetch Packages) |
-| Docker (optional) | - | `cd Server && docker-compose up` to start MongoDB in one command |
-| LayaAir (optional) | - | Open the `LayaBox/` client |
+| **.NET SDK** | **10.0+** | Build & run the server (Foundation dependency restored via NuGet, internet needed on first build) |
+| **Unity** | **2019.4.40f1** | Open the client in `Unity/` (first import fetches Packages, internet needed) |
+| **Docker** | any recent | One-command local MongoDB |
 
-Run the server:
+Three steps (details in the [tutorial](#-tutorial-from-zero-to-logged-in) below):
 
-    dotnet run --project Server/GameFrameX.Launcher --ServerType=Game --ServerId=1000 --APMPort=29090
+```shell
+# 1. Start the local database (MongoDB, user admin / admin)
+cd docker/mongo && docker compose up -d
 
-### Sub-repo index
+# 2. Build & start the server (override only the DB connection; ports use defaults)
+cd ../../Server && dotnet build
+cd bin/app_debug
+dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27017/?authSource=admin"
 
-This repo is an **aggregated release repo** (auto-synced daily from the source repos below). ⚠️ Direct edits will be overwritten by the next sync — please open PRs / Issues in the corresponding source repo:
+# 3. Open the Unity/ project with Unity 2019.4.40f1, load Assets/Scenes/Launcher.unity, press Play
+```
 
-| Directory | Source repo |
-|------|--------|
-| `Unity/` | GameFrameX/GameFrameX.Unity |
-| `Server/` | GameFrameX/GameFrameX.Server |
-| `LayaBox/` | GameFrameX/GameFrameX.LayaBox |
-| `Tools/` | GameFrameX/GameFrameX.Tools |
-| `Config/` | GameFrameX/GameFrameX.Config |
-| `Protobuf/` | GameFrameX/GameFrameX.Protobuf |
-| `FairyGUIProject/` | GameFrameX/GameFrameX.FairyGUIProject |
-| (not aggregated) | GameFrameX/GameFrameX.Foundation (NuGet package repo) · GameFrameX/GameFrameX.Docs (docs site) |
+If you see the login screen and can create a character into the main city, the full client↔server loop works 🎉
+
+Is the server up? Open `http://localhost:29090/health` in a browser — a response means it's alive.
 
 ---
 
@@ -57,12 +55,12 @@ It supports the major engines: **Unity, Cocos Creator, LayaAir (LayaBox), Godot*
 
 | What you'd otherwise DIY | What GameFrameX hands you out of the box |
 |---|---|
-| Writing a multiplayer server from scratch | A ready-to-go high-performance server (written in .NET, built to handle many concurrent players) |
-| Figuring out how to store data | Player data goes to MongoDB (fast reads/writes), backend data goes to PostgreSQL (rock-solid) |
+| Writing a multiplayer server from scratch | A ready-made high-performance server (written in .NET, built for many concurrent players) |
+| Figuring out how to store data | Player data in MongoDB (fast), backend data in PostgreSQL (rock-solid) |
 | Hand-carrying Excel configs into code | LuBan turns Excel into code and data in one click |
-| Client and server "speaking the same language" | ProtoBuf unifies the protocol — change it once, both sides sync |
+| Client and server "speaking the same language" | ProtoBuf unifies the protocol — change once, both sides sync |
 | Flying blind after launch | A built-in admin web panel for reading data / managing players / pushing configs |
-| Server deployment giving you a headache | One-click packaging and deployment with Docker, hassle-free |
+| Server deployment giving you a headache | One-click packaging and deployment with Docker |
 
 > Plain and simple: **even a solo developer can build and run an online game like a small team would.**
 
@@ -76,132 +74,178 @@ It supports the major engines: **Unity, Cocos Creator, LayaAir (LayaBox), Godot*
 
 ---
 
-# 🗺️ What are all these repos for? (Repo map)
+# 📦 Repo layout: why does the download look like this?
 
-GameFrameX is a "bundle", but each dish in the bundle lives in **its own separate repo** (so you can maintain and upgrade them independently). Start with this table to get the big picture:
-
-| Repo | In plain terms… | URL |
-|---|---|---|
-| 🏠 **Main repo (you are here)** | The "kitchen floor plan" — tells you which folder each piece belongs in | https://github.com/GameFrameX/GameFrameX |
-| 🌐 **Server** | The game's brain: handles multiplayer, saves, and combat logic (evolved from GeekServer) | https://github.com/GameFrameX/GameFrameX.Server |
-| 📊 **Config tables (LuBan)** | Fill in game data (items / levels / progression…) in Excel, generate code in one click | https://github.com/GameFrameX/GameFrameX.Config |
-| 📡 **Protocol (ProtoBuf)** | The "rules of conversation" between client and server; defines the messages both sides exchange | https://github.com/GameFrameX/GameFrameX.Protobuf |
-| 🎨 **UI project (FairyGUI)** | The source project for designing game UI in the FairyGUI editor | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
-| 🛠️ **Tools** | assorted helper utilities | https://github.com/GameFrameX/GameFrameX.Tools |
-| 💻 **Admin backend** | The web panel for managing data and players after launch (some source code is not open) | https://github.com/GameFrameX/GameFrameX.Admin |
-
-Live admin demo 👉 https://game.admin.web.vue.alianblank.com
-
-## 🎮 Client (pick one — download the one you use)
-
-| Engine | URL |
-|---|---|
-| Unity | https://github.com/GameFrameX/GameFrameX.Unity |
-| Cocos Creator | https://github.com/GameFrameX/GameFrameX.CocosCreator |
-| LayaAir (LayaBox) | https://github.com/GameFrameX/GameFrameX.LayaBox |
-| Godot | https://github.com/GameFrameX/GameFrameX.Godot |
-
----
-
-# 📁 Why can't I just put folders wherever I want?
-
-> ⚠️ **Important**: this framework locates files **by relative path** — kind of like the outlets in your house. Move the server from `Server/` to `MyServer/` and the whole chain loses its bearings.
-
-So please follow the structure below and **place each repo in the folder it belongs in**:
+This is an **aggregated release repo** — the latest code of the 7 source repos below is synced daily into same-named folders. One download gets you every piece, and **the folders are already in the right places** (config generation and protocol export find each other via relative paths — don't rename or move them):
 
 ```
-GameFrameX/                  # Project root directory (name can be changed)
-├── Config/                  # ← Put GameFrameX.Config here (Excel configs + LuBan export)
-├── Protobuf/                # ← Put GameFrameX.Protobuf here (communication protocol)
-├── FairyGUIProject/         # ← Put GameFrameX.FairyGUIProject here (UI editing project)
-├── Server/                  # ← Put GameFrameX.Server here (game server)
-├── Unity/                   # ← Put GameFrameX.Unity here (Unity client; swap for another engine if needed)
-│   ├── Assets/              #    Unity assets folder
-│   ├── Packages/            #    Unity packages
-│   ├── ProjectSettings/     #    Unity project settings
-│   └── UserSettings/        #    Unity user settings
-├── Tools/                   # ← Put GameFrameX.Tools here (auxiliary tools)
-├── docker/                  # Docker local runtime environment (MongoDB / PostgreSQL)
-├── Docs/                    # Documentation (currently mostly GeekServer's original docs)
-└── LICENSE.md               # Open-source license
+GameFrameX/                   # project root
+├── Server/                   # game server (.NET 10, Actor model + hot-update)
+├── Unity/                    # Unity client project (HybridCLR hot-update, YooAsset)
+├── LayaBox/                  # LayaAir client project (alternative client)
+├── Config/                   # LuBan config tables: edit Excel here, generate code for both ends
+├── Protobuf/                 # protocol: edit .proto here, export code for every end
+├── FairyGUIProject/          # UI editing project (open Game.fairy in the FairyGUI editor)
+├── Tools/                    # helper tools (protocol-export CLI / GUI)
+├── docker/                   # one-command local databases (mongo / postgres)
+├── scripts/                  # aggregation sync scripts
+└── README / LICENSE etc.
 ```
 
-> Want to switch to a different client engine? Just replace `Unity/` with the matching name (`Laya/`, `CocosCreator/`, `Godot/`) — same rule applies.
+| Directory | Source repo (send PRs / Issues here) |
+|------|------|
+| `Server/` | https://github.com/GameFrameX/GameFrameX.Server |
+| `Unity/` | https://github.com/GameFrameX/GameFrameX.Unity |
+| `LayaBox/` | https://github.com/GameFrameX/GameFrameX.LayaBox |
+| `Config/` | https://github.com/GameFrameX/GameFrameX.Config |
+| `Protobuf/` | https://github.com/GameFrameX/GameFrameX.Protobuf |
+| `FairyGUIProject/` | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
+| `Tools/` | https://github.com/GameFrameX/GameFrameX.Tools |
+
+> ⚠️ **Editing `Server/`, `Unity/`, etc. inside THIS repo is pointless** — the daily sync will overwrite your changes. To change code or send PRs, go to the corresponding source repo in the table above.
+
+**Repos NOT aggregated** (take them as needed):
+
+| Repo | Notes |
+|------|------|
+| [GameFrameX.Foundation](https://github.com/GameFrameX/GameFrameX.Foundation) | Server foundation libraries, referenced by Server as NuGet packages (restored automatically at build, no clone needed) |
+| [GameFrameX.Admin](https://github.com/GameFrameX/GameFrameX.Admin) | Admin backend (some source code not open), [live demo](https://game.admin.web.vue.alianblank.com) |
+| [GameFrameX.CocosCreator](https://github.com/GameFrameX/GameFrameX.CocosCreator) / [Godot](https://github.com/GameFrameX/GameFrameX.Godot) | clients for other engines |
+| [GameFrameX.Docs](https://github.com/GameFrameX/GameFrameX.Docs) | docs site source |
 
 ---
 
-# 🔧 Get your environment ready first
+# 🚀 Tutorial: from zero to logged in
 
-Before you start, install the following (click the links to download from the official sites):
+Follow along — about 10–15 minutes (Unity first import included).
 
-| What to install | Version | What it's for | Where to get it |
-|---|---|---|---|
-| **Git** | any recent version | Pulling the code for each repo | https://git-scm.com/ |
-| **.NET SDK** | **10.0 or above** | Compiling/running the server, running the LuBan export tool | https://dotnet.microsoft.com/download |
-| **Unity editor** | **2019.4.40f1** (compatible with 2019.4+) | Opening and running the Unity client | https://unity.com/download |
-| **Docker** (optional but recommended) | any recent version | Spinning up local MongoDB / PostgreSQL databases with one click | https://www.docker.com/ |
-
-> 💡 Both the server and the export tool depend on **.NET 10.0** — this is the most critical version requirement, so make sure you get it right.
-
----
-
-# 🚀 From zero to running, step by step
-
-**Step 1**: Create a folder for the project, open a terminal (cmd / PowerShell on Windows, Terminal on Mac / Linux), and `cd` into it.
-
-**Step 2**: Pull down the "kitchen floor plan":
+## Step 1: download the project
 
 ```shell
 git clone https://github.com/GameFrameX/GameFrameX.git
+cd GameFrameX
 ```
 
-This creates a `GameFrameX/` folder containing the project skeleton.
+Don't want git? **Code → Download ZIP** on GitHub, or grab it from a mirror like [gitee](https://gitee.com/GameFrameX/GameFrameX) — same result.
 
-**Step 3**: Place each component into its **matching folder** inside `GameFrameX/` (the example below uses Unity; for other engines, swap the last line for the matching URL):
+## Step 2: install the prerequisites
+
+| Install | Version | Where |
+|---|---|---|
+| **.NET SDK** | **10.0 or newer** | https://dotnet.microsoft.com/download |
+| **Unity Editor** | **2019.4.40f1** (Unity Hub → Installs → Install Editor → Archive) | https://unity.com/download |
+| **Docker Desktop** | any recent | https://www.docker.com/ |
+
+> 💡 .NET 10 is a hard requirement for the server and the table-generation tool — get this one right.
+
+## Step 3: start the local database
 
 ```shell
-git clone https://github.com/GameFrameX/GameFrameX.Server.git ./GameFrameX/Server
-git clone https://github.com/GameFrameX/GameFrameX.Config.git ./GameFrameX/Config
-git clone https://github.com/GameFrameX/GameFrameX.Protobuf.git ./GameFrameX/Protobuf
-git clone https://github.com/GameFrameX/GameFrameX.FairyGUIProject.git ./GameFrameX/FairyGUIProject
-git clone https://github.com/GameFrameX/GameFrameX.Tools.git ./GameFrameX/Tools
-git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
+cd docker/mongo
+docker compose up -d
 ```
 
-> These lines just mean "download repo X into folder X." **Do not rename the folders.**
+That's MongoDB: `mongodb://admin:admin@localhost:27017` (data lands in `docker/mongo/database/`).
 
-**Step 4 (Start the local databases)**: If you have Docker installed, go into the two directories and spin up MongoDB and PostgreSQL (the server talks to MongoDB, the admin backend talks to PostgreSQL):
+> PostgreSQL (`docker/postgres/`) serves the Admin backend — this tutorial doesn't need it.
+
+## Step 4: build & start the server
 
 ```shell
-cd GameFrameX/docker/mongo && docker compose up -d
-cd ../postgres && docker compose up -d
+cd ../../Server
+dotnet build
+cd bin/app_debug
+dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27017/?authSource=admin"
 ```
 
-Once they're running, connect like this:
-- MongoDB: `mongodb://admin:admin@localhost:27017`
-- PostgreSQL: `localhost:5432`, username `postgres` / password `postgres`, initial database `gameframex`
+**Why only one argument?** The defaults (see `Server/GameFrameX.Launcher/StartUp/AppStartUpGame.cs`) already open the full port set:
 
-> ⚠️ The credentials above are the local development defaults — they need to match the connection settings in `Server` / `Admin` for things to connect.
+| Port | Purpose |
+|---|---|
+| 29100 | TCP: long-lived game client connections |
+| 28080 | HTTP: login and other APIs (`/game/api/...`) |
+| 29110 | WebSocket |
+| 29090 | health check / metrics |
 
-**Step 5 (Generate config code)**: Go into the `Config/` directory and run the LuBan export script inside to turn Excel into code and data that both the client and the server can use. See the 👉 [`GameFrameX.Config`](https://github.com/GameFrameX/GameFrameX.Config) instructions for the exact commands.
+The only thing to override is `DataBaseUrl` — the default points at a public demo database; point it at the MongoDB you just started.
 
-**Step 6 (Generate protocol code)**: Go into the `Protobuf/` directory and run the protocol export script to generate the message code used by each side. See the 👉 [`GameFrameX.Protobuf`](https://github.com/GameFrameX/GameFrameX.Protobuf) instructions for the exact commands.
+**Even simpler with an IDE**: open `Server/Server.slnx` with Rider / Visual Studio (`Server.sln` if `.slnx` isn't supported), set the startup project to `GameFrameX.Launcher`, **set Working directory to `Server/bin/app_debug`**, leave arguments empty — and change the `DataBaseUrl` default in `AppStartUpGame.cs` to your local connection string (that edits a file inside the aggregated repo, fine for local debugging — see the overwrite note above).
 
-**Step 7 (Optional)**: If you need them, open `Tools/` and compile the auxiliary utilities — see the 👉 [`GameFrameX.Tools`](https://github.com/GameFrameX/GameFrameX.Tools) instructions.
+**Verify**: open `http://localhost:29090/health` in a browser — a response means it's alive.
 
-**Step 8 (Run it!)**: Open the `Unity/` project in Unity, start the server in `Server/`, and you're up and running 🎉
+## Step 5: connect the Unity client
+
+1. Open the `Unity/` folder with **2019.4.40f1** via Unity Hub (first open pulls Packages — needs internet, be patient)
+2. Load the scene `Assets/Scenes/Launcher.unity`
+3. Press **Play** ▶️
+
+The client defaults to `127.0.0.1` (TCP 29100 / HTTP 28080), matching the server's default ports — no config changes needed. Seeing the login screen and creating a character into the main city means the tutorial is complete.
+
+> Moving to another machine / a remote server? Change two spots: the TCP address in `Unity/Assets/Hotfix/UI/Logic/UILogin/UIPlayerList.cs` (`serverIp` / `serverPort`), and the HTTP address in `Unity/Assets/Hotfix/UI/Logic/UILogin/UILogin.cs` etc. (search for `127.0.0.1:28080`).
+
+## Prefer the LayaAir client?
+
+Open `LayaBox/` with the LayaAir IDE; entry point `src/Main.ts`. Two gotchas: the connect address lives in `LayaBox/src/gameframex/nettest.ts` (default `ws://127.0.0.1:21100`, which does NOT match the server's default WebSocket port **29110** — align them); protocol generation uses `Protobuf/Proto2TsExport_LayaBox.sh`.
 
 ---
 
-# 💬 Chat & feedback (suggestions, feature requests, bugs)
+# 🔁 Daily development: regenerating after edits
+
+The downloaded snapshot **ships with all generated artifacts** (config code/data, protocol code — all in place), so it runs as-is. Only regenerate when you change a source file:
+
+## After editing Excel configs (`Config/Excels/Tables/`)
+
+| What you changed | Run | Output goes to |
+|---|---|---|
+| tables the server reads | `cd Config && sh gen-server-bin.sh` (Windows: double-click `gen-server-bin.bat`) | `Server/GameFrameX.Config/` |
+| tables the client reads | `cd Config && sh gen-client-json.sh` | `Unity/Assets/` (code + data) |
+
+> File naming matters: `letter-EnglishName-ChineseName.xlsx` (e.g. `D-ItemConfig-道具表-道具-1001.xlsx`); the first 4 rows in each sheet are the header (`##var` / `##type` / `##group` / description), data starts at row 5. Full rules in [GameFrameX.Config](https://github.com/GameFrameX/GameFrameX.Config).
+
+## After editing the protocol (`Protobuf/*.proto`)
+
+The export tool is not shipped in the repo — build it once (the aggregated layout already satisfies its output-path requirements):
+
+```shell
+cd Tools
+dotnet build ProtoExport/ProtoExport.csproj -c Release   # output lands in ../Protobuf/Tools/ automatically
+cd ../Protobuf
+sh Proto2CsExport_Server.sh    # server protocol → Server/GameFrameX.Proto/
+sh Proto2CsExport_Client.sh    # client protocol → Unity/Assets/Hotfix/Proto/
+```
+
+> Protocol hard rules: proto3 only; `option module = 10;` is mandatory; messages must be named `Req<Name>` / `Resp<Name>` / `Notify<Name>`; field numbers must be < 800; no nested messages. Full rules in [GameFrameX.Protobuf](https://github.com/GameFrameX/GameFrameX.Protobuf).
+
+## After editing UI (FairyGUI)
+
+Open `FairyGUIProject/Game.fairy` with the FairyGUI editor (≥5.0), then **File → Publish — make sure "generate code" is checked**; output is written into `Unity/Assets/` (UI assets + C# binding code) automatically.
+
+> Most common newbie issue: Unity reports missing classes after publishing → 9 times out of 10 the "generate code" checkbox wasn't ticked.
+
+---
+
+# ⚠️ Common newbie pitfalls
+
+| Symptom | Cause & fix |
+|---|---|
+| Server fails to start, DB connection error | `DataBaseUrl` not passed — the default points at the public demo DB; pass the local connection string from Step 4 |
+| IDE launch crashes / hotfix not found | Working directory not set to `Server/bin/app_debug` (the server loads hot-update assemblies from `<cwd>/hotfix`) |
+| Unity first open stuck fetching packages | Needs internet access to the UPM registry (`gameframex.upm.alianblank.uk`) and gitee (HybridCLR); restricted networks will stall |
+| Client can't reach the server | Make sure the port set matches: TCP 29100 / HTTP 28080 / WS 29110; the server log lists what it's listening on |
+| Your code edits vanished the next day | The daily sync overwrites the aggregated repo — commit changes to the corresponding source repo |
+| LayaBox can't connect | `nettest.ts` defaults to port 21100 ≠ server's 29110 — align them |
+
+---
+
+# 💬 Community & feedback (suggestions, feature requests, bugs)
 
 QQ group: **467608841**
 
-# 📖 Documentation (it's genuinely being written, no rushing me 😅)
+# 📖 Documentation
 
-> All mirror sites have the same content — just pick whichever one opens for you.
+> All sites serve the same content — use whichever opens for you.
 
-- Main site: https://gameframex.doc.alianblank.com
+- Main: https://gameframex.doc.alianblank.com
 - Mirror 1: https://gameframex-docs.pages.dev
 - Mirror 2: https://gameframex.doc.cloudflare.alianblank.com
 - Mirror 3: https://gameframex.doc.vercel.alianblank.com
@@ -210,16 +254,16 @@ QQ group: **467608841**
 
 # ☕ Buy the author a coffee
 
-![wechat.jpg](Docs/imgs/wechat.jpg)
+![wechat.jpg](https://raw.githubusercontent.com/GameFrameX/GameFrameX/42e755df/Docs/imgs/wechat.jpg)
 
-# 🎯 Who's using GameFrameX?
+# 🎯 Who ships with GameFrameX?
 
-| Game | Launch channel | Launch date |
+| Game | Channels | Live since |
 |:---|:---|:---|
-| 深夜的烧烤店 (Late-Night BBQ Joint) | [TapTap](https://www.taptap.cn/app/384964) | 2024-04-15 |
-| 连续黑白 (Continuous Black & White) | Douyin, Kuaishou, Alipay, HarmonyOS, TapTap, iOS, etc. | 2024-11 |
+| 深夜的烧烤店 (Midnight BBQ) | [TapTap](https://www.taptap.cn/app/384964) | 2024-04-15 |
+| 连续黑白 | Douyin, Kuaishou, Alipay, HarmonyOS, TapTap, iOS, etc. | 2024-11 |
 
-> Shipped a game built with GameFrameX? Feel free to open a PR or issue to add it to the list above — let's grow it together 🙌
+> Shipped a game with GameFrameX? Open a PR or issue to add it to the list 🙌
 
 # 👥 Contributors
 
@@ -273,10 +317,10 @@ QQ group: **467608841**
 
 # 📜 Disclaimer
 
-All plugins come from the internet; please pay for them yourself when using them. If anything here infringes your rights, send an email and I'll remove it — thank you.
+All plugins come from the internet; pay for them yourself when used. If anything infringes your rights, email me and I'll remove it, thanks.
 
-This project may not be used for anything prohibited by your local laws. Technology itself is innocent; what's wrong is the people who abuse it.
+This project must not be used where local law forbids it. Technology is innocent; those who abuse it are not.
 
 # 💎 Sponsor
 
-[AITKPARTY](https://aitkparty.com/) is an AI large-model API aggregator and relay service, built on the open-source project New API. It offers a unified interface so developers can easily tap into mainstream large language models — saving you the trouble of integrating multiple model providers yourself.
+[AITKPARTY](https://aitkparty.com/) is an AI LLM API relay/aggregation service built on the open-source New API project, giving developers one unified interface to major language models — no need to integrate each provider yourself.
