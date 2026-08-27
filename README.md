@@ -1,8 +1,14 @@
 <div align="center">
-    <a href="https://trendshift.io/repositories/20145" target="_blank"><img src="https://trendshift.io/api/badge/repositories/20145" alt="GameFrameX%2FGameFrameX | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</div>
+
+# 🎮 GameFrameX
+
+**An open-source toolbox that takes a game all the way "from idea → built → live and running."**
+
+[![Trendshift](https://trendshift.io/api/badge/repositories/20145)](https://trendshift.io/repositories/20145)
 
 [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | **English** | [日本語](README.ja.md) | [한국어](README.ko.md)
+
+</div>
 
 ## Quick Start (running in 5 minutes)
 

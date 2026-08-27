@@ -1,8 +1,44 @@
 <div align="center">
-    <a href="https://trendshift.io/repositories/20145" target="_blank"><img src="https://trendshift.io/api/badge/repositories/20145" alt="GameFrameX%2FGameFrameX | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</div>
+
+# 🎮 GameFrameX
+
+**게임을 「아이디어 → 만들기 → 출시 운영」까지 싹 다 해주는 오픈소스 툴박스**
+
+[![Trendshift](https://trendshift.io/api/badge/repositories/20145)](https://trendshift.io/repositories/20145)
 
 [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [English](README.md) | [日本語](README.ja.md) | **한국어**
+
+</div>
+
+## 빠른 시작 (5분 안에 실행)
+
+**이 저장소가 곧 완전한 프로젝트입니다**: git clone, Code → Download ZIP, 미러 사이트 다운로드 — 어떤 방식으로 받아도 그대로 돌아갑니다. 추가로 받을 저장소가 없어요.
+
+| 구성 요소 | 버전 | 용도 |
+|------|------|------|
+| **.NET SDK** | **10.0+** | 서버 빌드 및 실행 (Foundation 의존성은 NuGet으로 자동 복원, 첫 빌드 시 인터넷 필요) |
+| **Unity** | **2019.4.40f1** | 클라이언트 `Unity/` 열기 (첫 임포트 시 Package를 가져오므로 인터넷 필요) |
+| **Docker** | 최신 버전 | 로컬 MongoDB를 원커맨드로 실행 |
+
+3단계면 됩니다 (자세한 건 아래 [튜토리얼](#-입문-튜토리얼-제로에서-로그인까지) 참고):
+
+```shell
+# 1. 로컬 데이터베이스 실행 (MongoDB, 계정 admin / admin)
+cd docker/mongo && docker compose up -d
+
+# 2. 서버 빌드 후 실행 (덮어쓰는 건 DB 연결뿐, 포트는 기본값 사용)
+cd ../../Server && dotnet build
+cd bin/app_debug
+dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27017/?authSource=admin"
+
+# 3. Unity 2019.4.40f1로 Unity/ 프로젝트 열고, Assets/Scenes/Launcher.unity 연 뒤 Play
+```
+
+로그인 화면이 뜨고 캐릭터를 만들어 메인 도시에 들어가면 클라이언트↔서버 전체 경로가 연결된 거예요 🎉
+
+서버가 켜졌는지 궁금하면? 브라우저에서 `http://localhost:29090/health`를 열어 응답이 오면 살아 있는 거예요.
+
+---
 
 # 🎮 GameFrameX가 뭐예요?
 
@@ -38,158 +74,204 @@
 
 # 👤 누가 쓰면 좋을까요?
 
-- **온라인 / 멀티 게임**을 만들고 싶은데 「서버는 어떻게 하지」에 막힌 인디 개발자
+- **온라인 / 네트워크 게임**을 만들고 싶은데 「서버를 어떻게 세우지」에서 막힌 인디 개발자
 - 아이디어를 검증할 **게임 프로토타입**을 빠르게 만들고 싶은 소규모 팀
 - 「클라이언트 + 서버 + 백오피스」 전체 흐름을 처음부터 끝까지 배우고 싶은 학습자
 
 ---
 
-# 🗺️ 이 저장소들은 다 뭐 하는 곳인가요? (저장소 맵)
+# 📦 저장소 구조: 왜 이렇게 구성되어 있나요?
 
-GameFrameX는 「올인원 패키지」예요. 단, 패키지 안의 각 요리는 **각자 독립된 저장소**에 담겨 있어요(개별적으로 유지보수/업그레이드하기 쉽도록요). 먼저 이 표로 전체 윤곽을 잡아봐요:
-
-| 저장소 | 쉽게 말하면… | 주소 |
-|---|---|---|
-| 🏠 **메인 저장소(여기)** | 「주방 배치도」 —— 모든 부품이 어느 폴더에 들어가야 하는지 알려줌 | https://github.com/GameFrameX/GameFrameX |
-| 🌐 **서버** | 게임의 두뇌, 멀티플레이 · 세이브 · 전투 로직을 담당(GeekServer 기반으로 진화) | https://github.com/GameFrameX/GameFrameX.Server |
-| 📊 **설정표(LuBan)** | Excel로 게임 데이터(아이템 / 스테이지 / 레벨…)를 채우고, 클릭 한 번에 코드 생성 | https://github.com/GameFrameX/GameFrameX.Config |
-| 📡 **통신 프로토콜(ProtoBuf)** | 클라이언트와 서버가 「대화하는 규칙」, 양쪽이 주고받을 메시지를 정의 | https://github.com/GameFrameX/GameFrameX.Protobuf |
-| 🎨 **UI 프로젝트(FairyGUI)** | FairyGUI 에디터로 게임 UI를 그리는 소스 프로젝트 | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
-| 🛠️ **도구 모음** | 각종 보조 도구 | https://github.com/GameFrameX/GameFrameX.Tools |
-| 💻 **관리 백오피스** | 출시 후 데이터 · 플레이어를 관리하는 웹(일부 소스코드는 비공개) | https://github.com/GameFrameX/GameFrameX.Admin |
-
-백오피스 온라인 데모 👉 https://game.admin.web.vue.alianblank.com
-
-## 🎮 클라이언트(넷 중 하나만 고르세요. 쓰는 걸 다운로드)
-
-| 엔진 | 주소 |
-|---|---|
-| Unity | https://github.com/GameFrameX/GameFrameX.Unity |
-| Cocos Creator | https://github.com/GameFrameX/GameFrameX.CocosCreator |
-| LayaAir(LayaBox) | https://github.com/GameFrameX/GameFrameX.LayaBox |
-| Godot | https://github.com/GameFrameX/GameFrameX.Godot |
-
----
-
-# 📁 폴더를 마음대로 두면 안 되는 이유는?
-
-> ⚠️ **중요**: 이 프레임워크는 **상대 경로**로 파일을 찾아요. 집의 콘센트 위치와 같아서 —— 서버를 `Server/`에서 `MyServer/`로 옮기면 전체 파이프라인이 길을 잃어버려요.
-
-그러니 아래 구조대로, 각 저장소를 **제자리 폴더**에 두세요:
+이 저장소는 **통합 릴리스 저장소**예요 — 아래 7개 소스 저장소의 최신 코드를 매일 자동으로 같은 이름의 폴더에 동기화합니다. 한 번 받으면 모든 부품을 손에 넣고, **폴더도 처음부터 제자리에 있어요** (설정 생성과 프로토콜 내보내기는 상대 경로로 서로를 찾습니다 — 이름 바꾸거나 옮기지 마세요):
 
 ```
-GameFrameX/                  # 프로젝트 루트 디렉토리(이름은 바꿔도 됨)
-├── Config/                  # ← GameFrameX.Config를 여기에(Excel 설정 + LuBan 내보내기)
-├── Protobuf/                # ← GameFrameX.Protobuf를 여기에(통신 프로토콜)
-├── FairyGUIProject/         # ← GameFrameX.FairyGUIProject를 여기에(UI 편집 프로젝트)
-├── Server/                  # ← GameFrameX.Server를 여기에(게임 서버)
-├── Unity/                   # ← GameFrameX.Unity를 여기에(Unity 클라이언트, 필요하면 다른 엔진으로 교체)
-│   ├── Assets/              #    Unity 리소스 디렉토리
-│   ├── Packages/            #    Unity 패키지
-│   ├── ProjectSettings/     #    Unity 프로젝트 설정
-│   └── UserSettings/        #    Unity 사용자 설정
-├── Tools/                   # ← GameFrameX.Tools를 여기에(보조 도구)
-├── docker/                  # Docker 로컬 실행 환경(MongoDB / PostgreSQL)
-├── Docs/                    # 문서(현재는 주로 GeekServer 원본 문서)
-└── LICENSE.md               # 오픈소스 라이선스
+GameFrameX/                   # 프로젝트 루트
+├── Server/                   # 게임 서버 (.NET 10, Actor 모델 + 핫업데이트)
+├── Unity/                    # Unity 클라이언트 프로젝트 (HybridCLR 핫업데이트, YooAsset)
+├── LayaBox/                  # LayaAir 클라이언트 프로젝트 (대체 클라이언트)
+├── Config/                   # LuBan 설정표: 여기서 Excel 편집, 양 끝 코드를 한 번에 생성
+├── Protobuf/                 # 통신 프로토콜: 여기서 .proto 편집, 각 단말용 코드를 한 번에 내보내기
+├── FairyGUIProject/          # UI 편집 프로젝트 (FairyGUI 에디터에서 Game.fairy 열기)
+├── Tools/                    # 보조 도구 (프로토콜 내보내기 CLI / GUI)
+├── docker/                   # 로컬 데이터베이스 원커맨드 실행 (mongo / postgres)
+├── scripts/                  # 통합 동기화 스크립트
+└── README / LICENSE 등
 ```
 
-> 다른 클라이언트 엔진으로 바꾸고 싶다고요? `Unity/`를 해당 이름으로 바꾸면 돼요(`Laya/`, `CocosCreator/`, `Godot/`), 규칙은 같아요.
+| 디렉터리 | 대응 소스 저장소 (변경은 여기로 PR / Issue 보내세요) |
+|------|------|
+| `Server/` | https://github.com/GameFrameX/GameFrameX.Server |
+| `Unity/` | https://github.com/GameFrameX/GameFrameX.Unity |
+| `LayaBox/` | https://github.com/GameFrameX/GameFrameX.LayaBox |
+| `Config/` | https://github.com/GameFrameX/GameFrameX.Config |
+| `Protobuf/` | https://github.com/GameFrameX/GameFrameX.Protobuf |
+| `FairyGUIProject/` | https://github.com/GameFrameX/GameFrameX.FairyGUIProject |
+| `Tools/` | https://github.com/GameFrameX/GameFrameX.Tools |
+
+> ⚠️ **이 저장소의 `Server/`, `Unity/` 등을 직접 고치는 건 소용없어요** — 매일 자동 동기화가 덮어써 버립니다. 코드를 고치거나 PR을 보내려면 위 표의 해당 소스 저장소로 가세요.
+
+**통합하지 않는 저장소** (필할 때 가져가세요):
+
+| 저장소 | 설명 |
+|------|------|
+| [GameFrameX.Foundation](https://github.com/GameFrameX/GameFrameX.Foundation) | 서버 기반 라이브러리, NuGet 패키지로 Server에서 참조 (빌드 시 자동 복원, clone 불필요) |
+| [GameFrameX.Admin](https://github.com/GameFrameX/GameFrameX.Admin) | 관리 백오피스 (일부 소스 비공개), [라이브 데모](https://game.admin.web.vue.alianblank.com) |
+| [GameFrameX.CocosCreator](https://github.com/GameFrameX/GameFrameX.CocosCreator) / [Godot](https://github.com/GameFrameX/GameFrameX.Godot) | 다른 엔진 클라이언트 |
+| [GameFrameX.Docs](https://github.com/GameFrameX/GameFrameX.Docs) | 문서 사이트 소스 |
 
 ---
 
-# 🔧 먼저 환경을 준비해요
+# 🚀 입문 튜토리얼: 제로에서 로그인까지
 
-시작하기 전에 아래 도구들을 먼저 설치해요(링크를 누르면 공식 사이트로):
+따라 하면 10~15분 정도 걸려요 (Unity 첫 임포트 포함).
 
-| 설치 항목 | 버전 | 용도 | 다운로드 |
-|---|---|---|---|
-| **Git** | 아무 최신 버전 | 각 저장소의 코드를 가져오기 | https://git-scm.com/ |
-| **.NET SDK** | **10.0 이상** | 서버 컴파일/실행, LuBan 내보내기 도구 실행 | https://dotnet.microsoft.com/download |
-| **Unity 에디터** | **2019.4.40f1**(2019.4+ 호환) | Unity 클라이언트를 열고 실행 | https://unity.com/download |
-| **Docker**(선택이지만 권장) | 아무 최신 버전 | 원클릭으로 로컬 데이터베이스 MongoDB / PostgreSQL 실행 | https://www.docker.com/ |
-
-> 💡 서버와 내보내기 도구 모두 **.NET 10.0**에 의존해요. 가장 중요한 버전 요구사항이니 반드시 맞춰 설치하세요.
-
----
-
-# 🚀 제로부터 시작해요, 하나씩 따라 하기
-
-**1단계**: 프로젝트를 넣을 새 폴더를 만들고 터미널을 열어요(Windows는 cmd / PowerShell, Mac / Linux는 터미널). 그리고 `cd`로 들어가요.
-
-**2단계**: 「주방 배치도」를 내려받아요:
+## 1단계: 프로젝트 다운로드
 
 ```shell
 git clone https://github.com/GameFrameX/GameFrameX.git
+cd GameFrameX
 ```
 
-그러면 `GameFrameX/` 폴더가 생기고, 안에 프로젝트 뼈대가 담겨 있어요.
+git을 안 쓰고 싶다면? GitHub 페이지의 **Code → Download ZIP**, 또는 [gitee 등 미러 사이트](https://gitee.com/GameFrameX/GameFrameX)에서 받아도 똑같아요.
 
-**3단계**: 각 부품을 `GameFrameX/` 안의 **해당 폴더**에 넣어요(아래는 Unity 기준이에요. 다른 엔진을 쓰면 마지막 줄을 해당 주소로 바꾸세요):
+## 2단계: 환경 설치
+
+| 설치 | 버전 | 어디서 |
+|---|---|---|
+| **.NET SDK** | **10.0 이상** | https://dotnet.microsoft.com/download |
+| **Unity 에디터** | **2019.4.40f1** (Unity Hub → Installs → Install Editor → Archive에서) | https://unity.com/download |
+| **Docker Desktop** | 최신 버전 | https://www.docker.com/ |
+
+> 💡 .NET 10은 서버와 설정표 생성 도구의 필수 요구사항이에요. 여기 틀리면 뒤에서 전부 막힙니다.
+
+## 3단계: 로컬 데이터베이스 실행
 
 ```shell
-git clone https://github.com/GameFrameX/GameFrameX.Server.git ./GameFrameX/Server
-git clone https://github.com/GameFrameX/GameFrameX.Config.git ./GameFrameX/Config
-git clone https://github.com/GameFrameX/GameFrameX.Protobuf.git ./GameFrameX/Protobuf
-git clone https://github.com/GameFrameX/GameFrameX.FairyGUIProject.git ./GameFrameX/FairyGUIProject
-git clone https://github.com/GameFrameX/GameFrameX.Tools.git ./GameFrameX/Tools
-git clone https://github.com/GameFrameX/GameFrameX.Unity.git ./GameFrameX/Unity
+cd docker/mongo
+docker compose up -d
 ```
 
-> 이 명령들의 의미는 「XX 저장소의 내용을 XX 폴더에 내려받는다」예요. **폴더 이름은 절대 바꾸지 마세요.**
+뜨는 건 MongoDB예요: `mongodb://admin:admin@localhost:27017` (데이터는 `docker/mongo/database/`에 저장).
 
-**4단계(로컬 데이터베이스 실행)**: Docker를 설치했다면 두 디렉토리에 각각 들어가서 MongoDB와 PostgreSQL을 띄워요(서버는 MongoDB, 백오피스는 PostgreSQL에 연결):
+> PostgreSQL(`docker/postgres/`)은 관리 백오피스 Admin용이에요. 이 튜토리얼에서는 필요 없으니 안 켜도 돼요.
+
+## 4단계: 서버 빌드 후 실행
 
 ```shell
-cd GameFrameX/docker/mongo && docker compose up -d
-cd ../postgres && docker compose up -d
+cd ../../Server
+dotnet build
+cd bin/app_debug
+dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27017/?authSource=admin"
 ```
 
-실행에 성공하면 이렇게 접속해요:
-- MongoDB: `mongodb://admin:admin@localhost:27017`
-- PostgreSQL: `localhost:5432`, 계정 `postgres` / 비밀번호 `postgres`, 초기 DB `gameframex`
+**인자가 하나뿐인 이유는?** 기본 설정(`Server/GameFrameX.Launcher/StartUp/AppStartUpGame.cs` 참고)이 포트를 전부 열어두고 있거든요:
 
-> ⚠️ 위 계정/비밀번호는 로컬 개발 기본값이에요. `Server` / `Admin`의 연결 설정과 맞춰야 접속돼요.
+| 포트 | 용도 |
+|---|---|
+| 29100 | TCP: 게임 클라이언트 장기 연결 |
+| 28080 | HTTP: 로그인 등 API (`/game/api/...`) |
+| 29110 | WebSocket |
+| 29090 | 헬스 체크 / 메트릭 |
 
-**5단계(설정 코드 생성)**: `Config/` 디렉토리로 가서 LuBan 내보내기 스크립트를 실행해요. Excel을 클라이언트와 서버 모두에서 쓸 수 있는 코드와 데이터로 바꿔주는 거예요. 구체적인 명령은 👉 [`GameFrameX.Config`](https://github.com/GameFrameX/GameFrameX.Config) 설명을 참고하세요.
+덮어써야 할 건 `DataBaseUrl` 하나 — 기본값은 공개 데모 DB를 가리키니, 로컬 개발에서는 방금 띄운 MongoDB로 향하게 하세요.
 
-**6단계(프로토콜 코드 생성)**: `Protobuf/` 디렉토리로 가서 프로토콜 내보내기 스크립트를 실행해요. 각 엔드에서 메시지를 주고받을 때 쓰는 코드를 만들어주는 거예요. 구체적인 명령은 👉 [`GameFrameX.Protobuf`](https://github.com/GameFrameX/GameFrameX.Protobuf) 설명을 참고하세요.
+**IDE면 더 간단해요**: Rider / Visual Studio로 `Server/Server.slnx` 열고 (`.slnx` 미지원이면 `Server.sln`), 시작 프로젝트를 `GameFrameX.Launcher`로, **Working directory를 `Server/bin/app_debug`로** 설정하고 명령줄 인자는 비워두세요 → 대신 `AppStartUpGame.cs`의 `DataBaseUrl` 기본값을 로컬 연결 문자열로 고치세요 (통합 저장소 내 파일 편집은 로컬 디버깅 전용. 위의 덮어쓰기 주의 참고).
 
-**7단계(선택)**: 필요하면 `Tools/`를 열어 보조 도구를 컴파일해요. 👉 [`GameFrameX.Tools`](https://github.com/GameFrameX/GameFrameX.Tools) 설명을 참고하세요.
+**확인**: 브라우저로 `http://localhost:29090/health`를 열어 응답이 오면 살아 있는 거예요.
 
-**8단계(드디어 실행!)**: Unity로 `Unity/` 프로젝트를 열고, `Server/`에 있는 서버를 띄우면 한번 돌려볼 수 있어요 🎉
+## 5단계: Unity 클라이언트 접속
+
+1. Unity Hub에서 **2019.4.40f1**로 저장소의 `Unity/` 폴더 열기 (처음엔 Package를 자동으로 받아와서 인터넷 필요, 좀 기다리세요)
+2. 씬 `Assets/Scenes/Launcher.unity` 열기
+3. **Play** ▶️ 누르기
+
+클라이언트는 기본으로 `127.0.0.1`(TCP 29100 / HTTP 28080)에 접속하고, 서버 기본 포트와 딱 맞아떨어져요. 설정을 바꿀 필요 없어요. 로그인 화면이 뜨고 캐릭터를 만들어 메인 도시에 들어가면 튜토리얼 완료!
+
+> 다른 머신 / 원격 서버로 옮길 땐 두 곳을 고쳐요: TCP 주소는 `Unity/Assets/Hotfix/UI/Logic/UILogin/UIPlayerList.cs`(`serverIp` / `serverPort`), HTTP 주소는 `Unity/Assets/Hotfix/UI/Logic/UILogin/UILogin.cs` 등(`127.0.0.1:28080` 검색).
+
+## LayaAir 클라이언트를 쓰고 싶다면?
+
+LayaAir IDE로 `LayaBox/`를 여세요. 진입점은 `src/Main.ts`. 주의점 두 가지: 접속 주소는 `LayaBox/src/gameframex/nettest.ts` (기본 `ws://127.0.0.1:21100`인데, 서버 기본 WebSocket 포트 **29110와 안 맞아요** — 맞춰야 연결됩니다). 프로토콜 생성은 `Protobuf/Proto2TsExport_LayaBox.sh`를 써요.
 
 ---
 
-# 💬 교류 & 피드백(제안, 요청, 버그)
+# 🔁 일상 개발: 수정한 뒤 다시 생성하는 방법
+
+다운로드한 스냅샷에는 **생성된 산출물이 전부 들어 있어요** (설정 코드 / 데이터, 프로토콜 코드 — 다 갖춰져 있음) 그래서 바로 돌아가요. 다시 생성해야 하는 건 원본 파일을 고쳤을 때뿐이에요:
+
+## Excel 설정을 고쳤다면 (`Config/Excels/Tables/`의 표)
+
+| 고친 것 | 실행 | 산출물 위치 |
+|---|---|---|
+| 서버가 읽는 표 | `cd Config && sh gen-server-bin.sh` (Windows는 `gen-server-bin.bat` 더블클릭) | `Server/GameFrameX.Config/` |
+| 클라이언트가 읽는 표 | `cd Config && sh gen-client-json.sh` | `Unity/Assets/` (코드 + 데이터) |
+
+> 파일 이름에 규칙이 있어요: `영문자-영어이름-중국어이름.xlsx` (예: `D-ItemConfig-道具表-道具-1001.xlsx`). Excel의 앞 4행은 헤더(`##var` / `##type` / `##group` / 설명)고, 데이터는 5행부터예요. 자세한 규칙은 [GameFrameX.Config](https://github.com/GameFrameX/GameFrameX.Config)에서.
+
+## 통신 프로토콜을 고쳤다면 (`Protobuf/*.proto`)
+
+내보내기 도구는 저장소에 포함되지 않아요. 먼저 한 번 빌드하세요 (통합 저장소의 디렉터리 배치는 출력 경로 요건을 이미 만족해요):
+
+```shell
+cd Tools
+dotnet build ProtoExport/ProtoExport.csproj -c Release   # 산출물은 ../Protobuf/Tools/로 자동 출력
+cd ../Protobuf
+sh Proto2CsExport_Server.sh    # 서버용 프로토콜 → Server/GameFrameX.Proto/
+sh Proto2CsExport_Client.sh    # 클라이언트용 프로토콜 → Unity/Assets/Hotfix/Proto/
+```
+
+> 프로토콜 엄격 규칙: proto3만 지원. `option module = 10;` 필수. 메시지 이름은 `Req<이름>` / `Resp<이름>` / `Notify<이름>`. 필드 번호는 800 미만. 중첩 message 금지. 자세한 규칙은 [GameFrameX.Protobuf](https://github.com/GameFrameX/GameFrameX.Protobuf)에서.
+
+## UI를 고쳤다면 (FairyGUI)
+
+FairyGUI 에디터(≥5.0)로 `FairyGUIProject/Game.fairy`를 열고, 수정 뒤 **파일 → 퍼블리시, 「코드 생성」에 반드시 체크**하세요. 산출물은 `Unity/Assets/`(UI 에셋 + C# 바인딩 코드)로 자동 기록돼요.
+
+> 초보자 최다 문제: 퍼블리시 후 Unity에서 클래스를 못 찾는 에러 → 십중팔구 「코드 생성」 체크를 깜빡한 거예요.
+
+---
+
+# ⚠️ 초보자가 자주 겪는 함정
+
+| 증상 | 원인 & 해결 |
+|---|---|
+| 서버 시작 시 DB 연결 에러 | `DataBaseUrl`을 안 넘김 — 기본값은 공개 데모 DB를 가리켜요. 4단계의 로컬 연결 문자열을 넘기세요 |
+| IDE 실행이 크래시 / hotfix를 못 찾음 | Working directory가 `Server/bin/app_debug`가 아님 (서버는 「현재 디렉터리/hotfix」에서 핫업데이트 어셈블리를 로드해요) |
+| Unity 첫 오픈이 패키지 받기에서 멈춤 | UPM 프라이빗 레지스트리(`gameframex.upm.alianblank.uk`)와 gitee(HybridCLR)에 인터넷 접근이 필요해요. 제한된 네트워크에선 멈춥니다 |
+| 클라이언트가 서버에 연결 안 됨 | 포트 조합이 맞는지 확인: TCP 29100 / HTTP 28080 / WS 29110. 서버 로그에 리스닝 목록이 나와요 |
+| 이 저장소에서 코드 고쳤는데 다음 날 사라짐 | 통합 저장소는 매일 동기화로 덮어씁니다. 변경은 해당 소스 저장소에 커밋하세요 |
+| LayaBox가 연결 안 됨 | `nettest.ts` 기본 포트 21100 ≠ 서버 29110 — 맞추세요 |
+
+---
+
+# 💬 커뮤니티 & 피드백 (제안, 요청, 버그)
 
 QQ 그룹: **467608841**
 
-# 📖 문서(진짜 쓰는 중이에요, 재촉 금지 😅)
+# 📖 문서
 
-> 모든 사이트 내용은 같아요. 열리는 아무 곳이나 쓰면 돼요.
+> 모든 사이트의 내용은 같아요. 열리는 아무거나 쓰세요.
 
-- 메인 사이트: https://gameframex.doc.alianblank.com
-- 백업 1: https://gameframex-docs.pages.dev
-- 백업 2: https://gameframex.doc.cloudflare.alianblank.com
-- 백업 3: https://gameframex.doc.vercel.alianblank.com
+- 메인: https://gameframex.doc.alianblank.com
+- 미러 1: https://gameframex-docs.pages.dev
+- 미러 2: https://gameframex.doc.cloudflare.alianblank.com
+- 미러 3: https://gameframex.doc.vercel.alianblank.com
 
 ---
 
-# ☕ 작성자에게 커피 한 잔 사주기
+# ☕ 저자에게 커피 한 잔
 
-![wechat.jpg](Docs/imgs/wechat.jpg)
+![wechat.jpg](https://raw.githubusercontent.com/GameFrameX/GameFrameX/42e755df/Docs/imgs/wechat.jpg)
 
-# 🎯 누가 GameFrameX를 쓰고 있을까?
+# 🎯 GameFrameX로 출시한 작품
 
 | 게임 이름 | 출시 채널 | 출시 시기 |
 |:---|:---|:---|
-| 심야의 바베큐 가게(深夜的烧烤店) | [TapTap](https://www.taptap.cn/app/384964) | 2024-04-15 |
-| 연속 흑백(连续黑白) | 더우인, 콰이쇼우, 알리페이, 홍몽, TapTap, iOS 등 | 2024-11 |
+| 심야의 숯불구이 (深夜的烧烤店) | [TapTap](https://www.taptap.cn/app/384964) | 2024-04-15 |
+| 연속 흑백 (连续黑白) | 더우인(抖音), 콰이서우(快手), 알리페이, 하모니OS, TapTap, iOS 등 | 2024-11 |
 
-> GameFrameX로 출시작을 만들었나요? PR이나 issue로 위 표에 추가해 주세요. 리스트를 함께 키워가요 🙌
+> GameFrameX로 출시 작품을 만들었나요? PR이나 issue로 위 표에 추가해 주세요 🙌
 
-# 👥 기여자 명단
+# 👥 기여자
 
 <!-- readme: contributors -start -->
 <table>
@@ -237,14 +319,14 @@ QQ 그룹: **467608841**
 
 ## Star History
 
-[![Star History Chart](https://star-history.dera.page/svg?repos=GameFrameX/GameFrameX,GameFrameX/GameFrameX.Unity,GameFrameX/GameFrameX.Server,GameFrameX/GameFrameX.Admin&type=Date)](https://star-history.dera.page/#GameFrameX/GameFrameX&GameFrameX/GameFrameX.Unity&GameFrameX/GameFrameX.Server&GameFrameX/GameFrameX.Admin&type=Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=GameFrameX/GameFrameX,GameFrameX/GameFrameX.Unity,GameFrameX/GameFrameX.Server,GameFrameX/GameFrameX.Admin&type=Date)](https://star-history.dera.page/#GameFrameX/GameFrameX&GameFrameX/GameFrameX.Unity&GameFrameX/GameFrameX.Server&GameFrameX.GameFrameX.Admin&type=Date)
 
 # 📜 면책 조항
 
-모든 플러그인은 인터넷에서 가져온 것으로, 사용하실 때는 직접 결제하세요. 저작권 침해가 있다면 email을 보내주시면 제거하겠습니다. 감사합니다.
+모든 플러그인은 인터넷에서 온 것이며, 사용 시 각자 결제하세요. 권리를 침해받았다면 email로 알려주세요. 바로 내리겠습니다.
 
-이 프로젝트는 해당 지역 법률이 허용하지 않는 범위에서 사용해서는 안 됩니다. 기술 자체에는 죄가 없고, 잘못은 기술을 남용하는 사람에게 있어요.
+이 프로젝트는 현지 법률이 허용하지 않는 범위에서 사용해서는 안 됩니다. 기술 자체는 무죄이며, 남용하는 사람이 잘못입니다.
 
 # 💎 스폰서
 
-[AITKPARTY](https://aitkparty.com/)는 AI 대형 모델 API 중계·통합 서비스예요. 오픈소스 프로젝트 New API 기반으로 구축되었고, 통합 인터페이스를 통해 개발자가 주요 대형 언어 모델에 편리하게 접근할 수 있도록 해줘요. 다수 모델 공급자를 각각 연동하는 수고를 덜어주는 거죠.
+[AITKPARTY](https://aitkparty.com/)는 오픈소스 프로젝트 New API 기반으로 구축된 AI LLM API 중계/통합 서비스예요. 주요 대형 언어 모델에 대한 통일된 인터페이스를 제공해서, 여러 모델 공급사를 각각 연동하는 수고를 덜어줍니다.
