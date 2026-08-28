@@ -1,0 +1,57 @@
+name: Smoke Test (Runtime)
+
+# 教程防腐：验证 README「三步跑通」的服务器侧永远有效。
+# 端口基线来自 2026-08-28 本地实测：默认参数下 TCP 29100 + HTTP 28080 开，
+# WS 29110 与 Metrics 29090 默认关闭（IsOpenTelemetryMetrics=false, MetricsPort=0），
+# 故只验证前两者——README 教程中 29090/health 的表述需另行修正（见 PromotionWorkbench backlog）。
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1"        # 每周一 UTC 3 点（北京周一 11 点）
+  pull_request:
+    paths: [ "Server/**", "Unity/**", "docker/**", ".github/workflows/smoke-test.yml" ]
+  push:
+    branches: [ main ]
+    paths: [ "Server/**", "Unity/**", "docker/**", "README.md" ]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { lfs: true }          # Unity/** 触发时需要 LFS 检出
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "10.0.x" }
+      - name: Start MongoDB
+        run: cd docker/mongo && docker compose up -d
+      - name: Wait for MongoDB
+        run: |
+          for i in $(seq 1 15); do
+            nc -z -w 2 localhost 27017 && exit 0
+            sleep 2
+          done
+          echo "::error::mongo not ready"; exit 1
+      - name: Build
+        run: dotnet build Server/Server.sln -c Debug
+      - name: Start server (background, tutorial args)
+        run: |
+          cd Server/bin/app_debug
+          nohup dotnet GameFrameX.Launcher.dll \
+            --DataBaseUrl="mongodb://admin:admin@localhost:27017/?authSource=admin" \
+            > /tmp/server.log 2>&1 &
+      - name: Wait for game ports
+        run: |
+          ok=0
+          for i in $(seq 1 45); do
+            if nc -z -w 2 localhost 28080 && nc -z -w 2 localhost 29100; then ok=1; break; fi
+            sleep 2
+          done
+          if [ "$ok" != "1" ]; then
+            echo "::error::ports 28080/29100 not listening"
+            exit 1
+          fi
+          echo "HTTP 28080 ✅ / TCP 29100 ✅ (waited ~$((i*2))s)"
+      - name: Server log on failure
+        if: failure()
+        run: tail -80 /tmp/server.log
