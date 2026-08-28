@@ -1,0 +1,24 @@
+name: PAT Debug
+
+# 临时诊断：输出 secret 中 token 的指纹（不泄露值），用于与本地终端比对是否同一 token。
+# 诊断完成后此 workflow 可删除。
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fingerprint the secret token
+        env:
+          GH_TOKEN: "${{ secrets.METRICS_PAT }}"
+        run: |
+          echo "token length: ${#GH_TOKEN}"
+          echo "token fingerprint (sha256 first 12): $(echo -n "$GH_TOKEN" | sha256sum | cut -c1-12)"
+          echo "--- who does this token act as ---"
+          gh api user --jq '"token login: \(.login)"' 2>&1 || true
+          echo "--- repo access test ---"
+          gh api repos/GameFrameX/GameFrameX --jq '"repo access OK: \(.full_name)"' 2>&1 || true
+          echo "--- token scopes/permissions header ---"
+          gh api repos/GameFrameX/GameFrameX -i 2>/dev/null | grep -iE "^x-accepted-oauth|^x-oauth-scopes" || echo "(no scopes header)"
