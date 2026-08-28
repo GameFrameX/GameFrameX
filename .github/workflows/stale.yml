@@ -1,0 +1,28 @@
+name: Mark stale
+
+# 每周一扫描：30 天无活动的 issue 标记 stale（只标记，不关闭；PR 不处理）。
+# 决策依据：PromotionWorkbench 05 —— 低摩擦社区，不做机器人关单。
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"   # 每周一 UTC 9（北京 17:00）
+
+permissions:
+  issues: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 30
+          days-before-close: -1        # 只标记，永不自动关闭
+          days-before-pr-stale: -1     # 不碰 PR
+          days-before-pr-close: -1
+          stale-issue-message: |
+            ⏳ 这个 issue 已 30 天无活动，标记为 stale / This issue has been inactive for 30 days and is marked stale.
+
+            仍然有效请回复一句话即可去掉标记 / Still relevant? A short reply will remove the label.
+          stale-issue-label: "stale"
+          exempt-issue-labels: "pinned,security"

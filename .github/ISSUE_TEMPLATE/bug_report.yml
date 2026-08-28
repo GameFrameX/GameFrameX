@@ -1,0 +1,65 @@
+name: 🐛 Bug 报告 / Bug Report
+description: 报告一个可复现的问题 / Report a reproducible problem
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提前感谢！信息越全，定位越快。/ Thanks in advance — the more detail, the faster we can help.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么 / What happened
+      description: 简述问题与报错 / A clear description of the problem and any error message
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤 / Steps to reproduce
+      placeholder: |
+        1. cd docker/mongo && docker compose up -d
+        2. cd Server && dotnet build
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为 / Expected behavior
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: 涉及端 / Component
+      options:
+        - 服务端 Server (.NET)
+        - Unity 客户端
+        - LayaBox 客户端
+        - 配置表 LuBan (Config)
+        - 协议 Protobuf
+        - 工具 Tools
+        - 其他 / Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息 / Environment
+      description: 引擎/SDK 版本、操作系统 / Unity or .NET SDK version, OS
+      placeholder: .NET 10.0.x, Unity 2019.4.40f1, macOS 15
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志 / Relevant logs
+      description: 服务端日志在 Server/bin/app_debug/ 下 / Server logs live under Server/bin/app_debug/
+      render: shell

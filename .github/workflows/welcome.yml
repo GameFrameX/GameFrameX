@@ -1,0 +1,37 @@
+name: Welcome
+
+# 首次互动双语欢迎（只对第一次开 issue / PR 的人触发一次）。
+# 依赖官方 actions/first-interaction@v1 + 内置 GITHUB_TOKEN，无需额外 secret。
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            👋 **欢迎！这是你在 GameFrameX 的第一个 Issue / Welcome & thanks for your first issue!** 🎉
+
+            - 📖 文档 Docs: https://gameframex.doc.alianblank.com
+            - 💬 提问交流 / Q&A: https://github.com/GameFrameX/GameFrameX/discussions/categories/q-a
+            - 🌐 中文交流完全没问题 / Feel free to write in Chinese or English
+
+            We'll get back to you soon. 谢谢你的反馈！
+          pr-message: |
+            🙏 **感谢你的第一个 PR / Thanks for your first PR!** 🎉
+
+            - ⚠️ **本仓是聚合仓 / This repo is an aggregate mirror** — 代码改动请提到对应的源仓库（见 README 顶部表格）/ Code changes belong in the corresponding source repo (see the table in README).
+            - 📖 文档 Docs: https://gameframex.doc.alianblank.com
+
+            We'll review it as soon as possible. 感谢贡献！

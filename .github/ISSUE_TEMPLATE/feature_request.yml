@@ -1,0 +1,41 @@
+name: ✨ 功能建议 / Feature Request
+description: 建议一个新能力或改进 / Suggest a new capability or improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 想解决什么问题 / Problem to solve
+      description: 你正在被什么卡住？/ What is blocking you right now?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 期望的方案 / Desired solution
+      description: 你希望它怎么工作 / How you'd expect it to work
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 考虑过的替代方案 / Alternatives considered
+      description: 非必填 / Optional
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: 涉及端 / Component
+      options:
+        - 服务端 Server (.NET)
+        - Unity 客户端
+        - LayaBox 客户端
+        - 配置表 LuBan (Config)
+        - 协议 Protobuf
+        - 工具 Tools
+        - 文档 Docs
+        - 其他 / Other
+    validations:
+      required: true

@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 提问交流 / Ask a Question
+    url: https://github.com/GameFrameX/GameFrameX/discussions/categories/q-a
+    about: 使用问题、选型咨询、报错求助请发 Discussions Q&A（中英文均可 / Chinese or English）
+  - name: 🎮 作品展示 / Show and tell
+    url: https://github.com/GameFrameX/GameFrameX/discussions/categories/show-and-tell
+    about: 用 GameFrameX 做的游戏欢迎来晒 / Built a game with GameFrameX? Show it off here
+  - name: 📖 文档 / Documentation
+    url: https://gameframex.doc.alianblank.com
+    about: 教程与 API 文档 / Tutorials and API docs
