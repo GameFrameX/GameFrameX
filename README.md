@@ -36,7 +36,7 @@ dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27
 
 If you see the login screen and can create a character into the main city, the full client↔server loop works 🎉
 
-Is the server up? Open `http://localhost:29090/health` in a browser — a response means it's alive.
+Is the server up? Check the listening ports: `nc -z localhost 29100` (TCP) and `nc -z localhost 28080` (HTTP) — success means it's alive. (Port 29090 is the metrics port and is **off by default** — see the port table below.)
 
 ---
 
@@ -166,18 +166,18 @@ dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27
 
 **Why only one argument?** The defaults (see `Server/GameFrameX.Launcher/StartUp/AppStartUpGame.cs`) already open the full port set:
 
-| Port | Purpose |
-|---|---|
-| 29100 | TCP: long-lived game client connections |
-| 28080 | HTTP: login and other APIs (`/game/api/...`) |
-| 29110 | WebSocket |
-| 29090 | health check / metrics |
+| Port | Purpose | Default |
+|---|---|---|
+| 29100 | TCP: long-lived game client connections | ✅ on |
+| 28080 | HTTP: login and other APIs (`/game/api/...`) | ✅ on |
+| 29110 | WebSocket | ❌ off — start with `--IsEnableWebSocket true` |
+| 29090 | metrics / health | ❌ off — start with `--IsOpenTelemetryMetrics true --MetricsPort 29090` |
 
 The only thing to override is `DataBaseUrl` — the default points at a public demo database; point it at the MongoDB you just started.
 
 **Even simpler with an IDE**: open `Server/Server.slnx` with Rider / Visual Studio (`Server.sln` if `.slnx` isn't supported), set the startup project to `GameFrameX.Launcher`, **set Working directory to `Server/bin/app_debug`**, leave arguments empty — and change the `DataBaseUrl` default in `AppStartUpGame.cs` to your local connection string (that edits a file inside the aggregated repo, fine for local debugging — see the overwrite note above).
 
-**Verify**: open `http://localhost:29090/health` in a browser — a response means it's alive.
+**Verify**: `nc -z localhost 29100 && nc -z localhost 28080` in a terminal — success means it's alive (or check the server log for `has been started` / `Now listening on`).
 
 ## Step 5: connect the Unity client
 
@@ -191,7 +191,7 @@ The client defaults to `127.0.0.1` (TCP 29100 / HTTP 28080), matching the server
 
 ## Prefer the LayaAir client?
 
-Open `LayaBox/` with the LayaAir IDE; entry point `src/Main.ts`. Two gotchas: the connect address lives in `LayaBox/src/gameframex/nettest.ts` (default `ws://127.0.0.1:21100`, which does NOT match the server's default WebSocket port **29110** — align them); protocol generation uses `Protobuf/Proto2TsExport_LayaBox.sh`.
+Open `LayaBox/` with the LayaAir IDE; entry point `src/Main.ts`. Two gotchas: WebSocket is **off by default** — start the server with `--IsEnableWebSocket true` first (default WsPort 29110; `nettest.ts` defaults to `ws://127.0.0.1:21100`, which does NOT match — align them); the connect address lives in `LayaBox/src/gameframex/nettest.ts`; protocol generation uses `Protobuf/Proto2TsExport_LayaBox.sh`.
 
 ---
 
@@ -237,9 +237,9 @@ Open `FairyGUIProject/Game.fairy` with the FairyGUI editor (≥5.0), then **File
 | Server fails to start, DB connection error | `DataBaseUrl` not passed — the default points at the public demo DB; pass the local connection string from Step 4 |
 | IDE launch crashes / hotfix not found | Working directory not set to `Server/bin/app_debug` (the server loads hot-update assemblies from `<cwd>/hotfix`) |
 | Unity first open stuck fetching packages | Needs internet access to the UPM registry (`gameframex.upm.alianblank.uk`) and gitee (HybridCLR); restricted networks will stall |
-| Client can't reach the server | Make sure the port set matches: TCP 29100 / HTTP 28080 / WS 29110; the server log lists what it's listening on |
+| Client can't reach the server | Make sure the port set matches: TCP 29100 / HTTP 28080; WebSocket 29110 needs `--IsEnableWebSocket true` (off by default); the server log lists what it's listening on |
 | Your code edits vanished the next day | The daily sync overwrites the aggregated repo — commit changes to the corresponding source repo |
-| LayaBox can't connect | `nettest.ts` defaults to port 21100 ≠ server's 29110 — align them |
+| LayaBox can't connect | WebSocket is off by default — start the server with `--IsEnableWebSocket true`; also align `nettest.ts` (defaults to 21100) with the server's WsPort 29110 |
 
 ---
 
