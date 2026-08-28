@@ -20,7 +20,3 @@ services:
   #     - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
   #     - ME_CONFIG_MONGODB_ADMINPASSWORD=admin
   #     - ME_CONFIG_MONGODB_SERVER=mongodb
-
-networks:
-  default:
-    name: gameframex
