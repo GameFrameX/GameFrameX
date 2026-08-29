@@ -1,0 +1,19 @@
+name: Update Packages
+
+# 上游 gameframex 包发版（public-github-actions publish-release.yml 末尾 dispatch 触发）
+# 或每天北京时间凌晨 3 点（UTC 19:00）定时 + 手动触发：
+# 由公共可重用工作流查 registry 最新版，bump Packages/manifest.json 并直推 main
+on:
+  repository_dispatch:
+    types: [package-released]
+  schedule:
+    - cron: "0 19 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-packages:
+    # 引用外部仓库的可重用工作流
+    # 权限由外部工作流统一配置，无需在调用方声明
+    uses: GameFrameX/public-github-actions/.github/workflows/update-packages.yml@main
+    # 组织级别已配置密钥，可以使用 inherit 继承所有密钥
+    secrets: inherit
