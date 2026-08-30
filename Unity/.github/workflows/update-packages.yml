@@ -1,13 +1,11 @@
 name: Update Packages
 
-# 上游 gameframex 包发版（public-github-actions publish-release.yml 末尾 dispatch 触发）
-# 或每天北京时间凌晨 3 点（UTC 19:00）定时 + 手动触发：
+# 每天北京时间 03:00 与 13:00 定时 + 手动触发：
 # 由公共可重用工作流查 registry 最新版，bump Packages/manifest.json 并直推 main
 on:
-  repository_dispatch:
-    types: [package-released]
   schedule:
-    - cron: "0 19 * * *"
+    - cron: "0 19 * * *"  # 北京时间 03:00
+    - cron: "0 5 * * *"   # 北京时间 13:00
   workflow_dispatch:
 
 jobs:

@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.code-philosophy.hybridclr": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
-    "com.gameframex.unity": "2.5.2",
+    "com.gameframex.unity": "2.5.3",
     "com.gameframex.unity.asset": "3.1.1",
     "com.gameframex.unity.config": "1.2.1",
     "com.gameframex.unity.coroutine": "1.2.0",
