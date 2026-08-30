@@ -6,6 +6,7 @@
 
 [![License](https://img.shields.io/badge/license-blue.svg)](LICENSE.md)
 [![Documentation](https://img.shields.io/badge/documentation-docs-blue.svg)](https://gameframex.doc.alianblank.com)
+
 [![Trendshift](https://trendshift.io/api/badge/repositories/20145)](https://trendshift.io/repositories/20145)
 
 インディゲーム開発者向けオールインワンソリューション · インディ開発者の夢を支援
