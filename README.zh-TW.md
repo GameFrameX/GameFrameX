@@ -138,7 +138,7 @@ dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27
 
 唯一要覆蓋的是 `DataBaseUrl`——預設值連的是演示用公網庫，本地開發請指到自己剛起的 MongoDB。
 
-**用 IDE 更簡單**：用 Rider / Visual Studio 開啟 `Server/Server.slnx`（不支援 `.slnx` 就開 `Server.sln`），啟動專案選 `GameFrameX.Launcher`，**Working directory 設為 `Server/bin/app_debug`**，命令列參數留空——但要在 `AppStartUpGame.cs` 裡把 `DataBaseUrl` 預設值改成本地連線字串（改的是聚合倉內的檔案，僅本地除錯用，見上方同步覆蓋說明）。
+**用 IDE 更簡單**：用 Rider / Visual Studio 開啟 `Server/Server.slnx`（不支援 `.slnx` 就開 `Server.sln`），啟動專案選 `GameFrameX.Launcher`，**Working directory 設為 `Server/bin/app_debug`**，命令列參數留空——但要在 `AppStartUpGame.cs` 裡把 `DataBaseUrl` 預設值改成本地連線字串（改的是聚合倉內的檔案，僅本地除錯用，見下方同步覆蓋說明）。
 
 **驗證**：終端執行 `nc -z localhost 29100 && nc -z localhost 28080`——成功即在線（或看伺服器日誌中的 `has been started` / `Now listening on`）。
 

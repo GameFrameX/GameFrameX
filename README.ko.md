@@ -138,7 +138,7 @@ dotnet GameFrameX.Launcher.dll --DataBaseUrl="mongodb://admin:admin@localhost:27
 
 덮어써야 할 건 `DataBaseUrl` 하나 — 기본값은 공개 데모 DB를 가리키니, 로컬 개발에서는 방금 띄운 MongoDB로 향하게 하세요.
 
-**IDE면 더 간단해요**: Rider / Visual Studio로 `Server/Server.slnx` 열고 (`.slnx` 미지원이면 `Server.sln`), 시작 프로젝트를 `GameFrameX.Launcher`로, **Working directory를 `Server/bin/app_debug`로** 설정하고 명령줄 인자는 비워두세요 → 대신 `AppStartUpGame.cs`의 `DataBaseUrl` 기본값을 로컬 연결 문자열로 고치세요 (통합 저장소 내 파일 편집은 로컬 디버깅 전용. 위의 덮어쓰기 주의 참고).
+**IDE면 더 간단해요**: Rider / Visual Studio로 `Server/Server.slnx` 열고 (`.slnx` 미지원이면 `Server.sln`), 시작 프로젝트를 `GameFrameX.Launcher`로, **Working directory를 `Server/bin/app_debug`로** 설정하고 명령줄 인자는 비워두세요 → 대신 `AppStartUpGame.cs`의 `DataBaseUrl` 기본값을 로컬 연결 문자열로 고치세요 (통합 저장소 내 파일 편집은 로컬 디버깅 전용. 아래의 덮어쓰기 주의 참고).
 
 **확인**: 터미널에서 `nc -z localhost 29100 && nc -z localhost 28080` — 성공하면 살아 있는 거예요 (또는 서버 로그에서 `has been started` / `Now listening on` 키워드를 확인하세요).
 
