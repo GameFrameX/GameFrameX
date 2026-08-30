@@ -329,7 +329,7 @@ GameFrameX/                   # 專案根目錄
                 </a>
             </td>
 		</tr>
-	<tbody>
+	</tbody>
 </table>
 <!-- readme: contributors -end -->
 

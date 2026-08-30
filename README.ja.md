@@ -329,7 +329,7 @@ GameFrameX/                   # プロジェクトルート
                 </a>
             </td>
 		</tr>
-	<tbody>
+	</tbody>
 </table>
 <!-- readme: contributors -end -->
 

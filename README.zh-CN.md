@@ -329,7 +329,7 @@ GameFrameX/                   # 项目根目录
                 </a>
             </td>
 		</tr>
-	<tbody>
+	</tbody>
 </table>
 <!-- readme: contributors -end -->
 

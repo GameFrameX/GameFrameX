@@ -329,7 +329,7 @@ It supports the major engines — whichever you use, it fits:
                 </a>
             </td>
 		</tr>
-	<tbody>
+	</tbody>
 </table>
 <!-- readme: contributors -end -->
 
