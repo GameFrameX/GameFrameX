@@ -1,0 +1,11 @@
+{{~if __namespace != ''~}}
+package {{__namespace}};
+{{~end~}}
+
+type JsonLoader func(string) ([]map[string]interface{}, error)
+
+type {{__name}} struct {
+    {{~for table in __tables ~}}
+    {{table.name}} *{{full_name table}}
+    {{~end~}}
+}

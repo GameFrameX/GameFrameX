@@ -62,6 +62,14 @@ public partial class {{__name}}
         }
     }
 
+    public void TranslateText(System.Func<string, string, string> translator)
+    {
+        foreach(var _v in _dataList)
+        {
+            _v.TranslateText(translator);
+        }
+    }
+
     {{~else if __table.is_list_table ~}}
     private readonly System.Collections.Generic.List<{{declaring_type_name value_type}}> _dataList;
     {{~if __table.is_union_index~}}
@@ -88,6 +96,14 @@ public partial class {{__name}}
             _v.ResolveRef(tables);
         }
     }
+
+    public void TranslateText(System.Func<string, string, string> translator)
+    {
+        foreach(var _v in _dataList)
+        {
+            _v.TranslateText(translator);
+        }
+    }
     {{~else~}}
 
     private readonly {{declaring_type_name value_type}} _data;
@@ -105,6 +121,11 @@ public partial class {{__name}}
     public void ResolveRef({{__manager_name}} tables)
     {
         _data.ResolveRef(tables);
+    }
+
+    public void TranslateText(System.Func<string, string, string> translator)
+    {
+        _data.TranslateText(translator);
     }
     {{~end~}}
 

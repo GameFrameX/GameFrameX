@@ -1,0 +1,71 @@
+{{namespace_with_grace_begin __namespace}}
+
+{{~if __this.comment != '' ~}}
+/**
+ * {{escape_comment __this.comment}}
+ */
+{{~end~}}
+
+class {{__name}}
+{
+    {{~if __this.is_map_table ~}}
+    private:
+    ::luban::HashMap<{{declaring_type_name __key_type}}, {{declaring_type_name __value_type}}> _dataMap;
+    ::luban::Vector<{{declaring_type_name __value_type}}> _dataList;
+
+    public:
+    ~{{__name}}();
+
+    bool load(::luban::ByteBuf& _buf);
+
+    const ::luban::HashMap<{{declaring_type_name __key_type}}, {{declaring_type_name __value_type}}>& getDataMap() const;
+    const ::luban::Vector<{{declaring_type_name __value_type}}>& getDataList() const;
+
+    {{declaring_type_name __value_type}} get({{declaring_type_name __key_type}} key);
+
+    {{~else if __this.is_list_table~}}
+    private:
+    ::luban::Vector<{{declaring_type_name __value_type}}> _dataList;
+    {{~if __this.is_union_index~}}
+    {{~else if !__this.index_list.empty?~}}
+    {{~for idx in __this.index_list~}}
+    ::luban::HashMap<{{declaring_type_name idx.type}}, {{declaring_type_name __value_type}}> _dataMap_{{idx.index_field.name}};
+    {{~end~}}
+    {{~end~}}
+
+    public:
+    bool load(::luban::ByteBuf& _buf);
+
+    const ::luban::Vector<{{declaring_type_name __value_type}}>& getDataList() const;
+
+    {{~if __this.is_union_index~}}
+    {{~else if !__this.index_list.empty?~}}
+    {{~for idx in __this.index_list~}}
+    ::luban::HashMap<{{declaring_type_name idx.type}}, {{declaring_type_name __value_type}}>& getDataMapBy{{idx.index_field.name}}();
+
+    {{declaring_type_name __value_type}} getBy{{idx.index_field.name}}({{declaring_type_name idx.type}} key);
+    {{~end~}}
+    {{~else~}}
+    {{declaring_type_name __value_type}} get(size_t index) const;
+    {{~end~}}
+    {{~else~}}
+    private:
+    {{declaring_type_name __value_type}} _data;
+
+    public:
+    {{declaring_type_name __value_type}} data() const;
+
+    bool load(::luban::ByteBuf& _buf);
+
+    {{~ for field in __value_type.def_bean.hierarchy_export_fields ~}}
+{{~if field.comment != '' ~}}
+    /**
+     * {{escape_comment field.comment}}
+     */
+{{~end~}}
+    {{declaring_type_name field.ctype}}& {{getter_name field.name}}() const;
+    {{~end~}}
+    {{~end~}}
+};
+
+{{namespace_with_grace_end __namespace}}

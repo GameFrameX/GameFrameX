@@ -1,0 +1,8 @@
+pub struct {{__name}}Def {
+    {{~for table in __tables ~}}
+{{~if table.comment != '' ~}}
+    /// {{escape_comment table.comment}}
+{{~end~}}
+    pub {{table.name}}: {{full_def_name table}},
+    {{~end~}}
+}

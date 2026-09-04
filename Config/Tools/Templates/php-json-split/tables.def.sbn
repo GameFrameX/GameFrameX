@@ -1,0 +1,13 @@
+{{~namespace_with_grace_begin __namespace~}}
+class {{str_full_name __full_name}}Def {
+    {{~for table in __tables ~}}
+{{~if table.comment != '' ~}}
+    /**
+     * {{escape_comment table.comment}}
+     */
+{{~end~}}
+    /** @var {{str_full_name table.full_name}}Def */
+    public ${{format_field_name __code_style table.name}};
+    {{~end~}}
+}
+{{~namespace_with_grace_end __namespace~}}

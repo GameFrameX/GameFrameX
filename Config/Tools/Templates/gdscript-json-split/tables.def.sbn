@@ -1,0 +1,11 @@
+@tool
+class_name {{str_full_name __full_name}}Def
+extends RefCounted
+
+
+{{~for table in __tables ~}}
+{{~if table.comment != '' ~}}
+## {{escape_comment table.comment}}
+{{~end~}}
+var {{format_field_name __code_style table.name}}: {{str_full_name table.full_name}}Def
+{{~end~}}

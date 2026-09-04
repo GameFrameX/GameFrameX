@@ -1,0 +1,17 @@
+{{namespace_with_grace_begin __namespace}}
+{{~if __this.comment != '' ~}}
+/**
+ * {{escape_comment __this.comment}}
+ */
+{{~end~}}
+export interface {{__name}}Def {
+    {{~if __this.is_map_table ~}}
+    dataMap: Map<{{declaring_type_name __key_type}}, {{declaring_def_type_name __value_type}}>
+    dataList: {{declaring_def_type_name __value_type}}[]
+    {{~else if __this.is_list_table ~}}
+    dataList: {{declaring_def_type_name __value_type}}[]
+    {{~else~}}
+    data: {{declaring_def_type_name __value_type}}
+    {{~end~}}
+}
+{{namespace_with_grace_end __namespace}}

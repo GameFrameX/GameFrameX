@@ -1,0 +1,21 @@
+{{~namespace_with_grace_begin __namespace~}}
+{{~if __this.comment != '' ~}}
+/**
+ * {{escape_comment __this.comment}}
+ */
+{{~end~}}
+class {{str_full_name __full_name}}Def{{if __parent_def_type}} extends {{str_full_name __parent_def_type.full_name}}Def{{end}} {
+    {{~ for field in __hierarchy_export_fields ~}}
+{{~if field.comment != '' ~}}
+    /**
+     * {{escape_comment field.comment}}
+     */
+{{~end~}}
+    /** @var {{declaring_def_type_name field.ctype}} */
+    public ${{format_field_name __code_style field.name}};
+    {{~end~}}
+{{~if !__this.is_abstract_type~}}
+    public const __ID__ = {{__this.id}};
+{{~end~}}
+}
+{{~namespace_with_grace_end __namespace~}}

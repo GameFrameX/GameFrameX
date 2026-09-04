@@ -1,4 +1,4 @@
-﻿using LuBan.Runtime;
+using LuBan.Runtime;
 using GameFrameX.Config;
 using SimpleJSON;
 {{
@@ -94,8 +94,11 @@ end
     public {{class_modifier __bean}} partial class {{__name}} : {{if parent_def_type}}{{__bean.parent}}{{else}}LuBan.Runtime.BeanBase{{end}}
     {{~end~}}
     {
+        private System.Func<string, string, string> Translator;
+
         public {{__name}}({{get_param_def_list(__bean)}}) {{if parent_def_type}} : base({{get_param_name_list(__bean.parent_def_type)}}) {{end}}
         {
+            Translator = null;
             {{~ for field in export_fields
             fieldName = format_property_name __code_style field.name
             ~}}
@@ -116,6 +119,7 @@ end
 
         public {{__name}}(JSONNode _buf){{if parent_def_type}} : base(_buf) {{end}}
         {
+            Translator = null;
             {{~ for field in export_fields
                 fieldName = format_property_name __code_style field.name
             ~}}
@@ -162,7 +166,23 @@ end
         /// {{escape_comment field.comment}}
         /// </summary>
         {{~end~}}
+        {{~if field.type == 'text'~}}
+        private {{declaring_type_name field.ctype}} _{{format_property_name __code_style field.name}};
+        public {{declaring_type_name field.ctype}} {{format_property_name __code_style field.name}}
+        {
+            get
+            {
+                if (Translator != null)
+                {
+                    return Translator({{format_property_name __code_style field.name}}_Localization_Key, _{{format_property_name __code_style field.name}});
+                }
+                return _{{format_property_name __code_style field.name}};
+            }
+            private set => _{{format_property_name __code_style field.name}} = value;
+        }
+        {{~else~}}
         public {{declaring_type_name field.ctype}} {{format_property_name __code_style field.name}} { private set; get; }
+        {{~end~}}
         {{~if field.type =='text'~}}
         {{~if field.comment != '' ~}}
         /// <summary>
@@ -202,11 +222,7 @@ end
             {{~if parent_def_type~}}
             base.TranslateText(translator);
             {{~end~}}
-            {{~ for field in export_fields ~}}
-            {{~if field.type =='text'~}}
-            {{format_property_name __code_style field.name}} = translator({{format_property_name __code_style field.name}}_Localization_Key, {{format_property_name __code_style field.name}});
-            {{~end~}}
-            {{~end~}}
+            Translator = translator;
         }
 
         public override string ToString()

@@ -1,0 +1,17 @@
+@tool
+class_name {{str_full_name __full_name}}Def
+extends RefCounted
+
+
+{{~if __this.comment != '' ~}}
+## {{escape_comment __this.comment}}
+{{~end~}}
+{{~ for field in __hierarchy_export_fields ~}}
+{{~if field.comment != '' ~}}
+## {{escape_comment field.comment}}
+{{~end~}}
+var {{format_field_name __code_style field.name}}: {{declaring_def_type_name field.ctype}}
+{{~end~}}
+{{~if !__this.is_abstract_type~}}
+const __ID__ = {{__this.id}}
+{{~end~}}

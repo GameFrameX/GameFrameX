@@ -1,0 +1,10 @@
+export interface {{__name}}Def {
+    {{~for table in __tables ~}}
+{{~if table.comment != '' ~}}
+    /**
+     * {{escape_comment table.comment}}
+     */
+{{~end~}}
+    {{table.name}}: {{table.full_name}}Def
+    {{~end~}}
+}

@@ -1,0 +1,7 @@
+---@class {{__name}}Def
+{{~for table in __tables ~}}
+---@field public {{table.name}} {{table.full_name}}Def {{-if table.comment != ''}} @{{escape_comment table.comment}}{{end}}
+{{~end~}}
+local {{__name}}Def = {}
+
+return {{__name}}Def

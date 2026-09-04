@@ -1,0 +1,18 @@
+from dataclasses import dataclass
+
+
+{{~if __this.comment != '' ~}}
+'''
+{{escape_comment __this.comment}}
+'''
+{{~end~}}
+@dataclass
+class {{str_full_name __full_name}}Def:
+    {{~if __this.is_map_table ~}}
+    data_map: dict[{{declaring_def_type_name __key_type}}, {{declaring_def_type_name __value_type}}]
+    data_list: list[{{declaring_def_type_name __value_type}}]
+    {{~else if __this.is_list_table ~}}
+    data_list: list[{{declaring_def_type_name __value_type}}]
+    {{~else~}}
+    data: {{declaring_def_type_name __value_type}}
+    {{~end~}}

@@ -35,8 +35,8 @@ using SimpleJSON;
     {{~end~}}
     public partial class {{__name}} : BaseDataTable<{{declaring_type_name __value_type}}>
     {
-        {{~if __table.is_map_table ~}}        
-        private readonly System.Func<System.Threading.Tasks.Task<JSONNode>> _loadFunc;        
+        {{~if __table.is_map_table ~}}
+        private readonly System.Func<System.Threading.Tasks.Task<JSONNode>> _loadFunc;
         public {{__name}}(System.Func<System.Threading.Tasks.Task<JSONNode>> loadFunc)
         {
             _loadFunc = loadFunc;

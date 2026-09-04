@@ -1,0 +1,16 @@
+#include "{{__schema_header_file}}"
+
+{{namespace_with_grace_begin __namespace}}
+
+bool {{__name}}::load(::luban::Loader<::luban::ByteBuf> loader)
+{
+    ::luban::ByteBuf buf;
+    {{~for table in __tables~}}
+    buf.clear();
+    if (!loader(buf, "{{table.output_data_file}}")) return false;
+    if (!{{table.name}}.load(buf)) return false;
+    {{~end~}}
+    return true;
+}
+
+{{namespace_with_grace_end __namespace}}

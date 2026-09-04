@@ -1,0 +1,16 @@
+@tool
+class_name {{str_full_name __full_name}}Def
+extends RefCounted
+
+
+{{~if __this.comment != '' ~}}
+## {{escape_comment __this.comment}}
+{{~end~}}
+{{~if __this.is_map_table ~}}
+var data_map: Dictionary
+var data_list: Array[{{declaring_def_type_name __value_type}}]
+{{~else if __this.is_list_table ~}}
+var data_list: Array[{{declaring_def_type_name __value_type}}]
+{{~else~}}
+var data: {{declaring_def_type_name __value_type}}
+{{~end~}}

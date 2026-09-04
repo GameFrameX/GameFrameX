@@ -1,0 +1,24 @@
+{{~if __top_module != ''~}}
+package {{__top_module}};
+{{~end~}}
+
+{{~
+    go_full_name = full_name __this
+    key_type = __this.key_ttype
+    value_type =  __this.value_ttype
+~}}
+
+{{~if __this.is_map_table~}}
+type {{go_full_name}} struct {
+    _dataMap map[{{declaring_type_name key_type}}]{{declaring_type_name value_type}}
+    _dataList []{{declaring_type_name value_type}}
+}
+{{~else if __this.is_list_table~}}
+type {{go_full_name}} struct {
+    _dataList []{{declaring_type_name value_type}}
+}
+{{~else~}}
+type {{go_full_name}} struct {
+    _data {{declaring_type_name value_type}}
+}
+{{~end~}}

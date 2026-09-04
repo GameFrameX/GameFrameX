@@ -1,0 +1,35 @@
+{{namespace_with_grace_begin __namespace}}
+
+{{~if __this.comment != '' ~}}
+/**
+ * {{escape_comment __this.comment}}
+ */
+{{~end~}}
+class {{__name}}
+{
+    {{~if __this.is_map_table ~}}
+    private:
+    ::luban::HashMap<{{declaring_type_name __key_type}}, {{declaring_type_name __value_type}}> _dataMap;
+    ::luban::Vector<{{declaring_type_name __value_type}}> _dataList;
+
+    public:
+    {{~else if __this.is_list_table~}}
+    private:
+    ::luban::Vector<{{declaring_type_name __value_type}}> _dataList;
+    {{~if __this.is_union_index~}}
+    {{~else if !__this.index_list.empty?~}}
+    {{~for idx in __this.index_list~}}
+    ::luban::HashMap<{{declaring_type_name idx.type}}, {{declaring_type_name __value_type}}> _dataMap_{{idx.index_field.name}};
+    {{~end~}}
+    {{~end~}}
+
+    public:
+    {{~else~}}
+    private:
+    {{declaring_type_name __value_type}} _data;
+
+    public:
+    {{~end~}}
+};
+
+{{namespace_with_grace_end __namespace}}

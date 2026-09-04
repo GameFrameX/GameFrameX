@@ -1,0 +1,14 @@
+{{
+    key_type = __this.key_ttype
+    value_type = __this.value_ttype
+}}
+{{namespace_with_grace_begin __namespace_with_top_module}}
+{{~if __this.comment != '' ~}}
+    /// <summary>
+    /// {{escape_comment __this.comment}}
+    /// </summary>
+{{~end~}}
+    public partial class {{__name}}
+    {
+    }
+{{namespace_with_grace_end __namespace_with_top_module}}

@@ -1,0 +1,12 @@
+---@class {{__full_name}}Def {{-if __this.comment != ''}} @{{escape_comment __this.comment}}{{end}}
+{{~if __this.is_map_table ~}}
+---@field public dataMap table<{{comment_type __key_type}},{{comment_type __value_type}}>
+---@field public dataList {{comment_type __value_type}}[]
+{{~else if __this.is_list_table ~}}
+---@field public dataList {{comment_type __value_type}}[]
+{{~else~}}
+---@field public data {{comment_type __value_type}}
+{{~end~}}
+local {{__name}}Def = {}
+
+return {{__name}}Def

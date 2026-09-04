@@ -1,0 +1,40 @@
+using LuBan.Runtime;
+using GameFrameX.Config;
+using SimpleJSON;
+{{
+    parent_def_type = __this.parent_def_type
+    export_fields = __this.export_fields
+}}
+{{namespace_with_grace_begin __namespace_with_top_module}}
+{{~if __this.comment != '' ~}}
+/// <summary>
+/// {{escape_comment __this.comment}}
+/// </summary>
+{{~end~}}
+    {{~if __this.is_value_type~}}
+    public partial struct {{__name}}
+    {{~else~}}
+    public {{class_modifier __this}} partial class {{__name}} : {{if parent_def_type}}{{__this.parent}}{{else}}LuBan.Runtime.BeanBase{{end}}
+    {{~end~}}
+    {
+        {{~ for field in export_fields ~}}
+{{~if field.comment != '' ~}}
+        /// <summary>
+        /// {{escape_comment field.comment}}
+        /// </summary>
+{{~end~}}
+        public {{declaring_type_name field.ctype}} {{format_property_name __code_style field.name}} { private set; get; }
+        {{~if field.type =='text'~}}
+        {{~if field.comment != '' ~}}
+        /// <summary>
+        /// {{escape_comment field.comment}} 的多语言Key
+        /// </summary>
+        {{~end~}}
+        private readonly string {{format_property_name __code_style field.name}}_Localization_Key;
+        {{~end~}}
+        {{~end~}}
+        {{~if !__this.is_abstract_type && !__this.is_value_type~}}
+        public const int __ID__ = {{__this.id}};
+        {{~end~}}
+    }
+{{namespace_with_grace_end __namespace_with_top_module}}

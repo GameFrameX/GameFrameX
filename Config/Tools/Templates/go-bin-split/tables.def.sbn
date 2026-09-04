@@ -1,0 +1,15 @@
+{{~if __namespace != ''~}}
+package {{__namespace}};
+{{~end~}}
+
+import (
+    "{{__luban_module_name}}"
+)
+
+type ByteBufLoader func(string) (*luban.ByteBuf, error)
+
+type {{__name}} struct {
+    {{~for table in __tables ~}}
+    {{table.name}} *{{full_name table}}
+    {{~end~}}
+}

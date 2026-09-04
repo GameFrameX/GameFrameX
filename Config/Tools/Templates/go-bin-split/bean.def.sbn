@@ -1,0 +1,16 @@
+{{~if __top_module != ''~}}
+package {{__top_module}};
+{{~end~}}
+
+{{~
+    go_full_name = full_name __this
+    hierarchy_fields = __this.hierarchy_export_fields
+~}}
+
+type {{go_full_name}} struct {
+    {{~for field in hierarchy_fields ~}}
+    {{format_field_name __code_style field.name}} {{declaring_type_name field.ctype}}
+    {{~end~}}
+}
+
+const TypeId_{{go_full_name}} = {{__this.id}}

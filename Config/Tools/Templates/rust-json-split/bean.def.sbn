@@ -1,0 +1,17 @@
+{{~if __this.comment != '' ~}}
+/// {{escape_comment __this.comment}}
+{{~end~}}
+pub struct {{__name}}Def {
+    {{~ for field in __hierarchy_export_fields ~}}
+{{~if field.comment != '' ~}}
+    /// {{escape_comment field.comment}}
+{{~end~}}
+    pub {{field.name}}: {{declaring_def_type_name field.ctype}},
+    {{~end~}}
+}
+
+{{~if !__this.is_abstract_type~}}
+impl {{__name}}Def {
+    pub const __ID__: i32 = {{__this.id}};
+}
+{{~end~}}

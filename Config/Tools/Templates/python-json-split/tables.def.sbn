@@ -1,0 +1,16 @@
+from dataclasses import dataclass
+
+
+@dataclass
+class {{str_full_name __full_name}}Def:
+    {{~for table in __tables ~}}
+{{~if table.comment != '' ~}}
+    '''
+    {{escape_comment table.comment}}
+    '''
+{{~end~}}
+    {{format_field_name __code_style table.name}}: {{str_full_name table.full_name}}Def
+    {{~end~}}
+    {{~if __tables.empty?~}}
+    pass
+    {{~end~}}

@@ -1,0 +1,14 @@
+---@class {{__full_name}}Def {{if __parent_def_type}}:{{__parent_def_type.full_name}}Def {{end}}{{-if __this.comment != ''}} @{{escape_comment __this.comment}}{{end}}
+{{~ for field in __hierarchy_export_fields~}}
+---@field public {{field.name}} {{comment_type field.ctype}} {{-if field.comment != ''}} @{{escape_comment field.comment}}{{end}}
+{{~end~}}
+{{~if !__this.is_abstract_type~}}
+---@field public __ID__ integer
+{{~end~}}
+local {{__name}}Def = {
+{{~if !__this.is_abstract_type~}}
+    __ID__ = {{__this.id}},
+{{~end~}}
+}
+
+return {{__name}}Def

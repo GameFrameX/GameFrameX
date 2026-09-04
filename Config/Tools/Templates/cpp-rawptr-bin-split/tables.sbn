@@ -1,0 +1,14 @@
+class {{__name}}
+{
+    public:
+    {{~for table in __tables ~}}
+{{~if table.comment != '' ~}}
+    /**
+     * {{escape_comment table.comment}}
+     */
+{{~end~}}
+    {{make_cpp_name table.full_name}} {{table.name}};
+    {{~end~}}
+
+    bool load(::luban::Loader<::luban::ByteBuf> loader);
+};

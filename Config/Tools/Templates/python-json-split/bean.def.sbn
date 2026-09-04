@@ -1,0 +1,26 @@
+from dataclasses import dataclass
+from typing import Optional
+
+
+{{~if __this.comment != '' ~}}
+'''
+{{escape_comment __this.comment}}
+'''
+{{~end~}}
+@dataclass
+class {{str_full_name __full_name}}Def{{if __parent_def_type}}({{str_full_name __parent_def_type.full_name}}Def){{end}}:
+    {{~ for field in __hierarchy_export_fields ~}}
+{{~if field.comment != '' ~}}
+    '''
+    {{escape_comment field.comment}}
+    '''
+{{~end~}}
+    {{format_field_name __code_style field.name}}: {{declaring_def_type_name field.ctype}}
+    {{~end~}}
+    {{~if __hierarchy_export_fields.empty?~}}
+    pass
+    {{~end~}}
+
+{{~if !__this.is_abstract_type~}}
+{{str_full_name __full_name}}TypeId = {{__this.id}}
+{{~end~}}

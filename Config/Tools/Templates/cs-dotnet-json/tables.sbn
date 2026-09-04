@@ -61,6 +61,17 @@ using GameFrameX.Config;
             {{format_property_name __code_style table.name}}.ResolveRef(this);
             {{~end~}}
         }
+
+        /// <summary>
+        /// 设置本地化的适配器
+        /// </summary>
+        /// <param name="translator">适配器对象</param>
+        public void SetTranslateText(System.Func<string, string, string> translator)
+        {
+            {{~for table in __tables ~}}
+            {{format_property_name __code_style table.name}}.TranslateText(translator);
+            {{~end~}}
+        }
     
         partial void PostInit();
     }

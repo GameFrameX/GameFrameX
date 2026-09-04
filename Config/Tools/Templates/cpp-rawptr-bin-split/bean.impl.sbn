@@ -1,0 +1,42 @@
+#include "{{__schema_header_file}}"
+
+{{namespace_with_grace_begin __top_module}}
+
+bool {{make_cpp_name __this.full_name}}::deserialize(::luban::ByteBuf& _buf)
+{
+    {{~if __parent_def_type~}}
+    if (!{{make_cpp_name __parent_def_type.full_name}}::deserialize(_buf))
+    {
+        return false;
+    }
+    {{~end~}}
+
+    {{~ for field in __export_fields ~}}
+    {{deserialize '_buf' (format_field_name __code_style field.name) field.ctype}}
+    {{~end~}}
+
+    return true;
+}
+
+{{~if __this.is_abstract_type~}}
+bool {{make_cpp_name __this.full_name}}::deserialize{{__this.name}}(::luban::ByteBuf& _buf, {{make_cpp_name __this.full_name}}*& _out)
+{
+    int32_t id;
+    if (!_buf.readInt(id)) return false;
+    switch (id)
+    {
+    {{~for child in __this.hierarchy_not_abstract_children~}}
+        case {{make_type_cpp_name child}}::__ID__: { _out = LUBAN_NEW({{make_type_cpp_name child}}); if (_out->deserialize(_buf)) { return true; } else { _out = nullptr; return false;} }
+    {{~end~}}
+        default: { _out = nullptr; return false;}
+    }
+}
+{{~else~}}
+bool {{make_cpp_name __this.full_name}}::deserialize{{__this.name}}(::luban::ByteBuf& _buf, {{make_cpp_name __this.full_name}}*& _out)
+{
+    _out = LUBAN_NEW({{make_type_cpp_name __this}});
+    return _out->deserialize(_buf);
+}
+{{~end~}}
+
+{{namespace_with_grace_end __top_module}}

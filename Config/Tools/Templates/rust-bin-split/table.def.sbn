@@ -1,0 +1,13 @@
+{{~if __this.comment != '' ~}}
+/// {{escape_comment __this.comment}}
+{{~end~}}
+pub struct {{__name}}Def {
+    {{~if __this.is_map_table ~}}
+    pub data_list: Vec<{{declaring_def_type_name __value_type}}>,
+    pub data_map: std::collections::HashMap<{{declaring_type_name __key_type}}, {{declaring_def_type_name __value_type}}>,
+    {{~else if __this.is_list_table ~}}
+    pub data_list: Vec<{{declaring_def_type_name __value_type}}>,
+    {{~else~}}
+    pub data: {{declaring_def_type_name __value_type}},
+    {{~end~}}
+}

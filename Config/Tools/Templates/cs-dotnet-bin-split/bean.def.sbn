@@ -1,0 +1,57 @@
+using GameFrameX.Core.Config;
+{{
+    parent_def_type = __this.parent_def_type
+    export_fields = __this.export_fields
+}}
+{{namespace_with_grace_begin __namespace_with_top_module}}
+{{~if __this.comment != '' ~}}
+    /// <summary>
+    /// {{escape_comment __this.comment}}
+    /// </summary>
+{{~end~}}
+    {{~if __this.is_value_type~}}
+    public partial struct {{__name}}
+    {{~else~}}
+    public {{class_modifier __this}} partial class {{__name}} : {{if parent_def_type}}{{__this.parent}}{{else}}BeanBase{{end}}
+    {{~end~}}
+    {
+        private System.Func<string, string, string> Translator;
+
+        {{~ for field in export_fields ~}}
+        {{~if field.comment != '' ~}}
+        /// <summary>
+        /// {{escape_comment field.comment}}
+        /// </summary>
+        {{~end~}}
+        {{~if field.type == 'text'~}}
+        private {{declaring_type_name field.ctype}} _{{format_property_name __code_style field.name}};
+        public {{declaring_type_name field.ctype}} {{format_property_name __code_style field.name}}
+        {
+            get
+            {
+                if (Translator != null)
+                {
+                    return Translator({{format_property_name __code_style field.name}}_Localization_Key, _{{format_property_name __code_style field.name}});
+                }
+                return _{{format_property_name __code_style field.name}};
+            }
+            private set => _{{format_property_name __code_style field.name}} = value;
+        }
+        {{~else~}}
+        public {{declaring_type_name field.ctype}} {{format_property_name __code_style field.name}} { private set; get; }
+        {{~end~}}
+        {{~if field.type =='text'~}}
+        {{~if field.comment != '' ~}}
+        /// <summary>
+        /// {{escape_comment field.comment}} 的多语言Key
+        /// </summary>
+        {{~end~}}
+        public readonly string {{format_property_name __code_style field.name}}_Localization_Key;
+        {{~end~}}
+        {{~end~}}
+
+        {{~if !__this.is_abstract_type && !__this.is_value_type~}}
+        public const int __ID__ = {{__this.id}};
+        {{~end~}}
+    }
+{{namespace_with_grace_end __namespace_with_top_module}}

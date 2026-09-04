@@ -1,0 +1,21 @@
+{{~namespace_with_grace_begin __namespace~}}
+{{~if __this.comment != '' ~}}
+/**
+ * {{escape_comment __this.comment}}
+ */
+{{~end~}}
+class {{str_full_name __full_name}}Def {
+    {{~if __this.is_map_table ~}}
+    /** @var array<{{declaring_def_type_name __key_type}},{{declaring_def_type_name __value_type}}> */
+    public $dataMap;
+    /** @var array<int,{{declaring_def_type_name __value_type}}> */
+    public $dataList;
+    {{~else if __this.is_list_table ~}}
+    /** @var array<int,{{declaring_def_type_name __value_type}}> */
+    public $dataList;
+    {{~else~}}
+    /** @var {{declaring_def_type_name __value_type}} */
+    public $data;
+    {{~end~}}
+}
+{{~namespace_with_grace_end __namespace~}}
