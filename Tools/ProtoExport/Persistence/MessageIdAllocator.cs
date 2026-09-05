@@ -104,7 +104,12 @@ public static class MessageIdAllocator
                 continue;
             }
 
-            presentNames.Add(info.Name);
+            // 同批同名消息只处理第一条：重名在同一 proto 内本身非法，此处防御性去重，
+            // 避免重复分配、assigned 重复记录与回写同号。
+            if (!presentNames.Add(info.Name))
+            {
+                continue;
+            }
 
             // 优先看 Retired（消息曾在锁里被删，现又回到 proto），
             // 再看 Messages（消息持续活跃）。两者都视为「已分配，沿用老号」。
@@ -126,7 +131,7 @@ public static class MessageIdAllocator
                 if (existingSubId <= 0 || existingSubId > MaxSubId)
                 {
                     throw new InvalidDataException(
-                        $"lock 中 module={moduleKey} 消息 '{info.Name}' 的历史 SubId={existingSubId} 越界（合法范围 1..{MaxSubId}）");
+                        string.Format(Loc.Err_LockSubIdOutOfRange, moduleKey, info.Name, existingSubId, MaxSubId));
                 }
 
                 info.Opcode = existingSubId;
@@ -148,7 +153,7 @@ public static class MessageIdAllocator
             if (next > MaxSubId)
             {
                 throw new InvalidDataException(
-                    $"module={moduleKey} 的 SubId 已用尽（>={MaxSubId}），请为该模块申请新的 ModuleID");
+                    string.Format(Loc.Err_SubIdExhausted, moduleKey, MaxSubId));
             }
 
             toAssign[info.Name] = next;

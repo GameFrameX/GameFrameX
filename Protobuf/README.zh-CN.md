@@ -5,9 +5,14 @@
 # GameFrameX.Protobuf
 
 [![Version](https://img.shields.io/github/v/release/GameFrameX/GameFrameX.Protobuf?label=version&color=green)](https://github.com/GameFrameX/GameFrameX.Protobuf/releases)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-blue.svg)](LICENSE.md)
 [![Documentation](https://img.shields.io/badge/docs-gameframex-brightgreen.svg)](https://gameframex.doc.alianblank.com)
 [![CI](https://github.com/GameFrameX/GameFrameX.Protobuf/actions/workflows/proto-export.yml/badge.svg)](https://github.com/GameFrameX/GameFrameX.Protobuf/actions/workflows/proto-export.yml)
+
+[![Discord](https://img.shields.io/badge/-5865F2?logo=discord&logoColor=white)](https://discord.gg/VDWUjWMDw9)
+[![GitHub](https://img.shields.io/badge/-181717?logo=github&logoColor=white)](https://github.com/GameFrameX/gameframex)
+[![Bilibili](https://img.shields.io/badge/-00A1D6?logo=bilibili&logoColor=white)](https://www.bilibili.com/video/BV1yrpeepEn7)
+[![Gitee](https://img.shields.io/badge/-C71D23?logo=gitee&logoColor=white)](https://gitee.com/GameFrameX/gameframex)
 
 **独立游戏前后端一体化解决方案 · 独立游戏开发者的圆梦大使**
 
@@ -29,9 +34,51 @@ GameFrameX.Protobuf 是 GameFrameX 框架的统一网络协议定义仓库。采
 
 - **CI（零配置）** —— 每次 `push` 都会自动导出全部语言并发布到滚动更新的 [`latest` Release](https://github.com/GameFrameX/GameFrameX.Protobuf/releases/latest)，直接下载即可。
 - **Docker** —— `docker run gameframex/gameframex-tools:latest ...`，无需本地工具链。
-- **本地脚本** —— 自行构建 `Tools/ProtoExport`（.NET 10），把产物放入本仓库的 `Tools/` 目录后运行 `Proto2*Export.sh/.bat`。详见[导出工具](#导出工具)。
+- **本地脚本** —— `Tools/` 目录的 `ProtoExport` 产物由流水线每周自动同步，clone 后直接运行 `Proto2*Export.sh/.bat`。详见[导出工具](#导出工具)。
 
 完整文档托管在 [GameFrameX 文档站](https://gameframex.doc.alianblank.com/protobuf/require)。
+
+### 功能特性
+
+- 统一的 `proto3` 协议定义，按数字模块 ID 组织
+- 仓库自带脚本，一条命令导出 C#、C++、Go、Lua、TypeScript
+- 每次 `push` 由 CI 自动发布全部语言产物到滚动更新的 `latest` Release
+- Docker 镜像 + `Tools/` 产物每周自动同步，无需配置本地工具链
+
+## 快速开始
+
+### 安装
+
+**方案 A —— 从 CI 下载（零配置）：** 从[最新 Release](https://github.com/GameFrameX/GameFrameX.Protobuf/releases/latest) 获取你所需语言的产物包。
+
+**方案 B —— Docker：**
+
+```bash
+docker run --rm \
+  -v "$PWD":/protos \
+  -v "$PWD/output":/output \
+  gameframex/gameframex-tools:latest \
+  --mode csharp --isServer true \
+  --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
+```
+
+**方案 C —— 本地脚本：** `Tools/` 产物已自动同步就绪（需本地 .NET 10 SDK），在仓库根目录直接运行：
+
+```bash
+./Proto2CsExport_Server.sh   # C#（服务端）
+./Proto2GoExport.sh          # Go
+```
+
+## 使用示例
+
+在仓库根目录直接运行自带脚本本地导出：
+
+```bash
+./Proto2CsExport_Server.sh   # C#（服务端）
+./Proto2GoExport.sh          # Go
+```
+
+所有脚本通过 `dotnet ./Tools/ProtoExport.dll` 启动 `Tools/` 下自动同步的生成器。完整参数列表见[导出参数](#导出参数)，细节见[导出文档](https://gameframex.doc.alianblank.com/protobuf/require)。
 
 ## 协议模块
 
@@ -310,13 +357,13 @@ option module = 10;    // Required: module ID must be defined
 
 | 语言 | Mode 与参数 | 本地脚本 | Docker |
 |------|-------------|----------|--------|
-| C#（服务端） | `csharp --isServer true` | `Proto2CsExport_Server.sh` / `.bat` | ✅ |
-| C#（客户端 / Unity / Godot） | `csharp` | `Proto2CsExport_Client.sh` / `.bat` | ✅ |
-| C++ | `cpp` | `Proto2CppExport.sh` / `.bat` | ✅ |
-| Go | `go` | `Proto2GoExport.sh` / `.bat` | ✅ |
-| Lua | `lua` | `Proto2LuaExport.sh` / `.bat` | ✅ |
-| TypeScript | `typescript` | `Proto2TsExport.sh` / `.bat` | ✅ |
-| TypeScript (LayaBox) | `typescript` | `Proto2TsExport_LayaBox.sh` | ✅ |
+| C#（服务端） | `csharp --isServer true` | `Proto2CsExport_Server.sh` / `.bat` | 是 |
+| C#（客户端 / Unity / Godot） | `csharp` | `Proto2CsExport_Client.sh` / `.bat` | 是 |
+| C++ | `cpp` | `Proto2CppExport.sh` / `.bat` | 是 |
+| Go | `go` | `Proto2GoExport.sh` / `.bat` | 是 |
+| Lua | `lua` | `Proto2LuaExport.sh` / `.bat` | 是 |
+| TypeScript | `typescript` | `Proto2TsExport.sh` / `.bat` | 是 |
+| TypeScript (LayaBox) | `typescript` | `Proto2TsExport_LayaBox.sh` | 是 |
 
 ### Docker 示例
 
@@ -450,11 +497,11 @@ docker run --rm \
 
 ## 导出工具
 
-本仓库的代码生成由独立的 [GameFrameX.Tools](https://github.com/GameFrameX/GameFrameX.Tools) 仓库中的 `ProtoExport` 工具驱动（一个 .NET 10 控制台程序）。**本仓库不内置该二进制**——从三种工作流中任选其一（见[快速开始](#快速开始)）：
+本仓库的代码生成由独立的 [GameFrameX.Tools](https://github.com/GameFrameX/GameFrameX.Tools) 仓库中的 `ProtoExport` 工具驱动（一个 .NET 10 控制台程序）。**`Tools/` 目录内置该工具的二进制产物，由流水线每周自动同步**——clone 后即可直接运行本地脚本，无需自行构建（见[快速开始](#快速开始)）：
 
 - **CI** —— 零配置，直接从最新 Release 下载生成代码。
 - **Docker** —— 运行预构建镜像，无需本地工具链。
-- **本地脚本** —— 自行构建工具，把产物放入本仓库的 `Tools/` 目录（完整步骤见下文）。
+- **本地脚本** —— 直接使用 `Tools/` 下每周自动同步的产物；需要立即更新时，手动触发同步流水线或自行构建覆盖（见下文）。
 
 ### 工具仓库
 
@@ -466,48 +513,38 @@ docker run --rm \
 
 ### 环境要求
 
-- **.NET 10 SDK** —— 构建工具和运行导出脚本都需要它。
+- **.NET 10 SDK** —— 运行导出脚本需要它（脚本通过 `dotnet` 启动工具）；自行构建工具时同样需要。
 - 验证：`dotnet --version` 应输出 `10.x.x`。
 
-### 构建
+### 自动同步（默认）
+
+`Tools/` 产物由 **Tools Sync** 流水线（`.github/workflows/tools-sync.yml`）维护：每周一 09:00（北京时间）自动从上游 `main` 分支构建 Release 产物，有变化才提交。需要立即同步时，在仓库 **Actions → Tools Sync → Run workflow** 手动触发。
+
+### 自行构建（可选覆盖）
+
+上游约定 `GameFrameX.Tools` 与本仓库克隆到同级目录，构建产物直接输出到本仓库的 `Tools/`：
 
 ```bash
-# 1. 克隆工具仓库
+# 1. 与本仓库同级克隆工具仓库
 git clone https://github.com/GameFrameX/GameFrameX.Tools.git
 cd GameFrameX.Tools/ProtoExport
 
-# 2. 构建（Release）
+# 2. 构建（Release）—— csproj 的 OutputPath 固定输出到同级 Protobuf/Tools/
 dotnet build -c Release
-
-# 3. 产物在 bin/Release/net10.0/
-ls bin/Release/net10.0/
 ```
 
-### 构建产物
+### 产物清单
 
-把以下文件从 `GameFrameX.Tools/ProtoExport/bin/Release/net10.0/` 复制到本仓库的 `Tools/` 目录：
+`Tools/` 目录只包含以下 4 个必需文件（自动同步与手动构建均只需这些）：
 
 | 文件 | 必需 | 作用 |
 |------|:----:|------|
-| `ProtoExport.dll` | ✅ | 主程序集 |
-| `ProtoExport.deps.json` | ✅ | 依赖描述（运行时必需） |
-| `ProtoExport.runtimeconfig.json` | ✅ | 运行时配置（指定 .NET 10） |
-| `GameFrameX.Foundation.Options.dll` | ✅ | 命令行参数解析依赖 |
-| `ProtoExport` / `ProtoExport.exe` | ⛔ | 原生启动器，脚本不使用 |
-| `ProtoExport.pdb` | ⛔ | 调试符号 |
+| `ProtoExport.dll` | 是 | 主程序集 |
+| `ProtoExport.deps.json` | 是 | 依赖描述（运行时必需） |
+| `ProtoExport.runtimeconfig.json` | 是 | 运行时配置（指定 .NET 10） |
+| `GameFrameX.Foundation.Options.dll` | 是 | 命令行参数解析依赖 |
 
-```bash
-# 把四个必需文件复制到本仓库的 Tools/ 目录
-cp bin/Release/net10.0/ProtoExport.dll                   /path/to/GameFrameX.Protobuf/Tools/
-cp bin/Release/net10.0/ProtoExport.deps.json             /path/to/GameFrameX.Protobuf/Tools/
-cp bin/Release/net10.0/ProtoExport.runtimeconfig.json    /path/to/GameFrameX.Protobuf/Tools/
-cp bin/Release/net10.0/GameFrameX.Foundation.Options.dll /path/to/GameFrameX.Protobuf/Tools/
-
-# 或一键复制全部产物
-cp bin/Release/net10.0/* /path/to/GameFrameX.Protobuf/Tools/
-```
-
-> 原生启动器（macOS/Linux 的 `ProtoExport`、Windows 的 `ProtoExport.exe`）可选——所有 `Proto2*` 脚本统一通过 `dotnet ./Tools/ProtoExport.dll` 启动工具，跨平台一致。
+构建输出中的 `ProtoExport.pdb`（调试符号）与原生启动器（macOS/Linux 的 `ProtoExport`、Windows 的 `ProtoExport.exe`）不会被同步——所有 `Proto2*` 脚本统一通过 `dotnet ./Tools/ProtoExport.dll` 启动工具，跨平台一致。
 
 ### 验证
 
@@ -524,35 +561,55 @@ Proto2CsExport_Client.bat     # Windows
 仓库根目录的每个 `Proto2*.sh` / `.bat` 脚本都会：
 
 1. 从仓库根目录运行；
-2. 通过 `dotnet ./Tools/ProtoExport.dll` 启动你放入 `Tools/` 的生成器；
+2. 通过 `dotnet ./Tools/ProtoExport.dll` 启动 `Tools/` 下自动同步的生成器；
 3. 传入对应语言的参数（`--mode`、`--isServer` 等）。
 
 因此**只要 `Tools/` 下有正确的产物，所有脚本即可直接运行**——无需关心各脚本的参数细节。
 
 ### 更新工具
 
-`ProtoExport` 上游迭代后，重新执行「构建 + 复制产物」覆盖 `Tools/` 下的旧文件即可。建议把工具版本与本仓库协议规范保持同步——拉取本仓库最新变更时一并重建工具。
+`ProtoExport` 上游迭代后，**Tools Sync** 流水线会在每周同步时自动覆盖 `Tools/` 下的旧文件（也可手动触发立即同步）。拉取本仓库最新变更即可获得最新的工具版本。
 
-## 快速开始
+## 依赖
 
-**方案 A —— 从 CI 下载（零配置）：** 从[最新 Release](https://github.com/GameFrameX/GameFrameX.Protobuf/releases/latest) 获取你所需语言的产物包。
+| 依赖 | 用途 |
+|------|------|
+| [GameFrameX.Tools `ProtoExport`](https://github.com/GameFrameX/GameFrameX.Tools) | 驱动全部导出的代码生成器（.NET 10 控制台程序） |
+| [`gameframex/gameframex-tools`](https://hub.docker.com/r/gameframex/gameframex-tools) Docker 镜像 | 容器化导出，无需本地工具链 |
+| .NET 10 SDK | 仅运行本地导出脚本时需要 |
 
-**方案 B —— Docker：**
+## 文档与资源
 
-```bash
-docker run --rm \
-  -v "$PWD":/protos \
-  -v "$PWD/output":/output \
-  gameframex/gameframex-tools:latest \
-  --mode csharp --isServer true \
-  --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
-```
+- [协议文档](https://gameframex.doc.alianblank.com/protobuf/require) —— 协议规范与导出指南
+- [GameFrameX.Tools](https://github.com/GameFrameX/GameFrameX.Tools) —— `ProtoExport` 源码、完整参数文档、Docker 镜像
+- [Releases](https://github.com/GameFrameX/GameFrameX.Protobuf/releases/latest) —— 滚动发布的全语言生成代码包
+- [导出流水线](.github/workflows/proto-export.yml) 与 [Tools Sync 流水线](.github/workflows/tools-sync.yml)
 
-**方案 C —— 本地脚本：** 自行构建工具并放入 `Tools/`（完整步骤见[导出工具](#导出工具)），然后在仓库根目录运行：
+## 社区与支持
 
-```bash
-./Proto2CsExport_Server.sh   # C#（服务端）
-./Proto2GoExport.sh          # Go
-```
+![QQ](https://img.shields.io/badge/QQ-467608841%2F233840761-EB1923?style=for-the-badge&logo=qq&logoColor=white)
+[![Bilibili](https://img.shields.io/badge/Bilibili-00A1D6?style=for-the-badge&logo=bilibili&logoColor=white)](https://www.bilibili.com/video/BV1yrpeepEn7)
+[![Gitee](https://img.shields.io/badge/Gitee-C71D23?style=for-the-badge&logo=gitee&logoColor=white)](https://gitee.com/GameFrameX/gameframex)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/GameFrameX/gameframex)
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/VDWUjWMDw9)
+[<img src="https://cdn.jsdelivr.net/npm/devicon@2/icons/linkedin/linkedin-original.svg" height="28" alt="LinkedIn" />](https://www.linkedin.com/in/alianblank)
+[![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/GameFrameX/)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/alian_blank)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCD9QhSFJ5xZkn5NTSV-DVAw)
+[![Bluesky](https://img.shields.io/badge/Bluesky-0285FF?style=for-the-badge&logo=bluesky&logoColor=white)](https://bsky.app/profile/alianblank.bsky.social)
 
-所有脚本通过 `dotnet ./Tools/ProtoExport.dll` 调用 `Tools/` 下的生成器；参数细节见[导出文档](https://gameframex.doc.alianblank.com/protobuf/require)。
+## 更新日志
+
+见 [Releases 页面](https://github.com/GameFrameX/GameFrameX.Protobuf/releases)——每次 `push` 到 `main` 都会重新发布滚动更新的 `latest` Release，附带最新生成的代码。
+
+## 开源协议
+
+详见 [LICENSE.md](LICENSE.md) 文件。
+
+<!--
+EN: See [LICENSE.md](LICENSE.md) for license information.
+zh-CN: 详见 [LICENSE.md](LICENSE.md) 文件。
+zh-TW: 詳見 [LICENSE.md](LICENSE.md) 檔案。
+ja: 詳しくは [LICENSE.md](LICENSE.md) をご参照ください。
+ko: 자세한 내용은 [LICENSE.md](LICENSE.md) 파일을 참조하세요.
+-->

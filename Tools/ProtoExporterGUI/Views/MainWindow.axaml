@@ -345,20 +345,22 @@
 
                         <!-- 逐模块统计表:模块号 / 模块名 / 消息数 / 墓碑数 -->
                         <StackPanel Name="LockTableSection" Spacing="4">
-                            <Grid ColumnDefinitions="80,*,100,100" Margin="0,0,0,4">
+                            <Grid ColumnDefinitions="80,*,100,100,90" Margin="0,0,0,4">
                                 <TextBlock Grid.Column="0" Name="LockModuleHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
                                 <TextBlock Grid.Column="1" Name="LockModuleNameHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
                                 <TextBlock Grid.Column="2" Name="LockMessageCountHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
                                 <TextBlock Grid.Column="3" Name="LockRetiredCountHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="4" Name="LockModuleSourceHeader" Classes="helperText" Margin="0" FontWeight="SemiBold" />
                             </Grid>
                             <ItemsControl Name="LockModuleList">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="models:LockModuleRow">
-                                        <Grid ColumnDefinitions="80,*,100,100" Margin="0,2">
+                                        <Grid ColumnDefinitions="80,*,100,100,90" Margin="0,2">
                                             <TextBlock Grid.Column="0" Text="{Binding ModuleKey}" FontFamily="Consolas,Menlo,Monaco,monospace" />
                                             <TextBlock Grid.Column="1" Text="{Binding ModuleName}" TextTrimming="CharacterEllipsis" />
                                             <TextBlock Grid.Column="2" Text="{Binding MessageCount}" />
                                             <TextBlock Grid.Column="3" Text="{Binding RetiredCount}" />
+                                            <TextBlock Grid.Column="4" Text="{Binding ModuleSource}" FontFamily="Consolas,Menlo,Monaco,monospace" />
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>

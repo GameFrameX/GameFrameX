@@ -84,6 +84,7 @@
   <data name="LockModuleNameColumn" xml:space="preserve"><value>模块名</value></data>
   <data name="LockMessageCountColumn" xml:space="preserve"><value>消息数</value></data>
   <data name="LockRetiredCountColumn" xml:space="preserve"><value>墓碑数</value></data>
+  <data name="LockModuleSourceColumn" xml:space="preserve"><value>模块来源</value></data>
   <data name="LockEmptyModules" xml:space="preserve"><value>（lock 文件中暂无模块条目）</value></data>
   <data name="LockRefresh" xml:space="preserve"><value>刷新</value></data>
   <data name="LockLoadFailed" xml:space="preserve"><value>lock 文件读取失败</value></data>

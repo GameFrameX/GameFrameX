@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,12 @@ public partial class MainWindow : Window
     /// 还未绑定,null 引用会爆。构造期跳过事件处理,用户交互不受影响。
     /// </summary>
     bool _initialized;
+
+    /// <summary>
+    /// 最近一次导出日志解析出的 module → source 映射（fileName / option），
+    /// 渲染 lock 面板时按模块号填充「模块来源」列；未导出过时为空，列显示「—」。
+    /// </summary>
+    Dictionary<short, string> _moduleSources = new Dictionary<short, string>();
 
     public MainWindow()
     {
@@ -82,6 +89,7 @@ public partial class MainWindow : Window
         this.LockModuleNameHeader.Text = Localization.Instance.LockModuleNameColumn;
         this.LockMessageCountHeader.Text = Localization.Instance.LockMessageCountColumn;
         this.LockRetiredCountHeader.Text = Localization.Instance.LockRetiredCountColumn;
+        this.LockModuleSourceHeader.Text = Localization.Instance.LockModuleSourceColumn;
 
         this.LockPathText.Text = string.IsNullOrWhiteSpace(lockPath)
             ? Localization.Instance.LockPathEmpty
@@ -115,6 +123,13 @@ public partial class MainWindow : Window
         this.LockModuleList.Items.Clear();
         foreach (var row in data.Modules)
         {
+            // 模块来源列来自最近一次导出日志的观测，lock 文件本身不记录来源
+            if (short.TryParse(row.ModuleKey, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var moduleKey)
+                && _moduleSources.TryGetValue(moduleKey, out var source))
+            {
+                row.ModuleSource = source;
+            }
+
             this.LockModuleList.Items.Add(row);
         }
 
@@ -368,6 +383,11 @@ public partial class MainWindow : Window
         }
 
         var lines = output.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+
+        // 收集 module → source 映射（正序遍历,同模块后出现的覆盖先出现的,与最后一次导出一致）,
+        // 供 lock 面板「模块来源」列显示;无匹配行时为空映射,面板列回退「—」。
+        _moduleSources = ModuleSourceParser.Collect(lines);
+
         // 从后往前找最近一条 [Lock] 统计行,与导出器最后一次落盘保持一致。
         for (var i = lines.Length - 1; i >= 0; i--)
         {

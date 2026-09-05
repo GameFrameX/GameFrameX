@@ -80,7 +80,7 @@ docker run --rm \
 ```protobuf
 syntax = "proto3";     // 必须声明：仅支持 proto3
 package Basic;
-option module = 10;    // 必须定义：模块 ID
+option module = 10;    // 模块 ID：文件名前缀（_0010_Name.proto）或此声明，二选一；并存时必须一致
 
 // 请求心跳
 message ReqHeartBeat
@@ -98,7 +98,16 @@ message ReqHeartBeat
 
 ## 模块 ID 规则
 
-通过 `option module = <id>;` 定义模块 ID：
+模块 ID 有两种声明方式，**文件名前缀优先**：
+
+1. **文件名前缀**：`_<模块ID>_<名称>.proto`（如 `_0010_Basic.proto` → 模块 10、`_-0120_Inner_Social.proto` → 模块 -120；分隔符兼容 `-`，如 `_0010-Basic.proto`）
+2. **option 声明**：`option module = <id>;`
+
+规则：
+
+- 两者并存时必须一致，否则构建报错
+- 文件名以 `_` + 数字开头但缺少第二个分隔符（如 `_0010Basic`）视为命名错误，构建报错
+- 两者皆无时构建报错
 
 | ID 范围 | 用途 |
 |---------|------|

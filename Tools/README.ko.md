@@ -80,7 +80,7 @@ docker run --rm \
 ```protobuf
 syntax = "proto3";     // 필수: proto3만 지원
 package Basic;
-option module = 10;    // 필수: 모듈 ID 정의
+option module = 10;    // 모듈 ID: 파일 이름 접두사(_0010_Name.proto) 또는 이 선언 중 하나. 둘 다 있으면 일치 필수
 
 // 하트비트 요청
 message ReqHeartBeat
@@ -98,7 +98,16 @@ message ReqHeartBeat
 
 ## 모듈 ID 규칙
 
-`option module = <id>;`로 모듈 ID를 정의합니다:
+모듈 ID는 두 가지 방식으로 선언할 수 있으며, **파일 이름 접두사가 우선**합니다:
+
+1. **파일 이름 접두사**: `_<모듈ID>_<이름>.proto` (예: `_0010_Basic.proto` → 모듈 10, `_-0120_Inner_Social.proto` → 모듈 -120. 구분자로 `-`도 허용, 예: `_0010-Basic.proto`)
+2. **option 선언**: `option module = <id>;`
+
+규칙:
+
+- 둘 다 존재하면 반드시 일치해야 하며, 불일치 시 빌드 오류
+- `_` + 숫자로 시작하지만 두 번째 구분자가 없는 파일 이름(예: `_0010Basic`)은 명명 오류로 간주되어 빌드 오류
+- 둘 다 없으면 빌드 오류
 
 | ID 범위 | 용도 |
 |---------|------|

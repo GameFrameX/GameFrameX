@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    English resources. Keys must stay in sync with the neutral Strings.resx
+    (guarded by LocalizationParityTests).
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="xml:space" type="xsd:string" use="optional" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Short log markers emitted before the corresponding exception -->
+  <data name="Log_PackageNotFound" xml:space="preserve"><value>Package not found</value></data>
+  <data name="Log_ModuleRangeError" xml:space="preserve"><value>Module ID out of range</value></data>
+  <data name="Log_ModuleFileNameFormatError" xml:space="preserve"><value>File name module prefix format error</value></data>
+  <data name="Log_ModuleMismatch" xml:space="preserve"><value>Module ID mismatch</value></data>
+  <data name="Log_ModuleNotFound" xml:space="preserve"><value>Module ID not found</value></data>
+
+  <!-- Module ID resolution (file name prefix / option declaration) -->
+  <data name="Err_PackageNotFound" xml:space="preserve"><value>Package not found==>example: package {0};</value></data>
+  <data name="Err_ModuleRangeFileName" xml:space="preserve"><value>Module ID in file name out of range==>fileName module &gt; {0} and module &lt; {1}</value></data>
+  <data name="Err_ModuleFileNameFormat" xml:space="preserve"><value>File name format error==>expected '_100_Name.proto' or '_100-Name.proto' but found '{0}'</value></data>
+  <data name="Err_ModuleRangeOption" xml:space="preserve"><value>Module ID out of range==>module &gt; {0} and module &lt; {1}</value></data>
+  <data name="Err_ModuleMismatch" xml:space="preserve"><value>Module ID mismatch==>fileName '{0}' declares {1} but 'option module = {2}'</value></data>
+  <data name="Err_ModuleNotFound" xml:space="preserve"><value>Module ID not found==>use fileName prefix '_100_Player.proto' or 'option module = 100'</value></data>
+  <data name="Log_PackageModuleLine" xml:space="preserve"><value>Package {0} =&gt; Module {1} (from {2})</value></data>
+
+  <!-- Proto naming and tag validation -->
+  <data name="Err_EnumNameNotCamelCase" xml:space="preserve"><value>Enum [{1}] in package [{0}] must follow UpperCamelCase naming rules</value></data>
+  <data name="Err_EnumFieldNotCamelCase" xml:space="preserve"><value>Enum field {1} in package [{0}] must follow UpperCamelCase naming rules</value></data>
+  <data name="Err_EnumMemberDuplicated" xml:space="preserve"><value>Enum value [{2}] of [{1}] in package [{0}] is duplicated</value></data>
+  <data name="Err_MessageNameNotCamelCase" xml:space="preserve"><value>Message [{1}] in package [{0}] must follow UpperCamelCase naming rules</value></data>
+  <data name="Err_MessageMemberDuplicated" xml:space="preserve"><value>Field tag in message [{1}] of package [{0}] is duplicated</value></data>
+  <data name="Err_MapCommaMissing" xml:space="preserve"><value>Map type of field [{2}] in message [{1}] of package [{0}] must be followed by a space after the comma</value></data>
+  <data name="Err_FieldNotCamelCase" xml:space="preserve"><value>Field [{2}] in message [{1}] of package [{0}] must follow UpperCamelCase naming rules</value></data>
+  <data name="Err_MemberTagExceed" xml:space="preserve"><value>Member tag cannot exceed 2047</value></data>
+
+  <!-- CLI entry -->
+  <data name="Log_ArgsParseError" xml:space="preserve"><value>Invalid arguments, parse failed</value></data>
+  <data name="Log_UnsupportedMode" xml:space="preserve"><value>Unsupported run mode</value></data>
+  <data name="Log_ExportSuccess" xml:space="preserve"><value>Export succeeded, see logs</value></data>
+  <data name="Log_ExportFailed" xml:space="preserve"><value>Export failed, check error details</value></data>
+  <data name="Err_InputPathNotExist" xml:space="preserve"><value>Proto file path does not exist: {0}</value></data>
+
+  <!-- Export flow logs -->
+  <data name="Log_SkipServerOnlyFile" xml:space="preserve"><value>[SKIP] client build skips server-only proto file (_s/-s suffix): {0}</value></data>
+  <data name="Log_SkipInternalModule" xml:space="preserve"><value>[SKIP] client build skips internal proto (moduleId={0} &lt; 0): {1}</value></data>
+  <data name="Log_LockSummary" xml:space="preserve"><value>[Lock] modules affected: {0}, newly assigned SubIds: {1}: {2}</value></data>
+  <data name="Log_LockSeedGenerated" xml:space="preserve"><value>[Lock] lock seed generated: {0}</value></data>
+  <data name="Log_ScanCompleted" xml:space="preserve"><value>Proto scan completed: found {0} .proto files, exported {1}, skipped {2} (mode: {3})</value></data>
+  <data name="Term_ServerMode" xml:space="preserve"><value>server</value></data>
+  <data name="Term_ClientMode" xml:space="preserve"><value>client</value></data>
+  <data name="Err_UnsupportedModeType" xml:space="preserve"><value>Unsupported mode type: {0}. Supported modes: {1}</value></data>
+
+  <!-- Lock persistence -->
+  <data name="Err_LockFileParseFailed" xml:space="preserve"><value>Failed to parse lock file {0}: {1}</value></data>
+  <data name="Err_LockFileEmpty" xml:space="preserve"><value>Lock file {0} deserialized to an empty result</value></data>
+  <data name="Err_LockSchemaIncompatible" xml:space="preserve"><value>schemaVersion={1} of lock file {0} is incompatible with supported version {2}; upgrade it per the migration guide, or delete it and regenerate.</value></data>
+  <data name="Err_LockModuleKeyInvalid" xml:space="preserve"><value>Module key '{1}' in lock file {0} is not a valid short value</value></data>
+  <data name="Err_LockNullField" xml:space="preserve"><value>Field {1} of lock file {0} is null (it must be omitted or an object)</value></data>
+  <data name="Err_LockSubIdOutOfRange" xml:space="preserve"><value>Historical SubId={2} of message '{1}' (module={0}) in lock is out of range (valid 1..{3})</value></data>
+  <data name="Err_SubIdExhausted" xml:space="preserve"><value>SubIds of module={0} are exhausted (&gt;={1}); request a new ModuleID for it</value></data>
+  <data name="Err_SeedOpcodeInvalid" xml:space="preserve"><value>Under seed mode, current Opcode={2} of message '{1}' (module={0}) is invalid; run a normal export first (without --messageIdLockPath) so line-order auto-increment completes, then seed.</value></data>
+  <data name="Err_SeedOpcodeExceed" xml:space="preserve"><value>Opcode={2} of message '{1}' (module={0}) exceeds the SubId upper bound {3} under seed mode</value></data>
+  <data name="Err_SeedOpcodeDuplicated" xml:space="preserve"><value>Opcode={1} is used by multiple messages ('{2}' and '{3}') in module={0} under seed mode; cannot freeze</value></data>
+
+  <!-- Comment validation -->
+  <data name="Err_CommentMissingContainer" xml:space="preserve"><value>{0}: {1} '{2}' is missing a comment</value></data>
+  <data name="Err_CommentMissing" xml:space="preserve"><value>{0}: '{1}.{2}' is missing a comment</value></data>
+  <data name="Err_CommentValidationFailed" xml:space="preserve"><value>Comment validation failed:
+  {0}</value></data>
+</root>

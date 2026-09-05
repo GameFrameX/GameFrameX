@@ -80,7 +80,7 @@ This tool has specific requirements for `.proto` file formatting. Please follow 
 ```protobuf
 syntax = "proto3";     // Required: only proto3 is supported
 package Basic;
-option module = 10;    // Required: module ID must be defined
+option module = 10;    // Module ID: file name prefix (_0010_Name.proto) or this declaration; must match when both present
 
 // Request heartbeat
 message ReqHeartBeat
@@ -98,7 +98,16 @@ message ReqHeartBeat
 
 ## Module ID Rules
 
-Module ID is defined via `option module = <id>;`:
+Module ID can be declared in two ways, with the **file name prefix taking precedence**:
+
+1. **File name prefix**: `_<moduleID>_<name>.proto` (e.g., `_0010_Basic.proto` → module 10, `_-0120_Inner_Social.proto` → module -120; `-` is also accepted as the separator, e.g., `_0010-Basic.proto`)
+2. **option declaration**: `option module = <id>;`
+
+Rules:
+
+- When both are present they must match, otherwise the build fails
+- A file name starting with `_` + digits but missing the second separator (e.g., `_0010Basic`) is treated as a naming error and fails the build
+- When neither is present the build fails
 
 | ID Range | Purpose |
 |----------|---------|

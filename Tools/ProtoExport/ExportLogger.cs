@@ -11,9 +11,16 @@ namespace GameFrameX.ProtoExport;
 /// </remarks>
 public static class ExportLogger
 {
+    private static Action<string> s_writeLine = Console.WriteLine;
+
     /// <summary>
     /// 单行日志输出委托。默认写 Console，GUI 宿主可替换为 UI 文本框追加。
+    /// 赋 null 视为恢复默认 Console 输出（防御后续调用 NRE）。
     /// 委托可能被多线程调用，实现方需自行保证线程安全（GUI 场景由 DispatcherTimer 单线程消费）。
     /// </summary>
-    public static Action<string> WriteLine { get; set; } = Console.WriteLine;
+    public static Action<string> WriteLine
+    {
+        get { return s_writeLine; }
+        set { s_writeLine = value ?? Console.WriteLine; }
+    }
 }

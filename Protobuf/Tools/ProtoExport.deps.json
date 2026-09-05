@@ -1,0 +1,87 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "ProtoExport/1.0.0": {
+        "dependencies": {
+          "GameFrameX.Foundation.Options": "4.0.2"
+        },
+        "runtime": {
+          "ProtoExport.dll": {}
+        }
+      },
+      "GameFrameX.Foundation.Localization/4.0.2": {
+        "dependencies": {
+          "Microsoft.Extensions.Localization.Abstractions": "10.0.11"
+        },
+        "runtime": {
+          "lib/net10.0/GameFrameX.Foundation.Localization.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.0.2.0"
+          }
+        },
+        "resources": {
+          "lib/net10.0/zh-CN/GameFrameX.Foundation.Localization.resources.dll": {
+            "locale": "zh-CN"
+          }
+        }
+      },
+      "GameFrameX.Foundation.Options/4.0.2": {
+        "dependencies": {
+          "GameFrameX.Foundation.Localization": "4.0.2"
+        },
+        "runtime": {
+          "lib/net10.0/GameFrameX.Foundation.Options.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.0.2.0"
+          }
+        },
+        "resources": {
+          "lib/net10.0/zh-CN/GameFrameX.Foundation.Options.resources.dll": {
+            "locale": "zh-CN"
+          }
+        }
+      },
+      "Microsoft.Extensions.Localization.Abstractions/10.0.11": {
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Localization.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.1126.37416"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ProtoExport/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GameFrameX.Foundation.Localization/4.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4ax6+72OE6O8S4/W+Fr2FynY5S+w6cAsNKRfNE/vhj6fX3AvLdsEApBdKgMDstBSpe06r8KA3x/Y58VlLWJ0xg==",
+      "path": "gameframex.foundation.localization/4.0.2",
+      "hashPath": "gameframex.foundation.localization.4.0.2.nupkg.sha512"
+    },
+    "GameFrameX.Foundation.Options/4.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MH7NQxQnrNS+QPq33T9QIvqJzpT69WUc4qXnGgBEt7IQv8mh8EPwX42S6FAVRSQXJ2pVkcyRjopJ+HVFnIWsKQ==",
+      "path": "gameframex.foundation.options/4.0.2",
+      "hashPath": "gameframex.foundation.options.4.0.2.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Localization.Abstractions/10.0.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Sg4JTdLEIbJGlZpDrr5xzkLSR4XQNJgeTqtiQkKW0IWr9aoXjKzB+wpnfFl6d+PTXnXkNB9sEDJ9sP+BRcOnrw==",
+      "path": "microsoft.extensions.localization.abstractions/10.0.11",
+      "hashPath": "microsoft.extensions.localization.abstractions.10.0.11.nupkg.sha512"
+    }
+  }
+}

@@ -1,10 +1,12 @@
-# 此目录用于存放 ProtoExport 编译产物（ProtoExport.dll、ProtoExport.deps.json、
-# ProtoExport.runtimeconfig.json、GameFrameX.Foundation.Options.dll 等）。
+# 此目录存放 ProtoExport 编译产物（ProtoExport.dll、ProtoExport.deps.json、
+# ProtoExport.runtimeconfig.json、GameFrameX.Foundation.Options.dll）。
 #
-# 获取产物：
-#   git clone https://github.com/GameFrameX/GameFrameX.Tools.git
-#   cd GameFrameX.Tools/ProtoExport
-#   dotnet build -c Release
-#   cp bin/Release/net10.0/* <本仓库>/Tools/
+# 产物由 .github/workflows/tools-sync.yml 每周自动从上游 GameFrameX.Tools
+# 构建并同步（有变化才提交）。clone 本仓库后直接运行根目录的 Proto2*Export.sh/.bat，
+# 无需手动放置任何文件。
 #
-# 完整步骤详见仓库根目录 README.md 的「快速开始 / 本地脚本」章节。
+# 立即同步：Actions → Tools Sync → Run workflow。
+# 如需自行构建覆盖：git clone https://github.com/GameFrameX/GameFrameX.Tools.git
+# 与本仓库同级摆放（GameFrameX.Tools 与本仓库的上级目录相同），然后
+# cd GameFrameX.Tools/ProtoExport && dotnet build -c Release ——
+# csproj 的 OutputPath 已固定输出到同级 Protobuf/Tools/（即本目录）。

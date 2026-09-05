@@ -5,9 +5,14 @@
 # GameFrameX.Protobuf
 
 [![Version](https://img.shields.io/github/v/release/GameFrameX/GameFrameX.Protobuf?label=version&color=green)](https://github.com/GameFrameX/GameFrameX.Protobuf/releases)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-blue.svg)](LICENSE.md)
 [![Documentation](https://img.shields.io/badge/docs-gameframex-brightgreen.svg)](https://gameframex.doc.alianblank.com)
 [![CI](https://github.com/GameFrameX/GameFrameX.Protobuf/actions/workflows/proto-export.yml/badge.svg)](https://github.com/GameFrameX/GameFrameX.Protobuf/actions/workflows/proto-export.yml)
+
+[![Discord](https://img.shields.io/badge/-5865F2?logo=discord&logoColor=white)](https://discord.gg/VDWUjWMDw9)
+[![GitHub](https://img.shields.io/badge/-181717?logo=github&logoColor=white)](https://github.com/GameFrameX/gameframex)
+[![Bilibili](https://img.shields.io/badge/-00A1D6?logo=bilibili&logoColor=white)](https://www.bilibili.com/video/BV1yrpeepEn7)
+[![Gitee](https://img.shields.io/badge/-C71D23?logo=gitee&logoColor=white)](https://gitee.com/GameFrameX/gameframex)
 
 **인디 게임 개발자를 위한 올인원 솔루션 · 인디 개발자의 꿈을 실현**
 
@@ -29,9 +34,51 @@ GameFrameX.Protobuf는 GameFrameX 프레임워크의 통일된 네트워크 프�
 
 - **CI(설정 불필요)** —— 모든 `push` 시에 모든 언어로 자동 내보내기하여 롤링 [`latest` Release](https://github.com/GameFrameX/GameFrameX.Protobuf/releases/latest)에 게시합니다. 다운로드만 하면 됩니다.
 - **Docker** —— `docker run gameframex/gameframex-tools:latest ...` 한 줄이면 도구 체인 설치가 필요 없습니다.
-- **로컬 스크립트** —— `Tools/ProtoExport`(.NET 10)를 직접 빌드하여 산출물을 이 리포지토리의 `Tools/` 디렉터리에 넣은 뒤 `Proto2*Export.sh/.bat` 스크립트를 실행합니다. 자세한 내용은 [내보내기 도구](#내보내기-도구)를 참조하세요.
+- **로컬 스크립트** —— `Tools/` 디렉터리의 `ProtoExport` 산출물은 워크플로가 매주 자동 동기화합니다. 클론 후 `Proto2*Export.sh/.bat`를 바로 실행하면 됩니다. 자세한 내용은 [내보내기 도구](#내보내기-도구)를 참조하세요.
 
 전체 문서는 [GameFrameX 문서 사이트](https://gameframex.doc.alianblank.com/protobuf/require)에서 제공됩니다.
+
+### 기능
+
+- 숫자 모듈 ID로 정리된 통일된 `proto3` 프로토콜 정의
+- 내장 스크립트로 C#, C++, Go, Lua, TypeScript를 한 번의 명령으로 내보내기
+- 모든 `push` 시 CI가 전체 언어 산출물을 롤링 `latest` Release에 자동 게시
+- Docker 이미지와 매주 자동 동기화되는 `Tools/` 산출물로 도구 체인 설정 불필요
+
+## 빠른 시작
+
+### 설치
+
+**옵션 A — CI에서 다운로드(설정 불필요):** [최신 Release](https://github.com/GameFrameX/GameFrameX.Protobuf/releases/latest)에서 사용 언어의 번들을 받으세요.
+
+**옵션 B — Docker:**
+
+```bash
+docker run --rm \
+  -v "$PWD":/protos \
+  -v "$PWD/output":/output \
+  gameframex/gameframex-tools:latest \
+  --mode csharp --isServer true \
+  --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
+```
+
+**옵션 C — 로컬 스크립트:** `Tools/`의 산출물은 이미 자동 동기화되어 있습니다(로컬 .NET 10 SDK 필요). 리포지토리 루트에서 바로 실행합니다:
+
+```bash
+./Proto2CsExport_Server.sh   # C# (서버)
+./Proto2GoExport.sh          # Go
+```
+
+## 사용 예시
+
+리포지토리 루트에서 내장 스크립트를 그대로 실행해 로컬로 내보냅니다:
+
+```bash
+./Proto2CsExport_Server.sh   # C# (서버)
+./Proto2GoExport.sh          # Go
+```
+
+모든 스크립트는 `dotnet ./Tools/ProtoExport.dll`로 `Tools/`의 자동 동기화된 생성기를 시작합니다. 전체 매개변수 목록은 [내보내기 매개변수](#내보내기-매개변수), 세부 사항은 [내보내기 문서](https://gameframex.doc.alianblank.com/protobuf/require)를 참조하세요.
 
 ## 프로토콜 모듈
 
@@ -310,13 +357,13 @@ option module = 10;    // Required: module ID must be defined
 
 | 언어 | 모드 및 플래그 | 로컬 스크립트 | Docker |
 |------|----------------|---------------|--------|
-| C# (서버) | `csharp --isServer true` | `Proto2CsExport_Server.sh` / `.bat` | ✅ |
-| C# (클라이언트 / Unity / Godot) | `csharp` | `Proto2CsExport_Client.sh` / `.bat` | ✅ |
-| C++ | `cpp` | `Proto2CppExport.sh` / `.bat` | ✅ |
-| Go | `go` | `Proto2GoExport.sh` / `.bat` | ✅ |
-| Lua | `lua` | `Proto2LuaExport.sh` / `.bat` | ✅ |
-| TypeScript | `typescript` | `Proto2TsExport.sh` / `.bat` | ✅ |
-| TypeScript (LayaBox) | `typescript` | `Proto2TsExport_LayaBox.sh` | ✅ |
+| C# (서버) | `csharp --isServer true` | `Proto2CsExport_Server.sh` / `.bat` | Yes |
+| C# (클라이언트 / Unity / Godot) | `csharp` | `Proto2CsExport_Client.sh` / `.bat` | Yes |
+| C++ | `cpp` | `Proto2CppExport.sh` / `.bat` | Yes |
+| Go | `go` | `Proto2GoExport.sh` / `.bat` | Yes |
+| Lua | `lua` | `Proto2LuaExport.sh` / `.bat` | Yes |
+| TypeScript | `typescript` | `Proto2TsExport.sh` / `.bat` | Yes |
+| TypeScript (LayaBox) | `typescript` | `Proto2TsExport_LayaBox.sh` | Yes |
 
 ### Docker 예시
 
@@ -450,11 +497,11 @@ docker run --rm \
 
 ## 내보내기 도구
 
-이 리포지토리의 코드 생성은 독립 리포지토리 [GameFrameX.Tools](https://github.com/GameFrameX/GameFrameX.Tools)의 `ProtoExport` 도구(.NET 10 콘솔 앱)가 담당합니다. **이 리포지토리는 바이너리를 포함하지 않습니다**——세 가지 워크플로 중 하나를 선택하세요([빠른 시작](#빠른-시작) 참조):
+이 리포지토리의 코드 생성은 독립 리포지토리 [GameFrameX.Tools](https://github.com/GameFrameX/GameFrameX.Tools)의 `ProtoExport` 도구(.NET 10 콘솔 앱)가 담당합니다. **`Tools/` 디렉터리에 도구 바이너리 산출물을 내장하며 워크플로가 매주 자동 동기화합니다**——클론 후 바로 로컬 스크립트를 실행할 수 있고 직접 빌드할 필요가 없습니다([빠른 시작](#빠른-시작) 참조):
 
 - **CI** —— 설정 불필요. 최신 Release에서 생성된 코드를 다운로드하기만 하면 됩니다.
 - **Docker** —— 사전 빌드된 이미지 실행. 로컬 도구 체인 불필요.
-- **로컬 스크립트** —— 도구를 직접 빌드하여 산출물을 이 리포지토리의 `Tools/` 디렉터리에 넣습니다(절차는 아래).
+- **로컬 스크립트** —— 매주 자동 동기화된 `Tools/`의 산출물을 그대로 사용합니다. 즉시 갱신이 필요하면 동기화 워크플로를 수동 실행하거나 직접 빌드하여 덮어씁니다(아래 참조).
 
 ### 도구 리포지토리
 
@@ -466,48 +513,38 @@ docker run --rm \
 
 ### 사전 요구 사항
 
-- **.NET 10 SDK** —— 도구 빌드와 내보내기 스크립트 실행 모두에 필요합니다.
+- **.NET 10 SDK** —— 내보내기 스크립트 실행에 필요합니다(스크립트는 `dotnet`으로 도구를 시작). 도구를 직접 빌드할 때도 필요합니다.
 - 확인: `dotnet --version`이 `10.x.x`를 출력해야 합니다.
 
-### 빌드
+### 자동 동기화(기본)
+
+`Tools/` 산출물은 **Tools Sync** 워크플로(`.github/workflows/tools-sync.yml`)가 관리합니다: 매주 월요일 09:00(베이징 시간)에 상류 `main` 브랜치의 Release 산출물을 자동으로 빌드하며, 변경이 있을 때만 커밋합니다. 즉시 동기화가 필요하면 리포지토리의 **Actions → Tools Sync → Run workflow**로 수동 실행하세요.
+
+### 직접 빌드(선택적 덮어쓰기)
+
+상류 규약에 따라 `GameFrameX.Tools`를 이 리포지토리와 같은 계층에 클론하면 빌드 산출물이 이 리포지토리의 `Tools/`에 직접 출력됩니다:
 
 ```bash
-# 1. 도구 리포지토리 클론
+# 1. 이 리포지토리와 같은 계층에 도구 리포지토리 클론
 git clone https://github.com/GameFrameX/GameFrameX.Tools.git
 cd GameFrameX.Tools/ProtoExport
 
-# 2. 빌드 (Release)
+# 2. 빌드 (Release) —— csproj의 OutputPath는 같은 계층의 Protobuf/Tools/로 고정 출력
 dotnet build -c Release
-
-# 3. 산출물은 bin/Release/net10.0/에 생성
-ls bin/Release/net10.0/
 ```
 
-### 빌드 산출물
+### 산출물 목록
 
-`GameFrameX.Tools/ProtoExport/bin/Release/net10.0/`에서 다음 파일들을 이 리포지토리의 `Tools/` 디렉터리로 복사합니다:
+`Tools/` 디렉터리에는 다음 4개의 필수 파일만 포함됩니다(자동 동기화와 직접 빌드 모두 동일):
 
 | 파일 | 필수 | 용도 |
 |------|:----:|------|
-| `ProtoExport.dll` | ✅ | 메인 어셈블리 |
-| `ProtoExport.deps.json` | ✅ | 의존성 매니페스트 (런타임에 필요) |
-| `ProtoExport.runtimeconfig.json` | ✅ | 런타임 설정 (.NET 10 지정) |
-| `GameFrameX.Foundation.Options.dll` | ✅ | 명령줄 파싱 의존성 |
-| `ProtoExport` / `ProtoExport.exe` | ⛔ | 네이티브 apphost——스크립트 미사용 |
-| `ProtoExport.pdb` | ⛔ | 디버그 심볼 |
+| `ProtoExport.dll` | Yes | 메인 어셈블리 |
+| `ProtoExport.deps.json` | Yes | 의존성 매니페스트 (런타임에 필요) |
+| `ProtoExport.runtimeconfig.json` | Yes | 런타임 설정 (.NET 10 지정) |
+| `GameFrameX.Foundation.Options.dll` | Yes | 명령줄 파싱 의존성 |
 
-```bash
-# 필수 4개 파일을 이 리포지토리의 Tools/로 복사
-cp bin/Release/net10.0/ProtoExport.dll                   /path/to/GameFrameX.Protobuf/Tools/
-cp bin/Release/net10.0/ProtoExport.deps.json             /path/to/GameFrameX.Protobuf/Tools/
-cp bin/Release/net10.0/ProtoExport.runtimeconfig.json    /path/to/GameFrameX.Protobuf/Tools/
-cp bin/Release/net10.0/GameFrameX.Foundation.Options.dll /path/to/GameFrameX.Protobuf/Tools/
-
-# 또는 전체 산출물을 한 번에 복사
-cp bin/Release/net10.0/* /path/to/GameFrameX.Protobuf/Tools/
-```
-
-> 네이티브 시작 프로그램(macOS/Linux의 `ProtoExport`, Windows의 `ProtoExport.exe`)은 선택 사항입니다——모든 `Proto2*` 스크립트는 `dotnet ./Tools/ProtoExport.dll`로 도구를 균일하게 시작하므로 크로스 플랫폼으로 일관됩니다.
+빌드 출력의 `ProtoExport.pdb`(디버그 심볼)와 네이티브 런처(macOS/Linux의 `ProtoExport`, Windows의 `ProtoExport.exe`)는 동기화되지 않습니다——모든 `Proto2*` 스크립트가 `dotnet ./Tools/ProtoExport.dll`로 도구를 통일 실행하므로 크로스 플랫폼에서 일관됩니다.
 
 ### 검증
 
@@ -524,35 +561,55 @@ Proto2CsExport_Client.bat     # Windows
 리포지토리 루트의 각 `Proto2*.sh` / `.bat` 스크립트는:
 
 1. 리포지토리 루트에서 실행되며;
-2. `Tools/`에 넣은 생성기를 `dotnet ./Tools/ProtoExport.dll`로 시작하고;
+2. 자동 동기화된 `Tools/`의 생성기를 `dotnet ./Tools/ProtoExport.dll`로 시작하고;
 3. 언어별 플래그(`--mode`, `--isServer` 등)를 전달합니다.
 
 따라서 `Tools/`에 올바른 산출물만 있으면 **모든 스크립트가 바로 실행됩니다**——언어별 매개변수를 직접 다룰 필요가 없습니다.
 
 ### 도구 업데이트
 
-`ProtoExport`가 상류에서 갱신되면, "빌드 + 산출물 복사"를 다시 실행하여 `Tools/`의 파일을 덮어씁니다. 도구 버전을 이 리포지토리의 프로토콜 규격과 동기화하세요——이 리포지토리의 최신 변경을 가져올 때 도구도 함께 다시 빌드하기를 권장합니다.
+`ProtoExport`가 상류에서 갱신되면, **Tools Sync** 워크플로가 매주 동기화 시 `Tools/`의 오래된 파일을 자동으로 덮어씁니다(수동 실행으로 즉시 동기화도 가능). 이 리포지토리의 최신 변경을 가져오면(pull) 최신 도구 버전을 얻을 수 있습니다.
 
-## 빠른 시작
+## 의존성
 
-**옵션 A — CI에서 다운로드(설정 불필요):** [최신 Release](https://github.com/GameFrameX/GameFrameX.Protobuf/releases/latest)에서 사용 언어의 번들을 받으세요.
+| 의존성 | 용도 |
+|--------|------|
+| [GameFrameX.Tools `ProtoExport`](https://github.com/GameFrameX/GameFrameX.Tools) | 모든 내보내기를 담당하는 코드 생성기(.NET 10 콘솔 앱) |
+| [`gameframex/gameframex-tools`](https://hub.docker.com/r/gameframex/gameframex-tools) Docker 이미지 | 컨테이너 기반 내보내기, 로컬 도구 체인 불필요 |
+| .NET 10 SDK | 로컬 내보내기 스크립트 실행에만 필요 |
 
-**옵션 B — Docker:**
+## 문서 및 자료
 
-```bash
-docker run --rm \
-  -v "$PWD":/protos \
-  -v "$PWD/output":/output \
-  gameframex/gameframex-tools:latest \
-  --mode csharp --isServer true \
-  --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
-```
+- [프로토콜 문서](https://gameframex.doc.alianblank.com/protobuf/require) —— 프로토콜 규칙과 내보내기 가이드
+- [GameFrameX.Tools](https://github.com/GameFrameX/GameFrameX.Tools) —— `ProtoExport` 소스, 전체 매개변수 문서, Docker 이미지
+- [Releases](https://github.com/GameFrameX/GameFrameX.Protobuf/releases/latest) —— 전체 언어의 생성 코드를 담은 롤링 번들
+- [내보내기 워크플로](.github/workflows/proto-export.yml)와 [Tools Sync 워크플로](.github/workflows/tools-sync.yml)
 
-**옵션 C — 로컬 스크립트:** 도구를 직접 빌드하여 `Tools/`에 넣고(전체 절차는 [내보내기 도구](#내보내기-도구) 참조), 리포지토리 루트에서 실행합니다:
+## 커뮤니티 및 지원
 
-```bash
-./Proto2CsExport_Server.sh   # C# (서버)
-./Proto2GoExport.sh          # Go
-```
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/GameFrameX/gameframex)
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/VDWUjWMDw9)
+[<img src="https://cdn.jsdelivr.net/npm/devicon@2/icons/linkedin/linkedin-original.svg" height="28" alt="LinkedIn" />](https://www.linkedin.com/in/alianblank)
+[![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/GameFrameX/)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/alian_blank)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCD9QhSFJ5xZkn5NTSV-DVAw)
+[![Bluesky](https://img.shields.io/badge/Bluesky-0285FF?style=for-the-badge&logo=bluesky&logoColor=white)](https://bsky.app/profile/alianblank.bsky.social)
+[![Bilibili](https://img.shields.io/badge/Bilibili-00A1D6?style=for-the-badge&logo=bilibili&logoColor=white)](https://www.bilibili.com/video/BV1yrpeepEn7)
+[![Gitee](https://img.shields.io/badge/Gitee-C71D23?style=for-the-badge&logo=gitee&logoColor=white)](https://gitee.com/GameFrameX/gameframex)
+![QQ](https://img.shields.io/badge/QQ-467608841%2F233840761-EB1923?style=for-the-badge&logo=qq&logoColor=white)
 
-모든 스크립트는 `dotnet ./Tools/ProtoExport.dll`로 `Tools/`의 생성기를 호출합니다. 매개변수 세부 사항은 [내보내기 문서](https://gameframex.doc.alianblank.com/protobuf/require)를 참조하세요.
+## 변경 로그
+
+[Releases 페이지](https://github.com/GameFrameX/GameFrameX.Protobuf/releases)를 참조하세요 —— `main`으로의 모든 `push`에서 최신 생성 코드를 첨부한 롤링 `latest` Release가 다시 게시됩니다.
+
+## 라이선스
+
+자세한 내용은 [LICENSE.md](LICENSE.md) 파일을 참조하세요.
+
+<!--
+EN: See [LICENSE.md](LICENSE.md) for license information.
+zh-CN: 详见 [LICENSE.md](LICENSE.md) 文件。
+zh-TW: 詳見 [LICENSE.md](LICENSE.md) 檔案。
+ja: 詳しくは [LICENSE.md](LICENSE.md) をご参照ください。
+ko: 자세한 내용은 [LICENSE.md](LICENSE.md) 파일을 참조하세요.
+-->

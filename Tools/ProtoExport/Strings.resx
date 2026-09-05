@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    默认（简体中文）资源。运行时按 CurrentUICulture 自动加载对应语言的附属程序集
+    （Strings.en.resx 等）；GUI 宿主切换线程 culture 即切换导出器文案语言。
+    新增语言只需新增同名附属 resx。两套 resx 的 key 集合必须一致，
+    由 LocalizationParityTests 守护。
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="xml:space" type="xsd:string" use="optional" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- 前置短句日志（异常抛出前的日志区标记） -->
+  <data name="Log_PackageNotFound" xml:space="preserve"><value>未找到 package 定义</value></data>
+  <data name="Log_ModuleRangeError" xml:space="preserve"><value>模块 ID 超出范围</value></data>
+  <data name="Log_ModuleFileNameFormatError" xml:space="preserve"><value>文件名模块前缀格式错误</value></data>
+  <data name="Log_ModuleMismatch" xml:space="preserve"><value>模块 ID 不一致</value></data>
+  <data name="Log_ModuleNotFound" xml:space="preserve"><value>未找到模块 ID</value></data>
+
+  <!-- 模块 ID 解析（文件名前缀 / option 声明） -->
+  <data name="Err_PackageNotFound" xml:space="preserve"><value>未找到 package 定义==>示例: package {0};</value></data>
+  <data name="Err_ModuleRangeFileName" xml:space="preserve"><value>文件名模块 ID 超出范围==>fileName module &gt; {0} and module &lt; {1}</value></data>
+  <data name="Err_ModuleFileNameFormat" xml:space="preserve"><value>文件名格式错误==>期望 '_100_Name.proto' 或 '_100-Name.proto'，实际为 '{0}'</value></data>
+  <data name="Err_ModuleRangeOption" xml:space="preserve"><value>模块 ID 超出范围==>module &gt; {0} and module &lt; {1}</value></data>
+  <data name="Err_ModuleMismatch" xml:space="preserve"><value>模块 ID 不一致==>文件名 '{0}' 声明 {1}，'option module = {2}'</value></data>
+  <data name="Err_ModuleNotFound" xml:space="preserve"><value>未找到模块 ID==>请使用文件名前缀 '_100_Player.proto' 或 'option module = 100'</value></data>
+  <data name="Log_PackageModuleLine" xml:space="preserve"><value>包 {0} =&gt; 模块 {1}（来源 {2}）</value></data>
+
+  <!-- proto 命名与序列校验 -->
+  <data name="Err_EnumNameNotCamelCase" xml:space="preserve"><value>[{0}] 包的 [{1}] 枚举名称必须遵守 [Upper Camel Case 命名规则]</value></data>
+  <data name="Err_EnumFieldNotCamelCase" xml:space="preserve"><value>[{0}] 包的 {1} 枚举字段名称必须遵守 [Upper Camel Case 命名规则]</value></data>
+  <data name="Err_EnumMemberDuplicated" xml:space="preserve"><value>[{0}] 包的 [{1}] 枚举序列[{2}]发生重复</value></data>
+  <data name="Err_MessageNameNotCamelCase" xml:space="preserve"><value>[{0}] 包的 [{1}] 消息名称必须遵守 [Upper Camel Case 命名规则]</value></data>
+  <data name="Err_MessageMemberDuplicated" xml:space="preserve"><value>[{0}] 包的 [{1}] 消息序列发生重复</value></data>
+  <data name="Err_MapCommaMissing" xml:space="preserve"><value>[{0}] 包的 [{1}] 消息的 [{2}] 字段名称字典类型中间的[逗号]后面必须跟随空格</value></data>
+  <data name="Err_FieldNotCamelCase" xml:space="preserve"><value>[{0}] 包的 [{1}] 消息的 [{2}] 字段名称必须遵守 [Upper Camel Case 命名规则]</value></data>
+  <data name="Err_MemberTagExceed" xml:space="preserve"><value>成员编码不能大于2047</value></data>
+
+  <!-- CLI 入口 -->
+  <data name="Log_ArgsParseError" xml:space="preserve"><value>参数错误，解析失败</value></data>
+  <data name="Log_UnsupportedMode" xml:space="preserve"><value>不支持的运行模式</value></data>
+  <data name="Log_ExportSuccess" xml:space="preserve"><value>导出成功,请查看日志</value></data>
+  <data name="Log_ExportFailed" xml:space="preserve"><value>导出失败,请检查错误信息</value></data>
+  <data name="Err_InputPathNotExist" xml:space="preserve"><value>协议文件路径不存在: {0}</value></data>
+
+  <!-- 导出流程日志 -->
+  <data name="Log_SkipServerOnlyFile" xml:space="preserve"><value>[SKIP] 客户端构建跳过服务器内部协议文件（_s/-s 后缀）: {0}</value></data>
+  <data name="Log_SkipInternalModule" xml:space="preserve"><value>[SKIP] 客户端构建跳过内部协议（moduleId={0} &lt; 0）: {1}</value></data>
+  <data name="Log_LockSummary" xml:space="preserve"><value>[Lock] 涉及模块 {0} 个，新增 SubId {1} 条：{2}</value></data>
+  <data name="Log_LockSeedGenerated" xml:space="preserve"><value>[Lock] 已生成 lock 种子：{0}</value></data>
+  <data name="Log_ScanCompleted" xml:space="preserve"><value>协议扫描完成: 共发现 {0} 个 .proto 文件，导出 {1} 个，跳过 {2} 个（模式: {3}）</value></data>
+  <data name="Term_ServerMode" xml:space="preserve"><value>服务器</value></data>
+  <data name="Term_ClientMode" xml:space="preserve"><value>客户端</value></data>
+  <data name="Err_UnsupportedModeType" xml:space="preserve"><value>不支持的模式类型: {0}。当前支持的模式: {1}</value></data>
+
+  <!-- lock 持久化 -->
+  <data name="Err_LockFileParseFailed" xml:space="preserve"><value>lock 文件 {0} 解析失败：{1}</value></data>
+  <data name="Err_LockFileEmpty" xml:space="preserve"><value>lock 文件 {0} 解析结果为空</value></data>
+  <data name="Err_LockSchemaIncompatible" xml:space="preserve"><value>lock 文件 {0} 的 schemaVersion={1} 与当前支持版本 {2} 不兼容，请按迁移说明手动升级或删除该文件后重新生成。</value></data>
+  <data name="Err_LockModuleKeyInvalid" xml:space="preserve"><value>lock 文件 {0} 中 module key '{1}' 不是合法的 short 范围</value></data>
+  <data name="Err_LockNullField" xml:space="preserve"><value>lock 文件 {0} 的字段 {1} 为 null（应省略或为对象）</value></data>
+  <data name="Err_LockSubIdOutOfRange" xml:space="preserve"><value>lock 中 module={0} 消息 '{1}' 的历史 SubId={2} 越界（合法范围 1..{3}）</value></data>
+  <data name="Err_SubIdExhausted" xml:space="preserve"><value>module={0} 的 SubId 已用尽（&gt;={1}），请为该模块申请新的 ModuleID</value></data>
+  <data name="Err_SeedOpcodeInvalid" xml:space="preserve"><value>seed 模式下 module={0} 消息 '{1}' 的当前 Opcode={2} 不合法，请先跑一次普通导出（不使用 --messageIdLockPath）让行序自增跑完，再做 seed。</value></data>
+  <data name="Err_SeedOpcodeExceed" xml:space="preserve"><value>seed 模式下 module={0} 消息 '{1}' 的 Opcode={2} 超过 SubId 上限 {3}</value></data>
+  <data name="Err_SeedOpcodeDuplicated" xml:space="preserve"><value>seed 模式下 module={0} 中 Opcode={1} 被多条消息使用（'{2}' 与 '{3}'），无法冻结</value></data>
+
+  <!-- 注释校验 -->
+  <data name="Err_CommentMissingContainer" xml:space="preserve"><value>{0}: {1} '{2}' 缺少注释</value></data>
+  <data name="Err_CommentMissing" xml:space="preserve"><value>{0}: '{1}.{2}' 缺少注释</value></data>
+  <data name="Err_CommentValidationFailed" xml:space="preserve"><value>注释校验失败:
+  {0}</value></data>
+</root>

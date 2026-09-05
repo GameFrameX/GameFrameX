@@ -10,15 +10,6 @@ namespace ProtoExporterGUI.Models;
 public class SettingData
 {
     /// <summary>
-    /// System.Text.Json 序列化选项：缩进写入、宽松解析（兼容历史 PascalCase 配置）。
-    /// </summary>
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true,
-        PropertyNameCaseInsensitive = true,
-    };
-
-    /// <summary>
     /// 全部内置导出模式的默认配置。作为 source-of-truth，用户配置在加载时按字段深度合并到默认值之上。
     /// 新增模式时在此处登记一条默认值即可，无需改动 UI 或合并逻辑。
     /// </summary>

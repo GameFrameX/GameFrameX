@@ -1,0 +1,75 @@
+name: Tools Sync
+
+# 每周一 01:00 UTC（北京时间 09:00）自动同步 Tools 产物；支持手动触发。
+# 全程在 CI 内完成：拉取上游 GameFrameX.Tools → Release 构建 → 复制产物 → 有变化才提交推送。
+on:
+  schedule:
+    - cron: '0 1 * * 1'
+  workflow_dispatch:
+
+# 同一时间只允许一个同步 run，不取消进行中的（避免推送被中断）
+concurrency:
+  group: tools-sync
+  cancel-in-progress: false
+
+# 推送 main 需要写权限
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync ProtoExport artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v6
+
+      - name: Checkout upstream GameFrameX.Tools
+        uses: actions/checkout@v6
+        with:
+          repository: GameFrameX/GameFrameX.Tools
+          path: upstream-tools
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build ProtoExport (Release)
+        run: |
+          set -euo pipefail
+          # 上游 csproj 的 OutputPath 固定指向「Tools + Protobuf 同级目录」布局，
+          # CI 用全局属性覆盖到独立产物目录，不依赖 runner 目录布局巧合
+          dotnet build upstream-tools/ProtoExport -c Release \
+            -p:OutputPath="$GITHUB_WORKSPACE/ci-artifacts/"
+
+      - name: Sync artifacts into Tools/
+        run: |
+          set -euo pipefail
+          # 先清掉历史残留的调试符号与原生启动器（仅靠 --exclude 不会删除目标端已存在的同名文件）
+          rm -f Tools/ProtoExport.pdb Tools/ProtoExport Tools/ProtoExport.exe
+          # 同步全部运行时产物（核心 4 文件 + 上游将来新增的依赖 dll / 资源目录）；
+          # --delete 让上游移除的依赖同步消失，.gitkeep 保留，pdb 与启动器不传入
+          rsync -a --delete \
+            --exclude '.gitkeep' \
+            --exclude 'ProtoExport.pdb' \
+            --exclude 'ProtoExport' \
+            --exclude 'ProtoExport.exe' \
+            ci-artifacts/ Tools/
+          ls -la Tools/
+
+      - name: Commit and push if changed
+        run: |
+          set -euo pipefail
+          UPSTREAM_SHA=$(git -C upstream-tools rev-parse --short HEAD)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Tools/
+          if git diff --cached --quiet; then
+            echo "No artifact changes; skip commit."
+            exit 0
+          fi
+          # [skip ci]：产物同步不触发 Proto Export 全量导出流水线
+          git commit -m "chore(tools): 同步 ProtoExport 产物 (GameFrameX.Tools@${UPSTREAM_SHA}) [skip ci]"
+          git pull --rebase origin main
+          git push

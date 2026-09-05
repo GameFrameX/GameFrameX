@@ -13,8 +13,8 @@ namespace GameFrameX.ProtoExport
                 var launcherOptions = new OptionsBuilder<LauncherOptions>(args).Build();
                 if (launcherOptions == null)
                 {
-                    Console.WriteLine("参数错误，解析失败");
-                    throw new Exception("参数错误，解析失败");
+                    Console.WriteLine(Loc.Log_ArgsParseError);
+                    throw new Exception(Loc.Log_ArgsParseError);
                 }
 
                 // --print-lock：只读 lock 文件并打印，不触发任何导出。便于 review。
@@ -33,22 +33,22 @@ namespace GameFrameX.ProtoExport
                 {
                     var path = ResolveLockPath(launcherOptions);
                     SeedLockFromCurrent(launcherOptions);
-                    Console.WriteLine($"[Lock] 已生成 lock 种子：{path}");
+                    Console.WriteLine(string.Format(Loc.Log_LockSeedGenerated, path));
                     return 0;
                 }
 
                 if (!Enum.TryParse<ModeType>(launcherOptions.Mode, true, out var modeType))
                 {
-                    Console.WriteLine("不支持的运行模式");
-                    throw new Exception("不支持的运行模式");
+                    Console.WriteLine(Loc.Log_UnsupportedMode);
+                    throw new Exception(Loc.Log_UnsupportedMode);
                 }
 
                 ProtoBufMessageHandler.Start(launcherOptions, modeType);
-                Console.WriteLine("导出成功,请查看日志");
+                Console.WriteLine(Loc.Log_ExportSuccess);
             }
             catch (Exception e)
             {
-                Console.WriteLine("导出失败,请检查错误信息");
+                Console.WriteLine(Loc.Log_ExportFailed);
                 Console.WriteLine(e);
                 throw;
             }
@@ -71,7 +71,7 @@ namespace GameFrameX.ProtoExport
         {
             if (string.IsNullOrWhiteSpace(launcherOptions.InputPath) || !Directory.Exists(launcherOptions.InputPath))
             {
-                throw new DirectoryNotFoundException($"协议文件路径不存在: {launcherOptions.InputPath}");
+                throw new DirectoryNotFoundException(string.Format(Loc.Err_InputPathNotExist, launcherOptions.InputPath));
             }
 
             var files = Directory.GetFiles(launcherOptions.InputPath, "*.proto", SearchOption.AllDirectories);

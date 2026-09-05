@@ -98,7 +98,7 @@ public sealed class Localization : INotifyPropertyChanged
         nameof(ModeTip), nameof(InputPathTip), nameof(OutputPathTip), nameof(NamespaceTip), nameof(ImportPathTip),
         nameof(GroupLockStatus), nameof(LockFilePath), nameof(LockStateFound), nameof(LockStateNotFound),
         nameof(LockFileLastWrite), nameof(LockModuleColumn), nameof(LockModuleNameColumn), nameof(LockMessageCountColumn),
-        nameof(LockRetiredCountColumn), nameof(LockEmptyModules), nameof(LockRefresh),
+        nameof(LockRetiredCountColumn), nameof(LockModuleSourceColumn), nameof(LockEmptyModules), nameof(LockRefresh),
         nameof(LockLoadFailed), nameof(LockSummaryTemplate), nameof(LockPathEmpty),
     };
 
@@ -165,6 +165,7 @@ public sealed class Localization : INotifyPropertyChanged
     public string LockModuleNameColumn => this[nameof(LockModuleNameColumn)];
     public string LockMessageCountColumn => this[nameof(LockMessageCountColumn)];
     public string LockRetiredCountColumn => this[nameof(LockRetiredCountColumn)];
+    public string LockModuleSourceColumn => this[nameof(LockModuleSourceColumn)];
     public string LockEmptyModules => this[nameof(LockEmptyModules)];
     public string LockRefresh => this[nameof(LockRefresh)];
     public string LockLoadFailed => this[nameof(LockLoadFailed)];

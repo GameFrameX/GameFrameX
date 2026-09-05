@@ -80,7 +80,7 @@ docker run --rm \
 ```protobuf
 syntax = "proto3";     // 必須：proto3 のみサポート
 package Basic;
-option module = 10;    // 必須：モジュール ID の定義
+option module = 10;    // モジュール ID：ファイル名プレフィックス（_0010_Name.proto）またはこの宣言のどちらか。併存時は一致必須
 
 // ハートビートリクエスト
 message ReqHeartBeat
@@ -98,7 +98,16 @@ message ReqHeartBeat
 
 ## モジュール ID ルール
 
-`option module = <id>;` でモジュール ID を定義します：
+モジュール ID は 2 つの方法で宣言でき、**ファイル名プレフィックスが優先**されます：
+
+1. **ファイル名プレフィックス**：`_<モジュールID>_<名前>.proto`（例：`_0010_Basic.proto` → モジュール 10、`_-0120_Inner_Social.proto` → モジュール -120。区切りには `-` も使用可能、例：`_0010-Basic.proto`）
+2. **option 宣言**：`option module = <id>;`
+
+ルール：
+
+- 両方存在する場合は一致が必須。不一致はビルドエラー
+- `_` + 数字で始まるが 2 番目の区切り記号がないファイル名（例：`_0010Basic`）は命名エラーとなりビルドエラー
+- 両方存在しない場合もビルドエラー
 
 | ID 範囲 | 用途 |
 |---------|------|

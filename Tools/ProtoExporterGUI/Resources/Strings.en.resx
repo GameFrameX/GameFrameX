@@ -80,6 +80,7 @@
   <data name="LockModuleNameColumn" xml:space="preserve"><value>Module name</value></data>
   <data name="LockMessageCountColumn" xml:space="preserve"><value>Messages</value></data>
   <data name="LockRetiredCountColumn" xml:space="preserve"><value>Retired</value></data>
+  <data name="LockModuleSourceColumn" xml:space="preserve"><value>Source</value></data>
   <data name="LockEmptyModules" xml:space="preserve"><value>(lock file contains no module entries)</value></data>
   <data name="LockRefresh" xml:space="preserve"><value>Refresh</value></data>
   <data name="LockLoadFailed" xml:space="preserve"><value>Failed to read lock file</value></data>

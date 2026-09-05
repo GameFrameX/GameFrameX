@@ -105,10 +105,10 @@ namespace ProtoExporterGUI.Tests
         }
 
         /// <summary>
-        /// 场景 1（基线）：一份 3 消息的模块首次导出 → lock 快照 S1。
+        /// 基线_三消息首次导出_生成快照S1：场景 1（基线），一份 3 消息的模块首次导出 → lock 快照 S1。
         /// </summary>
         [Fact]
-        public void 基线_三消息首次导出_生成快照S1()
+        public void Baseline_ThreeMessageFirstExport_GeneratesSnapshotS1()
         {
             var path = NewTempLockPath();
 
@@ -134,11 +134,11 @@ namespace ProtoExporterGUI.Tests
         }
 
         /// <summary>
-        /// 场景 2（变异 A 中间插入）：在 S1 基础上于中间插一条新消息。
+        /// 变异A_中间插入_老消息Opcode不变_新消息Max加一：场景 2（变异 A 中间插入），在 S1 基础上于中间插一条新消息。
         /// 老消息 Opcode 与 S1 完全一致；新消息 = max+1，而不是插入位置的行序号。
         /// </summary>
         [Fact]
-        public void 变异A_中间插入_老消息Opcode不变_新消息Max加一()
+        public void MutationA_InsertInMiddle_OldOpcodesUnchanged_NewMessageGetsMaxPlusOne()
         {
             var path = NewTempLockPath();
 
@@ -168,10 +168,11 @@ namespace ProtoExporterGUI.Tests
         }
 
         /// <summary>
-        /// 场景 3（变异 B 重排）：消息顺序整体倒过来，所有 Opcode 与 S1 一致，lock 字节级不变。
+        /// 变异B_整体重排_所有Opcode与基线一致：场景 3（变异 B 重排），消息顺序整体倒过来，
+        /// 所有 Opcode 与 S1 一致，lock 字节级不变。
         /// </summary>
         [Fact]
-        public void 变异B_整体重排_所有Opcode与基线一致()
+        public void MutationB_FullReorder_AllOpcodesMatchBaseline()
         {
             var path = NewTempLockPath();
 
@@ -197,10 +198,11 @@ namespace ProtoExporterGUI.Tests
         }
 
         /// <summary>
-        /// 场景 4（变异 C 删除）：删掉中间一条 → 它进 Retired，号永不回收（后续新消息跳过该号）。
+        /// 变异C_删除中间消息_进Retired_号永不回收：场景 4（变异 C 删除），删掉中间一条 → 它进 Retired，
+        /// 号永不回收（后续新消息跳过该号）。
         /// </summary>
         [Fact]
-        public void 变异C_删除中间消息_进Retired_号永不回收()
+        public void MutationC_DeleteMiddleMessage_MovedToRetired_NeverReused()
         {
             var path = NewTempLockPath();
 
@@ -233,11 +235,11 @@ namespace ProtoExporterGUI.Tests
         }
 
         /// <summary>
-        /// 场景 5（变异 D 重命名）：ReqX → ReqY 语义（此处 ReqB → ReqBNew）：
+        /// 变异D_重命名_新名拿新号_旧名进Retired：场景 5（变异 D 重命名），ReqX → ReqY 语义（此处 ReqB → ReqBNew）：
         /// 新名拿新号（max+1），旧名进 Retired，旧号永不回收。
         /// </summary>
         [Fact]
-        public void 变异D_重命名_新名拿新号_旧名进Retired()
+        public void MutationD_Rename_NewNameGetsNewSubId_OldNameToRetired()
         {
             var path = NewTempLockPath();
 
@@ -269,11 +271,12 @@ namespace ProtoExporterGUI.Tests
         }
 
         /// <summary>
-        /// 场景 6（回归）：对 A/B/C/D 每个变异（各自从 S1 重新开始），变异后再跑一遍原基线输入。
+        /// 回归_变异后重跑基线_老条目字节级不变：场景 6（回归），对 A/B/C/D 每个变异（各自从 S1 重新开始），
+        /// 变异后再跑一遍原基线输入。
         /// 断言：S1 的每条老条目 SubId 保持不变（字节级）；lock 与「S1 + 变异新增条目」的期望值一致。
         /// </summary>
         [Fact]
-        public void 回归_变异后重跑基线_老条目字节级不变()
+        public void Regression_RerunBaselineAfterMutation_OldEntriesByteIdentical()
         {
             // 变异 A：插入 ReqNew（=13）后重跑基线。ReqNew 不在基线输入中 → 标记进 Retired；
             // 老条目 ReqA/ReqB/ReqC 全部沿用，S1 三条记录原值不动。

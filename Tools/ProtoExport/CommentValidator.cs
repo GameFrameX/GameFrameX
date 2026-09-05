@@ -12,7 +12,7 @@ public static class CommentValidator
 
             if (level.HasFlag(CommentValidationLevel.Container) && string.IsNullOrWhiteSpace(info.Description))
             {
-                errors.Add($"{messageInfoList.FileName}: {kind} '{info.Name}' 缺少注释");
+                errors.Add(string.Format(Loc.Err_CommentMissingContainer, messageInfoList.FileName, kind, info.Name));
             }
 
             if (level.HasFlag(CommentValidationLevel.Member))
@@ -23,7 +23,7 @@ public static class CommentValidator
 
                     if (string.IsNullOrWhiteSpace(field.Description))
                     {
-                        errors.Add($"{messageInfoList.FileName}: '{info.Name}.{field.Name}' 缺少注释");
+                        errors.Add(string.Format(Loc.Err_CommentMissing, messageInfoList.FileName, info.Name, field.Name));
                     }
                 }
             }
@@ -31,7 +31,7 @@ public static class CommentValidator
 
         if (errors.Count > 0)
         {
-            throw new Exception("注释校验失败:\n  " + string.Join("\n  ", errors));
+            throw new Exception(string.Format(Loc.Err_CommentValidationFailed, string.Join("\n  ", errors)));
         }
     }
 }

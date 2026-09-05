@@ -14,6 +14,12 @@ public static partial class MessageHelper
     private const string ModulePattern = @"option module = (-?\d+);";
     private const string PackagePattern = @"package (\w+);";
 
+    // 文件名前缀格式：_<模块ID>_<名称>（如 _0010_Basic、_-0120_Inner_Social），模块 ID 取自前缀；分隔符兼容 - （如 _0010-Basic）
+    private const string FileNameModulePattern = @"^_(-?\d+)[_-]";
+
+    // 疑似前缀：以 _+数字 开头但缺第二个下划线（如 _0010Basic），视为命名格式错误而非无前缀
+    private const string FileNameModuleLikePattern = @"^_-?\d";
+
 
     public static MessageInfoList Parse(string proto, string fileName, string filePath, bool isGenerateErrorCode)
     {
@@ -21,8 +27,8 @@ public static partial class MessageHelper
 
         if (!packageMatch.Success)
         {
-            ExportLogger.WriteLine("Package not found");
-            throw new Exception("Package not found==>example: package {" + fileName + "};");
+            ExportLogger.WriteLine(Loc.Log_PackageNotFound);
+            throw new Exception(string.Format(Loc.Err_PackageNotFound, fileName));
         }
 
         var messageInfo = new MessageInfoList
@@ -32,28 +38,13 @@ public static partial class MessageHelper
             FileName = fileName,
         };
 
-        // 使用正则表达式提取module
-        Match moduleMatch = Regex.Match(proto, ModulePattern, RegexOptions.Singleline);
-        if (moduleMatch.Success)
-        {
-            if (short.TryParse(moduleMatch.Groups[1].Value, out var value))
-            {
-                messageInfo.Module = value;
-            }
-            else
-            {
-                ExportLogger.WriteLine("Module range error");
-                throw new FormatException($"Module range error==>module > {short.MinValue} and module < {short.MaxValue}");
-            }
-        }
-        else
-        {
-            ExportLogger.WriteLine("Module not found");
-            throw new Exception("Module not found==>example: option module = 100");
-        }
+        // 模块 ID 解析：文件名前缀优先，回退到 option module 声明
+        messageInfo.Module = ResolveModule(proto, fileName, out var moduleSource);
+        messageInfo.ModuleSource = moduleSource;
 
         var packageName = packageMatch.Groups[1].Value;
-        ExportLogger.WriteLine($"Package: {packageName} => Module: {moduleMatch.Groups[1].Value}");
+        ExportLogger.WriteLine(string.Format(Loc.Log_PackageModuleLine, packageName, messageInfo.Module,
+            moduleSource == MessageInfoList.ModuleSourceKind.FileName ? "fileName" : "option"));
         // 使用正则表达式提取枚举类型
         ParseEnum(proto, packageName, messageInfo.Infos);
 
@@ -65,6 +56,75 @@ public static partial class MessageHelper
         // 消息码排序配对
         MessageIdHandler(messageInfo.Infos, 10);
         return messageInfo;
+    }
+
+    /// <summary>
+    /// 解析模块 ID：文件名前缀 <c>_&lt;模块ID&gt;_</c> 优先，缺失时回退到 proto 内容的 <c>option module</c> 声明。
+    /// <para>
+    /// 决策表：两者都有必须一致（不一致抛异常）；仅文件名有 → 用文件名；仅 option 有 → 用 option；都没有 → 抛异常。
+    /// 文件名以 _+数字 开头但缺第二个下划线（如 _0010Basic）视为命名格式错误，抛异常。
+    /// </para>
+    /// </summary>
+    private static short ResolveModule(string proto, string fileName, out MessageInfoList.ModuleSourceKind source)
+    {
+        // 归一为纯文件名（兼容调用方传入带路径或带扩展名的情形），^_ 前缀匹配才可靠
+        var fileNameOnly = Path.GetFileNameWithoutExtension(fileName);
+
+        short? fromFileName = null;
+        var fileNameMatch = Regex.Match(fileNameOnly, FileNameModulePattern);
+        if (fileNameMatch.Success)
+        {
+            if (short.TryParse(fileNameMatch.Groups[1].Value, out var parsed))
+            {
+                fromFileName = parsed;
+            }
+            else
+            {
+                ExportLogger.WriteLine(Loc.Log_ModuleRangeError);
+                throw new FormatException(string.Format(Loc.Err_ModuleRangeFileName, short.MinValue, short.MaxValue));
+            }
+        }
+        else if (Regex.IsMatch(fileNameOnly, FileNameModuleLikePattern))
+        {
+            ExportLogger.WriteLine(Loc.Log_ModuleFileNameFormatError);
+            throw new FormatException(string.Format(Loc.Err_ModuleFileNameFormat, fileNameOnly));
+        }
+
+        short? fromOption = null;
+        var moduleMatch = Regex.Match(proto, ModulePattern, RegexOptions.Singleline);
+        if (moduleMatch.Success)
+        {
+            if (short.TryParse(moduleMatch.Groups[1].Value, out var value))
+            {
+                fromOption = value;
+            }
+            else
+            {
+                ExportLogger.WriteLine(Loc.Log_ModuleRangeError);
+                throw new FormatException(string.Format(Loc.Err_ModuleRangeOption, short.MinValue, short.MaxValue));
+            }
+        }
+
+        if (fromFileName.HasValue)
+        {
+            if (fromOption.HasValue && fromOption.Value != fromFileName.Value)
+            {
+                ExportLogger.WriteLine(Loc.Log_ModuleMismatch);
+                throw new FormatException(string.Format(Loc.Err_ModuleMismatch, fileNameOnly, fromFileName.Value, fromOption.Value));
+            }
+
+            source = MessageInfoList.ModuleSourceKind.FileName;
+            return fromFileName.Value;
+        }
+
+        if (fromOption.HasValue)
+        {
+            source = MessageInfoList.ModuleSourceKind.Option;
+            return fromOption.Value;
+        }
+
+        ExportLogger.WriteLine(Loc.Log_ModuleNotFound);
+        throw new Exception(Loc.Err_ModuleNotFound);
     }
 
     /// <summary>
@@ -140,7 +200,7 @@ public static partial class MessageHelper
             string blockName = match.Groups[1].Value;
             if (!Utility.IsCamelCase(blockName))
             {
-                throw new Exception($"[{packageName}] 包的 [{blockName}] 枚举名称必须遵守 [Upper Camel Case 命名规则]\n");
+                throw new Exception(string.Format(Loc.Err_EnumNameNotCamelCase, packageName, blockName) + "\n");
             }
 
             info.Name = blockName;
@@ -174,14 +234,14 @@ public static partial class MessageHelper
                         var name = fieldSplit[0].Trim();
                         if (!Utility.IsCamelCase(name))
                         {
-                            throw new Exception($"[{packageName}] 包的 {name} 枚举字段名称必须遵守 [Upper Camel Case 命名规则]\n");
+                            throw new Exception(string.Format(Loc.Err_EnumFieldNotCamelCase, packageName, name) + "\n");
                         }
 
                         field.Type = name;
                         int member = int.Parse(fieldSplit[1].Replace(";", "").Trim());
                         if (!CheckVerifyMember(info.Fields, member) && member != 0)
                         {
-                            throw new Exception("[" + packageName + "] 包的 [" + name + "] 消息序列[" + member + "]发生重复");
+                            throw new Exception(string.Format(Loc.Err_EnumMemberDuplicated, packageName, name, member));
                         }
 
                         field.Members = member;
@@ -202,7 +262,7 @@ public static partial class MessageHelper
             codes.Add(info);
             if (!Utility.IsCamelCase(messageName))
             {
-                throw new Exception($"[{packageName}] 包的 [{messageName}] 消息名称必须遵守 [Upper Camel Case 命名规则]\n");
+                throw new Exception(string.Format(Loc.Err_MessageNameNotCamelCase, packageName, messageName) + "\n");
             }
 
             info.Name = messageName;
@@ -233,7 +293,7 @@ public static partial class MessageHelper
                         var members = int.Parse(fieldSplit[1].Replace(";", "").Trim());
                         if (!CheckVerifyMember(info.Fields, members))
                         {
-                            throw new Exception("[" + packageName + "] 包的 [" + messageName + "] 消息序列发生重复");
+                            throw new Exception(string.Format(Loc.Err_MessageMemberDuplicated, packageName, messageName));
                         }
 
                         field.Members = members;
@@ -245,7 +305,7 @@ public static partial class MessageHelper
                         var key = fieldSplitStrings[0].Trim();
                         if (key.Trim().StartsWith("map") && fieldSplitStrings.Length < 3)
                         {
-                            throw new Exception($"[{packageName}] 包的 [{messageName}] 消息的 [{key}] 字段名称字典类型中间的[逗号]后面必须跟随空格\n");
+                            throw new Exception(string.Format(Loc.Err_MapCommaMissing, packageName, messageName, key) + "\n");
                         }
 
                         if (fieldSplitStrings.Length > 2)
@@ -268,7 +328,7 @@ public static partial class MessageHelper
 
                             if (!Utility.IsCamelCase(name))
                             {
-                                throw new Exception($"[{packageName}] 包的 [{messageName}] 消息的 [{name}] 字段名称必须遵守 [Upper Camel Case 命名规则]\n");
+                                throw new Exception(string.Format(Loc.Err_FieldNotCamelCase, packageName, messageName, name) + "\n");
                             }
 
                             field.Name = name;
@@ -279,7 +339,7 @@ public static partial class MessageHelper
                             var name = fieldSplitStrings[1].Trim();
                             if (!Utility.IsCamelCase(name))
                             {
-                                throw new Exception($"[{packageName}] 包的 [{messageName}] 消息的 [{name}] 字段名称必须遵守 [Upper Camel Case 命名规则]\n");
+                                throw new Exception(string.Format(Loc.Err_FieldNotCamelCase, packageName, messageName, name) + "\n");
                             }
 
                             field.Name = name;

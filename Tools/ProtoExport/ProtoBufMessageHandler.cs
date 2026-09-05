@@ -7,7 +7,7 @@ public static class ProtoBufMessageHandler
         // 先验证输入参数，再删除输出目录
         if (string.IsNullOrWhiteSpace(launcherOptions.InputPath) || !Directory.Exists(launcherOptions.InputPath))
         {
-            throw new DirectoryNotFoundException($"协议文件路径不存在: {launcherOptions.InputPath}");
+            throw new DirectoryNotFoundException(string.Format(Loc.Err_InputPathNotExist, launcherOptions.InputPath));
         }
 
         IProtoGenerateHelper protoGenerateHelper = null;
@@ -24,7 +24,7 @@ public static class ProtoBufMessageHandler
 
         if (protoGenerateHelper == null)
         {
-            throw new NotSupportedException($"不支持的模式类型: {modeType}。当前支持的模式: {string.Join(", ", Enum.GetNames<ModeType>())}");
+            throw new NotSupportedException(string.Format(Loc.Err_UnsupportedModeType, modeType, string.Join(", ", Enum.GetNames<ModeType>())));
         }
 
         protoGenerateHelper.Init(launcherOptions);
@@ -63,7 +63,7 @@ public static class ProtoBufMessageHandler
                 var isServerOnly = fileName.EndsWith("-s") || fileName.EndsWith("_s");
                 if (!launcherOptions.IsServer && isServerOnly)
                 {
-                    ExportLogger.WriteLine($"[SKIP] 客户端构建跳过服务器内部协议文件（_s/-s 后缀）: {fileName}");
+                    ExportLogger.WriteLine(string.Format(Loc.Log_SkipServerOnlyFile, fileName));
                     skippedCount++;
                     continue;
                 }
@@ -73,7 +73,7 @@ public static class ProtoBufMessageHandler
                 // 客户端构建跳过模块 id 小于 0 的内部协议（如 Inner*），仅服务器导出
                 if (!launcherOptions.IsServer && operationCodeInfo.Module < 0)
                 {
-                    ExportLogger.WriteLine($"[SKIP] 客户端构建跳过内部协议（moduleId={operationCodeInfo.Module} < 0）: {fileName}");
+                    ExportLogger.WriteLine(string.Format(Loc.Log_SkipInternalModule, operationCodeInfo.Module, fileName));
                     skippedCount++;
                     continue;
                 }
@@ -90,10 +90,11 @@ public static class ProtoBufMessageHandler
             if (useLock)
             {
                 var result = Persistence.MessageIdCoordinator.AssignAndPersist(launcherOptions.MessageIdLockPath, messageInfoLists);
-                ExportLogger.WriteLine($"[Lock] 涉及模块 {result.ModuleCount} 个，新增 SubId {result.NewlyAssignedCount} 条：{string.Join(", ", result.NewlyAssigned)}");
+                ExportLogger.WriteLine(string.Format(Loc.Log_LockSummary, result.ModuleCount, result.NewlyAssignedCount, string.Join(", ", result.NewlyAssigned)));
             }
 
-            ExportLogger.WriteLine($"协议扫描完成: 共发现 {files.Length} 个 .proto 文件，导出 {messageInfoLists.Count} 个，跳过 {skippedCount} 个（模式: {(launcherOptions.IsServer ? "服务器" : "客户端")}）");
+            ExportLogger.WriteLine(string.Format(Loc.Log_ScanCompleted, files.Length, messageInfoLists.Count, skippedCount,
+                launcherOptions.IsServer ? Loc.Term_ServerMode : Loc.Term_ClientMode));
 
             // Opcode 已确定，调用各 helper 生成代码
             foreach (var list in messageInfoLists)

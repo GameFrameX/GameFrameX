@@ -18,6 +18,12 @@ namespace ProtoExporterGUI.Models
         /// <summary>墓碑数（retired 计数，已删除/改名消息保留的历史号）。</summary>
         public int RetiredCount { get; }
 
+        /// <summary>
+        /// 模块 ID 的解析来源（fileName / option），取自最近一次导出日志；无导出记录时为「—」。
+        /// 其余四列来自 lock 文件快照，此列来自日志观测，故为渲染期后填充的可写属性。
+        /// </summary>
+        public string ModuleSource { get; set; } = "—";
+
         public LockModuleRow(string moduleKey, string moduleName, int messageCount, int retiredCount)
         {
             ModuleKey = moduleKey;

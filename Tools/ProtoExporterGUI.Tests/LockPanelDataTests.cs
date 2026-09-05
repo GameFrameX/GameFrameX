@@ -50,8 +50,11 @@ public class LockPanelDataTests
         return lockData;
     }
 
+    /// <summary>
+    /// Lock不存在_状态为未找到且不抛异常：lock 文件不存在时 Observe 状态为未找到（NotFound），且不抛异常。
+    /// </summary>
     [Fact]
-    public void Lock不存在_状态为未找到且不抛异常()
+    public void LockFileMissing_StateNotFoundAndNoThrow()
     {
         var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "no-such.lock.json");
         var data = LockPanelData.Observe(path);
@@ -62,8 +65,11 @@ public class LockPanelDataTests
         Assert.Null(data.ErrorMessage);
     }
 
+    /// <summary>
+    /// 路径为空_同样视为未找到：lock 路径为空时同样视为未找到（NotFound）。
+    /// </summary>
     [Fact]
-    public void 路径为空_同样视为未找到()
+    public void EmptyPath_TreatedAsNotFound()
     {
         var data = LockPanelData.Observe(null);
 
@@ -71,8 +77,11 @@ public class LockPanelDataTests
         Assert.Empty(data.Modules);
     }
 
+    /// <summary>
+    /// 合法lock_模块消息墓碑计数正确：合法 lock 文件解析为 Found，模块 / 消息 / 墓碑（Retired）计数正确。
+    /// </summary>
     [Fact]
-    public void 合法lock_模块消息墓碑计数正确()
+    public void ValidLock_ModuleMessageRetiredCountsCorrect()
     {
         var path = WriteLock(SampleLock());
         try
@@ -101,8 +110,11 @@ public class LockPanelDataTests
         }
     }
 
+    /// <summary>
+    /// 损坏lock_归入失败状态并携带错误信息：损坏的 lock 文件归入失败状态（Failed）并携带可展示的错误信息。
+    /// </summary>
     [Fact]
-    public void 损坏lock_归入失败状态并携带错误信息()
+    public void CorruptedLock_ClassifiedAsFailedWithErrorMessage()
     {
         var path = TempLockPath();
         File.WriteAllText(path, "{ this is not valid json");
@@ -123,8 +135,11 @@ public class LockPanelDataTests
         }
     }
 
+    /// <summary>
+    /// 时间戳_按指定格式输出：时间戳按指定 format 输出。
+    /// </summary>
     [Fact]
-    public void 时间戳_按指定格式输出()
+    public void Timestamp_FormattedWithGivenFormat()
     {
         var path = WriteLock(SampleLock());
         try
@@ -144,11 +159,81 @@ public class LockPanelDataTests
         }
     }
 
+    /// <summary>
+    /// 时间戳缺失_格式化返回null：时间戳缺失时格式化返回 null。
+    /// </summary>
     [Fact]
-    public void 时间戳缺失_格式化返回null()
+    public void MissingTimestamp_FormatReturnsNull()
     {
         var data = LockPanelData.Observe(null);
 
         Assert.Null(data.FormatLastWriteTime("yyyy-MM-dd"));
+    }
+
+    /// <summary>
+    /// 空白路径_同样视为未找到：空串 / 纯空白路径与 null 一致归 NotFound。
+    /// </summary>
+    [Fact]
+    public void BlankPath_TreatedAsNotFound()
+    {
+        var empty = LockPanelData.Observe(string.Empty);
+        Assert.Equal(LockPanelData.LoadState.NotFound, empty.State);
+
+        var blank = LockPanelData.Observe("   ");
+        Assert.Equal(LockPanelData.LoadState.NotFound, blank.State);
+        Assert.Null(blank.LastWriteTime);
+        Assert.Null(blank.ErrorMessage);
+    }
+
+    /// <summary>
+    /// 空模块lock_状态为Found且模块列表为空：合法但无模块的 lock 是 Found（与 NotFound 是两种状态）。
+    /// </summary>
+    [Fact]
+    public void EmptyModulesLock_StateFoundWithEmptyRows()
+    {
+        var path = WriteLock(MessageIdLock.CreateEmpty());
+        try
+        {
+            var data = LockPanelData.Observe(path);
+
+            Assert.Equal(LockPanelData.LoadState.Found, data.State);
+            Assert.NotNull(data.LastWriteTime);
+            Assert.Empty(data.Modules);
+            Assert.Null(data.ErrorMessage);
+        }
+        finally
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Schema不兼容_归入失败且保留时间戳：schemaVersion 过期的 lock 归 Failed，
+    /// 但文件存在这一事实仍应展示（LastWriteTime 非 null），便于用户定位过期文件。
+    /// </summary>
+    [Fact]
+    public void IncompatibleSchema_FailedWithLastWriteTimePreserved()
+    {
+        var path = TempLockPath();
+        File.WriteAllText(path, "{ \"schemaVersion\": 99, \"modules\": {} }");
+        try
+        {
+            var data = LockPanelData.Observe(path);
+
+            Assert.Equal(LockPanelData.LoadState.Failed, data.State);
+            Assert.NotNull(data.LastWriteTime);
+            Assert.False(string.IsNullOrEmpty(data.ErrorMessage));
+            Assert.Empty(data.Modules);
+        }
+        finally
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
     }
 }

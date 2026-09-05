@@ -3,9 +3,26 @@ namespace GameFrameX.ProtoExport
     public class MessageInfoList
     {
         /// <summary>
+        /// 模块 ID 的解析来源
+        /// </summary>
+        public enum ModuleSourceKind
+        {
+            /// <summary>文件名前缀 _&lt;模块ID&gt;_（如 _0010_Basic.proto）</summary>
+            FileName,
+
+            /// <summary>proto 内容声明 option module = N;</summary>
+            Option,
+        }
+
+        /// <summary>
         /// 消息模块ID
         /// </summary>
         public short Module { get; set; }
+
+        /// <summary>
+        /// 模块 ID 的解析来源（文件名前缀 / option 声明）
+        /// </summary>
+        public ModuleSourceKind ModuleSource { get; set; }
 
         /// <summary>
         /// 文件名
@@ -216,7 +233,7 @@ namespace GameFrameX.ProtoExport
                 _members = value;
                 if (!IsEnum && value >= 2047 && Name != "ErrorCode")
                 {
-                    throw new Exception("成员编码不能大于2047");
+                    throw new Exception(Loc.Err_MemberTagExceed);
                 }
             }
         }

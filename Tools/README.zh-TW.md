@@ -80,7 +80,7 @@ docker run --rm \
 ```protobuf
 syntax = "proto3";     // 必須宣告：僅支援 proto3
 package Basic;
-option module = 10;    // 必須定義：模組 ID
+option module = 10;    // 模組 ID：檔名前綴（_0010_Name.proto）或此宣告，二擇一；並存時必須一致
 
 // 請求心跳
 message ReqHeartBeat
@@ -98,7 +98,16 @@ message ReqHeartBeat
 
 ## 模組 ID 規則
 
-透過 `option module = <id>;` 定義模組 ID：
+模組 ID 有兩種宣告方式，**檔名前綴優先**：
+
+1. **檔名前綴**：`_<模組ID>_<名稱>.proto`（如 `_0010_Basic.proto` → 模組 10、`_-0120_Inner_Social.proto` → 模組 -120；分隔符號相容 `-`，如 `_0010-Basic.proto`）
+2. **option 宣告**：`option module = <id>;`
+
+規則：
+
+- 兩者並存時必須一致，否則建置報錯
+- 檔名以 `_` + 數字開頭但缺少第二個分隔符號（如 `_0010Basic`）視為命名錯誤，建置報錯
+- 兩者皆無時建置報錯
 
 | ID 範圍 | 用途 |
 |---------|------|

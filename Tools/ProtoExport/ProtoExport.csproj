@@ -14,9 +14,16 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 
+    <!-- 国际化：为非默认 resx 生成附属程序集（satellite assemblies）。
+         默认 Strings.resx 为中性资源（简体中文）；Strings.en.resx 自动产出 en/ProtoExport.resources.dll。
+         文案按 CurrentUICulture 自动选择：GUI 宿主切线程 culture 即切换，CLI 跟随系统语言。 -->
+    <EmbeddedResourceUseDependentUpon>false</EmbeddedResourceUseDependentUpon>
+    <GenerateSatelliteAssemblies>true</GenerateSatelliteAssemblies>
+    <SatelliteResourceLanguages>zh-CN;zh;en</SatelliteResourceLanguages>
+
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GameFrameX.Foundation.Options" Version="2.8.3" />
+    <PackageReference Include="GameFrameX.Foundation.Options" Version="4.0.2" />
   </ItemGroup>	
 </Project>

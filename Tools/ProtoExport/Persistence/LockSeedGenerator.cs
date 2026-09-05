@@ -61,21 +61,31 @@ public static class LockSeedGenerator
             };
             lockData.Modules[key] = entry;
 
+            // 同模块内重复 Opcode 意味着行序自增已被破坏，冻结进 lock 会造成同号双登记，
+            // 后续 Coordinator 沿用时会撞号——在 seed 阶段直接报错。
+            var usedOpcodes = new Dictionary<int, string>();
+
             foreach (var info in messages)
             {
                 if (info.Opcode <= 0)
                 {
                     throw new InvalidDataException(
-                        $"seed 模式下 module={key} 消息 '{info.Name}' 的当前 Opcode={info.Opcode} 不合法，"
-                        + "请先跑一次普通导出（不使用 --messageIdLockPath）让行序自增跑完，再做 seed。");
+                        string.Format(Loc.Err_SeedOpcodeInvalid, key, info.Name, info.Opcode));
                 }
 
                 if (info.Opcode > MessageIdAllocator.MaxSubId)
                 {
                     throw new InvalidDataException(
-                        $"seed 模式下 module={key} 消息 '{info.Name}' 的 Opcode={info.Opcode} 超过 SubId 上限 {MessageIdAllocator.MaxSubId}");
+                        string.Format(Loc.Err_SeedOpcodeExceed, key, info.Name, info.Opcode, MessageIdAllocator.MaxSubId));
                 }
 
+                if (usedOpcodes.TryGetValue(info.Opcode, out var firstName))
+                {
+                    throw new InvalidDataException(
+                        string.Format(Loc.Err_SeedOpcodeDuplicated, key, info.Opcode, firstName, info.Name));
+                }
+
+                usedOpcodes[info.Opcode] = info.Name;
                 entry.Messages[info.Name] = info.Opcode;
                 assigned.Add($"{key}.{info.Name}");
             }
