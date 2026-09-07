@@ -12,6 +12,11 @@
         },
         "runtime": {
           "ProtoExport.dll": {}
+        },
+        "resources": {
+          "en/ProtoExport.resources.dll": {
+            "locale": "en"
+          }
         }
       },
       "GameFrameX.Foundation.Localization/4.0.2": {
