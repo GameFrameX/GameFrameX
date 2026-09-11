@@ -84,7 +84,7 @@ Every script launches the auto-synced generator in `Tools/` via `dotnet ./Tools/
 
 | Proto File | Module | Description |
 |------------|--------|-------------|
-| `_0002_InnerBasic.proto` | 2 | Internal basic protocol |
+| `_-0002_Inner_Basic.proto` | -2 | Internal basic protocol (server-side) |
 | `_0010_Basic.proto` | 10 | Basic protocol |
 | `_0020_Common.proto` | 20 | Common protocol (error codes, shared types) |
 | `_0100_Bag.proto` | 100 | Inventory / bag protocol |
@@ -125,9 +125,9 @@ Line by line:
 
 Rules:
 
-- Filename: `_<ModuleID:0000>_<Domain>.proto`, e.g. `_0500_Mail.proto`.
-- Positive number = external protocol (client ↔ server); negative = internal (server ↔ server). A negative ID keeps its sign in the filename (`_-0120_Inner_Social.proto` for module -120); the leading `_` on every file keeps names valid (never starting with `-`) and uniformly sorted.
-- Internal files start with `Inner`, e.g. `_0002_InnerBasic.proto`.
+- Filename: external `_<ModuleID:0000>_<Domain>.proto` (e.g. `_0500_Mail.proto`); internal `_-<ModuleID:0000>_Inner_<Domain>.proto` (e.g. `_-0120_Inner_Social.proto`). The module ID is **positive for external** (client ↔ server) and **negative for internal** (server ↔ server); a negative ID keeps its sign in the filename, and the leading `_` keeps names valid (never starting with `-`) and uniformly sorted.
+- Internal modules mirror their external counterpart's number when one exists (`_0120_Social` 120 ↔ `_-0120_Inner_Social` -120); internal modules with no counterpart take their number from the internal reserved range (e.g. `_-0002_Inner_Basic` -2).
+- The `-s`/`_s` filename suffix is **disabled in this repository** (the export tool still supports it, but no file here may use it).
 
 **Why** — Putting the module ID in the filename makes the filename itself the routing key: you can tell the domain at a glance, and two files can never quietly share one number. The `Inner` prefix tags internal protocols so they can be filtered out and never leak to the client.
 
@@ -351,7 +351,7 @@ The export tool identifies server-only proto files by **filename suffix** `-s` o
 
 Internal protocols additionally carry a **negative module ID** for routing separation (see the Module ID table above).
 
-> **Note on the current repository:** internal files here use an `Inner_` prefix together with a negative module ID (e.g. `_-0120_Inner_Social.proto`). Both the `-s`/`_s` suffix and the negative-ID convention achieve server-only routing — pick one and stay consistent within a module.
+> **Note on the current repository:** internal files here use the single converged convention `_-<ModuleID>_Inner_<Domain>.proto` with a **negative module ID** (e.g. `_-0120_Inner_Social.proto`, `_-0002_Inner_Basic.proto`). The `-s`/`_s` suffix mechanism is disabled in this repository; server-only routing is achieved exclusively via the negative module ID.
 
 ## Supported Export Languages
 
