@@ -29,7 +29,10 @@ func generate_resolve_field_ref
         if field.is_nullable
             ret (get_ref_name field) + ' = ' + fieldName + '!= null ? tables.' + tableName + '.Get(' + (get_value_of_nullable_type field.ctype fieldName) + ') : null;'
         else
-            ret (get_ref_name field) + ' = tables.' + tableName + '.Get(' + fieldName + ');'
+            refVarName = (string.downcase (string.slice fieldName 0 1)) + (string.slice fieldName 1 (string.size fieldName)) + 'Ref'
+            line1 = 'tables.' + tableName + '.TryGet(' + fieldName + ', out var ' + refVarName + ');' + '\n'
+            line2 = (get_ref_name field) + ' = ' + refVarName + ';'
+            ret line1 + line2
         end
     else if can_generate_collection_ref field
         collection_ref_table = get_collection_ref_table field
