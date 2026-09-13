@@ -177,7 +177,7 @@ end
             {{~end~}}
         }
 
-        public void TranslateText(System.Func<string, string, string> translator)
+        public {{method_modifier __bean}} void TranslateText(System.Func<string, string, string> translator)
         {
             {{~if parent_def_type~}}
             base.TranslateText(translator);

@@ -174,7 +174,7 @@ public {{class_modifier __bean}} partial class {{__name}}
         PostResolveRef();
     }
 
-    public void TranslateText(System.Func<string, string, string> translator)
+    public {{method_modifier __bean}} void TranslateText(System.Func<string, string, string> translator)
     {
         {{~if parent_def_type~}}
         base.TranslateText(translator);
