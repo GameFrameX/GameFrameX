@@ -1,0 +1,69 @@
+syntax = "proto3";
+package Friend;
+
+// 好友服务器（Friend Role，好友关系，域号 660）业务错误码（6 位 = 模块ID 660 + 3 位编号）。
+enum FriendErrorCode
+{
+  NotLoggedIn = 660001; // 会话未绑定玩家（未登录）
+  CannotSelf = 660002; // 不能对自己发起好友操作
+  AlreadyFriends = 660003; // 双方已经是好友
+  RequestPending = 660004; // 好友申请已在等待中（重复申请）
+  RequestNotFound = 660005; // 对应好友申请不存在
+}
+
+// 请求向目标玩家发送好友申请
+message ReqFriendSendRequest
+{
+  int64 ToPlayerId = 1; // 目标玩家ID
+}
+
+// 返回发送好友申请结果
+message RespFriendSendRequest
+{
+}
+
+// 请求接受指定来源玩家的好友申请
+message ReqFriendAccept
+{
+  int64 FromPlayerId = 1; // 申请来源玩家ID
+}
+
+// 返回接受好友申请结果
+message RespFriendAccept
+{
+}
+
+// 请求拒绝指定来源玩家的好友申请
+message ReqFriendReject
+{
+  int64 FromPlayerId = 1; // 申请来源玩家ID
+}
+
+// 返回拒绝好友申请结果
+message RespFriendReject
+{
+}
+
+// 请求解除与指定好友的好友关系
+message ReqFriendRemove
+{
+  int64 FriendPlayerId = 1; // 要解除的好友玩家ID
+}
+
+// 返回解除好友关系结果
+message RespFriendRemove
+{
+}
+
+// 请求拉取自己的好友关系全量列表
+message ReqFriendRelationList
+{
+}
+
+// 返回好友关系全量列表（好友 / 收到的申请 / 发出的申请）
+message RespFriendRelationList
+{
+  repeated int64 Friends = 1; // 好友列表（玩家ID）
+  repeated int64 IncomingRequests = 2; // 收到的好友申请列表（玩家ID）
+  repeated int64 OutgoingRequests = 3; // 发出的好友申请列表（玩家ID）
+}

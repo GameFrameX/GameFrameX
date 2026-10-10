@@ -114,14 +114,13 @@ Every business area lives in its own file named `_<ModuleID:0000>_<Domain>.proto
 // File: _0100_Bag.proto
 syntax = "proto3";      // always proto3 — the modern protobuf syntax
 package Bag;            // the domain name (PascalCase)
-option module = 100;    // the routing number; must match the 0100 in the filename
 ```
 
 Line by line:
 
 - `syntax = "proto3";` — declares the modern protobuf syntax. Every file starts with this line.
 - `package Bag;` — this file's domain is "Bag". PascalCase means the first letter is uppercase.
-- `option module = 100;` — assigns routing number 100. **It must equal the `0100` in the filename.**
+- Module ID — comes **only** from the filename prefix (`_0100_` → 100). Do **not** write `option module`: removed from all proto files (2026-09-28); defining it in both places invites drift and a module mismatch exception.
 
 Rules:
 
@@ -251,7 +250,6 @@ A hypothetical `_0600_Quest` (quest system) module exercising every rule above:
 ```protobuf
 syntax = "proto3";
 package Quest;
-option module = 600;
 
 // Quest business error codes (6 digits = module 600 + 3-digit ordinal)
 enum QuestErrorCode {
@@ -312,7 +310,6 @@ The hard rules the `ProtoExport` tool enforces. Authoritative source: [GameFrame
 ```protobuf
 syntax = "proto3";     // Required: only proto3 is supported
 package Basic;
-option module = 10;    // Required: module ID must be defined
 ```
 
 ### Message Naming
@@ -347,7 +344,7 @@ option module = 10;    // Required: module ID must be defined
 
 ### Server-Only Files
 
-The export tool identifies server-only proto files by **filename suffix** `-s` or `_s` (e.g. `player-s.proto`, `economy_s.proto`). Pass `--isServer true` to include them; with the default `--isServer false` they are skipped, so server-only messages never leak to clients.
+The export tool identifies server-only proto files by **filename suffix** `-s` or `_s` (e.g. `player-s.proto`, `economy_s.proto`). Pass `--isServer` to include them; by default (omitting `--isServer`) they are skipped, so server-only messages never leak to clients. Note: boolean options are presence-based flags — **passing the flag turns it on**, so `--isServer false` also enables server mode (the `false` literal is ignored); the only way to turn one off is to omit it.
 
 Internal protocols additionally carry a **negative module ID** for routing separation (see the Module ID table above).
 
@@ -375,7 +372,7 @@ docker run --rm \
   -v ./Server/GameFrameX.Proto/Proto:/output \
   gameframex/gameframex-tools:latest \
   --mode csharp --isServer true \
-  --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.NetWork.Abstractions|using GameFrameX.NetWork.Messages" \
+  --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.Network.Abstractions|using GameFrameX.Network.Messages" \
   --isGenerateDescription true \
   --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
 ```
@@ -444,6 +441,8 @@ Path mapping: `-v <host>:<container>` mounts a host directory; `--inputPath` / `
 | `--usingStatements` | `""` | Using statements separated by `\|` (e.g. `"using System\|using ProtoBuf"`) |
 | `--isGenerateDescription` | `false` | Generate `[System.ComponentModel.Description]` attributes |
 | `--isServer` | `false` | Include server-only proto files (filename ends with `-s` or `_s`) |
+
+> Note: boolean options (`--isServer`, `--isGenerateDescription`, etc.) are presence-based flags: **passing the flag turns it on** — `--xxx false` cannot turn it off (the `false` literal is ignored). The "default" column is the value used when the option is omitted.
 
 ### TypeScript
 

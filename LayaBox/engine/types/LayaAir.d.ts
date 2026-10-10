@@ -196,12 +196,6 @@ declare module Laya {
         extend?: EnumDescriptor;
         [index: string]: any;
     }[] | any[] | Object | string;
-    type PropertType = string | Function | Object | [
-        PropertType
-    ] | [
-        "Record",
-        PropertType
-    ];
     interface PropertyDescriptor {
         /** 属性名称。一般不需要设定。 */
         name: string;
@@ -212,7 +206,12 @@ declare module Laya {
          * 其他对象类型可以直接使用类名，但要注意该类必须有使用regClass装饰器。也支持枚举类型。枚举类型不需要regClass。
          * 如果不提供type，表示只用于ui样式，没有实际对应数据，和不会序列化
          */
-        type: PropertType;
+        type: string | Function | Object | [
+            string | Function
+        ] | [
+            "Record",
+            string | Function
+        ];
         /** 标题。如果不提供，则使用name。 */
         caption: string;
         /** 提示文字 */
@@ -258,8 +257,6 @@ declare module Laya {
         validator: string;
         /** 是否序列化 */
         serializable: boolean;
-        /** 属性在不参与序列化时，如果它的数据可能受其他可序列化的属性影响，在这里填写其他属性名称。这通常用于判断预制体属性是否覆盖。*/
-        affectBy?: string;
         /** 是否多行文本输入 */
         multiline: boolean;
         /** 是否密码输入 */
@@ -364,7 +361,7 @@ declare module Laya {
      * 使用这个装饰器，可以使属性显示在编辑器属性设置面板上，并且能序列化保存。
      * @param info 属性的类型，如: Number,"number",[Number],["Record", Number]等。或传递对象描述详细信息，例如{ type: "string", multiline: true }。
      */
-    function property(info: PropertType | Partial<PropertyDescriptor>): any;
+    function property(info: string | Array<any> | Function | Object | Partial<PropertyDescriptor>): any;
     /**开始播放时调度。
      * @eventType Event.PLAYED
      * */
@@ -2016,7 +2013,7 @@ declare module Laya {
      */
     class Component {
         /** @private */
-        _id: number;
+        private _id;
         /**@private */
         private _hideFlags;
         /**@private */
@@ -2217,27 +2214,27 @@ declare module Laya {
         owner: Sprite | Sprite3D;
         protected setupScript(): void;
         /**
-         * 3D物理触发器事件与2D物理碰撞事件，开始碰撞时执行
+         * 开始碰撞时执行
          */
         onTriggerEnter?(other: PhysicsComponent | ColliderBase, self?: ColliderBase, contact?: any): void;
         /**
-         * 3D物理触发器事件与2D物理碰撞事件，持续碰撞时执行
+         * 持续碰撞时执行
          */
         onTriggerStay?(other: PhysicsComponent | ColliderBase, self?: ColliderBase, contact?: any): void;
         /**
-         * 3D物理触发器事件与2D物理碰撞事件，结束碰撞时执行
+         * 结束碰撞时执行
          */
         onTriggerExit?(other: PhysicsComponent | ColliderBase, self?: ColliderBase, contact?: any): void;
         /**
-         * 3D物理碰撞器事件（不适用2D），开始碰撞时执行
+         * 开始碰撞时执行
          */
         onCollisionEnter?(collision: Collision): void;
         /**
-         * 3D物理碰撞器事件（不适用2D），持续碰撞时执行
+         * 持续碰撞时执行
          */
         onCollisionStay?(collision: Collision): void;
         /**
-         *3D物理碰撞器事件（不适用2D），结束碰撞时执行
+         * 结束碰撞时执行
          */
         onCollisionExit?(collision: Collision): void;
         /**
@@ -7973,8 +7970,6 @@ declare module Laya {
         get renderbitFlag(): number;
         set boundsChange(value: boolean);
         get boundsChange(): boolean;
-        /**@interface */
-        _receiveShadow: boolean;
         get renderNode(): IBaseRenderNode;
         set distanceForSort(value: number);
         get distanceForSort(): number;
@@ -8060,6 +8055,7 @@ declare module Laya {
      * 类用于创建从渲染源输出到渲染目标的指令
      */
     class BlitFrameBufferCMD {
+        static __init__(): void;
         /**
        * 渲染命令集
        * @param source
@@ -8898,6 +8894,7 @@ declare module Laya {
         static clientWidth: number;
         /**渲染区高度。*/
         static clientHeight: number;
+        static __init__(): void;
         /**设置渲染管线 */
         configPipeLineMode: PipelineMode;
         set viewport(value: Viewport);
@@ -8928,30 +8925,13 @@ declare module Laya {
          */
         _renderElementOBJ: IRenderElement;
         _batchElement: RenderElement;
-        _transform: Transform3D;
         get render(): BaseRender;
         /**
          * 创建一个 <code>RenderElement</code> 实例。
          */
         constructor();
         protected _createRenderElementOBJ(): void;
-        /**
-         * 编译shader
-         * @param context
-         */
-        compileShader(context: IRenderContext3D): void;
-        /**
-         * 切换Shader
-         * @param customShader
-         * @param replacementTag
-         * @param subshaderIndex
-         * @returns
-         */
         _convertSubShader(customShader: Shader3D, replacementTag: string, subshaderIndex?: number): void;
-        /**
-         * pre update data
-         * @param context
-         */
         _renderUpdatePre(context: RenderContext3D): void;
     }
     /**
@@ -9433,7 +9413,6 @@ declare module Laya {
      * 光照贴图。
      */
     class Lightmap {
-        static ApplyLightmapEvent: string;
         /** 光照贴图颜色。 */
         lightmapColor: Texture2D;
         /** 光照贴图方向。 */
@@ -9491,10 +9470,6 @@ declare module Laya {
         currentCreationLayer: number;
         /** 是否启用灯光。*/
         enableLight: boolean;
-        /**
-         * Scene3D所属的2D场景，使用IDE编辑的场景载入后具有此属性。
-         */
-        get scene2D(): Scene;
         /**
          * set SceneRenderableManager
          */
@@ -10375,8 +10350,6 @@ declare module Laya {
      * <code>BaseCamera</code> 类用于创建摄像机的父类。
      */
     class UI3D extends BaseRender {
-        /**@intrtnal */
-        static TempMatrix: Matrix4x4;
         private _shellSprite;
         /**
          * 3D渲染的UI节点
@@ -10423,6 +10396,7 @@ declare module Laya {
          * 实例化一个UI3D
          */
         constructor();
+        private _updatePlane;
         /**
         * 分析碰撞点
         * @param hit
@@ -13081,7 +13055,6 @@ declare module Laya {
         private _destTarget;
         private _viewPort;
         private _scissor;
-        private _confifShaderData;
         private _cameraShaderData;
         private _sceneShaderData;
         private _globalShaderData;
@@ -13100,8 +13073,6 @@ declare module Laya {
         get invertY(): boolean;
         set pipelineMode(pipelineMode: PipelineMode);
         get pipelineMode(): PipelineMode;
-        get configShaderData(): ShaderData;
-        set configShaderData(value: ShaderData);
         set globalShaderData(globalShaderData: ShaderData);
         get globalShaderData(): ShaderData;
         set sceneShaderData(sceneShaderData: ShaderData);
@@ -13683,13 +13654,6 @@ declare module Laya {
     class QuickSort implements ISortPass {
         private elementArray;
         private isTransparent;
-        /**
-         * 快速排序
-         * @param elements
-         * @param isTransparent
-         * @param left
-         * @param right
-         */
         sort(elements: SingletonList<RenderElement>, isTransparent: boolean, left: number, right: number): void;
     }
     class RenderContext3DOBJ implements IRenderContext3D {
@@ -13698,7 +13662,6 @@ declare module Laya {
         scissor: Vector4;
         invertY: boolean;
         pipelineMode: PipelineMode;
-        configShaderData: ShaderData;
         cameraShaderData: ShaderData;
         sceneID: number;
         sceneShaderData: ShaderData;
@@ -13729,19 +13692,7 @@ declare module Laya {
         drawGeometry(shaderIns: ShaderInstance): void;
         _destroy(): void;
     }
-    class FastSinglelist<T> extends SingletonList<T> {
-    }
     class RenderGeometryElementOBJ implements IRenderGeometryElement {
-        /**
-         * index format
-         */
-        get indexFormat(): IndexFormat;
-        set indexFormat(value: IndexFormat);
-        /**
-         * Mesh Topology mode
-         */
-        get mode(): MeshTopology;
-        set mode(value: MeshTopology);
     }
     class RenderOBJCreateUtil implements IRenderOBJCreate {
         createTransform(owner: Sprite3D): Transform3D;
@@ -15854,55 +15805,6 @@ declare module Laya {
             height?: number;
         }): number[];
     }
-    class DrawEllipseCmd {
-        static ID: string;
-        /**
-         * 圆点X 轴位置。
-         */
-        x: number;
-        /**
-         * 圆点Y 轴位置。
-         */
-        y: number;
-        /**
-         * 横向半径。
-         */
-        width: number;
-        /**
-         * 纵向半径。
-         */
-        height: number;
-        /**
-         * 填充颜色，或者填充绘图的渐变对象。
-         */
-        fillColor: any;
-        /**
-         * （可选）边框颜色，或者填充绘图的渐变对象。
-         */
-        lineColor: any;
-        /**
-         * （可选）边框宽度。
-         */
-        lineWidth: number;
-        /**
-         * 位置和大小是否是百分比
-         */
-        percent: boolean;
-        /**@private */
-        static create(x: number, y: number, width: number, height: number, fillColor: any, lineColor: any, lineWidth: number): DrawEllipseCmd;
-        /**
-         * 回收到对象池
-         */
-        recover(): void;
-        /**@private */
-        run(context: Context, gx: number, gy: number): void;
-        /**@private */
-        get cmdID(): string;
-        getBoundPoints(sp?: {
-            width: number;
-            height?: number;
-        }): number[];
-    }
     /**
      * 绘制图片
      */
@@ -16231,71 +16133,6 @@ declare module Laya {
             height?: number;
         }): number[];
     }
-    class DrawRoundRectCmd {
-        static ID: string;
-        /**
-         * 圆点X 轴位置。
-         */
-        x: number;
-        /**
-         * 圆点Y 轴位置。
-         */
-        y: number;
-        /**
-         * 横向半径。
-         */
-        width: number;
-        /**
-         * 纵向半径。
-         */
-        height: number;
-        /**
-         * 左上圆角
-         */
-        lt: number;
-        /**
-         * 右上圆角
-         */
-        rt: number;
-        /**
-         * 左下圆角
-         */
-        lb: number;
-        /**
-         * 右下圆角
-         */
-        rb: number;
-        /**
-         * 填充颜色，或者填充绘图的渐变对象。
-         */
-        fillColor: any;
-        /**
-         * （可选）边框颜色，或者填充绘图的渐变对象。
-         */
-        lineColor: any;
-        /**
-         * （可选）边框宽度。
-         */
-        lineWidth: number;
-        /**
-         * 位置和大小是否是百分比
-         */
-        percent: boolean;
-        /**@private */
-        static create(x: number, y: number, width: number, height: number, lt: number, rt: number, lb: number, rb: number, fillColor: any, lineColor: any, lineWidth: number): DrawRoundRectCmd;
-        /**
-         * 回收到对象池
-         */
-        recover(): void;
-        /**@private */
-        run(context: Context, gx: number, gy: number): void;
-        /**@private */
-        get cmdID(): string;
-        getBoundPoints(sp?: {
-            width: number;
-            height?: number;
-        }): number[];
-    }
     /**
      * 绘制单个贴图
      */
@@ -16452,19 +16289,11 @@ declare module Laya {
         private _wordText;
         private _font;
         private _color;
-        private _storkColor;
-        private _stork;
-        private _align;
+        private _borderColor;
+        private _lineWidth;
+        private _textAlign;
         private _fontObj;
-        set text(value: string);
-        get text(): string;
-        set storkColor(value: string);
-        get storkColor(): string;
-        set stork(value: number);
-        get stork(): number;
-        set align(value: number);
-        get align(): number;
-        static create(text: string | WordText | null, x: number, y: number, font: string, color: string | null, align: string, stork: number, storkColor: string | null): FillTextCmd;
+        static create(text: string | WordText | null, x: number, y: number, font: string, color: string | null, textAlign: string, lineWidth: number, borderColor: string | null): FillTextCmd;
         /**
          * 回收到对象池
          */
@@ -17203,17 +17032,6 @@ declare module Laya {
          */
         drawCircle(x: number, y: number, radius: number, fillColor: any, lineColor?: any, lineWidth?: number): DrawCircleCmd;
         /**
-         * 绘制椭圆形
-         * @param x         圆点X 轴位置。
-         * @param y         圆点Y 轴位置。
-         * @param width     横向半径。
-         * @param height    纵向半径。
-         * @param fillColor 填充颜色，或者填充绘图的渐变对象。
-         * @param lineColor （可选）边框颜色，或者填充绘图的渐变对象。
-         * @param lineWidth （可选）边框宽度。
-         */
-        drawEllipse(x: number, y: number, width: number, height: number, fillColor: any, lineColor: any, lineWidth: number): DrawEllipseCmd;
-        /**
          * 绘制扇形。
          * @param x				开始绘制的 X 轴位置。
          * @param y				开始绘制的 Y 轴位置。
@@ -17919,9 +17737,6 @@ declare module Laya {
          */
         get timer(): Timer;
         set timer(value: Timer);
-        /**
-         * 场景包含的3D场景实例
-         */
         get scene3D(): any;
         /**
          * <p>从组件顶边到其内容区域顶边之间的垂直距离（以像素为单位）。</p>
@@ -18385,7 +18200,6 @@ declare module Laya {
         /**绘图对象。封装了绘制位图和矢量图的接口，Sprite所有的绘图操作都通过Graphics来实现的。*/
         get graphics(): Graphics;
         set graphics(value: Graphics);
-        setGraphics(value: Graphics, transferOwnership: boolean): void;
         /**
          * <p>显示对象的滚动矩形范围，具有裁剪效果(如果只想限制子对象渲染区域，请使用viewport)</p>
          * <p> srollRect和viewport的区别：<br/>
@@ -19093,7 +18907,7 @@ declare module Laya {
         protected _borderColor: string;
         /**
          * <p>默认边距信息</p>
-         * <p>[上边距，右边距，下边距，左边距]（边距以像素为单位）</p>
+         * <p>[左边距，上边距，右边距，下边距]（边距以像素为单位）</p>
          */
         protected _padding: number[];
         /**
@@ -19280,11 +19094,8 @@ declare module Laya {
         get strokeColor(): string;
         set strokeColor(value: string);
         /**
-         * 指定文本超出文本域后的行为
-         * @tips: <p>值为:可见visible、隐藏hidden、滚动:scroll、自动收缩shrink、显示省略号ellipsis。</p>
-         * @tips: <p>作用：可见，表示文本不受文本宽高约束全部可见；隐藏，超过文本宽高就会被裁切掉，性能最好；
-         * 滚动，表示超出宽高的部分被隐藏，可以通过划动控制显示在宽高内区域；自动收缩，表示文本会跟随宽高的大小而自动调整文本的大小，始终全部显示在文本宽高内。
-         * 显示省略号，表示当文本超出宽高后，未尾的几位字符会替换为省略号，表示当前文本还有未显示的内容</p>
+         * <p>overflow 指定文本超出文本域后的行为。其值为"hidden"、"visible"和"scroll"之一。</p>
+         * <p>性能从高到低依次为：hidden > visible > scroll。</p>
          */
         get overflow(): string;
         set overflow(value: string);
@@ -26175,7 +25986,6 @@ declare module Laya {
     class NativeGLRenderDrawContext extends NativeGLObject implements IRenderDrawContext {
         _nativeObj: any;
         constructor(engine: NativeWebGLEngine);
-        drawElements2DTemp(mode: MeshTopology, count: number, type: IndexFormat, offset: number): void;
     }
     class NativeGLTextureContext extends NativeGLObject implements ITextureContext {
         protected _native: any;
@@ -26429,57 +26239,29 @@ declare module Laya {
         bindUseProgram(webglProgram: any): boolean;
     }
     class GLRenderDrawContext extends GLObject implements IRenderDrawContext {
+        private _angleInstancedArrays;
         constructor(engine: WebGLEngine);
+        getMeshTopology(mode: MeshTopology): number;
+        getIndexType(type: IndexFormat): number;
+        drawArrays(mode: MeshTopology, first: number, count: number): void;
+        drawElements(mode: MeshTopology, count: number, type: IndexFormat, offset: number): void;
+        drawGeometryElement(geometryElement: IRenderGeometryElement): void;
     }
     class GLRenderState {
-        /**
-         * intance glRenderState
-         * @param engine
-         */
+        _engine: WebGLEngine;
+        _gl: WebGLRenderingContext | WebGL2RenderingContext;
         constructor(engine: WebGLEngine);
-        /**
-         * init
-         */
         private _initState;
-        /**
-         * get gl blend factor
-         * @param factor
-         * @returns
-         */
         _getBlendFactor(factor: BlendFactor): number;
-        /**
-         * get gl blend operation
-         * @param factor
-         * @returns
-         */
         _getBlendOperation(factor: BlendEquationSeparate): number;
-        /**
-         * get gl compare fun factor
-         * @param compareFunction
-         * @returns
-         */
         _getGLCompareFunction(compareFunction: CompareFunction): number;
-        /**
-         * get gl stencil operation
-         * @param compareFunction
-         * @returns
-         */
         _getGLStencilOperation(compareFunction: StencilOperation): number;
-        /**
-         * get gl frontface factor
-         * @param cullmode
-         * @returns
-         */
         _getGLFrontfaceFactor(cullmode: CullMode): number;
         /**
          * 模板写入开关
          * @param value
          */
         setStencilMask(value: boolean): void;
-        /**
-         * apply RenderState list
-         * @param cmd
-         */
         applyRenderStateCommand(cmd: RenderStateCommand): void;
     }
     class GLShaderInstance extends GLObject implements IRenderShaderInstance {
@@ -26555,7 +26337,7 @@ declare module Laya {
          * @returns
          */
         isSRGBFormat(format: TextureFormat | RenderTargetFormat): boolean;
-        createTextureInternal(dimension: TextureDimension, width: number, height: number, format: TextureFormat, generateMipmap: boolean, sRGB: boolean, premultipliedAlpha: boolean): InternalTexture;
+        createTextureInternal(dimension: TextureDimension, width: number, height: number, format: TextureFormat, generateMipmap: boolean, sRGB: boolean): InternalTexture;
         setTextureImageData(texture: WebGLInternalTex, source: HTMLImageElement | HTMLCanvasElement | ImageBitmap, premultiplyAlpha: boolean, invertY: boolean): void;
         setTextureSubImageData(texture: WebGLInternalTex, source: HTMLImageElement | HTMLCanvasElement | ImageBitmap, x: number, y: number, premultiplyAlpha: boolean, invertY: boolean): void;
         initVideoTextureData(texture: WebGLInternalTex): void;
@@ -26631,7 +26413,7 @@ declare module Laya {
         private _GLTextureContext;
         private _GLRenderDrawContext;
         private _GL2DRenderContext;
-        _GLRenderState: GLRenderState;
+        private _GLRenderState;
         private _GLStatisticsInfo;
         constructor(config: WebGlConfig, webglMode?: WebGLMode);
         /**
@@ -26886,25 +26668,24 @@ declare module Laya {
         TextureFormat_R16G16B16A16 = 2,
         Texture_anisotropic = 3,
         RenderTextureFormat_R16G16B16A16 = 4,
-        RenderTextureFormat_R32G32B32A32 = 5,
-        RenderTextureFormat_Depth = 6,
-        RenderTextureFormat_ShadowMap = 7,
-        Vertex_VAO = 8,
-        DrawElement_Instance = 9,
-        Shader_TextureLod = 10,
-        COMPRESS_TEXTURE_S3TC = 11,
-        COMPRESS_TEXTURE_S3TC_SRGB = 12,
-        COMPRESS_TEXTURE_PVRTC = 13,
-        COMPRESS_TEXTURE_ETC1 = 14,
-        COMPRESS_TEXTURE_ETC = 15,
-        COMPRESS_TEXTURE_ASTC = 16,
-        Texture_SRGB = 17,
-        MSAA = 18,
-        UnifromBufferObject = 19,
-        GRAPHICS_API_GLES3 = 20,
-        Texture3D = 21,
-        Texture_FloatLinearFiltering = 22,
-        Texture_HalfFloatLinearFiltering = 23
+        RenderTextureFormat_Depth = 5,
+        RenderTextureFormat_ShadowMap = 6,
+        Vertex_VAO = 7,
+        DrawElement_Instance = 8,
+        Shader_TextureLod = 9,
+        COMPRESS_TEXTURE_S3TC = 10,
+        COMPRESS_TEXTURE_S3TC_SRGB = 11,
+        COMPRESS_TEXTURE_PVRTC = 12,
+        COMPRESS_TEXTURE_ETC1 = 13,
+        COMPRESS_TEXTURE_ETC = 14,
+        COMPRESS_TEXTURE_ASTC = 15,
+        Texture_SRGB = 16,
+        MSAA = 17,
+        UnifromBufferObject = 18,
+        GRAPHICS_API_GLES3 = 19,
+        Texture3D = 20,
+        Texture_FloatLinearFiltering = 21,
+        Texture_HalfFloatLinearFiltering = 22
     }
     enum RenderClearFlag {
         Nothing = 0,
@@ -27276,7 +27057,7 @@ declare module Laya {
          * @param sRGB
          * @returns
          */
-        createTextureInternal(dimension: TextureDimension, width: number, height: number, format: TextureFormat, generateMipmap: boolean, sRGB: boolean, premultipliedAlpha: boolean): InternalTexture;
+        createTextureInternal(dimension: TextureDimension, width: number, height: number, format: TextureFormat, generateMipmap: boolean, sRGB: boolean): InternalTexture;
         setTextureImageData(texture: InternalTexture, source: HTMLImageElement | HTMLCanvasElement | ImageBitmap, premultiplyAlpha: boolean, invertY: boolean): void;
         setTextureSubImageData(texture: InternalTexture, source: HTMLImageElement | HTMLCanvasElement | ImageBitmap, x: number, y: number, premultiplyAlpha: boolean, invertY: boolean): void;
         setTexturePixelsData(texture: InternalTexture, source: ArrayBufferView, premultiplyAlpha: boolean, invertY: boolean): void;
@@ -27340,7 +27121,6 @@ declare module Laya {
         scissor: Vector4;
         invertY: boolean;
         pipelineMode: PipelineMode;
-        configShaderData: ShaderData;
         cameraShaderData: ShaderData;
         sceneID: number;
         sceneShaderData: ShaderData;
@@ -27658,39 +27438,41 @@ declare module Laya {
     class Shader3D {
         static _configDefineValues: DefineDatas;
         /**渲染状态_剔除。*/
-        static CULL: number;
+        static RENDER_STATE_CULL: number;
         /**渲染状态_混合。*/
-        static BLEND: number;
+        static RENDER_STATE_BLEND: number;
         /**渲染状态_混合源。*/
-        static BLEND_SRC: number;
+        static RENDER_STATE_BLEND_SRC: number;
         /**渲染状态_混合目标。*/
-        static BLEND_DST: number;
+        static RENDER_STATE_BLEND_DST: number;
         /**渲染状态_混合源RGB。*/
-        static BLEND_SRC_RGB: number;
+        static RENDER_STATE_BLEND_SRC_RGB: number;
         /**渲染状态_混合目标RGB。*/
-        static BLEND_DST_RGB: number;
+        static RENDER_STATE_BLEND_DST_RGB: number;
         /**渲染状态_混合源ALPHA。*/
-        static BLEND_SRC_ALPHA: number;
+        static RENDER_STATE_BLEND_SRC_ALPHA: number;
         /**渲染状态_混合目标ALPHA。*/
-        static BLEND_DST_ALPHA: number;
+        static RENDER_STATE_BLEND_DST_ALPHA: number;
+        /**渲染状态_混合常量颜色。*/
+        static RENDER_STATE_BLEND_CONST_COLOR: number;
         /**渲染状态_混合方程。*/
-        static BLEND_EQUATION: number;
-        /**渲染状态_混合方程。*/
-        static BLEND_EQUATION_RGB: number;
+        static RENDER_STATE_BLEND_EQUATION: number;
+        /**渲染状态_RGB混合方程。*/
+        static RENDER_STATE_BLEND_EQUATION_RGB: number;
         /**渲染状态_ALPHA混合方程。*/
-        static BLEND_EQUATION_ALPHA: number;
+        static RENDER_STATE_BLEND_EQUATION_ALPHA: number;
         /**渲染状态_深度测试。*/
-        static DEPTH_TEST: number;
+        static RENDER_STATE_DEPTH_TEST: number;
         /**渲染状态_深度写入。*/
-        static DEPTH_WRITE: number;
+        static RENDER_STATE_DEPTH_WRITE: number;
         /**渲染状态_模板测试。*/
-        static STENCIL_TEST: number;
+        static RENDER_STATE_STENCIL_TEST: number;
         /**渲染状态_模板写入 */
-        static STENCIL_WRITE: number;
+        static RENDER_STATE_STENCIL_WRITE: number;
         /**渲染状态_模板写入值 */
-        static STENCIL_Ref: number;
+        static RENDER_STATE_STENCIL_REF: number;
         /**渲染状态_模板写入设置 */
-        static STENCIL_Op: number;
+        static RENDER_STATE_STENCIL_OP: number;
         /**shader变量提交周期，自定义。*/
         static PERIOD_CUSTOM: number;
         /**shader变量提交周期，逐材质。*/
@@ -27984,6 +27766,8 @@ declare module Laya {
      * <code>ShaderInstance</code> 类用于实现ShaderInstance。
      */
     class ShaderInstance {
+        private _renderShaderInstance;
+        _cullStateCMD: RenderStateCommand;
         /**
          * 创建一个 <code>ShaderInstance</code> 实例。
          */
@@ -27993,42 +27777,14 @@ declare module Laya {
                 ShaderDataType
             ];
         }, shaderPass: ShaderCompileDefineBase);
-        /**
-         * get complete
-         */
         get complete(): boolean;
         /**
          * @inheritDoc
          * @override
          */
         protected _disposeResource(): void;
-        /**
-         * apply shader programe
-         * @returns
-         */
         bind(): boolean;
-        /**
-         * upload uniform data
-         * @param shaderUniform
-         * @param shaderDatas
-         * @param uploadUnTexture
-         */
         uploadUniforms(shaderUniform: CommandEncoder, shaderDatas: ShaderData, uploadUnTexture: boolean): void;
-        /**
-         * set blend depth stencil RenderState
-         * @param shaderDatas
-         */
-        uploadRenderStateBlendDepth(shaderDatas: ShaderData): void;
-        /**
-         * set blend depth stencil RenderState frome Shader
-         * @param shaderDatas
-         */
-        uploadRenderStateBlendDepthByShader(shaderDatas: ShaderData): void;
-        /**
-         * set blend depth stencil RenderState frome Material
-         * @param shaderDatas
-         */
-        uploadRenderStateBlendDepthByMaterial(shaderDatas: ShaderData): void;
     }
     /**
      * <code>ShaderPass</code> 类用于实现ShaderPass。
@@ -28278,6 +28034,27 @@ declare module Laya {
      * @private
      */
     class RenderStateContext {
+        static mainContext: any;
+        static DepthTestCMD: RenderStateCommand;
+        static DepthMaskCMD: RenderStateCommand;
+        static DepthFuncCMD: RenderStateCommand;
+        static StencilTestCMD: RenderStateCommand;
+        static StencilMaskCMD: RenderStateCommand;
+        static StencilFuncCMD: RenderStateCommand;
+        static stencilOpCMD: RenderStateCommand;
+        static BlendCMD: RenderStateCommand;
+        static BlendEquationCMD: RenderStateCommand;
+        static BlendEquationSeparateCMD: RenderStateCommand;
+        static BlendFuncCMD: RenderStateCommand;
+        static BlendFuncSeperateCMD: RenderStateCommand;
+        static CullFaceCMD: RenderStateCommand;
+        static FrontFaceCMD: RenderStateCommand;
+        static stencilFuncArray: number[];
+        static blendEquationSeparateArray: number[];
+        static blenfunArray: any[];
+        static blendFuncSeperateArray: any[];
+        static stencilOpArray: number[];
+        static __init__(): void;
         /**
          * 模板写入开关
          * @param gl
@@ -28443,7 +28220,6 @@ declare module Laya {
          */
         setMatrixbyIndex(uniformID: number, value: Matrix4x4): void;
         clone(): UnifromBufferData;
-        cloneTo(destObject: UnifromBufferData): void;
     }
     /**
      * 类封装WebGL2UniformBufferObect
@@ -28933,8 +28709,6 @@ declare module Laya {
         private _fillAndStroke;
         /**Math.PI*2的结果缓存 */
         static PI2: number;
-        /**Math.PI*0.5的结果缓存 */
-        static HPI: number;
         static const2DRenderCMD: RenderStateCommand;
         static set2DRenderConfig(): void;
         private _other;
@@ -29136,7 +28910,7 @@ declare module Laya {
          */
         lineTo(x: number, y: number): void;
         arcTo(x1: number, y1: number, x2: number, y2: number, r: number): void;
-        arc(cx: number, cy: number, rx: number, ry: number, startAngle: number, endAngle: number, counterclockwise?: boolean, b?: boolean, minNum?: number): void;
+        arc(cx: number, cy: number, r: number, startAngle: number, endAngle: number, counterclockwise?: boolean, b?: boolean): void;
         quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void;
         /**
          * 把颜色跟当前设置的alpha混合
@@ -29635,7 +29409,7 @@ declare module Laya {
         private static _destroyUnusedResources;
         private _cpuMemory;
         private _gpuMemory;
-        _id: number;
+        protected _id: number;
         protected _destroyed?: boolean;
         protected _referenceCount: number;
         protected _obsolute: boolean;
@@ -29849,7 +29623,7 @@ declare module Laya {
         /**
          * 通过url强制恢复bitmap。
          */
-        recoverBitmap(callback?: () => void): void;
+        recoverBitmap(onok?: () => void): void;
         /**
          * 强制释放Bitmap,无论是否被引用。
          */
@@ -29899,6 +29673,8 @@ declare module Laya {
         static normalTexture: Texture2D;
         /**错误纹理 */
         static errorTexture: Texture2D;
+        /**Default Toggle Texture */
+        static defalutUITexture: Texture2D;
         /**
          * 加载纹理
          * @param url 路径
@@ -29915,7 +29691,7 @@ declare module Laya {
          * @param sRGB
          * @returns
          */
-        constructor(width: number, height: number, format: TextureFormat, mipmap: boolean, canRead: boolean, sRGB?: boolean, premultiplyAlpha?: boolean);
+        constructor(width: number, height: number, format: TextureFormat, mipmap: boolean, canRead: boolean, sRGB?: boolean);
         /**
          * 设置Image数据
          * @param source Image原始数据
@@ -30043,7 +29819,7 @@ declare module Laya {
          */
         static get whiteTexture(): TextureCube;
         static get errorTexture(): TextureCube;
-        constructor(size: number, format: TextureFormat, mipmap?: boolean, sRGB?: boolean, premultiplyAlpha?: boolean);
+        constructor(size: number, format: TextureFormat, mipmap?: boolean, sRGB?: boolean);
         setImageData(source: (HTMLImageElement | HTMLCanvasElement | ImageBitmap)[], premultiplyAlpha: boolean, invertY: boolean): void;
         setPixelsData(source: ArrayBufferView[], premultiplyAlpha: boolean, invertY: boolean): void;
         updateSubPixelsData(source: ArrayBufferView[], xOffset: number, yOffset: number, width: number, height: number, mipmapLevel: number, generateMipmap: boolean, premultiplyAlpha: boolean, invertY: boolean): void;
@@ -30071,35 +29847,6 @@ declare module Laya {
          * @param	rt
          */
         static releaseRT(rt: RenderTexture2D): void;
-    }
-    class ExternalSkin {
-        protected _source: string;
-        protected _templet: SpineTemplet;
-        protected _items: ExternalSkinItem[];
-        target: SpineSkeleton;
-        get source(): string;
-        set source(value: string);
-        set items(value: ExternalSkinItem[]);
-        get items(): ExternalSkinItem[];
-        /**
-        * 得到动画模板的引用
-        * @return templet
-        */
-        get templet(): SpineTemplet;
-        set templet(value: SpineTemplet);
-        protected init(templet: SpineTemplet): void;
-        flush(): void;
-    }
-    class ExternalSkinItem {
-        protected _skin: string;
-        protected _slot: string;
-        protected _attachment: string;
-        get skin(): string;
-        set skin(value: string);
-        set slot(value: string);
-        get slot(): string;
-        set attachment(value: string);
-        get attachment(): string;
     }
     /**动画开始播放调度
      * @eventType Event.PLAYED
@@ -30134,14 +29881,7 @@ declare module Laya {
         private _skinName;
         private _animationName;
         private _loop;
-        private _externalSkins;
         constructor();
-        get externalSkins(): ExternalSkin[];
-        set externalSkins(value: ExternalSkin[]);
-        /**
-         * 重置外部加载的皮肤的样式
-         */
-        resetExternalSkin(): void;
         get source(): string;
         set source(value: string);
         get skinName(): string;
@@ -30183,7 +29923,6 @@ declare module Laya {
          */
         play(nameOrIndex: any, loop: boolean, force?: boolean, start?: number, end?: number, freshSkin?: boolean, playAudio?: boolean): void;
         private _update;
-        private _flushExtSkin;
         /**
          * 得到当前动画的数量
          * @return 当前动画的数量
@@ -31124,24 +30863,24 @@ declare module Laya {
          */
         get total(): number;
         /**
-         * 表示是否自动播放切片动画，若自动播放值为true,否则值为false;
+         * 表示是否自动播放动画，若自动播放值为true,否则值为false;
          * <p>可控制切片动画的播放、停止。</p>
          */
         get autoPlay(): boolean;
         set autoPlay(value: boolean);
         /**
-         * 表示切片动画播放间隔时间(以毫秒为单位)。
+         * 表示动画播放间隔时间(以毫秒为单位)。
          */
         get interval(): number;
         set interval(value: number);
         /**
-         * 表示切片动画的当前播放状态。
-         * 如果切片动画正在播放中，则为true，否则为flash。
+         * 表示动画的当前播放状态。
+         * 如果动画正在播放中，则为true，否则为flash。
          */
         get isPlaying(): boolean;
         set isPlaying(value: boolean);
         /**
-         * 播放切片动画。
+         * 播放动画。
          * @param	from	开始索引
          * @param	to		结束索引，-1为不限制
          */
@@ -31151,7 +30890,7 @@ declare module Laya {
          */
         protected _loop(): void;
         /**
-         * 停止切片动画。
+         * 停止动画。
          */
         stop(): void;
         /**
@@ -33786,8 +33525,6 @@ declare module Laya {
          */
         get value(): any;
         set value(obj: any);
-        protected changeClips(): void;
-        _setWidth(value: number): void;
     }
     /**
      * 当 <code>Group</code> 实例的 <code>selectedIndex</code> 属性发生变化时调度。
@@ -34175,10 +33912,6 @@ declare module Laya {
          * @default true
          */
         showLabel: boolean;
-        /**
-         * 一个布尔值，指示是否显示进度条。
-         */
-        protected _showProgress: boolean;
         /**@private */
         protected _allowClickBack: boolean;
         /**@private */
@@ -34257,8 +33990,6 @@ declare module Laya {
          */
         get skin(): string;
         set skin(value: string);
-        get showProgress(): boolean;
-        set showProgress(value: boolean);
         _setSkin(url: string): Promise<void>;
         protected _skinLoaded(): void;
         /**
@@ -34336,33 +34067,6 @@ declare module Laya {
          * 表示滑块按钮的引用。
          */
         get bar(): Button;
-    }
-    class StatUI implements IStatUI {
-        private _txt;
-        private _sp;
-        private _view;
-        private _toggleView;
-        private _toggleSprite;
-        private _checkBoxArray;
-        private _show;
-        private _showToggle;
-        /**
-         * @override
-         * 显示性能统计信息。
-         * @param	x X轴显示位置。
-         * @param	y Y轴显示位置。
-         */
-        show(x?: number, y?: number, views?: Array<StatUIParams>): void;
-        showToggle(x?: number, y?: number, views?: Array<StatToggleUIParams>): void;
-        /**
-        * @override
-        * 隐藏性能统计信息。
-        */
-        hide(): void;
-        update(): void;
-        private createUI;
-        private createToggleUI;
-        render(ctx: any, x: number, y: number): void;
     }
     /**
      * <code>Styles</code> 定义了组件常用的样式属性。
@@ -34493,7 +34197,6 @@ declare module Laya {
      * }
      */
     class Tab extends UIGroup {
-        constructor();
         /**
          * @private
          * @inheritDoc
@@ -36073,7 +35776,7 @@ declare module Laya {
         static onQQMiniGame: boolean;
         /*** BILIBILI小游戏 */
         static onBLMiniGame: boolean;
-        /** 抖音小游戏*/
+        /** 字节跳动小游戏*/
         static onTTMiniGame: boolean;
         /** 华为快游戏 */
         static onHWMiniGame: boolean;
@@ -36081,7 +35784,7 @@ declare module Laya {
         static onTBMiniGame: boolean;
         /** @private */
         static onFirefox: boolean;
-        /** Edge浏览器 */
+        /** @private */
         static onEdge: boolean;
         /** @private */
         static onLayaRuntime: boolean;
@@ -37301,45 +37004,29 @@ declare module Laya {
          */
         static destroy(url: string): void;
     }
-    type StatUnit = "M" | "K" | "int";
-    type StatColor = "yellow" | "white" | "red";
-    type StatMode = "summit" | "average";
-    interface StatUIParams {
-        title: string;
-        value: string;
-        color: StatColor;
-        units: StatUnit;
-        mode: StatMode;
-    }
-    interface StatToggleUIParams {
-        title: string;
-        value: string;
-        color: StatColor;
-    }
     /**
      * @author laya
      */
-    interface IStatUI {
+    class IStatRender {
         /**
          * 显示性能统计信息。
          * @param	x X轴显示位置。
          * @param	y Y轴显示位置。
-         * @views
          */
-        show(x?: number, y?: number, views?: Array<StatUIParams>): void;
-        showToggle(x?: number, y?: number, views?: Array<StatToggleUIParams>): void;
+        show(x: number, y: number, views: any): void;
+        showToggle(x: number, y: number, views: any): void;
+        /**激活性能统计*/
+        enable(): void;
         /**
          * 隐藏性能统计信息。
          */
         hide(): void;
         /**
-         * 每帧更新的调用接口
+         * 点击性能统计显示区域的处理函数。
          */
-        update(): void;
-        /**
-         * 渲染接口
-         */
-        render(ctx: any, x: number, y: number): void;
+        set_onclick(fn: Function): void;
+        isCanvasRender(): boolean;
+        renderNotCanvas(ctx: any, x: number, y: number): void;
     }
     /**
      * <code>Log</code> 类用于在界面内显示日志记录信息。
@@ -37439,8 +37126,8 @@ declare module Laya {
          */
         private static _getClassSign;
         /**
-         * 根据类型创建对象
-         * @param	cls 类型
+         * 根据类名回收类的实例
+         * @param	instance 类的具体实例
          */
         static createByClass<T>(cls: new () => T): T;
         /**
@@ -37566,15 +37253,30 @@ declare module Laya {
         static updateOrder(array: any[]): boolean;
     }
     /**
-     * <p> <code>Stat</code> 是一个性能统计面板，可以实时更新相关的性能参数。</p>
-     * <p>参与统计的性能参数如下（所有参数都是每大约1秒进行更新）：<br/>
-     * FPS(WebGL)：WebGL 模式下的帧频，也就是每秒显示的帧数，值越高、越稳定，感觉越流畅；<br/>
-     * Sprite：统计所有渲染节点（包括容器）数量，它的大小会影响引擎进行节点遍历、数据组织和渲染的效率。其值越小，游戏运行效率越高；<br/>
-     * DrawCall：此值是决定性能的重要指标，其值越小，游戏运行效率越高。Canvas模式下表示每大约1秒的图像绘制次数；WebGL模式下表示每大约1秒的渲染提交批次，每次准备数据并通知GPU渲染绘制的过程称为1次DrawCall，在每次DrawCall中除了在通知GPU的渲染上比较耗时之外，切换材质与shader也是非常耗时的操作；<br/>
-     * CurMem：Canvas模式下，表示内存占用大小，值越小越好，过高会导致游戏闪退；WebGL模式下，表示内存与显存的占用，值越小越好；<br/>
-     * Shader：是 WebGL 模式独有的性能指标，表示每大约1秒 Shader 提交次数，值越小越好；<br/>
-     * Canvas：由三个数值组成，只有设置 CacheAs 后才会有值，默认为0/0/0。从左到右数值的意义分别为：每帧重绘的画布数量 / 缓存类型为"normal"类型的画布数量 / 缓存类型为"bitmap"类型的画布数量。</p>
-     */
+         * <p> <code>Stat</code> 是一个性能统计面板，可以实时更新相关的性能参数。</p>
+         * <p>参与统计的性能参数如下（所有参数都是每大约1秒进行更新）：<br/>
+         * FPS(WebGL)：WebGL 模式下的帧频，也就是每秒显示的帧数，值越高、越稳定，感觉越流畅；<br/>
+         * Sprite：统计所有渲染节点（包括容器）数量，它的大小会影响引擎进行节点遍历、数据组织和渲染的效率。其值越小，游戏运行效率越高；<br/>
+         * DrawCall：此值是决定性能的重要指标，其值越小，游戏运行效率越高。Canvas模式下表示每大约1秒的图像绘制次数；WebGL模式下表示每大约1秒的渲染提交批次，每次准备数据并通知GPU渲染绘制的过程称为1次DrawCall，在每次DrawCall中除了在通知GPU的渲染上比较耗时之外，切换材质与shader也是非常耗时的操作；<br/>
+         * CurMem：Canvas模式下，表示内存占用大小，值越小越好，过高会导致游戏闪退；WebGL模式下，表示内存与显存的占用，值越小越好；<br/>
+         * Shader：是 WebGL 模式独有的性能指标，表示每大约1秒 Shader 提交次数，值越小越好；<br/>
+         * Canvas：由三个数值组成，只有设置 CacheAs 后才会有值，默认为0/0/0。从左到右数值的意义分别为：每帧重绘的画布数量 / 缓存类型为"normal"类型的画布数量 / 缓存类型为"bitmap"类型的画布数量。</p>
+         */
+    type StatUnit = "M" | "K" | "int";
+    type StatColor = "yellow" | "white" | "red";
+    type StatMode = "summit" | "average";
+    interface StatUIParams {
+        title: string;
+        value: string;
+        color: StatColor;
+        units: StatUnit;
+        mode: StatMode;
+    }
+    interface StatToggleUIParams {
+        title: string;
+        value: string;
+        color: StatColor;
+    }
     class Stat {
         static FPSStatUIParams: StatUIParams;
         static NodeStatUIParams: StatUIParams;
@@ -37596,7 +37298,6 @@ declare module Laya {
         static TextureMemeory: StatUIParams;
         static RenderTextureMemory: StatUIParams;
         static BufferMemory: StatUIParams;
-        static uploadUniformNum: StatUIParams;
         static AllShow: Array<StatUIParams>;
         static memoryShow: Array<StatUIParams>;
         static renderShow: Array<StatUIParams>;
@@ -37623,7 +37324,8 @@ declare module Laya {
         static gpuMemory: number;
         /**@interanl */
         static bufferMemory: number;
-        static _statUI: IStatUI;
+        static _currentShowArray: Array<StatUIParams>;
+        static _currentToggleArray: Array<StatToggleUIParams>;
         /**
          * 显示性能统计信息。
          * @param	x X轴显示位置。
@@ -37631,23 +37333,86 @@ declare module Laya {
          */
         static show(x?: number, y?: number, views?: Array<StatUIParams>): void;
         static showToggle(x?: number, y?: number, views?: Array<StatToggleUIParams>): void;
-        private static checkUI;
+        /**
+         * 设置自定义的Stat
+         * @param stat
+         * @param value
+         */
+        static setStat(stat: string, value: number): void;
+        /**激活性能统计*/
+        static enable(): void;
         /**
          * 隐藏性能统计信息。
          */
         static hide(): void;
-        /**
-         * @private
-         * 性能统计参数计算循环处理函数。
-         */
-        static loop(): void;
         static updateEngineData(): void;
         /**
          * @private
          * 清零性能统计计算相关的数据。
          */
         static clear(): void;
-        static render(ctx: any, x: number, y: number): void;
+        /**
+         * 点击性能统计显示区域的处理函数。
+         */
+        static set onclick(fn: Function);
+    }
+    /**
+     * 显示Stat的结果。由于stat会引入很多的循环引用，所以把显示部分拆开
+     * @author laya
+     */
+    class StatUI extends IStatRender {
+        private static _fontSize;
+        private static _toggleSize;
+        private _txt;
+        private _leftText;
+        private _canvas;
+        private _ctx;
+        private _first;
+        private _vx;
+        private _width;
+        private _height;
+        private _view;
+        private _toggleView;
+        /**
+         * @override
+         * 显示性能统计信息。
+         * @param	x X轴显示位置。
+         * @param	y Y轴显示位置。
+         */
+        show(x: number, y: number, views: Array<StatUIParams>): void;
+        showToggle(x: number, y: number, views: Array<StatToggleUIParams>): void;
+        private _toggleSprite;
+        private _toggletxt;
+        private _checkBoxArray;
+        private _toggleleftText;
+        private createToggleUI;
+        private createUI;
+        /**
+         * @override
+         * 激活性能统计
+         * */
+        enable(): void;
+        /**
+         * @override
+         * 隐藏性能统计信息。
+         */
+        hide(): void;
+        /**
+         * @override
+         * 点击性能统计显示区域的处理函数。
+         */
+        set_onclick(fn: (this: GlobalEventHandlers, ev: MouseEvent) => any): void;
+        /**
+         * @private
+         * 性能统计参数计算循环处理函数。
+         */
+        loop(): void;
+        private renderInfo;
+        /**
+         * @override
+         * 非canvas模式的渲染
+         * */
+        renderNotCanvas(ctx: any, x: number, y: number): void;
     }
     /**
      * @private
@@ -38281,7 +38046,6 @@ declare module Laya {
         static BlendLightTarget(): void;
         static BlendMask(): void;
         static BlendDestinationOut(): void;
-        static BlendSourceAlpha(): void;
     }
     class DrawStyle {
         static DEFAULT: DrawStyle;
@@ -38463,7 +38227,6 @@ declare module Laya {
         static MVP3D: number;
         static GAMMASPACE: number;
         static INVERTY: number;
-        static GAMMATEXTURE: number;
         static NOOPTMASK: number;
         private static __name2int;
         private static __int2name;
@@ -38537,7 +38300,6 @@ declare module Laya {
         constructor(mainID: number, subID: number);
         setValue(value: Shader2D): void;
         private _ShaderWithCompile;
-        updateShaderData(): void;
         upload(): void;
         setFilters(value: any[]): void;
         clear(): void;
@@ -38644,7 +38406,6 @@ declare module Laya {
     }
     class BasePoly {
         private static tempData;
-        private static vec2;
         /**
          * 构造线的三角形数据。根据一个位置数组生成vb和ib
          * @param	p
@@ -38655,8 +38416,6 @@ declare module Laya {
          * @return
          */
         static createLine2(p: any[], indices: any[], lineWidth: number, indexBase: number, outVertex: any[], loop: boolean): any[];
-        private static _setMiddleVertexs;
-        static getNormal(x1: number, y1: number, x2: number, y2: number, w: number, out?: Vector2): Vector2;
         /**
          * 相邻的两段线，边界会相交，这些交点可以作为三角形的顶点。有两种可选，一种是采用左左,右右交点，一种是采用 左右，左右交点。当两段线夹角很小的时候，如果采用
          * 左左，右右会产生很长很长的交点，这时候就要采用左右左右交点，相当于把尖角截断。

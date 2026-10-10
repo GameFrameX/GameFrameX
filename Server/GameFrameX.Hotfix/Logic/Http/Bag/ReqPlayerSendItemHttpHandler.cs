@@ -30,7 +30,6 @@
 // ==========================================================================================
 
 
-
 using GameFrameX.Apps.Common.Event;
 using GameFrameX.Apps.Common.EventData;
 using GameFrameX.Apps.Common.Session;
@@ -51,7 +50,7 @@ public sealed class ReqPlayerSendItemHttpHandler : BaseHttpHandler
     public override async Task<string> Action(string ip, string url, HttpMessageRequestBase requestBase)
     {
         var request = (ReqPlayerSendItemRequest)requestBase;
-        var playerSession = SessionManager.GetByRoleId(request.RoleId);
+        var playerSession = SessionManager.GetByRoleId(request.PlayerId);
         Dictionary<int, long> itemDic = new Dictionary<int, long>();
 
         var tbItemConfig = ConfigComponent.Instance.GetConfig<TbItemConfig>();
@@ -69,18 +68,18 @@ public sealed class ReqPlayerSendItemHttpHandler : BaseHttpHandler
         }
 
         // 发送道具事件
-        var playerSendItemEventData = new PlayerSendItemEventArgs(request.RoleId, itemDic);
-        EventDispatcher.Dispatch(request.RoleId, (int)EventId.PlayerSendItem, playerSendItemEventData);
+        var playerSendItemEventData = new PlayerSendItemEventArgs(request.PlayerId, itemDic);
+        EventDispatcher.Dispatch(request.PlayerId, (int)EventId.PlayerSendItem, playerSendItemEventData);
         if (playerSession.IsNotNull())
         {
             // 玩家在线
-            var bagComponentAgent = await ActorManager.GetComponentAgent<BagComponentAgent>(request.RoleId);
+            var bagComponentAgent = await ActorManager.GetComponentAgent<BagComponentAgent>(request.PlayerId);
             await bagComponentAgent.UpdateChanged(playerSession.WorkChannel, itemDic);
         }
         else
         {
             // 玩家不在线
-            var bagState = await GameDb.FindAsync<BagState>(request.RoleId);
+            var bagState = await GameDb.FindAsync<BagState>(request.PlayerId);
 
             foreach (var item in itemDic)
             {
@@ -113,9 +112,9 @@ public sealed class ReqPlayerSendItemHttpHandler : BaseHttpHandler
 public sealed class ReqPlayerSendItemRequest : HttpMessageRequestBase
 {
     [Required]
-    [Description("角色ID")]
+    [Description("玩家ID")]
     [Range(1, long.MaxValue)]
-    public long RoleId { get; set; }
+    public long PlayerId { get; set; }
 
     [Required] [Description("道具列表")] public Dictionary<int, long> Items { get; set; } = new Dictionary<int, long>();
 }

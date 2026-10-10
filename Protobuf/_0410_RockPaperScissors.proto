@@ -1,6 +1,5 @@
 syntax = "proto3";
 package RockPaperScissors;
-option module = 410;
 
 // 石头剪刀布出拳
 enum RockPaperScissorsGesture
@@ -14,7 +13,7 @@ enum RockPaperScissorsGesture
 // 石头剪刀布玩家信息
 message RockPaperScissorsPlayerInfo
 {
-  int64 RoleId = 1; // 玩家ID
+  int64 PlayerId = 1; // 玩家ID
   bool HasGesture = 2; // 是否已出拳
   RockPaperScissorsGesture Gesture = 3; // 出拳。未结算前对外为None，结算后显示真实出拳。
 }
@@ -24,7 +23,7 @@ message RockPaperScissorsGameInfo
 {
   int64 RoomId = 1; // 房间ID
   int32 Round = 2; // 当前局数
-  int64 WinnerRoleId = 3; // 胜利玩家ID。平局为0。
+  int64 WinnerPlayerId = 3; // 胜利玩家ID。平局为0。
   repeated RockPaperScissorsPlayerInfo Players = 4; // 玩家列表
 }
 

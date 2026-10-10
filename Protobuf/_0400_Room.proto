@@ -1,6 +1,5 @@
 syntax = "proto3";
 package Room;
-option module = 400;
 
 // 游戏类型
 enum GameType
@@ -60,7 +59,7 @@ enum RoomPlayerStatus
 // 通用房间玩家信息
 message RoomPlayerInfo
 {
-  int64 RoleId = 1; // 玩家ID
+  int64 PlayerId = 1; // 玩家ID
   int32 SeatIndex = 2; // 座位索引
   bool IsOwner = 3; // 是否房主
   string Name = 4; // 玩家昵称
@@ -79,7 +78,7 @@ message RoomInfo
   int32 PlayerCount = 5; // 当前玩家数量
   int32 MinPlayerCount = 6; // 最少玩家数量
   int32 MaxPlayerCount = 7; // 最大玩家数量
-  int64 OwnerRoleId = 8; // 房主玩家ID
+  int64 OwnerPlayerId = 8; // 房主玩家ID
   repeated RoomPlayerInfo Players = 9; // 玩家列表
   int32 Round = 10; // 当前局数
   int64 CreatedTime = 11; // 创建时间

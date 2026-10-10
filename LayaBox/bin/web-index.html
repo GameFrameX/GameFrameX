@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>GameFrameX LayaBox</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <style>html,body{width:100%;height:100%;margin:0;background:#1a1a1a;color:#fff;overflow:hidden;font-family:sans-serif;}</style>
+</head>
+<body>
+    <div id="gfx-status" style="position:absolute;left:0;top:0;width:100%;background:#222;color:#fff;padding:6px;z-index:9999;font:12px monospace;">booting…</div>
+    <script type="text/javascript" src="libs/laya.core.js"></script>
+    <script type="text/javascript" src="libs/laya.webgl_2D.js"></script>
+    <script type="text/javascript" src="libs/laya.LayaX_2D.js"></script>
+    <script type="text/javascript" src="libs/laya.modernAPIs_2D.js"></script>
+    <script type="text/javascript" src="libs/laya.light2D.js"></script>
+    <script type="text/javascript" src="libs/laya.line2D.js"></script>
+    <script type="text/javascript" src="libs/laya.physics2D.js"></script>
+    <script type="text/javascript" src="libs/laya.device.js"></script>
+    <script type="text/javascript" src="libs/laya.ui.js"></script>
+    <script type="text/javascript" src="libs/laya.ani.js"></script>
+    <script type="text/javascript" src="libs/long.js"></script>
+    <script type="text/javascript" src="libs/rawinflate.min.js"></script>
+    <script type="text/javascript" src="libs/protobuf.min.js"></script>
+    <script type="text/javascript" src="libs/fairygui.js"></script>
+    <script>
+        if (window.Long && window.protobuf) {
+            window.protobuf.util.Long = window.Long;
+            window.protobuf.configure();
+        }
+    </script>
+    <script type="text/javascript" src="js/bundle.js"></script>
+    <script>
+        (async function(){
+            const status = document.getElementById('gfx-status');
+            const log = (msg) => { console.log('[GAME] ' + msg); status.textContent = '[GAME] ' + msg; };
+            try {
+                log('Laya: ' + (typeof Laya));
+                log('fgui: ' + (typeof fgui));
+                log('protobuf: ' + (typeof protobuf));
+                log('Main: ' + (typeof Main));
+                await Laya.init(1136, 640);
+                log('Laya.init OK');
+                const scene2D = Laya.stage.addChild(new Laya.Sprite());
+                scene2D.name = 'Scene2D';
+                scene2D.size(1136, 640);
+                log('Scene2D ready, attaching Main');
+                scene2D.addComponent(Main);
+                log('Game started');
+
+                // fgui 资源 URL 重写:把 fgui 默认 'res://' 映射到我们的 HTTP 路由
+                // fgui 加载 .bytes 时 fetch 路径形如 <bytes url>;资源子图(图片)fetch <resKey>
+                if (window.fgui && window.fgui.UIAssetProxy && window.fgui.UIAssetProxy.inst) {
+                    window.fgui.UIAssetProxy.inst.getRes = function (url) {
+                        const cleanUrl = url.replace(/^res:\/\//, '');
+                        return fetch('/fairygui/' + cleanUrl).then(r => r.arrayBuffer()).then(ab => new Uint8Array(ab));
+                    };
+                    // 预加载关键包(启动链 OpenAsync<UILogin> 依赖)
+                    ['UICommon','UILogin','UIMain','UIRoom','UIBag','UICommonAvatar','UILoading'].forEach(name => {
+                        try { Laya.loader.loadPackage('fairygui/' + name); } catch (e) {}
+                    });
+                    log('fgui URL override + 7 pkg preload queued');
+                } catch (e) {
+                    log('fgui preload error: ' + (e && e.message));
+                }
+                } catch (e) {
+                    const msg = (e && (e.stack || e.message)) || String(e);
+                    log('BOOT ERROR: ' + msg);
+                    document.body.style.background = '#600';
+                }
+</body>
+</html>

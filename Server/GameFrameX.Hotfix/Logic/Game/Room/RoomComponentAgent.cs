@@ -462,7 +462,7 @@ public class RoomComponentAgent : StateComponentAgent<RoomComponent, RoomListSta
             PlayerCount = room.PlayerIds.Count,
             MinPlayerCount = room.MinPlayerCount,
             MaxPlayerCount = room.MaxPlayerCount,
-            OwnerRoleId = room.OwnerRoleId,
+            OwnerPlayerId = room.OwnerRoleId,
             Players = new List<RoomPlayerInfo>(),
             Round = room.Round,
             CreatedTime = room.CreatedTime,
@@ -483,7 +483,7 @@ public class RoomComponentAgent : StateComponentAgent<RoomComponent, RoomListSta
         var playerState = await GameDb.FindAsync<PlayerState>(roleId);
         return new RoomPlayerInfo
         {
-            RoleId = roleId,
+            PlayerId = roleId,
             SeatIndex = seatIndex,
             IsOwner = roleId == room.OwnerRoleId,
             Name = string.IsNullOrWhiteSpace(playerState?.Name) ? $"玩家{roleId}" : playerState.Name,

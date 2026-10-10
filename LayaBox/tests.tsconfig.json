@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",
+    "strictNullChecks": true,
+    "noEmitHelpers": false,
+    "strictPropertyInitialization": false,
+    "resolveJsonModule": true,
+    "outDir": "./build/tests"
+  },
+  "include": [
+    "./tests",
+    "./src/gameframex",
+    "./hotfix",
+    "./engine",
+    "./assets/fairygui/fairygui.d.ts"
+  ]
+}

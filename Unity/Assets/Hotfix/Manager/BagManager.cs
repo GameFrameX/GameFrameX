@@ -102,8 +102,7 @@ namespace Hotfix.Manager
             var itemType = bagType;
             foreach (var bagItem in _itemDic)
             {
-                var itemConfig = tbItemConfig.Get(bagItem.Key);
-                if (itemConfig.IsNotNull() && itemConfig.Type == itemType)
+                if (tbItemConfig.TryGet(bagItem.Key, out var itemConfig) && itemConfig.Type == itemType)
                 {
                     result.Add(bagItem.Value);
                 }

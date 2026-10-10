@@ -1,0 +1,72 @@
+syntax = "proto3";
+package Chat;
+
+// 聊天业务错误码（6 位 = 模块ID 690 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum ChatErrorCode
+{
+  NotLoggedIn = 690001; // 会话未绑定玩家（未登录）
+  ChannelNotFound = 690002; // 频道不存在
+  NotJoined = 690003; // 未加入该频道
+  ChannelFull = 690004; // 频道成员已满
+  TextInvalid = 690005; // 发言内容非法（空或超过长度上限）
+}
+
+// 聊天消息载荷
+message ChatMessageInfo
+{
+  int64 Seq = 1; // 频道内递增序号
+  int64 PlayerId = 2; // 发言玩家ID
+  string Text = 3; // 消息文本
+  int64 UnixTime = 4; // 发言 Unix 秒
+}
+
+// 请求加入聊天频道
+message ReqChatJoin
+{
+  int64 ChannelId = 1; // 频道ID
+}
+
+// 返回加入聊天频道
+message RespChatJoin
+{
+  int32 MemberCount = 1; // 加入后频道成员数
+}
+
+// 请求离开聊天频道
+message ReqChatLeave
+{
+  int64 ChannelId = 1; // 频道ID
+}
+
+// 返回离开聊天频道
+message RespChatLeave
+{
+  int32 MemberCount = 1; // 离开后频道成员数
+}
+
+// 请求在频道发言
+message ReqChatSpeak
+{
+  int64 ChannelId = 1; // 频道ID
+  string Text = 2; // 消息文本（1-200 字符）
+}
+
+// 返回频道发言结果（含落库后的完整消息）
+message RespChatSpeak
+{
+  ChatMessageInfo Message = 1; // 落库后的消息载荷
+}
+
+// 请求拉取频道历史消息（增量：仅返回序号大于 SinceSeq 的消息）
+message ReqChatPullHistory
+{
+  int64 ChannelId = 1; // 频道ID
+  int64 SinceSeq = 2; // 已同步到的最大序号（0 表示从头拉取）
+  int32 Limit = 3; // 拉取条数上限（&lt;=0 或超上限按上限处理）
+}
+
+// 返回频道历史消息
+message RespChatPullHistory
+{
+  repeated ChatMessageInfo Messages = 1; // 增量消息列表（按序号升序）
+}

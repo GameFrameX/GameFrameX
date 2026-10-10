@@ -121,8 +121,17 @@
 
     {{#libs}}
     <script type="text/javascript" src="{{{name}}}"></script>
-    {{/libs}}
-    <script type="text/javascript" src="{{{bundleJS}}}"></script>
+    <script type="text/javascript" src="libs/long.js"></script>
+    <script type="text/javascript" src="libs/rawinflate.min.js"></script>
+    <script type="text/javascript" src="libs/protobuf.min.js"></script>
+    <script type="text/javascript" src="libs/fairygui.js"></script>
+    <script>
+        // int64 精度:雪花 Id 超 2^53,protobufjs 必须启用 Long
+        if (window.Long && window.protobuf) {
+            window.protobuf.util.Long = window.Long;
+            window.protobuf.configure();
+        }
+    </script>
     <script type="text/javascript" src="{{{indexJS}}}"></script>
 </body>
 

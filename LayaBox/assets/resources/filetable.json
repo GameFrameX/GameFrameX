@@ -1,0 +1,116 @@
+{
+  "files": {
+    "fairygui/UIBag/UIBag_fui.bytes": {
+      "hash": "342ecfacde08e15b",
+      "size": 3637
+    },
+    "fairygui/UICommon/UICommon_atlas0.png": {
+      "hash": "70d92738ceabb15f",
+      "size": 472646
+    },
+    "fairygui/UICommon/UICommon_fui.bytes": {
+      "hash": "417738c6aa33aa56",
+      "size": 14831
+    },
+    "fairygui/UICommonAvatar/UICommonAvatar_atlas0.png": {
+      "hash": "4dbbe2b7bdbaff1a",
+      "size": 1823596
+    },
+    "fairygui/UICommonAvatar/UICommonAvatar_fui.bytes": {
+      "hash": "db2a685202be4dba",
+      "size": 4111
+    },
+    "fairygui/UILoading/UILoading_fui.bytes": {
+      "hash": "38edad6e2931d3f3",
+      "size": 454
+    },
+    "fairygui/UILogin/UILogin_atlas0.png": {
+      "hash": "7ea3089e2f7dd904",
+      "size": 98948
+    },
+    "fairygui/UILogin/UILogin_fui.bytes": {
+      "hash": "00c6454f8ccdfb59",
+      "size": 5810
+    },
+    "fairygui/UIMain/UIMain_atlas0.png": {
+      "hash": "5f8def96c07d38cd",
+      "size": 948981
+    },
+    "fairygui/UIMain/UIMain_fui.bytes": {
+      "hash": "b9cb25f8443612d3",
+      "size": 1507
+    },
+    "fairygui/UIRoom/UIRoom_fui.bytes": {
+      "hash": "b2ecd6f270a07803",
+      "size": 14638
+    },
+    "fairygui/fairygui.d.ts": {
+      "hash": "1a7de85c918b1dbd",
+      "size": 90671
+    },
+    "fairygui/fairygui.js": {
+      "hash": "30774367ce582027",
+      "size": 681561
+    },
+    "fairygui/fairygui.js.map": {
+      "hash": "76fbe60046c166f9",
+      "size": 1383592
+    },
+    "fairygui/rawinflate.min.js": {
+      "hash": "86c15f6d88ed56e4",
+      "size": 6814
+    },
+    "resources/config/local_tblocalization.json": {
+      "hash": "4e1ddfa1fafc3fe2",
+      "size": 59144
+    },
+    "resources/config/tables_tbachievementconfig.json": {
+      "hash": "8175325c13e7c245",
+      "size": 350
+    },
+    "resources/config/tables_tbitemconfig.json": {
+      "hash": "aac5c4f64f430cd6",
+      "size": 6497
+    },
+    "resources/config/tables_tbsoundsconfig.json": {
+      "hash": "dc2effa8fb4d51a2",
+      "size": 1173
+    },
+    "resources/protobuf/_0010_Basic.proto": {
+      "hash": "44bada214d013fbe",
+      "size": 395
+    },
+    "resources/protobuf/_0020_Common.proto": {
+      "hash": "500e776466b9034a",
+      "size": 1058
+    },
+    "resources/protobuf/_0100_Bag.proto": {
+      "hash": "5282887a1acc8050",
+      "size": 2016
+    },
+    "resources/protobuf/_0120_Social.proto": {
+      "hash": "e5753c1e96bc7d81",
+      "size": 764
+    },
+    "resources/protobuf/_0300_User.proto": {
+      "hash": "f6bc657a7624bb18",
+      "size": 1836
+    },
+    "resources/protobuf/_0310_Attribute.proto": {
+      "hash": "68f25c26e0f8af53",
+      "size": 830
+    },
+    "resources/protobuf/_0400_Room.proto": {
+      "hash": "3d25731a5d21cd6c",
+      "size": 3459
+    },
+    "resources/protobuf/_0410_RockPaperScissors.proto": {
+      "hash": "303453828f2dd5e8",
+      "size": 1686
+    },
+    "resources/protobuf/_0500_Mail.proto": {
+      "hash": "486a0856e419b9c0",
+      "size": 4468
+    }
+  }
+}

@@ -1,0 +1,100 @@
+syntax = "proto3";
+package Guild;
+
+// 公会服务器（Guild Role，公会管理，域号 680）业务错误码（6 位 = 模块ID 680 + 3 位编号）。
+enum GuildErrorCode
+{
+  NotLoggedIn = 680001; // 会话未绑定玩家（未登录）
+  NameInvalid = 680002; // 公会名称非法（长度区间 2-16）
+  GuildNameExists = 680003; // 公会名称已被占用（全局唯一）
+  AlreadyInGuild = 680004; // 玩家已加入其他公会（一人一公会）
+  GuildNotFound = 680005; // 公会不存在
+  NotLeader = 680006; // 仅会长可执行该操作（或会长不可离会，须解散）
+  NotMember = 680007; // 玩家不是该公会成员
+  NotApplicant = 680008; // 目标玩家不在申请列表中
+}
+
+// 请求创建公会（创建者为会长）
+message ReqGuildCreate
+{
+  string Name = 1; // 公会名称（2-16 字符，全局唯一）
+}
+
+// 返回创建公会结果
+message RespGuildCreate
+{
+  int64 GuildId = 1; // 分配的公会ID
+}
+
+// 请求申请加入指定公会
+message ReqGuildApply
+{
+  int64 GuildId = 1; // 公会ID
+}
+
+// 返回申请加入公会结果
+message RespGuildApply
+{
+}
+
+// 请求会长审批通过指定申请人的入会申请
+message ReqGuildApprove
+{
+  int64 ApplicantPlayerId = 1; // 申请人玩家ID
+}
+
+// 返回审批结果（含审批后公会最新等级 / 经验 / 成员数）
+message RespGuildApprove
+{
+  int32 Level = 1; // 公会等级
+  int64 Exp = 2; // 公会经验
+  int32 MemberCount = 3; // 公会成员数
+}
+
+// 请求离开当前公会（会长不可离会，须解散）
+message ReqGuildLeave
+{
+}
+
+// 返回离开公会结果
+message RespGuildLeave
+{
+}
+
+// 请求会长移除指定成员（不含会长本人）
+message ReqGuildKick
+{
+  int64 MemberPlayerId = 1; // 要移除的成员玩家ID
+}
+
+// 返回移除成员结果
+message RespGuildKick
+{
+}
+
+// 请求会长解散当前公会
+message ReqGuildDisband
+{
+}
+
+// 返回解散公会结果
+message RespGuildDisband
+{
+}
+
+// 请求查询指定公会档案
+message ReqGuildQuery
+{
+  int64 GuildId = 1; // 公会ID
+}
+
+// 返回公会档案（含待审批申请列表）
+message RespGuildQuery
+{
+  string Name = 1; // 公会名称
+  int64 LeaderId = 2; // 会长玩家ID
+  int32 Level = 3; // 公会等级
+  int64 Exp = 4; // 公会经验
+  int32 MemberCount = 5; // 公会成员数
+  repeated int64 Applications = 6; // 待审批申请列表（玩家ID）
+}

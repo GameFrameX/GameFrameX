@@ -1,0 +1,53 @@
+syntax = "proto3";
+package Battle;
+
+// 战斗业务错误码（6 位 = 模块ID 460 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum BattleErrorCode
+{
+  NotLoggedIn = 460001; // 会话未绑定玩家（未登录）
+  RatingInvalid = 460002; // 评分非法（须大于 0）
+  BestOfInvalid = 460003; // 赛制非法（仅支持 1 / 3 / 5 局）
+  BattleNotFound = 460004; // 战斗记录不存在
+}
+
+// 单回合战斗结果载荷
+message BattleRoundInfo
+{
+  int32 Round = 1; // 回合序号（从 1 递增）
+  double AtkPower = 2; // 攻方战力
+  double DefPower = 3; // 守方战力
+  bool AtkWin = 4; // 攻方是否获胜
+}
+
+// 请求创建战斗（请求者为攻方）
+message ReqBattleCreate
+{
+  int64 DefPlayerId = 1; // 守方玩家ID
+  int32 AtkRating = 2; // 攻方评分（大于 0）
+  int32 DefRating = 3; // 守方评分（大于 0）
+  int32 BestOf = 4; // 赛制局数（1 / 3 / 5）
+}
+
+// 返回创建战斗结果（含完整回合模拟与积分变化）
+message RespBattleCreate
+{
+  int64 BattleId = 1; // 战斗ID
+  int64 WinnerPlayerId = 2; // 获胜玩家ID
+  repeated BattleRoundInfo Rounds = 3; // 回合结果列表
+  int32 ScoreDelta = 4; // 攻方积分变化（胜 +30 / 败 -20）
+}
+
+// 请求查询战斗记录
+message ReqBattleQuery
+{
+  int64 BattleId = 1; // 战斗ID
+}
+
+// 返回战斗记录（字段同创建响应）
+message RespBattleQuery
+{
+  int64 BattleId = 1; // 战斗ID
+  int64 WinnerPlayerId = 2; // 获胜玩家ID
+  repeated BattleRoundInfo Rounds = 3; // 回合结果列表
+  int32 ScoreDelta = 4; // 攻方积分变化（胜 +30 / 败 -20）
+}

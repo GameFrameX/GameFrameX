@@ -85,7 +85,7 @@ namespace Hotfix.UI
 
         public static string BuildPlayerName(RoomPlayerInfo player, bool isSelf)
         {
-            var name = string.IsNullOrEmpty(player.Name) ? $"玩家{player.RoleId}" : player.Name;
+            var name = string.IsNullOrEmpty(player.Name) ? $"玩家{player.PlayerId}" : player.Name;
             if (player.IsOwner)
             {
                 name += " 房主";
@@ -96,7 +96,7 @@ namespace Hotfix.UI
 
         public static string GetPlayerName(RoomPlayerInfo player, bool isSelf)
         {
-            var name = string.IsNullOrEmpty(player.Name) ? $"玩家{player.RoleId}" : player.Name;
+            var name = string.IsNullOrEmpty(player.Name) ? $"玩家{player.PlayerId}" : player.Name;
             return isSelf ? "我: " + name : name;
         }
 

@@ -1,6 +1,5 @@
 syntax = "proto3";
 package Basic;
-option module = 10;
 
 // 请求心跳
 message ReqHeartBeat

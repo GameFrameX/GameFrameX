@@ -80,7 +80,7 @@ namespace GameFrameX.Proto.Proto
 		/// </summary>
 		[ProtoMember(1)]
 		[System.ComponentModel.Description("玩家ID")]
-		public long RoleId { get; set; }
+		public long PlayerId { get; set; }
 
 		/// <summary>
 		/// 是否已出拳
@@ -123,7 +123,7 @@ namespace GameFrameX.Proto.Proto
 		/// </summary>
 		[ProtoMember(3)]
 		[System.ComponentModel.Description("胜利玩家ID。平局为0。")]
-		public long WinnerRoleId { get; set; }
+		public long WinnerPlayerId { get; set; }
 
 		/// <summary>
 		/// 玩家列表

@@ -243,10 +243,10 @@ public class RockPaperScissorsGameComponentAgent : StateComponentAgent<RockPaper
         {
             RoomId = game.RoomId,
             Round = game.Round,
-            WinnerRoleId = revealGestures ? game.WinnerRoleId : 0,
+            WinnerPlayerId = revealGestures ? game.WinnerRoleId : 0,
             Players = playerIds.Select(roleId => new RockPaperScissorsPlayerInfo
             {
-                RoleId = roleId,
+                PlayerId = roleId,
                 HasGesture = game.GestureMap.ContainsKey(roleId),
                 Gesture = revealGestures && game.GestureMap.TryGetValue(roleId, out var gesture) ? gesture : RockPaperScissorsGesture.None,
             }).ToList(),

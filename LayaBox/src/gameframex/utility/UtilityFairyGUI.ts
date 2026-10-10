@@ -6,7 +6,7 @@ export default class UtilityFairyGUI {
      * @param path
      * @returns
      */
-    getChild(root: Laya.Node, path: string): Laya.Node {
+    getChild(root: Laya.Node, path: string): Laya.Node | null {
         let arr = path.split("/");
         for (let i = 0; i < arr.length; i++) {
             let child = root.getChildByName(arr[i]);

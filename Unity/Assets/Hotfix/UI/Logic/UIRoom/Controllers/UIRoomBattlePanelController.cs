@@ -83,14 +83,14 @@ namespace Hotfix.UI
             var currentRoleId = RoomDataManager.Instance.CurrentRoleId;
 
             _binder.SetRoomTitle($"房间 #{room.RoomId}  {RoomUIFormatter.GetRoomName(room)}");
-            _binder.SetRoomState($"{RoomUIFormatter.GetRoomStatusText(room.Status)}  {room.PlayerCount}/{room.MaxPlayerCount}  局数:{room.Round}  房主:{room.OwnerRoleId}");
+            _binder.SetRoomState($"{RoomUIFormatter.GetRoomStatusText(room.Status)}  {room.PlayerCount}/{room.MaxPlayerCount}  局数:{room.Round}  房主:{room.OwnerPlayerId}");
             _binder.SetInvite(RoomDataManager.Instance.InviteText);
             _binder.SetArenaResult(GetArenaResultText(room));
             _binder.SetArenaTips(GetArenaTipsText(room));
             _binder.SetTips(GetTipsText(room));
 
-            RefreshPlayer(room.Players.FirstOrDefault(m => m.RoleId == currentRoleId), true, room.Status, game);
-            RefreshPlayer(room.Players.FirstOrDefault(m => m.RoleId != currentRoleId), false, room.Status, game);
+            RefreshPlayer(room.Players.FirstOrDefault(m => m.PlayerId == currentRoleId), true, room.Status, game);
+            RefreshPlayer(room.Players.FirstOrDefault(m => m.PlayerId != currentRoleId), false, room.Status, game);
 
             _binder.SetStartEnabled(RoomDataManager.Instance.CanStartGame());
             _binder.SetSyncEnabled(RoomUIFormatter.IsGameDataStatus(room.Status));
@@ -124,7 +124,7 @@ namespace Hotfix.UI
                 return;
             }
 
-            var gesturePlayer = game == null ? null : game.Players.FirstOrDefault(m => m.RoleId == player.RoleId);
+            var gesturePlayer = game == null ? null : game.Players.FirstOrDefault(m => m.PlayerId == player.PlayerId);
             var avatarUrl = player.Avatar > 0 ? player.Avatar.ToString() : string.Empty;
             var stateText = GetPlayerStateText(player, gesturePlayer, roomStatus);
             var stateColor = GetPlayerStateColor(player, gesturePlayer);

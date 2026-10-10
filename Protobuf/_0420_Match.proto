@@ -1,0 +1,54 @@
+syntax = "proto3";
+package Match;
+
+// 匹配模式。
+enum MatchMode
+{
+  OneVsOne = 1; // 1 对 1
+  TwoVsTwo = 2; // 2 对 2
+}
+
+// 匹配业务错误码（6 位 = 模块ID 420 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum MatchErrorCode
+{
+  NotLoggedIn = 420001; // 会话未绑定玩家（未登录）
+  AlreadyQueuing = 420002; // 玩家已在任一匹配池排队中
+  NotQueuing = 420003; // 玩家当前不在匹配池排队中
+  ModeInvalid = 420004; // 匹配模式非法（未定义）
+  RatingInvalid = 420005; // 评分非法（须大于 0）
+}
+
+// 请求加入匹配池
+message ReqMatchEnqueue
+{
+  MatchMode Mode = 1; // 匹配模式
+  int32 Rating = 2; // 玩家评分（大于 0）
+}
+
+// 返回加入匹配池结果（MatchId 非 0 表示立即配对成功）
+message RespMatchEnqueue
+{
+  int64 MatchId = 1; // 匹配对局ID（0 = 排队中，尚未配对）
+}
+
+// 请求取消排队
+message ReqMatchCancel
+{
+}
+
+// 返回取消排队结果
+message RespMatchCancel
+{
+}
+
+// 请求查询本人匹配状态
+message ReqMatchStatus
+{
+}
+
+// 返回本人匹配状态（排队中或最近一次配对结果）
+message RespMatchStatus
+{
+  bool Queuing = 1; // 是否排队中
+  int64 MatchId = 2; // 最近配对成功的对局ID（0 = 无）
+}

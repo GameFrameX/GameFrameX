@@ -1,104 +1,133 @@
+import type IMessage from "./IMessage";
 import ProtoMessageRegister from "../protobuf/ProtoMessageRegister";
-import IMessage from "./IMessage";
-import MessageObject from "./MessageObject";
 
+/**
+ * 消息注册表。
+ *
+ * 承担 Unity `ProtoMessageIdHandler` 的职责:消息全名 ↔ 消息号 (module<<16)|id 双向表,
+ * 请求表(Request)/响应表(Response+Notify)分离;消息类型解析依赖宿主注入的 protobuf Root。
+ * 生成物(ProtoExport)的 `Xxx.register()` 调用 registerReqMessage/registerRespMessage 建表。
+ */
 export default class ProtoMessageHelper {
-    private static _protobuff: any = null;
-    private static pb: any;
-    private static _messageReqMap: Map<number, IMessage> = new Map<number, IMessage>();
-    private static _messageRespMap: Map<number, IMessage> = new Map<number, IMessage>();
-    private static _messageMap: Map<number, IMessage> = new Map<number, IMessage>();
-    private static _messageList: MessageClassObjectData[] = [];
-    public static init(): void {
-        this._protobuff = (window as any).protobuf;
-        this._protobuff.load(ProtoMessageRegister.getProtoBuffList(), (err: any, root: any) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
+    /** 宿主注入的 protobuf Root(protobufjs),null 表示尚未就绪。 */
+    private static root: { lookupType: (name: string) => IMessage } | null = null;
 
-            this.pb = root;
-            ProtoMessageRegister.register();
-        });
+    /** 请求消息号表:全名 → id。 */
+    private static readonly reqIdByType: Map<string, number> = new Map();
+
+    /** 响应/通知消息号表:全名 → id。 */
+    private static readonly respIdByType: Map<string, number> = new Map();
+
+    /** 响应/通知全名表:id → 全名。 */
+    private static readonly respTypeById: Map<number, string> = new Map();
+
+    /** 心跳消息全名集合(registerRespMessage 时按 IHeartBeatMessage 语义无法区分,由生成物显式注册)。 */
+    private static readonly heartBeatTypes: Set<string> = new Set();
+
+    /**
+     * 注入 protobuf Root 并完成全部消息注册。
+     * @param root 宿主加载好的 protobufjs Root(或等价 lookupType 接口)
+     */
+    public static adopt(root: { lookupType: (name: string) => IMessage }): void {
+        this.root = root;
+        ProtoMessageRegister.register();
     }
-    public static registerRespMessage(moduleName: string, messageId: number, messageClassObject: MessageObject = null): void {
-        if (!this._messageRespMap.has(messageId)) {
-            let messageClass = this.getMessageType(moduleName);
-            this._messageRespMap.set(messageId, messageClass);
-            this._messageMap.set(messageId, messageClass);
-            let messageClassObjectData: MessageClassObjectData = new MessageClassObjectData(moduleName, messageId, messageClassObject);
-            this._messageList.push(messageClassObjectData);
+
+    /**
+     * 注册请求消息。由生成物调用,全名即 protobuf 类型全名。
+     * @param fullName 消息全名(如 'User.ReqLogin')
+     * @param messageId 消息号
+     */
+    public static registerReqMessage(fullName: string, messageId: number): void {
+        this.reqIdByType.set(fullName, messageId);
+        if (fullName.includes('HeartBeat')) {
+            this.heartBeatTypes.add(fullName);
         }
     }
-    public static registerReqMessage(moduleName: string, messageId: number, messageClassObject: MessageObject = null): void {
-        if (!this._messageReqMap.has(messageId)) {
-            let messageClass = this.getMessageType(moduleName);
-            this._messageReqMap.set(messageId, messageClass);
-            this._messageMap.set(messageId, messageClass);
-            let messageClassObjectData: MessageClassObjectData = new MessageClassObjectData(moduleName, messageId, messageClassObject);
-            this._messageList.push(messageClassObjectData);
+
+    /**
+     * 注册响应/通知消息。由生成物调用。
+     * @param fullName 消息全名(如 'User.RespLogin')
+     * @param messageId 消息号
+     */
+    public static registerRespMessage(fullName: string, messageId: number): void {
+        this.respIdByType.set(fullName, messageId);
+        this.respTypeById.set(messageId, fullName);
+        if (fullName.includes('HeartBeat')) {
+            this.heartBeatTypes.add(fullName);
         }
     }
 
-    public static getMessageIdByModule(moduleName: string): number {
+    /**
+     * 是否心跳消息(包头 OperationType=1)。
+     * @param fullName 消息全名
+     */
+    public static isHeartBeat(fullName: string): boolean {
+        return this.heartBeatTypes.has(fullName);
+    }
 
-        for (let index = 0; index < this._messageList.length; index++) {
-            const element = this._messageList[index];
-            if (element.ModuleName == moduleName) {
-                return element.MessageId;
-            }
+    /**
+     * 按全名取 protobuf 消息类型(create/encode/decode)。
+     * @param fullName 消息全名
+     */
+    public static getMessageType(fullName: string): IMessage {
+        const type = this.root?.lookupType(fullName);
+        if (type == null) {
+            throw new Error(`protobuf type '${fullName}' not found (root adopted?)`);
         }
-        return 0;
 
+        return type;
     }
-    public static getMessageObjectByMessageId(messageId: number): MessageObject {
-        for (let index = 0; index < this._messageList.length; index++) {
-            const element = this._messageList[index];
-            if (element.MessageId == messageId) {
-                return element.MessageClass;
-            }
+
+    /**
+     * 请求消息号。
+     * @param fullName 消息全名
+     */
+    public static getReqMessageId(fullName: string): number {
+        const id = this.reqIdByType.get(fullName);
+        if (id == null) {
+            throw new Error(`request message '${fullName}' is not registered`);
         }
-        return null;
-    }
-    public static getMessageTypeByModule(moduleName: string, typeName: string): IMessage {
-        return this.pb.lookupType(moduleName + '.' + typeName);
+
+        return id;
     }
 
-    public static getMessageType(typeName: string): IMessage {
-        return this.pb.lookupType(typeName);
-    }
-    public static getIndexByMessageType(typeName: string): any {
-        let types = typeName.split(".");
-        if (types.length == 2) {
-            return this._protobuff[types[0]][types[1]];
+    /**
+     * 响应/通知消息号。
+     * @param fullName 消息全名
+     */
+    public static getRespMessageId(fullName: string): number {
+        const id = this.respIdByType.get(fullName);
+        if (id == null) {
+            throw new Error(`response message '${fullName}' is not registered`);
         }
-    }
-    public static getMessageRespTypeByIndex(MessageId: number): IMessage {
-        return this._messageRespMap.get(MessageId);
-    }
-    public static getMessageReqTypeByIndex(MessageId: number): IMessage {
-        return this._messageReqMap.get(MessageId);
-    }
-}
-class MessageClassObjectData {
 
-    private _moduleName: string;
-    private _messageId: number;
-    private _messageClass: MessageObject;
-    public get MessageId(): number {
-        return this._messageId;
-    }
-    public get MessageClass(): MessageObject {
-        return this._messageClass;
-    }
-    public get ModuleName(): string {
-        return this._moduleName;
+        return id;
     }
 
-    constructor(moduleName: string, messageId: number, messageClass: MessageObject) {
-        this._moduleName = moduleName;
-        this._messageId = messageId;
-        this._messageClass = messageClass;
+    /**
+     * 响应/通知消息全名。
+     * @param messageId 消息号
+     */
+    public static getRespMessageName(messageId: number): string | null {
+        return this.respTypeById.get(messageId) ?? null;
     }
 
+    /**
+     * 已注册消息总数(启动自检用:应等于生成清单数量)。
+     */
+    public static get registeredCount(): number {
+        return this.reqIdByType.size + this.respIdByType.size;
+    }
+
+    /**
+     * 清空注册表(测试用)。
+     */
+    public static reset(): void {
+        this.root = null;
+        this.reqIdByType.clear();
+        this.respIdByType.clear();
+        this.respTypeById.clear();
+        this.heartBeatTypes.clear();
+    }
 }

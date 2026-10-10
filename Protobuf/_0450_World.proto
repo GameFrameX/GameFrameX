@@ -1,0 +1,67 @@
+syntax = "proto3";
+package World;
+
+// 世界公告状态。
+enum WorldAnnouncementStatus
+{
+  Active = 1; // 生效中
+  Revoked = 2; // 已撤销
+  Expired = 3; // 已过期
+}
+
+// 世界公告业务错误码（6 位 = 模块ID 450 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum WorldErrorCode
+{
+  NotLoggedIn = 450001; // 会话未绑定玩家（未登录，发布者身份获取失败）
+  TitleInvalid = 450002; // 标题非法（空或超过长度上限）
+  ExpireInvalid = 450003; // 过期时间非法（须晚于当前时间）
+  AnnouncementNotFound = 450004; // 公告不存在
+  NotActive = 450005; // 公告非生效中状态（不可撤销）
+}
+
+// 世界公告信息载荷
+message WorldAnnouncementInfo
+{
+  int64 Id = 1; // 公告ID
+  string Title = 2; // 标题
+  string Content = 3; // 正文
+  int64 PublisherPlayerId = 4; // 发布者玩家ID
+  int64 CreatedUnixTime = 5; // 发布 Unix 秒
+  int64 ExpireUnixTime = 6; // 过期 Unix 秒
+}
+
+// 请求发布公告（需登录，发布者为会话玩家）
+message ReqWorldPublish
+{
+  string Title = 1; // 标题（1-64 字符）
+  string Content = 2; // 正文
+  int64 ExpireUnixTime = 3; // 过期 Unix 秒（须晚于当前时间）
+}
+
+// 返回发布公告结果
+message RespWorldPublish
+{
+  int64 AnnouncementId = 1; // 新公告ID
+}
+
+// 请求撤销公告（无需登录）
+message ReqWorldRevoke
+{
+  int64 AnnouncementId = 1; // 公告ID
+}
+
+// 返回撤销公告结果
+message RespWorldRevoke
+{
+}
+
+// 请求查询生效中公告（无需登录）
+message ReqWorldQuery
+{
+}
+
+// 返回生效中公告列表（过期已惰性置 Expired 并过滤）
+message RespWorldQuery
+{
+  repeated WorldAnnouncementInfo Announcements = 1; // 生效中公告列表
+}

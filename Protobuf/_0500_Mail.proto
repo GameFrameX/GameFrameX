@@ -1,6 +1,5 @@
 syntax = "proto3";
 package Mail;
-option module = 500;
 
 // 邮件业务错误码（6 位 = 模块ID 500 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
 enum MailErrorCode

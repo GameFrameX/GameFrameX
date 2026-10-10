@@ -57,10 +57,10 @@ namespace Hotfix.UI
             _binder.SetResult(RockPaperScissorsDataManager.Instance.GetResultText());
             _binder.SetRound(room == null ? "第 0 局" : $"第 {room.Round} 局");
 
-            var selfPlayer = room?.Players.FirstOrDefault(m => m.RoleId == currentRoleId);
-            var opponentPlayer = room?.Players.FirstOrDefault(m => m.RoleId != currentRoleId);
-            var selfGesture = game?.Players.FirstOrDefault(m => m.RoleId == currentRoleId);
-            var opponentGesture = game?.Players.FirstOrDefault(m => m.RoleId != currentRoleId);
+            var selfPlayer = room?.Players.FirstOrDefault(m => m.PlayerId == currentRoleId);
+            var opponentPlayer = room?.Players.FirstOrDefault(m => m.PlayerId != currentRoleId);
+            var selfGesture = game?.Players.FirstOrDefault(m => m.PlayerId == currentRoleId);
+            var opponentGesture = game?.Players.FirstOrDefault(m => m.PlayerId != currentRoleId);
             var hasRevealedResult = RockPaperScissorsDataManager.Instance.HasRevealedResult();
 
             _binder.SetSelfName(selfPlayer == null ? "我" : RoomUIFormatter.GetPlayerName(selfPlayer, true));

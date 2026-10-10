@@ -1,0 +1,101 @@
+syntax = "proto3";
+package Auction;
+
+// 拍卖批次状态
+enum AuctionLotStatus
+{
+  Listing = 1; // 挂牌中
+  Sold = 2; // 已售出
+  Expired = 3; // 已过期流拍
+}
+
+// 拍卖业务错误码（6 位 = 模块ID 810 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum AuctionErrorCode
+{
+  NotLoggedIn = 810001; // 会话未绑定玩家（未登录）
+  LotEnded = 810002; // 批次已结束（到期/已售出/已流拍）
+  BidTooLow = 810003; // 出价低于当前最低有效出价
+  CannotSelfBid = 810004; // 不能竞拍自己挂拍的批次
+  PriceInvalid = 810005; // 价格参数非法
+  LotNotFound = 810006; // 批次不存在
+  NotExpired = 810007; // 批次未到期（不可提前结算，区别于已终结 LotEnded）
+}
+
+// 拍卖批次载荷
+message AuctionLotInfo
+{
+  int64 LotId = 1; // 批次ID
+  int64 ItemId = 2; // 物品ID
+  int64 ReservePrice = 3; // 保留价（起拍价）
+  int64 BuyoutPrice = 4; // 一口价
+  int64 HighestBid = 5; // 当前最高出价（0 = 暂无出价）
+  int32 BidCount = 6; // 有效出价次数
+  AuctionLotStatus Status = 7; // 批次状态
+  int64 ExpireUnixTime = 8; // 到期 Unix 秒
+  int64 HighestBidderPlayerId = 9; // 当前最高出价玩家ID（0 = 暂无出价）
+}
+
+// 请求挂拍（创建拍卖批次）
+message ReqAuctionListLot
+{
+  int64 ItemId = 1; // 物品ID
+  int64 ReservePrice = 2; // 保留价（起拍价，须大于 0）
+  int64 BuyoutPrice = 3; // 一口价（须大于保留价）
+  int64 ExpireUnixTime = 4; // 到期 Unix 秒（须晚于当前时间）
+}
+
+// 返回挂拍结果
+message RespAuctionListLot
+{
+  int64 LotId = 1; // 新建批次ID
+}
+
+// 请求出价竞拍
+message ReqAuctionBid
+{
+  int64 LotId = 1; // 批次ID
+  int64 Price = 2; // 出价（首价不低于保留价，其后不低于最高价 ×1.1 向上取整）
+}
+
+// 返回出价结果
+message RespAuctionBid
+{
+  int64 HighestBid = 1; // 出价后的当前最高出价
+  int32 BidCount = 2; // 出价后的有效出价次数
+}
+
+// 请求一口价买断
+message ReqAuctionBuyout
+{
+  int64 LotId = 1; // 批次ID
+}
+
+// 返回一口价买断结果
+message RespAuctionBuyout
+{
+  int64 FinalPrice = 1; // 成交价（= 一口价）
+}
+
+// 请求结算批次（仅可结算已到期的挂牌批次）
+message ReqAuctionSettle
+{
+  int64 LotId = 1; // 批次ID
+}
+
+// 返回结算结果
+message RespAuctionSettle
+{
+  AuctionLotStatus Status = 1; // 结算后的批次状态（Sold / Expired）
+  int64 FinalPrice = 2; // 成交价（流拍为 0）
+}
+
+// 请求查询全部挂牌中的批次
+message ReqAuctionQueryLots
+{
+}
+
+// 返回挂牌中的批次列表（过期批次已惰性结算并被过滤）
+message RespAuctionQueryLots
+{
+  repeated AuctionLotInfo Lots = 1; // 挂牌中的批次列表
+}

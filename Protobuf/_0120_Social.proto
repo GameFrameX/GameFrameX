@@ -1,6 +1,5 @@
 syntax = "proto3";
 package Social;
-option module = 120;
 
 // 好友信息
 message FriendInfo

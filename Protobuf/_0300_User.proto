@@ -1,6 +1,5 @@
 syntax = "proto3";
 package User;
-option module = 300;
 
 // 请求账号登录
 message ReqLogin

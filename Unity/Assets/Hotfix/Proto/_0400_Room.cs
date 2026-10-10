@@ -226,7 +226,7 @@ namespace Hotfix.Proto
 		/// 玩家ID
 		/// </summary>
 		[ProtoMember(1)]
-		public long RoleId { get; set; }
+		public long PlayerId { get; set; }
 
 		/// <summary>
 		/// 座位索引
@@ -317,7 +317,7 @@ namespace Hotfix.Proto
 		/// 房主玩家ID
 		/// </summary>
 		[ProtoMember(8)]
-		public long OwnerRoleId { get; set; }
+		public long OwnerPlayerId { get; set; }
 
 		/// <summary>
 		/// 玩家列表

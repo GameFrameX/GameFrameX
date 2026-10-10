@@ -50,7 +50,7 @@ export default class UtilityMath extends Singleton<UtilityMath>() {
     public static getAngleTwoPoint(p1: Laya.Point, p2: Laya.Point): number {
         let vy = p2.y - p1.y;
         let vx = p2.x - p1.x;
-        let ang;
+        let ang: number = 0;
 
         if (vy == 0) {
             if (vx < 0) {

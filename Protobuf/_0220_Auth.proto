@@ -1,0 +1,69 @@
+syntax = "proto3";
+package Auth;
+
+// 权限码白名单枚举。
+enum AuthPermission
+{
+  Login = 1; // 登录权限
+  Chat = 2; // 聊天权限
+  Trade = 3; // 交易权限
+  GmCommand = 4; // GM 指令权限
+}
+
+// 权限授予业务错误码（6 位 = 模块ID 220 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum AuthErrorCode
+{
+  NotLoggedIn = 220001; // 会话未绑定玩家（未登录）
+  PermissionUnknown = 220002; // 权限码未在白名单定义
+  AlreadyGranted = 220003; // 权限已授予（重复授予幂等报错）
+  NotGranted = 220004; // 权限未被授予（撤销不存在）
+}
+
+// 请求授予玩家权限（操作者=请求者）
+message ReqAuthGrant
+{
+  int64 TargetPlayerId = 1; // 目标玩家ID
+  AuthPermission Permission = 2; // 权限码（AuthPermission 白名单）
+}
+
+// 返回授予玩家权限结果
+message RespAuthGrant
+{
+}
+
+// 请求撤销玩家权限（操作者=请求者）
+message ReqAuthRevoke
+{
+  int64 TargetPlayerId = 1; // 目标玩家ID
+  AuthPermission Permission = 2; // 权限码（AuthPermission 白名单）
+}
+
+// 返回撤销玩家权限结果
+message RespAuthRevoke
+{
+}
+
+// 请求查询玩家是否持有权限
+message ReqAuthHas
+{
+  int64 TargetPlayerId = 1; // 目标玩家ID
+  AuthPermission Permission = 2; // 权限码（AuthPermission 白名单）
+}
+
+// 返回玩家是否持有权限
+message RespAuthHas
+{
+  bool Granted = 1; // 是否已授予
+}
+
+// 请求列举玩家持有的全部权限
+message ReqAuthListPermissions
+{
+  int64 TargetPlayerId = 1; // 目标玩家ID
+}
+
+// 返回玩家持有的全部权限列表
+message RespAuthListPermissions
+{
+  repeated AuthPermission Permissions = 1; // 权限列表
+}

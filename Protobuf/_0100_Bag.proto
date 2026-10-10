@@ -1,6 +1,5 @@
 syntax = "proto3";
 package Bag;
-option module = 100;
 
 // 背包道具
 message BagItem

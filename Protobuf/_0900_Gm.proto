@@ -1,0 +1,77 @@
+syntax = "proto3";
+package Gm;
+
+// 违规处罚类型
+enum GmPenaltyType
+{
+  Ban = 1; // 封禁
+  Mute = 2; // 禁言
+}
+
+// 违规处罚状态
+enum GmPenaltyStatus
+{
+  Active = 1; // 生效中
+  Revoked = 2; // 已撤销
+  Expired = 3; // 已过期
+}
+
+// 违规处罚业务错误码（6 位 = 模块ID 900 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum GmErrorCode
+{
+  NotLoggedIn = 900001; // 会话未绑定玩家（未登录）
+  PenaltyTypeInvalid = 900002; // 处罚类型非法
+  DurationInvalid = 900003; // 处罚时长非法（须在 (0, 365 天] 内）
+  PenaltyNotFound = 900004; // 处罚记录不存在
+  NotActive = 900005; // 处罚不在生效中（已撤销或已过期）
+}
+
+// 违规处罚载荷
+message GmPenaltyInfo
+{
+  int64 PenaltyId = 1; // 处罚ID
+  GmPenaltyType Type = 2; // 处罚类型
+  string Reason = 3; // 处罚原因
+  int64 CreatedUnixTime = 4; // 创建 Unix 秒
+  int64 ExpireUnixTime = 5; // 到期 Unix 秒
+  GmPenaltyStatus Status = 6; // 处罚状态
+}
+
+// 请求新增违规处罚
+message ReqGmAddPenalty
+{
+  int64 PlayerId = 1; // 被处罚玩家ID
+  GmPenaltyType Type = 2; // 处罚类型（Ban / Mute）
+  string Reason = 3; // 处罚原因
+  int64 DurationSeconds = 4; // 处罚时长（秒，(0, 365 天]）
+}
+
+// 返回新增违规处罚结果
+message RespGmAddPenalty
+{
+  int64 PenaltyId = 1; // 新建处罚ID
+  int64 ExpireUnixTime = 2; // 处罚到期 Unix 秒
+}
+
+// 请求撤销违规处罚（仅可撤销生效中的处罚）
+message ReqGmRevokePenalty
+{
+  int64 PenaltyId = 1; // 处罚ID
+}
+
+// 返回撤销违规处罚结果
+message RespGmRevokePenalty
+{
+}
+
+// 请求查询玩家生效中的违规处罚（已过期惰性置 Expired 并被过滤）
+message ReqGmQueryPenalties
+{
+  int64 PlayerId = 1; // 被查询玩家ID
+}
+
+// 返回玩家生效中的违规处罚列表
+message RespGmQueryPenalties
+{
+  repeated GmPenaltyInfo Penalties = 1; // 生效中的处罚列表（未过期且未撤销）
+}

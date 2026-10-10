@@ -1,0 +1,53 @@
+syntax = "proto3";
+package Room;
+
+// 房间分配业务错误码（6 位 = 模块ID 430 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum RoomErrorCode
+{
+  NotLoggedIn = 430001; // 会话未绑定玩家（未登录）
+  NotAllocated = 430002; // 玩家当前未被分配房间
+  CapacityInvalid = 430003; // 房间容量非法（须 1-20，0 表示默认 4）
+}
+
+// 房间槽位信息载荷
+message RoomSlotInfo
+{
+  int64 RoomId = 1; // 房间ID
+  int32 Capacity = 2; // 房间容量
+  int32 PlayerCount = 3; // 当前占用数
+}
+
+// 请求分配房间槽位
+message ReqRoomAllocate
+{
+  int32 Capacity = 1; // 期望房间容量（1-20；0 = 默认 4）
+}
+
+// 返回分配房间槽位结果
+message RespRoomAllocate
+{
+  int64 RoomId = 1; // 分配到的房间ID
+  int32 PlayerCount = 2; // 分配后房间占用数
+}
+
+// 请求释放房间槽位
+message ReqRoomRelease
+{
+}
+
+// 返回释放房间槽位结果
+message RespRoomRelease
+{
+  int64 RoomId = 1; // 被释放的房间ID
+}
+
+// 请求查询全部房间槽位
+message ReqRoomQuery
+{
+}
+
+// 返回全部房间槽位列表
+message RespRoomQuery
+{
+  repeated RoomSlotInfo Rooms = 1; // 房间槽位列表
+}

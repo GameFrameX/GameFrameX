@@ -1,6 +1,5 @@
 syntax = "proto3";
 package Attribute;
-option module = 310;
 
 // 玩家属性条目，含最终值与 Base/Add/Pct 调试字段
 message PlayerAttributeEntry

@@ -1,0 +1,95 @@
+syntax = "proto3";
+package Team;
+
+// 队伍服务器（Team Role，队伍管理，域号 670）业务错误码（6 位 = 模块ID 670 + 3 位编号）。
+enum TeamErrorCode
+{
+  NotLoggedIn = 670001; // 会话未绑定玩家（未登录）
+  NameInvalid = 670002; // 队伍名称非法（空或超过长度上限）
+  CapacityInvalid = 670003; // 队伍人数上限非法（允许区间 2-10）
+  TeamNotFound = 670004; // 队伍不存在
+  TeamFull = 670005; // 队伍已满员
+  AlreadyInTeam = 670006; // 玩家已在其他队伍中（一人一队）
+  NotMember = 670007; // 玩家不是该队伍成员
+  NotLeader = 670008; // 仅队长可执行该操作
+  CannotSelf = 670009; // 不能对自己执行该操作
+}
+
+// 队伍摘要载荷
+message TeamInfo
+{
+  int64 TeamId = 1; // 队伍ID
+  string Name = 2; // 队伍名称
+  int64 LeaderId = 3; // 队长玩家ID
+  int32 MemberCount = 4; // 当前成员数
+  int32 MaxMemberCount = 5; // 成员数上限
+}
+
+// 请求创建队伍（创建者为队长）
+message ReqTeamCreate
+{
+  string Name = 1; // 队伍名称（1-32 字符）
+  int32 MaxMemberCount = 2; // 成员数上限（2-10）
+}
+
+// 返回创建队伍结果
+message RespTeamCreate
+{
+  int64 TeamId = 1; // 分配的队伍ID
+}
+
+// 请求加入指定队伍
+message ReqTeamJoin
+{
+  int64 TeamId = 1; // 队伍ID
+}
+
+// 返回加入队伍结果
+message RespTeamJoin
+{
+  int32 MemberCount = 1; // 加入后成员数
+}
+
+// 请求离开当前队伍（队长离队触发转移或解散）
+message ReqTeamLeave
+{
+}
+
+// 返回离开队伍结果
+message RespTeamLeave
+{
+  int64 TeamId = 1; // 离开的队伍ID
+  bool Disbanded = 2; // 离开后队伍是否已解散
+}
+
+// 请求队长移除指定成员（不能踢自己）
+message ReqTeamKick
+{
+  int64 MemberPlayerId = 1; // 要移除的成员玩家ID
+}
+
+// 返回移除成员结果
+message RespTeamKick
+{
+}
+
+// 请求队长解散当前队伍
+message ReqTeamDisband
+{
+}
+
+// 返回解散队伍结果
+message RespTeamDisband
+{
+}
+
+// 请求拉取全部队伍列表
+message ReqTeamList
+{
+}
+
+// 返回全部队伍列表
+message RespTeamList
+{
+  repeated TeamInfo Teams = 1; // 队伍摘要列表
+}

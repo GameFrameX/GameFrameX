@@ -1,0 +1,47 @@
+syntax = "proto3";
+package Login;
+
+// 登录令牌业务错误码（6 位 = 模块ID 210 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum LoginErrorCode
+{
+  TtlInvalid = 210002; // TTL 非法（须在 (0, 604800] 秒区间内）
+  TokenInvalid = 210003; // 令牌不存在（或已过期/已撤销，撤销场景使用）
+}
+
+// 请求签发登录令牌
+message ReqLoginIssueToken
+{
+  int64 AccountId = 1; // 账号ID
+  int32 TtlSeconds = 2; // 有效期秒数（TTL，区间 (0, 604800]）
+}
+
+// 返回签发登录令牌结果
+message RespLoginIssueToken
+{
+  string Token = 1; // 签发的令牌
+  int64 ExpireUnixTime = 2; // 过期 Unix 秒
+}
+
+// 请求校验登录令牌
+message ReqLoginVerifyToken
+{
+  string Token = 1; // 令牌
+}
+
+// 返回校验登录令牌结果（无效令牌不设 ErrorCode，仅 Valid=false）
+message RespLoginVerifyToken
+{
+  bool Valid = 1; // 令牌是否有效（存在且未过期）
+  int64 AccountId = 2; // 令牌归属账号ID（无效时为 0）
+}
+
+// 请求撤销登录令牌
+message ReqLoginRevokeToken
+{
+  string Token = 1; // 令牌
+}
+
+// 返回撤销登录令牌结果
+message RespLoginRevokeToken
+{
+}

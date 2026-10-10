@@ -124,7 +124,7 @@ namespace Hotfix.Manager
                 return false;
             }
 
-            var playerInfo = CurrentGame.Players.FirstOrDefault(m => m.RoleId == roleId);
+            var playerInfo = CurrentGame.Players.FirstOrDefault(m => m.PlayerId == roleId);
             return playerInfo != null && playerInfo.HasGesture;
         }
 
@@ -135,7 +135,7 @@ namespace Hotfix.Manager
 
         public RockPaperScissorsPlayerInfo GetPlayer(long roleId)
         {
-            return CurrentGame == null ? null : CurrentGame.Players.FirstOrDefault(m => m.RoleId == roleId);
+            return CurrentGame == null ? null : CurrentGame.Players.FirstOrDefault(m => m.PlayerId == roleId);
         }
 
         public RockPaperScissorsPlayerInfo GetCurrentPlayer()
@@ -151,7 +151,7 @@ namespace Hotfix.Manager
             }
 
             var roleId = RoomDataManager.Instance.CurrentRoleId;
-            return CurrentGame.Players.FirstOrDefault(m => m.RoleId != roleId);
+            return CurrentGame.Players.FirstOrDefault(m => m.PlayerId != roleId);
         }
 
         public bool CanSubmitGesture()
@@ -192,12 +192,12 @@ namespace Hotfix.Manager
                 return "等待结算数据";
             }
 
-            if (CurrentGame.WinnerRoleId == 0)
+            if (CurrentGame.WinnerPlayerId == 0)
             {
                 return "平局";
             }
 
-            return CurrentGame.WinnerRoleId == RoomDataManager.Instance.CurrentRoleId ? "你赢了" : "你输了";
+            return CurrentGame.WinnerPlayerId == RoomDataManager.Instance.CurrentRoleId ? "你赢了" : "你输了";
         }
 
         private static bool IsGameDataStatus(RoomStatus status)
@@ -229,7 +229,7 @@ namespace Hotfix.Manager
 
             return room.Players.All(player =>
             {
-                var gesturePlayer = game.Players.FirstOrDefault(m => m.RoleId == player.RoleId);
+                var gesturePlayer = game.Players.FirstOrDefault(m => m.PlayerId == player.PlayerId);
                 return gesturePlayer != null
                        && gesturePlayer.HasGesture
                        && gesturePlayer.Gesture != RockPaperScissorsGesture.None;

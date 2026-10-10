@@ -1,0 +1,47 @@
+syntax = "proto3";
+package Scene;
+
+// 场景在线业务错误码（6 位 = 模块ID 440 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum SceneErrorCode
+{
+  NotLoggedIn = 440001; // 会话未绑定玩家（未登录）
+  NotInScene = 440002; // 玩家不在该场景中
+  SceneFull = 440003; // 场景已满（容量 100）
+}
+
+// 请求进入场景
+message ReqSceneEnter
+{
+  int64 SceneId = 1; // 场景ID
+}
+
+// 返回进入场景结果
+message RespSceneEnter
+{
+  int32 PlayerCount = 1; // 进入后场景在线人数
+}
+
+// 请求离开场景
+message ReqSceneLeave
+{
+  int64 SceneId = 1; // 场景ID
+}
+
+// 返回离开场景结果
+message RespSceneLeave
+{
+  int32 PlayerCount = 1; // 离开后场景在线人数
+}
+
+// 请求查询场景在线列表
+message ReqSceneQuery
+{
+  int64 SceneId = 1; // 场景ID
+}
+
+// 返回场景在线列表
+message RespSceneQuery
+{
+  int32 PlayerCount = 1; // 场景在线人数
+  repeated int64 PlayerIds = 2; // 在线玩家ID列表
+}

@@ -47,6 +47,7 @@ using GameFrameX.Core.Config;
         {
             ByteBuf _buf = await _loadFunc();
             StringDataMaps.Clear();
+            LongDataMaps.Clear();
             DataList.Clear();
             for(int n = _buf.ReadSize() ; n > 0 ; --n)
             {
@@ -107,7 +108,7 @@ using GameFrameX.Core.Config;
             {{~end~}}
         }
 
-        public async System.Threading.Tasks.Task LoadAsync()
+        public override async System.Threading.Tasks.Task LoadAsync()
         {
             ByteBuf _buf = await _loadFunc();
             _dataList.Clear();
@@ -174,7 +175,7 @@ using GameFrameX.Core.Config;
             _loadFunc = loadFunc;
         }
 
-        public async System.Threading.Tasks.Task LoadAsync()
+        public override async System.Threading.Tasks.Task LoadAsync()
         {
             ByteBuf _buf = await _loadFunc();
             int n = _buf.ReadSize();

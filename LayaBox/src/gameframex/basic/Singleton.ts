@@ -1,7 +1,7 @@
 export default function Singleton<T>() {
     class SingletonT {
         protected constructor() { }
-        private static _instance: SingletonT = null;
+        private static _instance: SingletonT | null = null;
         /**
          * 单例对象
          */

@@ -1,0 +1,72 @@
+syntax = "proto3";
+package RockPaperScissors;
+option module = 410;
+
+// 石头剪刀布出拳
+enum RockPaperScissorsGesture
+{
+  None = 0; // 未出拳
+  Rock = 1; // 石头
+  Scissors = 2; // 剪刀
+  Paper = 3; // 布
+}
+
+// 石头剪刀布玩家信息
+message RockPaperScissorsPlayerInfo
+{
+  int64 RoleId = 1; // 玩家ID
+  bool HasGesture = 2; // 是否已出拳
+  RockPaperScissorsGesture Gesture = 3; // 出拳。未结算前对外为None，结算后显示真实出拳。
+}
+
+// 石头剪刀布游戏信息
+message RockPaperScissorsGameInfo
+{
+  int64 RoomId = 1; // 房间ID
+  int32 Round = 2; // 当前局数
+  int64 WinnerRoleId = 3; // 胜利玩家ID。平局为0。
+  repeated RockPaperScissorsPlayerInfo Players = 4; // 玩家列表
+}
+
+// 请求石头剪刀布游戏信息
+message ReqRockPaperScissorsGameInfo
+{
+  int64 RoomId = 1; // 房间ID
+}
+
+// 返回石头剪刀布游戏信息
+message RespRockPaperScissorsGameInfo
+{
+  RockPaperScissorsGameInfo GameInfo = 1; // 游戏信息
+}
+
+// 请求石头剪刀布出拳
+message ReqSubmitRockPaperScissorsGesture
+{
+  int64 RoomId = 1; // 房间ID
+  RockPaperScissorsGesture Gesture = 2; // 出拳
+}
+
+// 返回石头剪刀布出拳
+message RespSubmitRockPaperScissorsGesture
+{
+  RockPaperScissorsGameInfo GameInfo = 1; // 游戏信息
+}
+
+// 请求石头剪刀布再来一局
+message ReqRestartRockPaperScissorsGame
+{
+  int64 RoomId = 1; // 房间ID
+}
+
+// 返回石头剪刀布再来一局
+message RespRestartRockPaperScissorsGame
+{
+  RockPaperScissorsGameInfo GameInfo = 1; // 游戏信息
+}
+
+// 通知石头剪刀布游戏变化
+message NotifyRockPaperScissorsGameChanged
+{
+  RockPaperScissorsGameInfo GameInfo = 1; // 游戏信息
+}

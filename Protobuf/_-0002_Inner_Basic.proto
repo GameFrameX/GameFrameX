@@ -1,3 +1,2 @@
 syntax = "proto3";
 package InnerBasic;
-option module = -2;

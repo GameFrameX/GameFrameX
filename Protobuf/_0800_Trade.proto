@@ -1,0 +1,79 @@
+syntax = "proto3";
+package Trade;
+
+// 挂单方向
+enum TradeSide
+{
+  Buy = 1; // 买单（买入）
+  Sell = 2; // 卖单（卖出）
+}
+
+// 挂单交易业务错误码（6 位 = 模块ID 800 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum TradeErrorCode
+{
+  NotLoggedIn = 800001; // 会话未绑定玩家（未登录）
+  SideInvalid = 800002; // 挂单方向非法
+  QuantityInvalid = 800003; // 挂单数量非法（须大于 0）
+  PriceInvalid = 800004; // 挂单单价非法（须大于 0）
+  OrderNotFound = 800005; // 订单不存在
+}
+
+// 撮合成交回执载荷
+message TradeDealInfo
+{
+  int64 TradeId = 1; // 成交流水ID
+  int32 Quantity = 2; // 成交数量
+  int64 UnitPrice = 3; // 成交单价（按挂单方 maker 价格）
+  int64 CounterpartyPlayerId = 4; // 对手方玩家ID
+}
+
+// 订单簿挂单载荷（盘口查询）
+message TradeOrderInfo
+{
+  int64 OrderId = 1; // 订单ID
+  int64 PlayerId = 2; // 挂单玩家ID
+  int32 Remaining = 3; // 剩余数量
+  int64 UnitPrice = 4; // 挂单单价
+}
+
+// 请求挂单（新单进入订单簿并即时撮合）
+message ReqTradePlace
+{
+  TradeSide Side = 1; // 挂单方向
+  int64 ItemId = 2; // 物品ID
+  int32 Quantity = 3; // 挂单数量（须大于 0）
+  int64 UnitPrice = 4; // 挂单单价（须大于 0）
+}
+
+// 返回挂单结果（新单即时撮合回执；OrderId 为 0 表示全部成交，非 0 表示留量挂单号）
+message RespTradePlace
+{
+  int64 OrderId = 1; // 挂单号（0 = 新单已全部成交，无留量）
+  int32 Remaining = 2; // 新单剩余未成交数量
+  repeated TradeDealInfo Trades = 3; // 即时撮合成交回执列表（按成交顺序）
+}
+
+// 请求撤销挂单
+message ReqTradeCancel
+{
+  int64 OrderId = 1; // 订单ID
+}
+
+// 返回撤销挂单结果（撤销时的剩余数量）
+message RespTradeCancel
+{
+  int32 Remaining = 1; // 撤销时的剩余数量
+}
+
+// 请求查询订单簿（按价格优先序返回指定方向的挂单列表）
+message ReqTradeBook
+{
+  int64 ItemId = 1; // 物品ID
+  TradeSide Side = 2; // 挂单方向（Buy 返回买盘、Sell 返回卖盘）
+}
+
+// 返回订单簿盘口（按价格优先序）
+message RespTradeBook
+{
+  repeated TradeOrderInfo Orders = 1; // 挂单列表（买盘高价优先 / 卖盘低价优先，同价时间优先）
+}

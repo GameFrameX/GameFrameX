@@ -1,11 +1,11 @@
 syntax = "proto3";
 package InnerSocial;
-option module = -120;
 
 // 请求添加好友
 message ReqInnerFriendByAdd
 {
-  int64 PlayerId = 1; // 玩家ID
+  int64 PlayerId = 1; // 目标玩家ID
+  int64 SourcePlayerId = 2; // 源玩家ID（发起方，跨服场景区分关系归属）
 }
 
 // 响应添加好友
@@ -24,7 +24,8 @@ message InnerFriendInfo
 // 请求删除好友
 message ReqInnerFriendByDelete
 {
-  int64 PlayerId = 1; // 玩家ID
+  int64 PlayerId = 1; // 目标玩家ID
+  int64 SourcePlayerId = 2; // 源玩家ID（发起方，跨服场景区分关系归属）
 }
 
 // 响应删除好友
@@ -42,5 +43,5 @@ message ReqInnerFriendList
 // 响应好友列表
 message RespInnerFriendList
 {
-  repeated InnerFriendInfo Friends = 1; // 好友列表
+  repeated FriendInfo Friends = 1; // 好友列表
 }

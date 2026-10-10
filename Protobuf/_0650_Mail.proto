@@ -1,0 +1,81 @@
+syntax = "proto3";
+package Mail;
+
+// 邮件服务器（Mail Role，跨服投递队列，域号 650）业务错误码（6 位 = 模块ID 650 + 3 位编号）。
+enum MailDeliveryErrorCode
+{
+  NotLoggedIn = 650001; // 会话未绑定玩家（未登录）
+  NotDeliverable = 650002; // 邮件已处于终态（已投递/已死亡/已过期），不可再操作
+  TitleInvalid = 650003; // 邮件标题非法（空或超过长度上限）
+  MailNotFound = 650004; // 邮件不存在
+}
+
+// 跨服投递状态
+enum MailDeliveryStatus
+{
+  Queued = 1; // 排队待投递
+  Delivered = 2; // 已投递（终态）
+  Dead = 3; // 重试超限死亡（终态）
+  Expired = 4; // 已过期（终态）
+}
+
+// 跨服投递邮件摘要载荷
+message MailDeliveryInfo
+{
+  int64 MailId = 1; // 邮件ID
+  int64 FromPlayerId = 2; // 发件玩家ID
+  int64 ToPlayerId = 3; // 收件玩家ID
+  string Title = 4; // 邮件标题
+  MailDeliveryStatus Status = 5; // 投递状态
+}
+
+// 请求将一封邮件加入跨服投递队列
+message ReqMailEnqueue
+{
+  int64 ToPlayerId = 1; // 收件玩家ID
+  string Title = 2; // 邮件标题（1-64 字符）
+  string Body = 3; // 邮件正文
+  int64 ExpireUnixTime = 4; // 过期 Unix 秒（0 表示永久有效）
+}
+
+// 返回入队结果
+message RespMailEnqueue
+{
+  int64 MailId = 1; // 分配的邮件ID
+}
+
+// 请求查询指定收件人的待投递邮件（参数键控，无需登录语义）
+message ReqMailQueryPending
+{
+  int64 ToPlayerId = 1; // 收件玩家ID
+  int32 Limit = 2; // 查询条数上限
+}
+
+// 返回待投递邮件摘要列表（过期邮件惰性置 Expired 且不返回）
+message RespMailQueryPending
+{
+  repeated MailDeliveryInfo Mails = 1; // 待投递邮件摘要列表
+}
+
+// 请求将邮件标记为已投递
+message ReqMailMarkDelivered
+{
+  int64 MailId = 1; // 邮件ID
+}
+
+// 返回标记已投递结果
+message RespMailMarkDelivered
+{
+}
+
+// 请求登记一次投递失败（重试计数 +1，超过上限进入 Dead 终态）
+message ReqMailMarkFailed
+{
+  int64 MailId = 1; // 邮件ID
+}
+
+// 返回登记失败结果（含最新重试计数）
+message RespMailMarkFailed
+{
+  int32 RetryCount = 1; // 登记后的重试计数
+}

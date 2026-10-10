@@ -51,7 +51,7 @@ jobs:
                 -v "$OUT":/output \
                 "$IMAGE" \
                 --mode csharp --isServer true \
-                --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.NetWork.Abstractions|using GameFrameX.NetWork.Messages" \
+                --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.Network.Abstractions|using GameFrameX.Network.Messages" \
                 --isGenerateDescription true \
                 --isGenerateErrorCode true \
                 --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto

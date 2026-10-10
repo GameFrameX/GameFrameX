@@ -48,13 +48,13 @@ export default class LogHelper {
      * @param {boolean} printStack - whether to print the entire stack trace
      * @return {String} the line where the error occurred
      */
-    private static getMagicLine(printStack: boolean = false): String {
+    private static getMagicLine(printStack: boolean = false): string {
         const e: Error = new Error('where is the line.');
-        const array: string[] = e.stack.split('\n');
+        const array: string[] = e.stack!.split('\n');
 
         let line: string;
         if (printStack === false) {
-            line = array[3];
+            line = array[3] ?? '';
 
             const s0: string = '    at ';
             const reg0: number = line.indexOf(s0);
@@ -74,6 +74,6 @@ export default class LogHelper {
             line = array.join('\n');
         }
 
-        return "";// line.replace(/file:\/\/\//g, '');
+        return line.replace(/file:\/\/\//g, '');
     }
 }

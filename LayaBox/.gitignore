@@ -5,3 +5,9 @@ local
 release
 node_modules
 bin/js
+
+# gfx-doc 由 Obsidian vault 管理,项目内为软链,不纳入版本管理
+gfx-doc
+
+bin/js/bundles
+build

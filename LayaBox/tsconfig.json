@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "module": "es6",
-    "target": "es6",
     "strict": true,
     "strictNullChecks": false,
+    "lib": ["es2021", "dom"],
     "noEmitHelpers": true,
     "sourceMap": true,
     "experimentalDecorators": true,
@@ -12,6 +11,7 @@
   "include": [
     "./assets",
     "./src",
+    "./hotfix",
     "./engine"
   ]
 }

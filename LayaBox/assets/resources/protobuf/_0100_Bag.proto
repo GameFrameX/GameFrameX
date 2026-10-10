@@ -1,0 +1,111 @@
+syntax = "proto3";
+package Bag;
+option module = 100;
+
+// 背包道具
+message BagItem
+{
+  int32 ItemId = 1; // 道具ID
+  int64 Count = 2; // 道具数量
+}
+
+// 请求背包数据
+message ReqBagInfo
+{
+}
+
+// 返回背包数据
+message RespBagInfo
+{
+  map<int32, int64> ItemDic = 1; // 道具字典，key:道具ID，value:数量
+}
+
+// 通知背包道具变化
+message NotifyBagItem
+{
+  int32 ItemId = 1; // 道具ID
+  int64 Count = 2; // 最终道具数量
+  int64 Value = 3; // 变化的值
+}
+
+// 通知背包数据变化
+message NotifyBagInfoChanged
+{
+  map<int32, NotifyBagItem> ItemDic = 1; // 变化的道具，key:道具ID，value:变化信息
+}
+
+// 请求合成宠物
+message ReqComposePet
+{
+  int32 FragmentId = 1; // 碎片ID
+}
+
+// 返回合成宠物
+message RespComposePet
+{
+  int32 PetId = 1; // 合成宠物的ID
+}
+
+// 请求使用道具
+message ReqUseItem
+{
+  int32 ItemId = 1; // 道具ID
+  int64 Count = 2; // 道具数量
+}
+
+// 返回使用道具
+message RespUseItem
+{
+  int32 ItemId = 1; // 道具ID
+  int64 Count = 2; // 道具数量
+}
+
+// 请求丢弃道具
+message ReqDiscardItem
+{
+  int32 ItemId = 1; // 道具ID
+  int64 Count = 2; // 道具数量
+}
+
+// 返回丢弃道具
+message RespDiscardItem
+{
+  int32 ItemId = 1; // 道具ID
+  int64 Count = 2; // 道具数量
+}
+
+// 请求出售道具
+message ReqSellItem
+{
+  int32 ItemId = 1; // 道具ID
+}
+
+// 返回出售道具
+message RespSellItem
+{
+  map<int64, int64> ItemDic = 1; // 变化的道具，key:道具ID，value:数量
+}
+
+// 请求增加道具
+message ReqAddItem
+{
+  map<int32, int64> ItemDic = 1; // 增加的道具，key:道具ID，value:数量
+}
+
+// 返回增加道具
+message RespAddItem
+{
+  map<int32, int64> ItemDic = 1; // 变化的道具，key:道具ID，value:数量
+}
+
+// 请求减少道具
+message ReqRemoveItem
+{
+  map<int32, int64> ItemDic = 1; // 减少的道具，key:道具ID，value:数量
+}
+
+// 返回减少道具
+message RespRemoveItem
+{
+  map<int32, int64> ItemDic = 1; // 变化的道具，key:道具ID，value:数量
+}

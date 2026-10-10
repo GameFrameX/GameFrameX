@@ -33,7 +33,7 @@ export default class ObjectPool<T> {
      */
     getObject(): T {
         if (this.pool.length > 0) {
-            return this.pool.pop();
+            return this.pool.pop()!;
         } else {
             return this.objectFactory();
         }

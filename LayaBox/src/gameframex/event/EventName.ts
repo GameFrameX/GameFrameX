@@ -1,10 +1,9 @@
 /**
- * This class definition creates a class called EventName.
- * 
- * - The `SocketConnected` method returns the string 'SocketConnected'.
- * - The `SocketClose` method returns the string 'SocketClose'.
- * - The `SocketError` method returns the string 'SocketError'.
- * - The `SocketReconnect` method returns the string 'SocketReconnect'.
+ * 简单字符串事件名常量。
+ *
+ * 结构化事件(带负载数据)请使用 `event/` 下的 XxxEventArgs 类
+ * (NetworkEventArgs/StartupEventArgs 等),与 Unity GameEventArgs 对齐;
+ * 本表只承载无参数的引擎层通知。
  */
 export default class EventName {
     public static SocketConnected = 'SocketConnected';

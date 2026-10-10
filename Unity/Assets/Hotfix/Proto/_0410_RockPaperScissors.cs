@@ -72,7 +72,7 @@ namespace Hotfix.Proto
 		/// 玩家ID
 		/// </summary>
 		[ProtoMember(1)]
-		public long RoleId { get; set; }
+		public long PlayerId { get; set; }
 
 		/// <summary>
 		/// 是否已出拳
@@ -109,7 +109,7 @@ namespace Hotfix.Proto
 		/// 胜利玩家ID。平局为0。
 		/// </summary>
 		[ProtoMember(3)]
-		public long WinnerRoleId { get; set; }
+		public long WinnerPlayerId { get; set; }
 
 		/// <summary>
 		/// 玩家列表

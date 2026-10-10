@@ -114,14 +114,13 @@ protobuf 初心者ですか？この節はステップ・バイ・ステップ�
 // ファイル：_0100_Bag.proto
 syntax = "proto3";      // 常に proto3 —— 現行の protobuf 構文
 package Bag;            // ドメイン名（PascalCase）
-option module = 100;    // ルーティング番号。ファイル名の 0100 と一致必須
 ```
 
 行ごとの解説:
 
 - `syntax = "proto3";` —— 現行の protobuf 構文を宣言します。すべてのファイルはこの行で始まります。
 - `package Bag;` —— このファイルのドメインは「Bag」。PascalCase は先頭が大文字であることを意味します。
-- `option module = 100;` —— ルーティング番号 100 を割り当てます。**ファイル名の `0100` と完全に一致必須です。**
+- モジュール ID —— **ファイル名のプレフィックスのみ**で決まる（`_0100_` → 100）。`option module` は**書かない**：2026-09-28 に全 proto ファイルから削除済み。ファイル名と option の二重定義は齟齬と module mismatch 例外を招く。
 
 ルール:
 
@@ -251,7 +250,6 @@ enum MailErrorCode {
 ```protobuf
 syntax = "proto3";
 package Quest;
-option module = 600;
 
 // Quest business error codes (6 digits = module 600 + 3-digit ordinal)
 enum QuestErrorCode {
@@ -312,7 +310,6 @@ message NotifyQuestChanged {
 ```protobuf
 syntax = "proto3";     // 必須: proto3 のみサポート
 package Basic;
-option module = 10;    // 必須: モジュール ID を定義すること
 ```
 
 ### メッセージ命名
@@ -347,7 +344,7 @@ option module = 10;    // 必須: モジュール ID を定義すること
 
 ### サーバー専用ファイル
 
-エクスポートツールはサーバー専用 proto ファイルを**ファイル名の接尾辞** `-s` または `_s`（例: `player-s.proto`、`economy_s.proto`）で識別します。取り込むには `--isServer true` を渡してください。デフォルト `--isServer false` ではスキップされ、サーバー専用メッセージがクライアントに漏れることはありません。
+エクスポートツールはサーバー専用 proto ファイルを**ファイル名の接尾辞** `-s` または `_s`（例: `player-s.proto`、`economy_s.proto`）で識別します。取り込むには `--isServer` を渡してください。デフォルト（`--isServer` を省略）ではスキップされ、サーバー専用メッセージがクライアントに漏れることはありません。注意：ブール型パラメータはフラグ方式で、**指定すれば有効**になります——`--isServer false` でもサーバーモードが有効になります（`false` は無視されます）。無効化するには省略してください。
 
 内部プロトコルはさらにルーティング分離のために**負のモジュール ID** を持ちます（上記「モジュール ID」表を参照）。
 
@@ -375,7 +372,7 @@ docker run --rm \
   -v ./Server/GameFrameX.Proto/Proto:/output \
   gameframex/gameframex-tools:latest \
   --mode csharp --isServer true \
-  --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.NetWork.Abstractions|using GameFrameX.NetWork.Messages" \
+  --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.Network.Abstractions|using GameFrameX.Network.Messages" \
   --isGenerateDescription true \
   --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
 ```
@@ -444,6 +441,8 @@ docker run --rm \
 | `--usingStatements` | `""` | `\|` 区切りの using 文（例: `"using System\|using ProtoBuf"`） |
 | `--isGenerateDescription` | `false` | `[System.ComponentModel.Description]` 属性を生成 |
 | `--isServer` | `false` | サーバー専用 proto ファイルを取り込む（ファイル名が `-s` または `_s` で終わる） |
+
+> 注：ブール型パラメータ（`--isServer`、`--isGenerateDescription` など）はフラグ方式です：**指定すれば有効**になり、`--xxx false` では無効化できません（`false` は無視されます）。表の「デフォルト値」はパラメータ省略時の値です。
 
 ### TypeScript
 

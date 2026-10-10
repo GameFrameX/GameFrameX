@@ -114,14 +114,13 @@ protobuf가 처음이신가요? 이 절은 단계별 튜토리얼입니다. 위�
 // 파일명: _0100_Bag.proto
 syntax = "proto3";      // 항상 proto3 —— 현행 protobuf 문법
 package Bag;            // 도메인명(PascalCase)
-option module = 100;    // 라우팅 번호. 파일명의 0100 과 일치해야 함
 ```
 
 한 줄씩 설명:
 
 - `syntax = "proto3";` —— 현행 protobuf 문법을 선언합니다. 모든 파일이 이 줄로 시작합니다.
 - `package Bag;` —— 이 파일의 도메인은 'Bag'. PascalCase는 첫 글자가 대문자임을 뜻합니다.
-- `option module = 100;` —— 라우팅 번호 100을 할당합니다.**파일명의 `0100` 과 완전히 일치해야 합니다.**
+- 모듈 ID —— **파일명 접두사로만** 결정됨(`_0100_` → 100). `option module`는 **작성 금지**: 2026-09-28 전 proto 파일에서 제거됨. 파일명과 option 이중 정의는 어긋남과 module mismatch 예외를 부른다.
 
 규칙:
 
@@ -251,7 +250,6 @@ enum MailErrorCode {
 ```protobuf
 syntax = "proto3";
 package Quest;
-option module = 600;
 
 // Quest business error codes (6 digits = module 600 + 3-digit ordinal)
 enum QuestErrorCode {
@@ -312,7 +310,6 @@ message NotifyQuestChanged {
 ```protobuf
 syntax = "proto3";     // Required: only proto3 is supported
 package Basic;
-option module = 10;    // Required: module ID must be defined
 ```
 
 ### 메시지 명명
@@ -347,7 +344,7 @@ option module = 10;    // Required: module ID must be defined
 
 ### 서버 전용 파일
 
-내보내기 도구는 서버 전용 proto 파일을 **파일명 접미사** `-s` 또는 `_s`(예: `player-s.proto`, `economy_s.proto`)로 식별합니다. 이들을 포함하려면 `--isServer true` 를 전달하고, 기본값 `--isServer false` 에서는 건너뛰므로 서버 전용 메시지가 클라이언트에 유출되지 않습니다.
+내보내기 도구는 서버 전용 proto 파일을 **파일명 접미사** `-s` 또는 `_s`(예: `player-s.proto`, `economy_s.proto`)로 식별합니다. 이들을 포함하려면 `--isServer` 를 전달하세요. 기본값(`--isServer` 생략)에서는 건너뛰므로 서버 전용 메시지가 클라이언트에 유출되지 않습니다. 주의: 불리언 파라미터는 플래그 방식으로 **지정하면 켜집니다** — `--isServer false` 도 서버 모드를 켭니다(`false` 리터럴은 무시됨). 끄려면 생략하세요.
 
 내부 프로토콜은 라우팅 분리를 위해 추가로 **음수 모듈 ID**를 가집니다(위 모듈 ID 표 참조).
 
@@ -375,7 +372,7 @@ docker run --rm \
   -v ./Server/GameFrameX.Proto/Proto:/output \
   gameframex/gameframex-tools:latest \
   --mode csharp --isServer true \
-  --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.NetWork.Abstractions|using GameFrameX.NetWork.Messages" \
+  --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.Network.Abstractions|using GameFrameX.Network.Messages" \
   --isGenerateDescription true \
   --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
 ```
@@ -444,6 +441,8 @@ docker run --rm \
 | `--usingStatements` | `""` | `\|` 로 구분된 using 문(예: `"using System\|using ProtoBuf"`) |
 | `--isGenerateDescription` | `false` | `[System.ComponentModel.Description]` 특성 생성 |
 | `--isServer` | `false` | 서버 전용 proto 파일 포함(파일명이 `-s` 또는 `_s` 로 끝남) |
+
+> 주의: 불리언 파라미터(`--isServer`, `--isGenerateDescription` 등)는 플래그 방식입니다: **지정하면 켜지며** `--xxx false` 로는 끌 수 없습니다(`false` 리터럴은 무시됨). 표의 "기본값"은 파라미터 생략 시의 값입니다.
 
 ### TypeScript
 

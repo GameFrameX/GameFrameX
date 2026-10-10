@@ -192,7 +192,7 @@ namespace Hotfix.Manager
 
         public bool IsCurrentPlayerOwner()
         {
-            return CurrentRoom != null && CurrentRoom.OwnerRoleId == CurrentRoleId;
+            return CurrentRoom != null && CurrentRoom.OwnerPlayerId == CurrentRoleId;
         }
 
         public bool CanStartGame()
@@ -208,7 +208,7 @@ namespace Hotfix.Manager
             }
 
             var roleId = CurrentRoleId;
-            return CurrentRoom.Players.FirstOrDefault(m => m.RoleId != roleId);
+            return CurrentRoom.Players.FirstOrDefault(m => m.PlayerId != roleId);
         }
 
         private void UpsertRoom(RoomInfo room)

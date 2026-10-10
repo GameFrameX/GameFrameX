@@ -1,0 +1,62 @@
+syntax = "proto3";
+package Gateway;
+
+// 后端路由业务错误码（6 位 = 模块ID 230 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum GatewayErrorCode
+{
+  WeightInvalid = 230002; // 权重非法（须大于 0）
+  TargetNotFound = 230003; // 路由目标不存在
+  NoAvailableTarget = 230004; // 无可用路由目标（全部心跳超时或角色类型无注册）
+}
+
+// 请求注册路由目标
+message ReqGatewayRegisterTarget
+{
+  string RoleType = 1; // 角色类型（如 Trade/Chat）
+  string Host = 2; // 主机地址
+  int32 Port = 3; // 端口
+  int32 Weight = 4; // 路由权重（大于 0）
+}
+
+// 返回注册路由目标结果
+message RespGatewayRegisterTarget
+{
+  int64 TargetId = 1; // 新注册目标的ID
+}
+
+// 请求路由目标心跳
+message ReqGatewayHeartbeat
+{
+  int64 TargetId = 1; // 路由目标ID
+}
+
+// 返回路由目标心跳结果
+message RespGatewayHeartbeat
+{
+  bool Alive = 1; // 目标是否存活（心跳已刷新）
+}
+
+// 请求解析角色类型的路由目标（可用集按权重随机）
+message ReqGatewayResolveTarget
+{
+  string RoleType = 1; // 角色类型
+}
+
+// 返回解析到的路由目标
+message RespGatewayResolveTarget
+{
+  int64 TargetId = 1; // 路由目标ID
+  string Host = 2; // 主机地址
+  int32 Port = 3; // 端口
+}
+
+// 请求注销路由目标
+message ReqGatewayUnregisterTarget
+{
+  int64 TargetId = 1; // 路由目标ID
+}
+
+// 返回注销路由目标结果
+message RespGatewayUnregisterTarget
+{
+}

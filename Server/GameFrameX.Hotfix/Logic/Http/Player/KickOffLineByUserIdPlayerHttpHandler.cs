@@ -53,7 +53,7 @@ public sealed class KickOffLineByUserIdPlayerHttpHandler : BaseHttpHandler
     public override Task<string> Action(string ip, string url, HttpMessageRequestBase requestBase)
     {
         var request = (KickOffLineByUserIdPlayerRequest)requestBase;
-        SessionManager.KickOffLineByUserId(request.RoleId);
+        SessionManager.KickOffLineByUserId(request.PlayerId);
         return Task.FromResult(HttpJsonResult.SuccessString());
     }
 }
@@ -61,10 +61,10 @@ public sealed class KickOffLineByUserIdPlayerHttpHandler : BaseHttpHandler
 public sealed class KickOffLineByUserIdPlayerRequest : HttpMessageRequestBase
 {
     /// <summary>
-    /// 角色Id
+    /// 玩家ID
     /// </summary>
-    [Description("角色Id")]
+    [Description("玩家ID")]
     [Required]
     [Range(1, long.MaxValue)]
-    public long RoleId { get; set; }
+    public long PlayerId { get; set; }
 }

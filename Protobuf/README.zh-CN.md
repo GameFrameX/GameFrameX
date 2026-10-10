@@ -114,14 +114,13 @@ docker run --rm \
 // 文件名：_0100_Bag.proto
 syntax = "proto3";      // 永远用 proto3 —— 当前的 protobuf 语法
 package Bag;            // 业务域名（PascalCase）
-option module = 100;    // 路由号；必须和文件名里的 0100 对上
 ```
 
 逐行解读：
 
 - `syntax = "proto3";` —— 声明使用当前的 protobuf 语法。每个文件都以此开头。
 - `package Bag;` —— 这个文件的业务域是"Bag"。PascalCase 指首字母大写。
-- `option module = 100;` —— 分配路由号 100。**它必须和文件名里的 `0100` 完全一致。**
+- 模块 ID —— **只**由文件名前缀决定（`_0100_` → 100）。**不要写** `option module`：已从全部协议文件移除（2026-09-28）；文件名与 option 双份定义会漂移并抛 module mismatch 异常。
 
 规则：
 
@@ -251,7 +250,6 @@ enum MailErrorCode {
 ```protobuf
 syntax = "proto3";
 package Quest;
-option module = 600;
 
 // Quest business error codes (6 digits = module 600 + 3-digit ordinal)
 enum QuestErrorCode {
@@ -312,7 +310,6 @@ message NotifyQuestChanged {
 ```protobuf
 syntax = "proto3";     // Required: only proto3 is supported
 package Basic;
-option module = 10;    // Required: module ID must be defined
 ```
 
 ### 消息命名
@@ -347,7 +344,7 @@ option module = 10;    // Required: module ID must be defined
 
 ### 仅服务端文件
 
-导出工具通过**文件名后缀** `-s` 或 `_s`（如 `player-s.proto`、`economy_s.proto`）识别仅服务端的 proto 文件。传入 `--isServer true` 可将其纳入；默认 `--isServer false` 时它们会被跳过，因此仅服务端的消息永远不会泄露给客户端。
+导出工具通过**文件名后缀** `-s` 或 `_s`（如 `player-s.proto`、`economy_s.proto`）识别仅服务端的 proto 文件。传入 `--isServer` 可将其纳入；默认（省略 `--isServer`）时它们会被跳过，因此仅服务端的消息永远不会泄露给客户端。注意：布尔参数是开关语义，**出现即开启**——`--isServer false` 同样会开启服务器模式（`false` 字面量会被忽略），要关闭只能省略该参数。
 
 内部协议另外使用**负的模块 ID** 实现路由隔离（参见上方模块 ID 表）。
 
@@ -375,7 +372,7 @@ docker run --rm \
   -v ./Server/GameFrameX.Proto/Proto:/output \
   gameframex/gameframex-tools:latest \
   --mode csharp --isServer true \
-  --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.NetWork.Abstractions|using GameFrameX.NetWork.Messages" \
+  --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.Network.Abstractions|using GameFrameX.Network.Messages" \
   --isGenerateDescription true \
   --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
 ```
@@ -444,6 +441,8 @@ docker run --rm \
 | `--usingStatements` | `""` | using 语句，以 `\|` 分隔（如 `"using System\|using ProtoBuf"`） |
 | `--isGenerateDescription` | `false` | 是否生成 `[System.ComponentModel.Description]` 特性 |
 | `--isServer` | `false` | 是否纳入仅服务端的 proto 文件（文件名以 `-s` 或 `_s` 结尾） |
+
+> 注：布尔参数（`--isServer`、`--isGenerateDescription` 等）为开关语义：**出现即开启**，`--xxx false` 无法将其关闭（`false` 字面量会被忽略）；表中「默认值」指省略该参数时的取值。
 
 ### TypeScript
 

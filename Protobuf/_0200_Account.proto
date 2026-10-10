@@ -1,0 +1,53 @@
+syntax = "proto3";
+package Account;
+
+// 账号业务错误码（6 位 = 模块ID 200 + 3 位编号）。客户端协议 ErrorCode 以 int 透传：发生错误时赋具体码，成功不赋值（框架默认 0）。
+enum AccountErrorCode
+{
+  AccountExists = 200002; // 账号名已存在
+  NameInvalid = 200003; // 账号名非法（长度 4-32 且非纯空白）
+  PasswordTooShort = 200004; // 密码过短（至少 6 个字符）
+  AccountNotFound = 200005; // 账号不存在
+  OldPasswordMismatch = 200006; // 旧密码不匹配
+}
+
+// 请求注册账号
+message ReqAccountRegister
+{
+  string AccountName = 1; // 账号名（4-32 字符，非纯空白，全局唯一）
+  string Password = 2; // 密码（至少 6 个字符）
+}
+
+// 返回注册账号结果（新建账号档案）
+message RespAccountRegister
+{
+  int64 AccountId = 1; // 新建账号ID
+  int64 CreatedUnixTime = 2; // 创建 Unix 秒
+}
+
+// 请求查询账号档案（不含密码）
+message ReqAccountQuery
+{
+  string AccountName = 1; // 账号名
+}
+
+// 返回账号档案（不含密码）
+message RespAccountQuery
+{
+  int64 AccountId = 1; // 账号ID
+  int64 CreatedUnixTime = 2; // 创建 Unix 秒
+  int64 LastLoginUnixTime = 3; // 最近一次登录 Unix 秒（从未登录为 0）
+}
+
+// 请求修改账号密码
+message ReqAccountChangePassword
+{
+  string AccountName = 1; // 账号名
+  string OldPassword = 2; // 旧密码
+  string NewPassword = 3; // 新密码（至少 6 个字符）
+}
+
+// 返回修改账号密码结果
+message RespAccountChangePassword
+{
+}
