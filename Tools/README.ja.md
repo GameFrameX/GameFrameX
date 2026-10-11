@@ -1,30 +1,46 @@
 <div align="center">
 
-![GameFrameX Logo](https://download.alianblank.com/gameframex/gameframex_logo_320.png)
+<img src="https://download.alianblank.com/gameframex/gameframex_logo_320.png" alt="Game Frame X Logo" width="160" />
 
 # GameFrameX.Tools
 
+[![License](https://img.shields.io/badge/license-blue.svg)](LICENSE.md)
 [![Version](https://img.shields.io/github/v/release/GameFrameX/GameFrameX.Tools?label=version&color=green)](https://github.com/GameFrameX/GameFrameX.Tools/releases)
-[![License](https://img.shields.io/badge/license-MIT+Apache%202.0-orange.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-gameframex-brightgreen.svg)](https://gameframex.doc.alianblank.com)
+
+[![Discord](https://img.shields.io/badge/-5865F2?logo=discord&logoColor=white)](https://discord.gg/VDWUjWMDw9)
+[![GitHub](https://img.shields.io/badge/-181717?logo=github&logoColor=white)](https://github.com/GameFrameX/gameframex)
+[![Bilibili](https://img.shields.io/badge/-00A1D6?logo=bilibili&logoColor=white)](https://www.bilibili.com/video/BV1yrpeepEn7)
+[![Gitee](https://img.shields.io/badge/-C71D23?logo=gitee&logoColor=white)](https://gitee.com/GameFrameX/gameframex)
 
 **インディゲーム開発者向けオールインワンソリューション · インディ開発者の夢を支援**
 
-[📖 ドキュメント](https://gameframex.doc.alianblank.com) • [💬 QQグループ: 467608841](https://qm.qq.com/cgi-bin/qm/qr?k=sYFd1nv6m2KZIWFLorZ5pBR0AE5ZhbuL&jump_from=webapi&authKey=oCu+uoL3n35fT5SEt7iLgGtROPxh31n/rHUxRlp0w1f+j38W4tKBuWyRH3KEdwHN)
+<br />
 
----
+[ドキュメント](https://gameframex.doc.alianblank.com) · [クイックスタート](#クイックスタート) · QQグループ: 467608841 / 233840761
 
-🌐 **言語**: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | **日本語** | [한국어](README.ko.md)
+<br />
 
----
+[English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | **日本語** | [한국어](README.ko.md)
 
 </div>
 
-# ProtoExport ツール
+## プロジェクト概要
 
-言語別エクスポートの Proto プロトコルコード生成ツールです。C#、TypeScript に対応、C++ と Lua は開発中です。
+ProtoExport はマルチ言語向けの Proto プロトコルコード生成ツールです。C#、TypeScript、C++、Lua、Go の 5 つのターゲット言語へのエクスポートに対応し、CLI、クロスプラットフォーム GUI、Docker イメージの 3 つの利用方法を提供します。
 
-# ビルド
+### 機能概要
+
+- マルチ言語エクスポート: C#（`.cs`）、TypeScript（`.ts`）、C++（`.h`）、Lua（`.lua`）、Go（`.go`）
+- 3 つの利用方法: CLI（`dotnet ProtoExport.dll`）、Avalonia GUI（ProtoExporterGUI）、Docker イメージ（`linux/amd64`、`linux/arm64`）
+- メッセージ ID の安定性: lock ファイルが `(Module, メッセージ名) → SubId` のマッピングを永続化し、プロトコル番号は proto テキストの編集ではずれません
+- サーバー専用プロトコル: `-s` / `_s` で終わる proto ファイルは、サーバー向けエクスポート時にのみ含まれます
+- コメント検証: `none` / `container` / `member` / `all` の 4 段階によるコメント完全性チェック
+- GUI 設定の永続化: モードごとに `Setting.json` に保存し、デフォルト値と深くマージして無損失アップグレード
+
+## クイックスタート
+
+### インストール
 
 `ProtoExport` プロジェクトは、ビルド成果物を**固定の同階層パス** `../Protobuf/Tools/`（リポジトリルート相対、すなわち `<ワークスペース>/Protobuf/Tools/`）に出力するよう設定されています。パスは `.csproj` の位置を `$(MSBuildThisFileDirectory)` で基準にするため、`Tools` と `Protobuf` を同階層にクローンすればどの環境でも同じように解決されます。
 
@@ -44,10 +60,19 @@ dotnet build ProtoExport/ProtoExport.csproj -c Release
 
 > SDK デフォルトの `output-paths` target に上書きされないよう、`OutDir` ではなく `OutputPath` を使用します。
 
+## 使用例
 
-# Docker
+| モード | 出力言語 | ファイル拡張子 | 説明 |
+|--------|---------|--------------|------|
+| `csharp` | C# | `.cs` | Server、Unity、Godot、Stride、Flax などに対応 |
+| `typescript` | TypeScript | `.ts` | LayaAir、Cocos Creator、Phaser などに対応 |
+| `cpp` | C++ | `.h` | Unreal Engine などに対応 |
+| `lua` | Lua | `.lua` | Defold、Solar2D、Dora SSR などに対応 |
+| `go` | Go | `.go` | Go ゲームサーバーなどに対応 |
 
-`linux/amd64` および `linux/arm64` 用の Docker イメージが提供されています。
+### Docker イメージ
+
+`linux/amd64` および `linux/arm64` 向けのプリビルド済み Docker イメージが提供されています。
 
 **Docker Hub**
 
@@ -71,153 +96,11 @@ docker run --rm \
   --mode csharp --isServer true --usingStatements "using System|using ProtoBuf|using System.Collections.Generic|using GameFrameX.NetWork.Abstractions|using GameFrameX.NetWork.Messages" --isGenerateDescription true --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
 ```
 
-# Proto プロトコル仕様
-
-本ツールは `.proto` ファイルの書式について特定の要件があります。正しくコードを生成するために、以下のルールに従ってください。
-
-## ファイルフォーマット要件
-
-```protobuf
-syntax = "proto3";     // 必須：proto3 のみサポート
-package Basic;
-option module = 10;    // モジュール ID：ファイル名プレフィックス（_0010_Name.proto）またはこの宣言のどちらか。併存時は一致必須
-
-// ハートビートリクエスト
-message ReqHeartBeat
-{
-    int64 Timestamp = 1; // タイムスタンプ
-}
-```
-
-## メッセージ命名規則
-
-- **リクエストメッセージ**：`Req` で始まる必要があります（例：`ReqLogin`、`ReqHeartBeat`）
-- **レスポンスメッセージ**：`Resp` で始まる必要があります（例：`RespLogin`）
-- **通知メッセージ**：`Notify` で始まる必要があります（例：`NotifyBagInfoChanged`）
-- メッセージ名、フィールド名、enum名、enum値はすべて **UpperCamelCase**（アッパーキャメルケース）を使用
-
-## モジュール ID ルール
-
-モジュール ID は 2 つの方法で宣言でき、**ファイル名プレフィックスが優先**されます：
-
-1. **ファイル名プレフィックス**：`_<モジュールID>_<名前>.proto`（例：`_0010_Basic.proto` → モジュール 10、`_-0120_Inner_Social.proto` → モジュール -120。区切りには `-` も使用可能、例：`_0010-Basic.proto`）
-2. **option 宣言**：`option module = <id>;`
-
-ルール：
-
-- 両方存在する場合は一致が必須。不一致はビルドエラー
-- `_` + 数字で始まるが 2 番目の区切り記号がないファイル名（例：`_0010Basic`）は命名エラーとなりビルドエラー
-- 両方存在しない場合もビルドエラー
-
-| ID 範囲 | 用途 |
-|---------|------|
-| `0` ~ `32767` | クライアント-サーバー間通信 |
-| `-32768` ~ `-1` | サーバー-サーバー間通信 |
-
-## フィールド番号ルール
-
-- メッセージのフィールド番号は **800 未満**である必要があります（800 以上はシステム予約であり、パースエラーの原因になります）
-- `ErrorCode` はレスポンスメッセージの予約フィールド名です。手動で定義しないでください。`Resp` メッセージには自動的に `ErrorCode` フィールドが生成されます
-
-## 制限事項
-
-- **ネスト型非対応**：message 内部での `message`、`enum`、その他カスタム型のネストはサポートされていません
-- **RPC 定義非対応**：proto ファイル内での RPC サービス定義はサポートされていません
-- **proto3 のみ対応**：`syntax = "proto3";` の宣言が必須です。proto2 はサポートされていません
-
-## コメント規約
-
-- message と enum 定義の**上**にコメントを追加：
-
-```protobuf
-// ハートビートリクエスト
-message ReqHeartBeat
-{
-    int64 Timestamp = 1;
-}
-```
-
-- フィールド行の**末尾**にインラインコメントを追加：
-
-```protobuf
-// プレイヤー情報
-message PlayerInfo
-{
-    int64 Id = 1;         // プレイヤーID
-    string Name = 2;      // プレイヤー名
-    uint32 Level = 3;     // プレイヤーレベル
-    int32 State = 4;      // プレイヤー状態
-}
-```
-
-完全なプロトコル仕様については [通信プロトコル仕様](https://gameframex.doc.alianblank.com/zh-CN/protobuf/require.html) と [注意事項](https://gameframex.doc.alianblank.com/zh-CN/protobuf/note.html) のドキュメントを参照してください。
-
-## サンプル Proto ファイル
-
-[TestProtos/](TestProtos/) ディレクトリには、主要なパターンを網羅したサンプル proto ファイルが含まれています：
-
-| ファイル | パターン | モジュール ID |
-|----------|----------|--------------|
-| `heartbeat.proto` | 基本的な Req/Resp | `1`（クライアント-サーバー） |
-| `player.proto` | Req/Resp/Notify + enum + map | `2`（クライアント-サーバー） |
-| `bag.proto` | enum + repeated + map + Notify | `3`（クライアント-サーバー） |
-| `admin-s.proto` | サーバー専用プロトコル（`-s` 接尾辞） | `99`（クライアント-サーバー） |
-| `server-internal-s.proto` | サーバー間通信（負のモジュール ID） | `-1`（サーバー-サーバー） |
-
----
-
-# パラメータ解説
-
-## コアパラメータ
-
-| パラメータ | 必須 | デフォルト | 説明 |
-|-----------|------|-----------|------|
-| `--mode` | はい | - | 言語モード：`csharp`、`typescript`、`cpp`、`lua` |
-| `--inputPath` | はい | - | `.proto` ファイルのディレクトリパス |
-| `--outputPath` | はい | - | 生成ファイルの出力パス |
-| `--namespaceName` | いいえ | `""` | 生成コードの名前空間（C# のみ有効、TypeScript では無視） |
-| `--isGenerateErrorCode` | いいえ | `true` | レスポンスメッセージに `ErrorCode` フィールドを自動生成するか |
-| `--requireComments` | いいえ | `none` | コメント検証レベル：`none`（検証なし）、`container`（message/enum にコメント必須）、`member`（フィールド/enum メンバーにコメント必須）、`all`（すべて） |
-
-## C# 専用パラメータ
-
-| パラメータ | 必須 | デフォルト | 説明 |
-|-----------|------|-----------|------|
-| `--usingStatements` | いいえ | `""` | using 文を `\|` で区切って指定（例：`"using System\|using ProtoBuf\|using System.Collections.Generic"`） |
-| `--isGenerateDescription` | いいえ | `false` | `[System.ComponentModel.Description]` 属性を生成するか |
-| `--isServer` | いいえ | `false` | サーバー専用 proto ファイル（`-s` または `_s` で終わるファイル）を含めるか |
-
-## TypeScript 専用パラメータ
-
-| パラメータ | 必須 | デフォルト | 説明 |
-|-----------|------|-----------|------|
-| `--importPath` | いいえ | `"../network/"` | 生成される import 文のパスプレフィックス |
-| `--isGenerateDescription` | いいえ | `false` | JSDoc スタイルのコメントを生成するか |
-
-## その他のパラメータ
-
-| パラメータ | 必須 | デフォルト | 説明 |
-|-----------|------|-----------|------|
-| `--isGenerateErrorCodeExcelFile` | いいえ | `true` | エラーコード Excel ファイルを生成するか |
-| `--errorCodeExcelFilePath` | いいえ | `""` | エラーコード Excel ファイルのカスタムパス |
-
----
-
-# モード詳細と例
-
-| モード | 出力言語 | ファイル拡張子 | 説明 |
-|--------|---------|--------------|------|
-| `csharp` | C# | `.cs` | Server、Unity、Godot、Stride、Flax などに対応 |
-| `typescript` | TypeScript | `.ts` | LayaAir、Cocos Creator、Phaser などに対応 |
-| `cpp` | C++ | `.h` | Unreal Engine などに対応 |
-| `lua` | Lua | `.lua` | Defold、Solar2D、Dora SSR などに対応 |
-| `go` | Go | `.go` | Go ゲームサーバーなどに対応 |
-
-## C# モード
+### C# モード
 
 `[ProtoContract]` / `[ProtoMember]` 属性付きの C# コードを生成します。すべての動作は CLI パラメータで制御され、エンジン固有のハードコードはありません。
 
-### サーバーエクスポート
+#### サーバーエクスポート
 
 サーバー用の using 文、`[Description]` 属性付きのコードを生成し、サーバー専用 proto ファイルを含めます。
 
@@ -248,7 +131,7 @@ docker run --rm \
   --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
 ```
 
-### Unity エクスポート
+#### Unity エクスポート
 
 Unity 用の using 文付きコードを生成し、サーバー専用 proto ファイルは自動的にスキップされます。
 
@@ -262,7 +145,7 @@ dotnet ProtoExport.dll \
   --isGenerateErrorCode true
 ```
 
-### Godot エクスポート
+#### Godot エクスポート
 
 Unity と同様ですが、Godot 固有の名前空間を使用します。
 
@@ -276,11 +159,11 @@ dotnet ProtoExport.dll \
   --isGenerateErrorCode true
 ```
 
-## TypeScript モード
+### TypeScript モード
 
 `export namespace`、`export class`、`export enum` を含む `.ts` ファイルと、集約ファイル `ProtoMessageRegister.ts` を生成します。サーバー専用 proto ファイルは自動的にスキップされます。
 
-### デフォルト import パス
+#### デフォルト import パス
 
 ```bash
 dotnet ProtoExport.dll \
@@ -290,7 +173,7 @@ dotnet ProtoExport.dll \
   --isGenerateErrorCode true
 ```
 
-### カスタム import パス
+#### カスタム import パス
 
 ```bash
 dotnet ProtoExport.dll \
@@ -311,7 +194,7 @@ docker run --rm \
   --mode typescript --inputPath /protos --outputPath /output
 ```
 
-## C++ モード
+### C++ モード
 
 `#pragma once`、名前空間、`enum class`、クラス定義を含む C++ ヘッダファイルを生成します。`MessageObject` を継承するクラスには `MESSAGE_ID` と `Clear()` メソッドが含まれます。
 
@@ -324,7 +207,7 @@ dotnet ProtoExport.dll \
   --namespaceName GameFrameX.Proto
 ```
 
-## Lua モード
+### Lua モード
 
 LuaDoc（EmmyLua）スタイルの型アノテーションとモジュールベースのメッセージ定義を含む `.lua` ファイルを生成します。集約ファイル `ProtoMessageRegister.lua` も生成されます。
 
@@ -346,7 +229,7 @@ docker run --rm \
   --mode lua --importPath "./network/" --inputPath /protos --outputPath /output
 ```
 
-## Go モード
+### Go モード
 
 protobuf タグ付きの Go struct 定義、enum 型定義、集約ファイル `message_register.go` を生成します。`--namespaceName` は Go パッケージ名として使用されます（ドット区切りの場合は最後のセグメント）。
 
@@ -369,13 +252,11 @@ docker run --rm \
   --mode go --inputPath /protos --outputPath /output --namespaceName proto
 ```
 
----
-
-# GUI ツール（ProtoExporterGUI）
+### GUI ツール（ProtoExporterGUI）
 
 ProtoExport CLI をラップするクロスプラットフォームの Avalonia GUI で、コマンドライン引数を手打ちする手間を省けます。
 
-## 機能
+#### 機能概要
 
 - 7種類のエクスポートモード（Server / Unity / Godot / TypeScript / C++ / Lua / Go）をドロップダウンで切り替え
 - すべての CLI パラメータを視覚的に編集（名前空間、using/import、コメント検証レベル、エラーコード、Description、サーバーモード）
@@ -384,16 +265,16 @@ ProtoExport CLI をラップするクロスプラットフォームの Avalonia 
 - 設定の永続化（モードごとにプログラムディレクトリの `Setting.json` に保存、デフォルト値と深くマージして無損失アップグレード）
 - リアルタイムログ出力パネル
 
-## ビルドと発行
+#### ビルドと発行
 
 ```bash
 dotnet publish ProtoExporterGUI/ProtoExporterGUI.csproj -c Release -r win-x64 --no-self-contained
-# その他の RID：osx-arm64 / osx-x64 / linux-x64 / linux-arm64
+# その他の RID: osx-arm64 / osx-x64 / linux-x64 / linux-arm64
 ```
 
 成果物はシングルファイルの実行可能ファイルです（ランタイムを含まないため、対象マシンに .NET 10 ランタイムの事前インストールが必要です）。
 
-## 使い方
+#### 使い方
 
 1. アプリを起動する
 2. エクスポートモードを選択する
@@ -403,9 +284,7 @@ dotnet publish ProtoExporterGUI/ProtoExporterGUI.csproj -c Release -r win-x64 --
 
 GUI は CLI と機能的に等価です。CI / 自動化のシナリオでは、引き続き CLI または Docker の使用を推奨します。
 
----
-
-# クイックエクスポートスクリプト
+### クイックエクスポートスクリプト
 
 `Protobuf/` ディレクトリにプリセットのエクスポートスクリプトが用意されています：
 
@@ -418,17 +297,213 @@ GUI は CLI と機能的に等価です。CI / 自動化のシナリオでは、
 | `Proto2LuaExport.sh/.bat` | Lua コードのエクスポート |
 | `Proto2GoExport.sh/.bat` | Go コードのエクスポート |
 
----
+## API リファレンス
 
-# Docker パスマッピング
+### Proto プロトコル仕様
 
-Docker 使用時のパスマッピングは以下の通りです：
+本ツールは `.proto` ファイルの書式について特定の要件があります。正しくコードを生成するために、以下のルールに従ってください。
 
-- `-v <ホストパス>:<コンテナパス>` でホストのディレクトリをコンテナにマウントします
-- `--inputPath` と `--outputPath` には**コンテナ内パス**（例：`/protos`、`/output`）を指定します（ホストパスではありません）
+#### ファイルフォーマット要件
+
+```protobuf
+syntax = "proto3";     // 必須: proto3 のみサポート
+package Basic;
+option module = 10;    // モジュール ID: ファイル名プレフィックス（_0010_Name.proto）またはこの宣言のどちらか。併存時は一致必須
+
+// ハートビートリクエスト
+message ReqHeartBeat
+{
+    int64 Timestamp = 1; // タイムスタンプ
+}
+```
+
+#### メッセージ命名規則
+
+- **リクエストメッセージ**: `Req` で始まる必要があります（例: `ReqLogin`、`ReqHeartBeat`）
+- **レスポンスメッセージ**: `Resp` で始まる必要があります（例: `RespLogin`）
+- **通知メッセージ**: `Notify` で始まる必要があります（例: `NotifyBagInfoChanged`）
+- メッセージ名、フィールド名、enum名、enum値はすべて **UpperCamelCase**（アッパーキャメルケース）を使用
+
+#### モジュール ID ルール
+
+モジュール ID は 2 つの方法で宣言でき、**ファイル名プレフィックスが優先**されます:
+
+1. **ファイル名プレフィックス**: `_<モジュールID>_<名前>.proto`（例: `_0010_Basic.proto` → モジュール 10、`_-0120_Inner_Social.proto` → モジュール -120。区切りには `-` も使用可能、例: `_0010-Basic.proto`）
+2. **option 宣言**: `option module = <id>;`
+
+ルール:
+
+- 両方存在する場合は一致が必須。不一致はビルドエラー
+- `_` + 数字で始まるが 2 番目の区切り記号がないファイル名（例: `_0010Basic`）は命名エラーとなりビルドエラー
+- 両方存在しない場合もビルドエラー
+
+| ID 範囲 | 用途 |
+|---------|------|
+| `0` ~ `32767` | クライアント-サーバー間通信 |
+| `-32768` ~ `-1` | サーバー-サーバー間通信 |
+
+#### フィールド番号ルール
+
+- メッセージのフィールド番号は **800 未満**である必要があります（800 以上はシステム予約であり、パースエラーの原因になります）
+- `ErrorCode` はレスポンスメッセージの予約フィールド名です。手動で定義しないでください。`Resp` メッセージには自動的に `ErrorCode` フィールドが生成されます
+
+#### 制限事項
+
+- **ネスト型非対応**: message 内部での `message`、`enum`、その他カスタム型のネストはサポートされていません
+- **RPC 定義非対応**: proto ファイル内での RPC サービス定義はサポートされていません
+- **proto3 のみ対応**: `syntax = "proto3";` の宣言が必須です。proto2 はサポートされていません
+
+#### コメント規約
+
+- message と enum 定義の**上**にコメントを追加:
+
+```protobuf
+// ハートビートリクエスト
+message ReqHeartBeat
+{
+    int64 Timestamp = 1;
+}
+```
+
+- フィールド行の**末尾**にインラインコメントを追加:
+
+```protobuf
+// プレイヤー情報
+message PlayerInfo
+{
+    int64 Id = 1;         // プレイヤーID
+    string Name = 2;      // プレイヤー名
+    uint32 Level = 3;     // プレイヤーレベル
+    int32 State = 4;      // プレイヤー状態
+}
+```
+
+#### サンプル Proto ファイル
+
+[TestProtos/](TestProtos/) ディレクトリには、主要なパターンを網羅したサンプル proto ファイルが含まれています:
+
+| ファイル | パターン | モジュール ID |
+|----------|----------|--------------|
+| `heartbeat.proto` | 基本的な Req/Resp | `1`（クライアント-サーバー） |
+| `player.proto` | Req/Resp/Notify + enum + map | `2`（クライアント-サーバー） |
+| `bag.proto` | enum + repeated + map + Notify | `3`（クライアント-サーバー） |
+| `admin-s.proto` | サーバー専用プロトコル（`-s` 接尾辞） | `99`（クライアント-サーバー） |
+| `server-internal-s.proto` | サーバー間通信（負のモジュール ID） | `-1`（サーバー-サーバー） |
+
+### パラメータ解説
+
+#### コアパラメータ
+
+| パラメータ | 必須 | デフォルト | 説明 |
+|-----------|------|-----------|------|
+| `--mode` | はい | - | 言語モード: `csharp`、`typescript`、`cpp`、`lua`、`go` |
+| `--inputPath` | はい | - | `.proto` ファイルのディレクトリパス |
+| `--outputPath` | はい | - | 生成ファイルの出力パス |
+| `--namespaceName` | いいえ | `""` | 生成コードの名前空間（C# のみ有効、TypeScript では無視） |
+| `--isGenerateErrorCode` | いいえ | `true` | レスポンスメッセージに `ErrorCode` フィールドを自動生成するか |
+| `--requireComments` | いいえ | `none` | コメント検証レベル: `none`（検証なし）、`container`（message/enum にコメント必須）、`member`（フィールド/enum メンバーにコメント必須）、`all`（すべて） |
+
+#### C# 専用パラメータ
+
+| パラメータ | 必須 | デフォルト | 説明 |
+|-----------|------|-----------|------|
+| `--usingStatements` | いいえ | `""` | using 文を `\|` で区切って指定（例: `"using System\|using ProtoBuf\|using System.Collections.Generic"`） |
+| `--isGenerateDescription` | いいえ | `false` | `[System.ComponentModel.Description]` 属性を生成するか |
+| `--isServer` | いいえ | `false` | サーバー専用 proto ファイル（`-s` または `_s` で終わるファイル）を含めるか |
+
+> 注：ブール型パラメータ（`--isGenerateErrorCode`、`--isGenerateDescription`、`--isServer` など）はフラグ方式です：**指定すれば有効**になり、`--xxx false` では無効化できません（`false` は無視されます）。表の「デフォルト」はパラメータ省略時の値です（例：`--isGenerateErrorCode` は省略時も有効）。
+
+#### TypeScript 専用パラメータ
+
+| パラメータ | 必須 | デフォルト | 説明 |
+|-----------|------|-----------|------|
+| `--importPath` | いいえ | `"../network/"` | 生成される import 文のパスプレフィックス |
+| `--isGenerateDescription` | いいえ | `false` | JSDoc スタイルのコメントを生成するか |
+
+#### その他のパラメータ
+
+| パラメータ | 必須 | デフォルト | 説明 |
+|-----------|------|-----------|------|
+| `--isGenerateErrorCodeExcelFile` | いいえ | `true` | エラーコード Excel ファイルを生成するか |
+| `--errorCodeExcelFilePath` | いいえ | `""` | エラーコード Excel ファイルのカスタムパス |
+
+### サブ ID の安定性（lock ファイル）
+
+#### 問題: 行順自動採番がプロトコルを壊す
+
+旧バージョンの `MessageIdHandler` は、proto ファイル内の**行順**で自動採番して SubId を割り当てていました（各モジュールは 10 から開始）。このため、proto ファイルに構造的な編集を加えると、そのモジュールの SubId が全体としてずれてしまいます:
+
+| 操作 | 結果 |
+|------|------|
+| 途中にメッセージを 1 つ挿入 | それ以降のすべてのメッセージの SubId が +1 |
+| message 定義の順序を入れ替える | 対応するメッセージの SubId が入れ替わる |
+| メッセージを 1 つ削除 | それ以降のすべてのメッセージの SubId が -1 |
+
+SubId はランタイムのネットワークプロトコルにおけるアドレッシングキーです（`MessageID = (Module << 16) | SubId`）。ひとたびずれると、C# / C++ / Go / Lua / TypeScript の各端で生成されるレジストリが、稼働中の旧クライアントと**全体としてずれ込みます**: 旧パケットが保持する過去の Opcode が、別のメッセージとして解釈されてしまいます。行順はあくまでテキスト上の属性であり、プロトコルの意味論に関与すべきではありません。
+
+#### lock 仕組み
+
+有効にすると、`MessageIdCoordinator` は `(Module, メッセージ名) → SubId` のマッピングを JSON lock ファイル（`proto-message-ids.lock.json`）に永続化します。割り当ての判断は名前のみを参照し、行順は使いません:
+
+| シナリオ | 割り当て判断 |
+|---------|-------------|
+| メッセージ名が lock 内に既に存在する | 過去の SubId を**そのまま使用**し、決して書き換えない |
+| メッセージ名が lock 内に存在しない | **max(使用済み番号) + 1**。空き番号は埋めない |
+| lock 内に存在するが今回の proto にない（削除・リネーム） | `retired` セクションへ移動し、**決して再利用しない** |
+
+重要なルール:
+
+- `schemaVersion`: lock ファイルは schema バージョン番号を持ち、バージョン非互換の場合はエクスポートが即座にエラーになります。黙って並べ替えることは決してありません
+- 各モジュール（`option module = <id>`）は**独立して採番**され、モジュールをまたいだ ID 空間は共有されません
+- SubId の有効範囲は `1..65535`（16 ビット）で、モジュール内の開始番号は `10` です
+- シリアライズは key の辞書順で出力され、diff には実際の変更のみが含まれるため PR review が容易です
+- lock ファイルの書き込みはアトミック操作です（`.tmp` に書き出してから rename）
+
+#### 移行手順
 
 ```bash
-# 例：ホスト ./my-protos -> コンテナ /protos
+# 1. シードを一度だけ生成: 「現在この瞬間」の Opcode を lock の起点として凍結する
+bash tools/migrate-message-id-lock.sh
+#    同等の CLI:
+#    dotnet ProtoExport.dll --inputPath <protos> --outputPath <out> \
+#      --mode csharp --messageIdLockPath ./proto-message-ids.lock.json --regenerate-lock
+
+# 2. lock ファイルを確認し、git にコミットする
+git add proto-message-ids.lock.json && git commit -m "chore(proto): freeze message id lock"
+
+# 3. 以降のすべてのエクスポート（ローカル + CI + Docker）で lock パスを必ず渡す
+dotnet ProtoExport.dll ... --messageIdLockPath ./proto-message-ids.lock.json
+```
+
+> **注意**: 移行は**過去のずれをロールバックしません**。旧バージョンの行順自動採番によるずれはすでに発生しており、シードはあくまで「現在この瞬間を凍結」し、以降の割り当てを安定させるものです。すでに稼働環境でずれが発生している場合は、別途プロトコルの整合化を行う必要があります。
+
+関連 CLI パラメータ:
+
+| パラメータ | 説明 |
+|-----------|------|
+| `--messageIdLockPath` | lock ファイルのパス。**空の場合は lock モードが無効**になり、旧来の行順自動採番の動作にフォールバックします（後方互換） |
+| `--print-lock` | lock ファイルの内容を読み取って表示するだけで、エクスポートは実行しません（review 用） |
+| `--regenerate-lock` | 現在パースした Opcode を lock シードとしてシリアライズします（一回限りの移行用） |
+
+#### merge conflict の扱い
+
+2 人が同じモジュールに同時にメッセージを追加すると、それぞれが同じ `max+1` を算出するため、マージ時に lock ファイルのコンフリクトは避けられません。対処方法:
+
+1. どちらか一方の lock の内容を採用します（コンフリクトした両者の内容は等価で、エントリの並び順が異なるだけです）
+2. エクスポートをもう一度実行します（`--messageIdLockPath` 付き）。後からマージされた新メッセージには、次に利用可能な番号が自動的に割り当て直されます
+3. lock ファイルを再コミットします
+
+**これはバグではなく仕様です**: コンフリクトを明示化することで「1 つの番号が決して 2 つのメッセージに割り当たらない」ことを保証します。黙って自動マージすると、逆に 2 つのメッセージが同じ SubId を共有し、ランタイムでパースのずれを引き起こす恐れがあります。`retired` セクションも同様です: 削除・リネームされた旧番号は永久に占有され、新メッセージは `max+1` しか取得できません。
+
+### Docker パスマッピング
+
+Docker 使用時のパスマッピングは以下の通りです:
+
+- `-v <ホストパス>:<コンテナパス>` でホストのディレクトリをコンテナにマウントします
+- `--inputPath` と `--outputPath` には**コンテナ内パス**（例: `/protos`、`/output`）を指定します（ホストパスではありません）
+
+```bash
+# 例: ホスト ./my-protos -> コンテナ /protos
 docker run --rm \
   -v $(pwd)/my-protos:/protos \
   -v $(pwd)/my-output:/output \
@@ -438,3 +513,44 @@ docker run --rm \
   --isGenerateDescription true \
   --inputPath /protos --outputPath /output --namespaceName GameFrameX.Proto.Proto
 ```
+
+## 依存関係
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) — ビルドと CLI 実行
+- [Avalonia](https://avaloniaui.net/) — GUI ツール（ProtoExporterGUI）のクロスプラットフォーム UI フレームワーク
+- [Docker](https://www.docker.com/)（オプション）— コンテナとしてエクスポーターを実行
+
+## ドキュメントとリソース
+
+- [公式ドキュメント](https://gameframex.doc.alianblank.com)
+- [通信プロトコル仕様](https://gameframex.doc.alianblank.com/zh-CN/protobuf/require.html)
+- [注意事項](https://gameframex.doc.alianblank.com/zh-CN/protobuf/note.html)
+
+## コミュニティとサポート
+
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/VDWUjWMDw9)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/GameFrameX/gameframex)
+[<img src="https://cdn.jsdelivr.net/npm/devicon@2/icons/linkedin/linkedin-original.svg" height="28" alt="LinkedIn" />](https://www.linkedin.com/in/alianblank)
+[![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/GameFrameX/)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/alian_blank)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCD9QhSFJ5xZkn5NTSV-DVAw)
+[![Bluesky](https://img.shields.io/badge/Bluesky-0285FF?style=for-the-badge&logo=bluesky&logoColor=white)](https://bsky.app/profile/alianblank.bsky.social)
+[![Bilibili](https://img.shields.io/badge/Bilibili-00A1D6?style=for-the-badge&logo=bilibili&logoColor=white)](https://www.bilibili.com/video/BV1yrpeepEn7)
+[![Gitee](https://img.shields.io/badge/Gitee-C71D23?style=for-the-badge&logo=gitee&logoColor=white)](https://gitee.com/GameFrameX/gameframex)
+![QQ](https://img.shields.io/badge/QQ-467608841%2F233840761-EB1923?style=for-the-badge&logo=qq&logoColor=white)
+
+## 変更履歴
+
+詳しくは [CHANGELOG.md](CHANGELOG.md) を参照してください。
+
+## ライセンス
+
+詳しくは [LICENSE.md](LICENSE.md) をご参照ください。
+
+<!--
+EN: See [LICENSE.md](LICENSE.md) for license information.
+zh-CN: 详见 [LICENSE.md](LICENSE.md) 文件。
+zh-TW: 詳見 [LICENSE.md](LICENSE.md) 檔案。
+ja: 詳しくは [LICENSE.md](LICENSE.md) をご参照ください。
+ko: 자세한 내용은 [LICENSE.md](LICENSE.md) 파일을 참조하세요.
+-->

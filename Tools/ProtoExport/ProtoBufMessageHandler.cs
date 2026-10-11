@@ -30,10 +30,24 @@ public static class ProtoBufMessageHandler
         protoGenerateHelper.Init(launcherOptions);
 
         // 参数验证通过后再清理并创建输出目录
+        // 整体 Delete(true) 在挂载输出目录场景（如 CI 上 -v 出来的 /output）会因
+        // 当前用户与宿主 UID 不一致而抛 IOException / UnauthorizedAccessException，
+        // 此时降级为逐项清理以保留目录可写，新一轮导出文件仍能正常落盘。
         var outputDirectoryInfo = new DirectoryInfo(launcherOptions.OutputPath);
         if (outputDirectoryInfo.Exists)
         {
-            outputDirectoryInfo.Delete(true);
+            try
+            {
+                outputDirectoryInfo.Delete(true);
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            {
+                ExportLogger.WriteLine($"[WARN] 输出目录整体清空失败 ({ex.Message})，改为逐项清理。");
+                foreach (var entry in outputDirectoryInfo.EnumerateFileSystemInfos())
+                {
+                    if (entry is DirectoryInfo sub) sub.Delete(true); else entry.Delete();
+                }
+            }
         }
 
         outputDirectoryInfo.Create();

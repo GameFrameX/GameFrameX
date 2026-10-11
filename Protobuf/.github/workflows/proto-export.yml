@@ -47,6 +47,7 @@ jobs:
           case "${{ matrix.lang }}" in
             csharp-server)
               docker run --rm \
+                --user "$(id -u):$(id -g)" \
                 -v "$PROTOS":/protos:ro \
                 -v "$OUT":/output \
                 "$IMAGE" \
@@ -58,6 +59,7 @@ jobs:
               ;;
             csharp-client)
               docker run --rm \
+                --user "$(id -u):$(id -g)" \
                 -v "$PROTOS":/protos:ro \
                 -v "$OUT":/output \
                 "$IMAGE" \
@@ -68,6 +70,7 @@ jobs:
               ;;
             cpp)
               docker run --rm \
+                --user "$(id -u):$(id -g)" \
                 -v "$PROTOS":/protos:ro \
                 -v "$OUT":/output \
                 "$IMAGE" \
@@ -79,6 +82,7 @@ jobs:
               ;;
             go)
               docker run --rm \
+                --user "$(id -u):$(id -g)" \
                 -v "$PROTOS":/protos:ro \
                 -v "$OUT":/output \
                 "$IMAGE" \
@@ -89,6 +93,7 @@ jobs:
               ;;
             lua)
               docker run --rm \
+                --user "$(id -u):$(id -g)" \
                 -v "$PROTOS":/protos:ro \
                 -v "$OUT":/output \
                 "$IMAGE" \
@@ -99,6 +104,7 @@ jobs:
               ;;
             typescript)
               docker run --rm \
+                --user "$(id -u):$(id -g)" \
                 -v "$PROTOS":/protos:ro \
                 -v "$OUT":/output \
                 "$IMAGE" \
