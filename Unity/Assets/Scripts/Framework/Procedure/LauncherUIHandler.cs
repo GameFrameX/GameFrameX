@@ -228,8 +228,8 @@ namespace GameFrameX.Startup.Application
 #endif
             var message = (AssetDownloadProgressUpdateEventArgs)gameEventArgs;
             float progress = message.CurrentDownloadSizeBytes / (message.TotalDownloadSizeBytes * 1f);
-            string currentSizeMb = Utility.File.GetBytesSize(message.CurrentDownloadSizeBytes);
-            string totalSizeMb = Utility.File.GetBytesSize(message.TotalDownloadSizeBytes);
+            string currentSizeMb = FileHelper.GetBytesSize(message.CurrentDownloadSizeBytes);
+            string totalSizeMb = FileHelper.GetBytesSize(message.TotalDownloadSizeBytes);
             SetProgress(progress, $"{currentSizeMb}/{totalSizeMb}");
         }
     }
