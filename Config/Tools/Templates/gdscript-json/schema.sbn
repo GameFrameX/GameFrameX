@@ -2,6 +2,16 @@
 class_name Schema
 extends RefCounted
 
+{{~
+func table_field_name
+    name = format_method_name __code_style $0.name
+    if $0.namespace == ''
+        ret name + '_'
+    else
+        ret name
+    end
+end
+~}}
 
 {{~for enum in __enums~}}
 {{~if enum.comment != '' ~}}
@@ -32,6 +42,12 @@ class {{name}}{{if bean.parent_def_type}} extends {{full_name bean.parent_def_ty
     {{~end~}}
     var {{format_field_name __code_style field.name}}: {{declaring_type_name field.ctype}}
 {{~end~}}
+    {{~if !bean.is_abstract_type && !bean.is_value_type~}}
+    
+    var __type_id__ = {{bean.id}};
+    func get_type_id() : return __type_id__;
+    
+    {{~end~}}
 
 {{~if bean.is_abstract_type~}}
     static func fromJson(_json_):
@@ -158,10 +174,10 @@ class {{str_full_name __full_name}}:
     {{~if table.comment != ''~}}
     ## {{table.comment | html.escape}}
     {{~end~}}
-    var {{format_method_name __code_style table.name}}: {{full_name table}}
+    var {{to_field_name table.name}}: {{full_name table}}
     {{~end~}}
     
     func _init(loader: Callable) -> void:
         {{~for table in __tables ~}}
-        self.{{format_method_name __code_style table.name}} = {{full_name table}}.new(loader.call('{{table.output_data_file}}'))
+        self.{{to_field_name table.name}} = {{full_name table}}.new(loader.call('{{table.output_data_file}}'))
         {{~end~}}

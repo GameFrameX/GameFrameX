@@ -68,7 +68,7 @@ pub struct {{bean.name}} {
 {{~if bean.is_abstract_type~}}
 
 impl {{bean.name}} {
-    pub fn new(mut buf: &mut ByteBuf) -> Result<std::sync::Arc<AbstractBase>, LubanError> {
+    pub fn new(buf: &mut ByteBuf) -> Result<std::sync::Arc<AbstractBase>, LubanError> {
         let type_id = buf.read_int();
         match type_id {
             {{~for child in bean.hierarchy_not_abstract_children~}}
@@ -110,7 +110,7 @@ impl<'a> GetBase<'a, &'a dyn {{base_trait_name bean}}> for AbstractBase {
 {{~else~}}
 
 impl {{bean.name}}{
-    pub fn new(mut buf: &mut ByteBuf) -> Result<{{bean.name}}, LubanError> {
+    pub fn new(buf: &mut ByteBuf) -> Result<{{bean.name}}, LubanError> {
         {{~ for field in hierarchy_fields ~}}
         {{deserialize field.name 'buf' field.ctype}}
         {{~end~}}
@@ -183,11 +183,11 @@ pub struct {{table.name}} {
 {{~if table.is_map_table ~}}
 
 impl {{name}} {
-    pub fn new(mut buf: ByteBuf) -> Result<std::sync::Arc<{{name}}>, LubanError> {
+    pub fn new(buf: &mut ByteBuf) -> Result<std::sync::Arc<{{name}}>, LubanError> {
         let mut data_map: {{map_type}} = Default::default();
         let mut data_list: Vec<{{value_type}}> = vec![];
 
-        for x in (0..buf.read_size()).rev() {
+        for _ in (0..buf.read_size()).rev() {
             {{deserialize_row "row" "buf" table.value_ttype}}
             data_list.push(row.clone());
             {{~ if table.value_ttype.def_bean.is_abstract_type ~}}
@@ -201,25 +201,33 @@ impl {{name}} {
         Ok(std::sync::Arc::new({{name}} { data_map, data_list }))
     }
 
-    pub fn get(&self, key: &{{key_type}}) -> Option<{{value_type}}> {
+    pub fn get<Q>(&self, key: &Q) -> Option<{{value_type}}>
+    where
+        {{key_type}}: std::borrow::Borrow<Q>,
+        Q: std::hash::Hash + Eq + ?Sized,
+    {
         self.data_map.get(key).map(|x| x.clone())
     }
 }
 
-impl std::ops::Index<{{key_type}}> for {{name}} {
+impl<Q> std::ops::Index<&Q> for {{name}}
+where
+    {{key_type}}: std::borrow::Borrow<Q>,
+    Q: std::hash::Hash + Eq + ?Sized,
+{
     type Output = {{value_type}};
 
-    fn index(&self, index: {{key_type}}) -> &Self::Output {
-        &self.data_map.get(&index).unwrap()
+    fn index(&self, index: &Q) -> &Self::Output {
+        self.data_map.get(index).unwrap()
     }
 }
 {{~else if table.is_list_table ~}}
 
 impl {{name}} {
-    pub fn new(mut buf: ByteBuf) -> Result<std::sync::Arc<{{name}}>, LubanError> {
+    pub fn new(buf: &mut ByteBuf) -> Result<std::sync::Arc<{{name}}>, LubanError> {
         let mut data_list: Vec<{{value_type}}> = vec![];
 
-        for x in (0..buf.read_size()).rev() {
+        for _ in (0..buf.read_size()).rev() {
             {{deserialize_row "row" "buf" table.value_ttype}}
             data_list.push(row.clone());
         }
@@ -252,14 +260,22 @@ impl {{name}} {
     }
 
     {{~if table.is_union_index~}}
-    pub fn get(&self, key: &({{array.each table.index_list @index_type_name | array.join ', '}})) -> Option<{{value_type}}> {
+    pub fn get<Q>(&self, key: &Q) -> Option<{{value_type}}>
+    where
+        ({{array.each table.index_list @index_type_name | array.join ', '}}): std::borrow::Borrow<Q>,
+        Q: std::hash::Hash + Eq + ?Sized,
+    {
         self.data_map_union.get(key).map(|x| x.clone())
     }
     {{~else if !table.index_list.empty? ~}}
     {{~for idx in table.index_list
         index = format_property_name __code_style idx.index_field.name
     ~}}
-    pub fn get_by_{{index}}(&self, key: &{{declaring_type_name idx.type}}) -> Option<{{value_type}}> {
+    pub fn get_by_{{index}}<Q>(&self, key: &Q) -> Option<{{value_type}}>
+    where
+        {{declaring_type_name idx.type}}: std::borrow::Borrow<Q>,
+        Q: std::hash::Hash + Eq + ?Sized,
+    {
         self.data_map_{{index}}.get(key).map(|x| x.clone())
     }
     {{~end~}}
@@ -268,7 +284,7 @@ impl {{name}} {
 {{~else~}}
 
 impl {{name}} {
-    pub fn new(mut buf: ByteBuf) -> Result<std::sync::Arc<{{name}}>, LubanError> {
+    pub fn new(buf: &mut ByteBuf) -> Result<std::sync::Arc<{{name}}>, LubanError> {
         let n = buf.read_size();
         if n != 1 { return Err(LubanError::Table(format!("table mode=one, but size != 1"))); }
         {{deserialize 'data' 'buf' table.value_ttype}}

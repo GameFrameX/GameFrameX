@@ -6,13 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v10.0": {
-      "Luban/3.13.1": {
+      "Luban/5.1.0": {
         "dependencies": {
           "CommandLineParser": "2.9.1",
           "Luban.Bson": "3.13.1",
           "Luban.CSharp": "3.13.1",
           "Luban.Core": "3.13.1",
           "Luban.Cpp": "3.13.1",
+          "Luban.Dart": "3.13.1",
           "Luban.DataLoader.Builtin": "3.13.1",
           "Luban.DataTarget.Builtin": "3.13.1",
           "Luban.DataValidator.Builtin": "3.13.1",
@@ -20,6 +21,7 @@
           "Luban.Gdscript": "3.13.1",
           "Luban.Golang": "3.13.1",
           "Luban.Java": "3.13.1",
+          "Luban.Javascript": "3.13.1",
           "Luban.L10N": "3.13.1",
           "Luban.Lua": "3.13.1",
           "Luban.MsgPack": "3.13.1",
@@ -199,6 +201,17 @@
           }
         }
       },
+      "Luban.Dart/3.13.1": {
+        "dependencies": {
+          "Luban.Core": "3.13.1"
+        },
+        "runtime": {
+          "Luban.Dart.dll": {
+            "assemblyVersion": "3.13.1.0",
+            "fileVersion": "3.13.1.0"
+          }
+        }
+      },
       "Luban.DataLoader.Builtin/3.13.1": {
         "dependencies": {
           "ExcelDataReader": "3.9.0",
@@ -278,6 +291,19 @@
         },
         "runtime": {
           "Luban.Java.dll": {
+            "assemblyVersion": "3.13.1.0",
+            "fileVersion": "3.13.1.0"
+          }
+        }
+      },
+      "Luban.Javascript/3.13.1": {
+        "dependencies": {
+          "Luban.CSharp": "3.13.1",
+          "Luban.Core": "3.13.1",
+          "Luban.DataTarget.Builtin": "3.13.1"
+        },
+        "runtime": {
+          "Luban.Javascript.dll": {
             "assemblyVersion": "3.13.1.0",
             "fileVersion": "3.13.1.0"
           }
@@ -394,7 +420,7 @@
     }
   },
   "libraries": {
-    "Luban/3.13.1": {
+    "Luban/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -510,6 +536,11 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Luban.Dart/3.13.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "Luban.DataLoader.Builtin/3.13.1": {
       "type": "project",
       "serviceable": false,
@@ -541,6 +572,11 @@
       "sha512": ""
     },
     "Luban.Java/3.13.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Luban.Javascript/3.13.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

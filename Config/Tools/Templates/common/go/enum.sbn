@@ -7,6 +7,7 @@ package {{__top_module}};
  * {{escape_comment __this.comment}}
  */
 {{~end~}}
+type {{full_name __this}} int32
 const (
     {{~ for item in __this.items ~}}
 {{~if item.comment_or_alias != '' ~}}
@@ -14,6 +15,6 @@ const (
      * {{escape_comment item.comment_or_alias}}
      */
 {{~end~}}
-    {{full_name __this}}_{{item.name}} = {{item.int_value}};
+    {{full_name __this}}_{{item.name}} {{full_name __this}} = {{item.int_value}};
     {{~end~}}
 )
