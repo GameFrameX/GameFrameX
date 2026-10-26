@@ -9,28 +9,28 @@
       "Luban/5.1.0": {
         "dependencies": {
           "CommandLineParser": "2.9.1",
-          "Luban.Bson": "3.13.1",
-          "Luban.CSharp": "3.13.1",
-          "Luban.Core": "3.13.1",
-          "Luban.Cpp": "3.13.1",
-          "Luban.Dart": "3.13.1",
-          "Luban.DataLoader.Builtin": "3.13.1",
-          "Luban.DataTarget.Builtin": "3.13.1",
-          "Luban.DataValidator.Builtin": "3.13.1",
-          "Luban.FlatBuffers": "3.13.1",
-          "Luban.Gdscript": "3.13.1",
-          "Luban.Golang": "3.13.1",
-          "Luban.Java": "3.13.1",
-          "Luban.Javascript": "3.13.1",
-          "Luban.L10N": "3.13.1",
-          "Luban.Lua": "3.13.1",
-          "Luban.MsgPack": "3.13.1",
-          "Luban.PHP": "3.13.1",
-          "Luban.Protobuf": "3.13.1",
-          "Luban.Python": "3.13.1",
-          "Luban.Rust": "3.13.1",
-          "Luban.Schema.Builtin": "3.13.1",
-          "Luban.Typescript": "3.13.1",
+          "Luban.Bson": "5.1.0",
+          "Luban.CSharp": "5.1.0",
+          "Luban.Core": "5.1.0",
+          "Luban.Cpp": "5.1.0",
+          "Luban.Dart": "5.1.0",
+          "Luban.DataLoader.Builtin": "5.1.0",
+          "Luban.DataTarget.Builtin": "5.1.0",
+          "Luban.DataValidator.Builtin": "5.1.0",
+          "Luban.FlatBuffers": "5.1.0",
+          "Luban.Gdscript": "5.1.0",
+          "Luban.Golang": "5.1.0",
+          "Luban.Java": "5.1.0",
+          "Luban.Javascript": "5.1.0",
+          "Luban.L10N": "5.1.0",
+          "Luban.Lua": "5.1.0",
+          "Luban.MsgPack": "5.1.0",
+          "Luban.PHP": "5.1.0",
+          "Luban.Protobuf": "5.1.0",
+          "Luban.Python": "5.1.0",
+          "Luban.Rust": "5.1.0",
+          "Luban.Schema.Builtin": "5.1.0",
+          "Luban.Typescript": "5.1.0",
           "YamlDotNet.NetCore": "1.0.0"
         },
         "runtime": {
@@ -153,19 +153,19 @@
           }
         }
       },
-      "Luban.Bson/3.13.1": {
+      "Luban.Bson/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
+          "Luban.Core": "5.1.0",
           "Newtonsoft.Json.Bson": "1.0.3"
         },
         "runtime": {
           "Luban.Bson.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Core/3.13.1": {
+      "Luban.Core/5.1.0": {
         "dependencies": {
           "ExcelDataReader": "3.9.0",
           "NLog": "6.2.0",
@@ -173,247 +173,247 @@
         },
         "runtime": {
           "Luban.Core.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Cpp/3.13.1": {
+      "Luban.Cpp/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1"
+          "Luban.Core": "5.1.0"
         },
         "runtime": {
           "Luban.Cpp.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.CSharp/3.13.1": {
+      "Luban.CSharp/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
-          "Luban.DataValidator.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataValidator.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.CSharp.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Dart/3.13.1": {
+      "Luban.Dart/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1"
+          "Luban.Core": "5.1.0"
         },
         "runtime": {
           "Luban.Dart.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.DataLoader.Builtin/3.13.1": {
+      "Luban.DataLoader.Builtin/5.1.0": {
         "dependencies": {
           "ExcelDataReader": "3.9.0",
-          "Luban.Core": "3.13.1",
+          "Luban.Core": "5.1.0",
           "NeoLua": "1.3.19",
           "Ude.NetStandard": "1.2.0",
           "YamlDotNet.NetCore": "1.0.0"
         },
         "runtime": {
           "Luban.DataLoader.Builtin.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.DataTarget.Builtin/3.13.1": {
+      "Luban.DataTarget.Builtin/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
-          "Luban.DataLoader.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataLoader.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.DataTarget.Builtin.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.DataValidator.Builtin/3.13.1": {
+      "Luban.DataValidator.Builtin/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1"
+          "Luban.Core": "5.1.0"
         },
         "runtime": {
           "Luban.DataValidator.Builtin.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.FlatBuffers/3.13.1": {
+      "Luban.FlatBuffers/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
-          "Luban.DataTarget.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataTarget.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.FlatBuffers.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Gdscript/3.13.1": {
+      "Luban.Gdscript/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
-          "Luban.DataTarget.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataTarget.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.Gdscript.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Golang/3.13.1": {
+      "Luban.Golang/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1"
+          "Luban.Core": "5.1.0"
         },
         "runtime": {
           "Luban.Golang.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Java/3.13.1": {
+      "Luban.Java/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1"
+          "Luban.Core": "5.1.0"
         },
         "runtime": {
           "Luban.Java.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Javascript/3.13.1": {
+      "Luban.Javascript/5.1.0": {
         "dependencies": {
-          "Luban.CSharp": "3.13.1",
-          "Luban.Core": "3.13.1",
-          "Luban.DataTarget.Builtin": "3.13.1"
+          "Luban.CSharp": "5.1.0",
+          "Luban.Core": "5.1.0",
+          "Luban.DataTarget.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.Javascript.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.L10N/3.13.1": {
+      "Luban.L10N/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
-          "Luban.DataLoader.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataLoader.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.L10N.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Lua/3.13.1": {
+      "Luban.Lua/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1"
+          "Luban.Core": "5.1.0"
         },
         "runtime": {
           "Luban.Lua.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.MsgPack/3.13.1": {
+      "Luban.MsgPack/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
+          "Luban.Core": "5.1.0",
           "MessagePack": "3.1.8"
         },
         "runtime": {
           "Luban.MsgPack.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.PHP/3.13.1": {
+      "Luban.PHP/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
-          "Luban.DataTarget.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataTarget.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.PHP.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Protobuf/3.13.1": {
+      "Luban.Protobuf/5.1.0": {
         "dependencies": {
           "Google.Protobuf": "3.29.0",
-          "Luban.Core": "3.13.1",
-          "Luban.DataTarget.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataTarget.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.Protobuf.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Python/3.13.1": {
+      "Luban.Python/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
-          "Luban.DataTarget.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataTarget.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.Python.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Rust/3.13.1": {
+      "Luban.Rust/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1"
+          "Luban.Core": "5.1.0"
         },
         "runtime": {
           "Luban.Rust.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Schema.Builtin/3.13.1": {
+      "Luban.Schema.Builtin/5.1.0": {
         "dependencies": {
-          "Luban.Core": "3.13.1",
-          "Luban.DataLoader.Builtin": "3.13.1"
+          "Luban.Core": "5.1.0",
+          "Luban.DataLoader.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.Schema.Builtin.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       },
-      "Luban.Typescript/3.13.1": {
+      "Luban.Typescript/5.1.0": {
         "dependencies": {
-          "Luban.CSharp": "3.13.1",
-          "Luban.Core": "3.13.1",
-          "Luban.DataTarget.Builtin": "3.13.1"
+          "Luban.CSharp": "5.1.0",
+          "Luban.Core": "5.1.0",
+          "Luban.DataTarget.Builtin": "5.1.0"
         },
         "runtime": {
           "Luban.Typescript.dll": {
-            "assemblyVersion": "3.13.1.0",
-            "fileVersion": "3.13.1.0"
+            "assemblyVersion": "5.1.0.0",
+            "fileVersion": "5.1.0.0"
           }
         }
       }
@@ -516,112 +516,112 @@
       "path": "yamldotnet.netcore/1.0.0",
       "hashPath": "yamldotnet.netcore.1.0.0.nupkg.sha512"
     },
-    "Luban.Bson/3.13.1": {
+    "Luban.Bson/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Core/3.13.1": {
+    "Luban.Core/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Cpp/3.13.1": {
+    "Luban.Cpp/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.CSharp/3.13.1": {
+    "Luban.CSharp/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Dart/3.13.1": {
+    "Luban.Dart/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.DataLoader.Builtin/3.13.1": {
+    "Luban.DataLoader.Builtin/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.DataTarget.Builtin/3.13.1": {
+    "Luban.DataTarget.Builtin/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.DataValidator.Builtin/3.13.1": {
+    "Luban.DataValidator.Builtin/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.FlatBuffers/3.13.1": {
+    "Luban.FlatBuffers/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Gdscript/3.13.1": {
+    "Luban.Gdscript/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Golang/3.13.1": {
+    "Luban.Golang/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Java/3.13.1": {
+    "Luban.Java/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Javascript/3.13.1": {
+    "Luban.Javascript/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.L10N/3.13.1": {
+    "Luban.L10N/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Lua/3.13.1": {
+    "Luban.Lua/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.MsgPack/3.13.1": {
+    "Luban.MsgPack/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.PHP/3.13.1": {
+    "Luban.PHP/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Protobuf/3.13.1": {
+    "Luban.Protobuf/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Python/3.13.1": {
+    "Luban.Python/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Rust/3.13.1": {
+    "Luban.Rust/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Schema.Builtin/3.13.1": {
+    "Luban.Schema.Builtin/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Luban.Typescript/3.13.1": {
+    "Luban.Typescript/5.1.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
