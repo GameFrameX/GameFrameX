@@ -1,0 +1,75 @@
+syntax = "proto3";
+package ConnectFour;
+
+// 四子棋棋盘格子状态（值与座位号对应）
+enum ConnectFourCell
+{
+  None = 0; // 空
+  PlayerOne = 1; // 一号位棋子
+  PlayerTwo = 2; // 二号位棋子
+}
+
+// 四子棋玩家信息
+message ConnectFourPlayerInfo
+{
+  int64 PlayerId = 1; // 玩家ID
+  int32 SeatIndex = 2; // 座位索引（1 或 2，与棋子取值对应）
+}
+
+// 四子棋游戏信息
+message ConnectFourGameInfo
+{
+  int64 RoomId = 1; // 房间ID
+  int32 Round = 2; // 当前局数
+  int64 CurrentPlayerId = 3; // 当前回合玩家ID。未开始或已结束时为0。
+  int64 WinnerPlayerId = 4; // 胜利玩家ID。未分出胜负为0；平局时为0且IsDraw为true。
+  bool IsDraw = 5; // 是否平局（棋盘落满且无四连）
+  int32 MoveCount = 6; // 已落子总数
+  int32 LastMoveColumn = 7; // 最近一次落子列（0-6）。无落子为-1。
+  int32 LastMoveRow = 8; // 最近一次落子行（0-5，0为底行）。无落子为-1。
+  repeated int32 Board = 9; // 棋盘42格，行主序 index = row*7+column，row 0 为底行；取值见 ConnectFourCell
+  repeated ConnectFourPlayerInfo Players = 10; // 玩家列表
+}
+
+// 请求四子棋游戏信息
+message ReqConnectFourGameInfo
+{
+  int64 RoomId = 1; // 房间ID
+}
+
+// 返回四子棋游戏信息
+message RespConnectFourGameInfo
+{
+  ConnectFourGameInfo GameInfo = 1; // 游戏信息
+}
+
+// 请求四子棋落子
+message ReqSubmitConnectFourMove
+{
+  int64 RoomId = 1; // 房间ID
+  int32 Column = 2; // 落子列（0-6）
+}
+
+// 返回四子棋落子
+message RespSubmitConnectFourMove
+{
+  ConnectFourGameInfo GameInfo = 1; // 游戏信息
+}
+
+// 请求四子棋再来一局
+message ReqRestartConnectFourGame
+{
+  int64 RoomId = 1; // 房间ID
+}
+
+// 返回四子棋再来一局
+message RespRestartConnectFourGame
+{
+  ConnectFourGameInfo GameInfo = 1; // 游戏信息
+}
+
+// 通知四子棋游戏变化
+message NotifyConnectFourGameChanged
+{
+  ConnectFourGameInfo GameInfo = 1; // 游戏信息
+}

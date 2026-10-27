@@ -28,44 +28,44 @@ namespace Unity.Startup
 			get { return BgImage;}
 		}
 
-		[SerializeField] [UGUIElementProperty("TipText")]
-		private UnityEngine.UI.Text TipText;
+		[SerializeField] [UGUIElementProperty("tip_text")]
+		private UnityEngine.UI.Text tip_text;
 
-		public UnityEngine.UI.Text m_TipText
+		public UnityEngine.UI.Text m_tip_text
 		{
-			get { return TipText;}
+			get { return tip_text;}
 		}
 
-		[SerializeField] [UGUIElementProperty("ProgressBar/Background")]
-		private UnityEngine.UI.Image ProgressBar_Background;
+		[SerializeField] [UGUIElementProperty("progress_bar/Background")]
+		private UnityEngine.UI.Image progress_bar_Background;
 
-		public UnityEngine.UI.Image m_ProgressBar_Background
+		public UnityEngine.UI.Image m_progress_bar_Background
 		{
-			get { return ProgressBar_Background;}
+			get { return progress_bar_Background;}
 		}
 
-		[SerializeField] [UGUIElementProperty("ProgressBar/Fill Area/Fill")]
-		private UnityEngine.UI.Image ProgressBar_FillArea_Fill;
+		[SerializeField] [UGUIElementProperty("progress_bar/Fill Area/Fill")]
+		private UnityEngine.UI.Image progress_bar_FillArea_Fill;
 
-		public UnityEngine.UI.Image m_ProgressBar_FillArea_Fill
+		public UnityEngine.UI.Image m_progress_bar_FillArea_Fill
 		{
-			get { return ProgressBar_FillArea_Fill;}
+			get { return progress_bar_FillArea_Fill;}
 		}
 
-		[SerializeField] [UGUIElementProperty("ProgressBar/Fill Area")]
-		private UnityEngine.Transform ProgressBar_FillArea;
+		[SerializeField] [UGUIElementProperty("progress_bar/Fill Area")]
+		private UnityEngine.Transform progress_bar_FillArea;
 
-		public UnityEngine.Transform m_ProgressBar_FillArea
+		public UnityEngine.Transform m_progress_bar_FillArea
 		{
-			get { return ProgressBar_FillArea;}
+			get { return progress_bar_FillArea;}
 		}
 
-		[SerializeField] [UGUIElementProperty("ProgressBar")]
-		private UnityEngine.UI.Slider ProgressBar;
+		[SerializeField] [UGUIElementProperty("progress_bar")]
+		private UnityEngine.UI.Slider progress_bar;
 
-		public UnityEngine.UI.Slider m_ProgressBar
+		public UnityEngine.UI.Slider m_progress_bar
 		{
-			get { return ProgressBar;}
+			get { return progress_bar;}
 		}
 
 		[SerializeField] [UGUIElementProperty("upgrade/Image")]
@@ -122,11 +122,11 @@ namespace Unity.Startup
 			_isInitView = true;
 			this.self = this.gameObject;
 			BgImage = gameObject.transform.FindChildName("BgImage").GetComponent<UnityEngine.UI.Image>();
-			TipText = gameObject.transform.FindChildName("TipText").GetComponent<UnityEngine.UI.Text>();
-			ProgressBar_Background = gameObject.transform.FindChildName("ProgressBar/Background").GetComponent<UnityEngine.UI.Image>();
-			ProgressBar_FillArea_Fill = gameObject.transform.FindChildName("ProgressBar/Fill Area/Fill").GetComponent<UnityEngine.UI.Image>();
-			ProgressBar_FillArea = gameObject.transform.FindChildName("ProgressBar/Fill Area").GetComponent<UnityEngine.Transform>();
-			ProgressBar = gameObject.transform.FindChildName("ProgressBar").GetComponent<UnityEngine.UI.Slider>();
+			tip_text = gameObject.transform.FindChildName("tip_text").GetComponent<UnityEngine.UI.Text>();
+			progress_bar_Background = gameObject.transform.FindChildName("progress_bar/Background").GetComponent<UnityEngine.UI.Image>();
+			progress_bar_FillArea_Fill = gameObject.transform.FindChildName("progress_bar/Fill Area/Fill").GetComponent<UnityEngine.UI.Image>();
+			progress_bar_FillArea = gameObject.transform.FindChildName("progress_bar/Fill Area").GetComponent<UnityEngine.Transform>();
+			progress_bar = gameObject.transform.FindChildName("progress_bar").GetComponent<UnityEngine.UI.Slider>();
 			upgrade_Image = gameObject.transform.FindChildName("upgrade/Image").GetComponent<UnityEngine.UI.Image>();
 			upgrade_TextContent = gameObject.transform.FindChildName("upgrade/TextContent").GetComponent<UnityEngine.UI.Text>();
 			upgrade_EnterButton_Text = gameObject.transform.FindChildName("upgrade/EnterButton/Text").GetComponent<UnityEngine.UI.Text>();

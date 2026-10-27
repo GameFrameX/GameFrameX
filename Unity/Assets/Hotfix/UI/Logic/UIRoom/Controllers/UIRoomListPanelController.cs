@@ -39,6 +39,7 @@ namespace Hotfix.UI
             _binder.RegisterHandlers(
                 () => RoomDataManager.Instance.RequestRoomList().Forget(),
                 () => CreateRoomAndEnter().Forget(),
+                () => CreateRoomAndEnter(GameType.ConnectFour).Forget(),
                 CloseSelf,
                 roomId => JoinRoomAndEnter(roomId).Forget());
 
@@ -98,9 +99,9 @@ namespace Hotfix.UI
             _binder.SetRoomList(manager.Rooms, _selectedRoomId);
         }
 
-        private async UniTask CreateRoomAndEnter()
+        private async UniTask CreateRoomAndEnter(GameType gameType = GameType.RockPaperScissors)
         {
-            await RoomDataManager.Instance.CreateRoom(RoomUIFormatter.CreateRoomName());
+            await RoomDataManager.Instance.CreateRoom(RoomUIFormatter.CreateRoomName(gameType), gameType);
             await EnterBattleIfAlreadyInRoom();
         }
 
@@ -112,12 +113,19 @@ namespace Hotfix.UI
 
         private async UniTask EnterBattleIfAlreadyInRoom()
         {
-            if (RoomDataManager.Instance.CurrentRoom == null)
+            var room = RoomDataManager.Instance.CurrentRoom;
+            if (room == null)
             {
                 return;
             }
 
             GameApp.UI.CloseUIForm<UIRoomListPanel>();
+            if (room.GameType == GameType.ConnectFour)
+            {
+                await GameApp.UI.OpenAsync<UIConnectFourBattlePanel>(UIGroupConstants.Window);
+                return;
+            }
+
             await GameApp.UI.OpenAsync<UIRoomBattlePanel>(UIGroupConstants.Window);
         }
 

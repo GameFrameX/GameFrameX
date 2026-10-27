@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Unity.Startup
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UILauncherUpgrade : FUI
     {
         public const string UIPackageName = "UILauncher";
@@ -24,8 +23,8 @@ namespace Unity.Startup
         public GComponent self { get; private set; }
 
 		public GGraph m_bg { get; private set; }
-		public GButton m_EnterButton { get; private set; }
-		public GLabel m_TextContent { get; private set; }
+		public GButton m_enter_button { get; private set; }
+		public GLabel m_text_content { get; private set; }
 
 
         public static UILauncherUpgrade Create(GObject go)
@@ -65,8 +64,8 @@ namespace Unity.Startup
             if (com != null)
             {
 				m_bg = (GGraph)com.GetChild("bg");
-				m_EnterButton = (GButton)com.GetChild("EnterButton");
-				m_TextContent = (GLabel)com.GetChild("TextContent");
+				m_enter_button = (GButton)com.GetChild("enter_button");
+				m_text_content = (GLabel)com.GetChild("text_content");
             }
         }
 
@@ -80,14 +79,13 @@ namespace Unity.Startup
             base.Dispose();
             self.Remove();
 			m_bg = null;
-			m_EnterButton = null;
-			m_TextContent = null;
-            self = null;            
+			m_enter_button = null;
+			m_text_content = null;
+            self = null;
         }
 
         private UILauncherUpgrade(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

@@ -9,15 +9,16 @@ namespace Hotfix.UI
     /// </summary>
     internal static class RoomUIFormatter
     {
-        public static string CreateRoomName()
+        public static string CreateRoomName(GameType gameType = GameType.RockPaperScissors)
         {
+            var gameName = gameType == GameType.ConnectFour ? "四子棋" : "猜拳";
             var player = PlayerManager.Instance.PlayerInfo;
             if (player == null || string.IsNullOrEmpty(player.Name))
             {
-                return "猜拳房间";
+                return gameName + "房间";
             }
 
-            return $"{player.Name}的猜拳房间";
+            return $"{player.Name}的{gameName}房间";
         }
 
         public static string GetRoomName(RoomInfo room)

@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Hotfix.UI
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UIRoomBattlePanel : FUI
     {
         public const string UIPackageName = "UIRoom";
@@ -45,9 +44,9 @@ namespace Hotfix.UI
 		public GGraph m_arena_bg { get; private set; }
 		public GTextField m_result_text { get; private set; }
 		public GTextField m_arena_tips_text { get; private set; }
-		public UIGestureButton m_rock_button { get; private set; }
-		public UIGestureButton m_scissors_button { get; private set; }
-		public UIGestureButton m_paper_button { get; private set; }
+		public UIRoomGestureButton m_rock_button { get; private set; }
+		public UIRoomGestureButton m_scissors_button { get; private set; }
+		public UIRoomGestureButton m_paper_button { get; private set; }
 		public UIRoomButton m_start_button { get; private set; }
 		public UIRoomButton m_sync_button { get; private set; }
 		public GTextField m_tips_text { get; private set; }
@@ -57,24 +56,9 @@ namespace Hotfix.UI
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
 
-        private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
-        {
-            UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
-        }
-
         public static UIRoomBattlePanel CreateInstance()
         {
             return Create(CreateGObject());
-        }
-
-        public static UniTask<UIRoomBattlePanel> CreateInstanceAsync(Entity domain)
-        {
-            UniTaskCompletionSource<UIRoomBattlePanel> tcs = new UniTaskCompletionSource<UIRoomBattlePanel>();
-            CreateGObjectAsync((go) =>
-            {
-                tcs.TrySetResult(Create(go));
-            });
-            return tcs.Task;
         }
 
         public static UIRoomBattlePanel Create(GObject go)
@@ -135,9 +119,9 @@ namespace Hotfix.UI
 				m_arena_bg = (GGraph)com.GetChild("arena_bg");
 				m_result_text = (GTextField)com.GetChild("result_text");
 				m_arena_tips_text = (GTextField)com.GetChild("arena_tips_text");
-				m_rock_button = UIGestureButton.Create(com.GetChild("rock_button"));
-				m_scissors_button = UIGestureButton.Create(com.GetChild("scissors_button"));
-				m_paper_button = UIGestureButton.Create(com.GetChild("paper_button"));
+				m_rock_button = UIRoomGestureButton.Create(com.GetChild("rock_button"));
+				m_scissors_button = UIRoomGestureButton.Create(com.GetChild("scissors_button"));
+				m_paper_button = UIRoomGestureButton.Create(com.GetChild("paper_button"));
 				m_start_button = UIRoomButton.Create(com.GetChild("start_button"));
 				m_sync_button = UIRoomButton.Create(com.GetChild("sync_button"));
 				m_tips_text = (GTextField)com.GetChild("tips_text");
@@ -181,12 +165,11 @@ namespace Hotfix.UI
 			m_start_button = null;
 			m_sync_button = null;
 			m_tips_text = null;
-            self = null;            
+            self = null;
         }
 
         private UIRoomBattlePanel(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

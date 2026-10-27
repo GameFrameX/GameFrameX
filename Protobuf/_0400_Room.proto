@@ -6,6 +6,7 @@ enum GameType
 {
   None = 0; // 未知
   RockPaperScissors = 1; // 石头剪刀布
+  ConnectFour = 2; // 四子棋
 }
 
 // 通用房间状态

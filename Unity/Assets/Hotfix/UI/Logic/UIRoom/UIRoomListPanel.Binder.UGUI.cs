@@ -63,11 +63,12 @@ namespace Hotfix.UI
             }
         }
 
-        void IRoomListPanelBinder.RegisterHandlers(Action onRefresh, Action onCreate, Action onClose, Action<long> onJoinRoom)
+        void IRoomListPanelBinder.RegisterHandlers(Action onRefresh, Action onCreate, Action onCreateConnectFour, Action onClose, Action<long> onJoinRoom)
         {
             _joinRoomHandler = onJoinRoom;
             m_refresh_button.onClick.AddListener(() => onRefresh());
             m_create_button.onClick.AddListener(() => onCreate());
+            m_create_connectfour_button.onClick.AddListener(() => onCreateConnectFour());
             m_close_button.onClick.AddListener(() => onClose());
 
             var maskButton = m_mask.GetComponent<UnityEngine.UI.Button>();
@@ -82,6 +83,7 @@ namespace Hotfix.UI
             _joinRoomHandler = null;
             m_refresh_button.onClick.RemoveAllListeners();
             m_create_button.onClick.RemoveAllListeners();
+            m_create_connectfour_button.onClick.RemoveAllListeners();
             m_close_button.onClick.RemoveAllListeners();
             ClearItemInstances();
 
@@ -91,6 +93,7 @@ namespace Hotfix.UI
                 maskButton.onClick.RemoveAllListeners();
             }
         }
+
 
         private void ClearItemInstances()
         {

@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 310022704599519747}
   - component: {fileID: 310022704599519744}
   m_Layer: 5
-  m_Name: TipText
+  m_Name: tip_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -402,7 +402,7 @@ GameObject:
   - component: {fileID: 2816116810786201694}
   - component: {fileID: 4357964301223411063}
   m_Layer: 5
-  m_Name: ProgressBar
+  m_Name: progress_bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

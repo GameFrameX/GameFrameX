@@ -110,11 +110,11 @@ namespace Hotfix.Manager
             FireChanged();
         }
 
-        public async UniTask CreateRoom(string roomName = "")
+        public async UniTask CreateRoom(string roomName = "", GameType gameType = GameType.RockPaperScissors)
         {
             var response = await NetworkCall<RespCreateRoom>(new ReqCreateRoom
             {
-                GameType = GameType.RockPaperScissors,
+                GameType = gameType,
                 Name = roomName,
                 MinPlayerCount = 2,
                 MaxPlayerCount = 2

@@ -55,6 +55,13 @@ public class RoomComponentAgent : StateComponentAgent<RoomComponent, RoomListSta
             MaxPlayerCount = 2,
             DefaultNamePrefix = "石头剪刀布房间",
         },
+        [GameType.ConnectFour] = new RoomRule
+        {
+            GameType = GameType.ConnectFour,
+            MinPlayerCount = 2,
+            MaxPlayerCount = 2,
+            DefaultNamePrefix = "四子棋房间",
+        },
     };
 
     public override async Task<bool> Active()

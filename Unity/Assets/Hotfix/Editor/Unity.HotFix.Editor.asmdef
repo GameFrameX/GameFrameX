@@ -1,0 +1,21 @@
+{
+    "name": "Unity.HotFix.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Unity.HotFix",
+        "GameFrameX.Runtime",
+        "GameFrameX.UI.Runtime",
+        "GameFrameX.UI.UGUI.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

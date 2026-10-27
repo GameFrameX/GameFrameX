@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using FairyGUI;
+using GameFrameX.Runtime;
 using Hotfix.Manager;
 using Hotfix.Proto;
 
@@ -34,7 +35,7 @@ namespace Hotfix.UI
             m_room_list.DataList = _roomItems;
         }
 
-        void IRoomListPanelBinder.RegisterHandlers(Action onRefresh, Action onCreate, Action onClose, Action<long> onJoinRoom)
+        void IRoomListPanelBinder.RegisterHandlers(Action onRefresh, Action onCreate, Action onCreateConnectFour, Action onClose, Action<long> onJoinRoom)
         {
             _joinRoomHandler = onJoinRoom;
             m_room_list.itemRenderer = RenderRoomItem;
@@ -43,6 +44,12 @@ namespace Hotfix.UI
             m_create_button.self.onClick.Set(() => onCreate());
             m_close_button.self.onClick.Set(() => onClose());
             m_mask.onClick.Set(() => onClose());
+
+            // FGUI 包内暂未提供四子棋创建按钮控件，仅保留回调不阻塞流程。
+            if (onCreateConnectFour != null)
+            {
+                Log.Warning("FGUI 通道暂未提供四子棋创建房间按钮控件");
+            }
         }
 
         void IRoomListPanelBinder.ClearHandlers()

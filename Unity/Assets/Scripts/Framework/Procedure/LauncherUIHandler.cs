@@ -82,7 +82,7 @@ namespace GameFrameX.Startup.Application
                 return;
             }
 
-            _ui.m_TipText.text = text;
+            _ui.m_tip_text.text = text;
         }
 
         /// <summary>
@@ -121,8 +121,8 @@ namespace GameFrameX.Startup.Application
 #if ENABLE_UI_FAIRYGUI
             _ui.m_IsDownload.SetSelectedIndex(1);
 #endif
-            _ui.m_ProgressBar.value = Mathf.Clamp01(progress) * 100;
-            _ui.m_TipText.text = $"Downloading {sizeInfo}";
+            _ui.m_progress_bar.value = Mathf.Clamp01(progress) * 100;
+            _ui.m_tip_text.text = $"Downloading {sizeInfo}";
         }
 
         /// <summary>
@@ -146,10 +146,10 @@ namespace GameFrameX.Startup.Application
             bool isChinese = GameApp.Localization.Language == LocalizationCode.Chinese ||
                              GameApp.Localization.Language == LocalizationCode.ChineseSimplified;
 
-            _ui.m_upgrade.m_EnterButton.title = isChinese ? "确认" : "Enter";
-            _ui.m_upgrade.m_TextContent.title = gameAppVersion.UpdateAnnouncement;
-            _ui.m_upgrade.m_TextContent.onClickLink.Set(context => { ApplicationHelper.OpenURL(context.data.ToString()); });
-            _ui.m_upgrade.m_EnterButton.onClick.Set(() =>
+            _ui.m_upgrade.m_enter_button.title = isChinese ? "确认" : "Enter";
+            _ui.m_upgrade.m_text_content.title = gameAppVersion.UpdateAnnouncement;
+            _ui.m_upgrade.m_text_content.onClickLink.Set(context => { ApplicationHelper.OpenURL(context.data.ToString()); });
+            _ui.m_upgrade.m_enter_button.onClick.Set(() =>
             {
                 if (gameAppVersion.IsForce)
                 {
@@ -187,10 +187,10 @@ namespace GameFrameX.Startup.Application
             bool isChinese = GameApp.Localization.Language == LocalizationCode.Chinese ||
                              GameApp.Localization.Language == LocalizationCode.ChineseSimplified;
 
-            _ui.m_upgrade.m_EnterButton.title = isChinese ? "确认" : "Enter";
-            _ui.m_upgrade.m_TextContent.title = upgradeInfo.UpdateAnnouncement;
-            _ui.m_upgrade.m_TextContent.onClickLink.Set(context => { ApplicationHelper.OpenURL(context.data.ToString()); });
-            _ui.m_upgrade.m_EnterButton.onClick.Set(() =>
+            _ui.m_upgrade.m_enter_button.title = isChinese ? "确认" : "Enter";
+            _ui.m_upgrade.m_text_content.title = upgradeInfo.UpdateAnnouncement;
+            _ui.m_upgrade.m_text_content.onClickLink.Set(context => { ApplicationHelper.OpenURL(context.data.ToString()); });
+            _ui.m_upgrade.m_enter_button.onClick.Set(() =>
             {
                 if (upgradeInfo.IsForce)
                 {

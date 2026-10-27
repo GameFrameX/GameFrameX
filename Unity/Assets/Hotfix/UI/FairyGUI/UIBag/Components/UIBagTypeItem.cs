@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Hotfix.UI
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UIBagTypeItem : FUI
     {
         public const string UIPackageName = "UIBag";
@@ -79,12 +78,11 @@ namespace Hotfix.UI
             self.Remove();
 			m_normal = null;
 			m_select = null;
-            self = null;            
+            self = null;
         }
 
         private UIBagTypeItem(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

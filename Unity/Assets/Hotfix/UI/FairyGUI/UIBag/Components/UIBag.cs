@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Hotfix.UI
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UIBag : FUI
     {
         public const string UIPackageName = "UIBag";
@@ -31,24 +30,9 @@ namespace Hotfix.UI
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
 
-        private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
-        {
-            UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
-        }
-
         public static UIBag CreateInstance()
         {
             return Create(CreateGObject());
-        }
-
-        public static UniTask<UIBag> CreateInstanceAsync(Entity domain)
-        {
-            UniTaskCompletionSource<UIBag> tcs = new UniTaskCompletionSource<UIBag>();
-            CreateGObjectAsync((go) =>
-            {
-                tcs.TrySetResult(Create(go));
-            });
-            return tcs.Task;
         }
 
         public static UIBag Create(GObject go)
@@ -103,12 +87,11 @@ namespace Hotfix.UI
             self.Remove();
 			m_bg = null;
 			m_content = null;
-            self = null;            
+            self = null;
         }
 
         private UIBag(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Hotfix.UI
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UIBagItemInfo : FUI
     {
         public const string UIPackageName = "UIBag";
@@ -26,9 +25,9 @@ namespace Hotfix.UI
 		public Controller m_IsCanUse { get; private set; }
 		public GTextField m_name_text { get; private set; }
 		public GRichTextField m_desc_text { get; private set; }
-		public GButton m_good_item { get; private set; }
-		public GButton m_use_button { get; private set; }
-		public GButton m_get_source_button { get; private set; }
+		public UICommonGoodItem m_good_item { get; private set; }
+		public UICommonYellowNormalButton m_use_button { get; private set; }
+		public UICommonBlueNormalButton m_get_source_button { get; private set; }
 
 
         public static UIBagItemInfo Create(GObject go)
@@ -70,9 +69,9 @@ namespace Hotfix.UI
 				m_IsCanUse = com.GetController("IsCanUse");
 				m_name_text = (GTextField)com.GetChild("name_text");
 				m_desc_text = (GRichTextField)com.GetChild("desc_text");
-				m_good_item = (GButton)com.GetChild("good_item");
-				m_use_button = (GButton)com.GetChild("use_button");
-				m_get_source_button = (GButton)com.GetChild("get_source_button");
+				m_good_item = UICommonGoodItem.Create(com.GetChild("good_item"));
+				m_use_button = UICommonYellowNormalButton.Create(com.GetChild("use_button"));
+				m_get_source_button = UICommonBlueNormalButton.Create(com.GetChild("get_source_button"));
             }
         }
 
@@ -91,12 +90,11 @@ namespace Hotfix.UI
 			m_good_item = null;
 			m_use_button = null;
 			m_get_source_button = null;
-            self = null;            
+            self = null;
         }
 
         private UIBagItemInfo(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

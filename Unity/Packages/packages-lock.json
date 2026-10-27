@@ -1,0 +1,1053 @@
+{
+  "dependencies": {
+    "com.code-philosophy.hybridclr": {
+      "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "6cadd24d101f4cbd00cd80190106f6621132d24d"
+    },
+    "com.gameframex.unity": {
+      "version": "file:com.gameframex.unity",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.litjson": "1.2.4",
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.gameframex.unity.readassets": "1.2.2",
+        "com.gameframex.unity.cysharp.unitask": "2.6.2"
+      }
+    },
+    "com.gameframex.unity.advertisement": {
+      "version": "file:com.gameframex.unity.advertisement",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.advertisement.alipayminigame": {
+      "version": "file:com.gameframex.unity.advertisement.alipayminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.advertisement": "1.5.1"
+      }
+    },
+    "com.gameframex.unity.advertisement.csj": {
+      "version": "file:com.gameframex.unity.advertisement.csj",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.advertisement": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.advertisement.douyinminigame": {
+      "version": "file:com.gameframex.unity.advertisement.douyinminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.advertisement": "1.5.1"
+      }
+    },
+    "com.gameframex.unity.advertisement.kuaishouminigame": {
+      "version": "file:com.gameframex.unity.advertisement.kuaishouminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.advertisement": "1.5.1"
+      }
+    },
+    "com.gameframex.unity.advertisement.topon": {
+      "version": "file:com.gameframex.unity.advertisement.topon",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.advertisement": "1.5.1",
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.advertisement.wechatminigame": {
+      "version": "file:com.gameframex.unity.advertisement.wechatminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.advertisement": "1.5.1"
+      }
+    },
+    "com.gameframex.unity.android": {
+      "version": "file:com.gameframex.unity.android",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.asset": {
+      "version": "file:com.gameframex.unity.asset",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.builder": {
+      "version": "file:com.gameframex.unity.builder",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.litjson": "1.2.4",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.config": {
+      "version": "file:com.gameframex.unity.config",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.event": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.coroutine": {
+      "version": "file:com.gameframex.unity.coroutine",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.cysharp.unitask": {
+      "version": "file:com.gameframex.unity.cysharp.unitask",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.debugger": {
+      "version": "file:com.gameframex.unity.debugger",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.setting": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.demigiant.dotween": {
+      "version": "1.1.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://gameframex.upm.alianblank.uk"
+    },
+    "com.gameframex.unity.download": {
+      "version": "file:com.gameframex.unity.download",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.entity": {
+      "version": "file:com.gameframex.unity.entity",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.cysharp.unitask": "2.6.2",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.entry": {
+      "version": "file:com.gameframex.unity.entry",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.config": "2.0.0",
+        "com.gameframex.unity.coroutine": "1.2.1",
+        "com.gameframex.unity.download": "2.0.0",
+        "com.gameframex.unity.entity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.fsm": "2.0.0",
+        "com.gameframex.unity.globalconfig": "1.3.3",
+        "com.gameframex.unity.localization": "3.0.0",
+        "com.gameframex.unity.mono": "2.0.0",
+        "com.gameframex.unity.network": "3.0.0",
+        "com.gameframex.unity.procedure": "2.0.0",
+        "com.gameframex.unity.scene": "3.0.0",
+        "com.gameframex.unity.setting": "2.0.0",
+        "com.gameframex.unity.sound": "2.0.0",
+        "com.gameframex.unity.timer": "2.0.0",
+        "com.gameframex.unity.ui": "3.0.0",
+        "com.gameframex.unity.web": "2.0.0",
+        "com.gameframex.unity.web.protobuff": "1.1.4"
+      }
+    },
+    "com.gameframex.unity.esotericsoftware.spine.spine-unity": {
+      "version": "file:com.gameframex.unity.esotericsoftware.spine.spine-unity",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.event": {
+      "version": "file:com.gameframex.unity.event",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.fairygui.unity": {
+      "version": "file:com.gameframex.unity.fairygui.unity",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.focus-creative-games.luban": {
+      "version": "file:com.gameframex.unity.focus-creative-games.luban",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.fsm": {
+      "version": "file:com.gameframex.unity.fsm",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.gameanalytics": {
+      "version": "file:com.gameframex.unity.gameanalytics",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.gameanalytics.gravity-engine": {
+      "version": "file:com.gameframex.unity.gameanalytics.gravity-engine",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.gameanalytics.talkingdata": {
+      "version": "file:com.gameframex.unity.gameanalytics.talkingdata",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.gameanalytics.talkingdata.sdk": {
+      "version": "file:com.gameframex.unity.gameanalytics.talkingdata.sdk",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.getchannel": {
+      "version": "file:com.gameframex.unity.getchannel",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.globalconfig": {
+      "version": "file:com.gameframex.unity.globalconfig",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.google.protobuf": {
+      "version": "file:com.gameframex.unity.google.protobuf",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.network": "2.6.0"
+      }
+    },
+    "com.gameframex.unity.gravityinfinite.gravity-engine": {
+      "version": "file:com.gameframex.unity.gravityinfinite.gravity-engine",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.gwiazdorrr.betterstreamingassets": {
+      "version": "file:com.gameframex.unity.gwiazdorrr.betterstreamingassets",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.imagecache": {
+      "version": "file:com.gameframex.unity.imagecache",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.download": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.json.simplejson": {
+      "version": "file:com.gameframex.unity.json.simplejson",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.litjson": {
+      "version": "file:com.gameframex.unity.litjson",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.localization": {
+      "version": "file:com.gameframex.unity.localization",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.setting": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.login": {
+      "version": "file:com.gameframex.unity.login",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.login.google": {
+      "version": "file:com.gameframex.unity.login.google",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.getchannel": "1.3.2",
+        "com.gameframex.unity.login": "1.0.0"
+      }
+    },
+    "com.gameframex.unity.mono": {
+      "version": "file:com.gameframex.unity.mono",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.network": {
+      "version": "file:com.gameframex.unity.network",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.litjson": "1.2.4",
+        "com.gameframex.unity.psygames.unitywebsocket": "2.9.3"
+      }
+    },
+    "com.gameframex.unity.objectstorage": {
+      "version": "file:com.gameframex.unity.objectstorage",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.objectstorage.aliyun": {
+      "version": "file:com.gameframex.unity.objectstorage.aliyun",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.objectstorage": "1.1.1"
+      }
+    },
+    "com.gameframex.unity.objectstorage.qiniu": {
+      "version": "file:com.gameframex.unity.objectstorage.qiniu",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.objectstorage": "1.1.1"
+      }
+    },
+    "com.gameframex.unity.objectstorage.tencent": {
+      "version": "file:com.gameframex.unity.objectstorage.tencent",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.objectstorage": "1.1.1",
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.operationclipboard": {
+      "version": "file:com.gameframex.unity.operationclipboard",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.operationclipboard.alipayminigame": {
+      "version": "file:com.gameframex.unity.operationclipboard.alipayminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationclipboard": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.operationclipboard.douyinminigame": {
+      "version": "file:com.gameframex.unity.operationclipboard.douyinminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationclipboard": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.operationclipboard.kuaishouminigame": {
+      "version": "file:com.gameframex.unity.operationclipboard.kuaishouminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationclipboard": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.operationclipboard.wechatminigame": {
+      "version": "file:com.gameframex.unity.operationclipboard.wechatminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationclipboard": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.operationkeyboard": {
+      "version": "file:com.gameframex.unity.operationkeyboard",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.operationkeyboard.alipayminigame": {
+      "version": "file:com.gameframex.unity.operationkeyboard.alipayminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationkeyboard": "1.0.0"
+      }
+    },
+    "com.gameframex.unity.operationkeyboard.douyinminigame": {
+      "version": "file:com.gameframex.unity.operationkeyboard.douyinminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationkeyboard": "1.0.0"
+      }
+    },
+    "com.gameframex.unity.operationkeyboard.fairygui": {
+      "version": "file:com.gameframex.unity.operationkeyboard.fairygui",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationkeyboard": "1.0.0"
+      }
+    },
+    "com.gameframex.unity.operationkeyboard.kuaishouminigame": {
+      "version": "file:com.gameframex.unity.operationkeyboard.kuaishouminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationkeyboard": "1.0.0"
+      }
+    },
+    "com.gameframex.unity.operationkeyboard.ugui": {
+      "version": "file:com.gameframex.unity.operationkeyboard.ugui",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationkeyboard": "1.0.1"
+      }
+    },
+    "com.gameframex.unity.operationkeyboard.wechatminigame": {
+      "version": "file:com.gameframex.unity.operationkeyboard.wechatminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.operationkeyboard": "1.0.0"
+      }
+    },
+    "com.gameframex.unity.payment": {
+      "version": "file:com.gameframex.unity.payment",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.payment.alipay": {
+      "version": "file:com.gameframex.unity.payment.alipay",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.payment": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.payment.apple": {
+      "version": "file:com.gameframex.unity.payment.apple",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.payment": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.payment.douyinminigame": {
+      "version": "file:com.gameframex.unity.payment.douyinminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.payment": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.payment.google": {
+      "version": "file:com.gameframex.unity.payment.google",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.payment": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.procedure": {
+      "version": "file:com.gameframex.unity.procedure",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.fsm": "2.0.0",
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.psygames.unitywebsocket": {
+      "version": "file:com.gameframex.unity.psygames.unitywebsocket",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.readassets": {
+      "version": "file:com.gameframex.unity.readassets",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.scene": {
+      "version": "file:com.gameframex.unity.scene",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.sentry": {
+      "version": "file:com.gameframex.unity.sentry",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "io.sentry.unity": "4.0.0",
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.setting": {
+      "version": "file:com.gameframex.unity.setting",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.setting.alipayminigame": {
+      "version": "file:com.gameframex.unity.setting.alipayminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.setting": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.setting.douyinminigame": {
+      "version": "file:com.gameframex.unity.setting.douyinminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.setting": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.setting.kuaishouminigame": {
+      "version": "file:com.gameframex.unity.setting.kuaishouminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.setting": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.setting.wechatminigame": {
+      "version": "file:com.gameframex.unity.setting.wechatminigame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.setting": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.sound": {
+      "version": "file:com.gameframex.unity.sound",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.entity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.cysharp.unitask": "2.6.2",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.startup": {
+      "version": "file:com.gameframex.unity.startup",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.procedure": "2.0.0",
+        "com.gameframex.unity.fsm": "2.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.web": "2.0.1",
+        "com.gameframex.unity.globalconfig": "1.3.3",
+        "com.gameframex.unity.setting": "2.0.0",
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0",
+        "com.gameframex.unity.systeminfo": "3.1.0",
+        "com.gameframex.unity.cysharp.unitask": "2.6.1"
+      }
+    },
+    "com.gameframex.unity.systeminfo": {
+      "version": "file:com.gameframex.unity.systeminfo",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.gameframex.unity.timer": {
+      "version": "file:com.gameframex.unity.timer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.gameframex.unity.tuyoogame.yooasset": {
+      "version": "file:com.gameframex.unity.tuyoogame.yooasset",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.scriptablebuildpipeline": "2.1.0",
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
+      }
+    },
+    "com.gameframex.unity.tuyoogame.yooasset.alipay": {
+      "version": "file:com.gameframex.unity.tuyoogame.yooasset.alipay",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.tuyoogame.yooasset.douyin": {
+      "version": "file:com.gameframex.unity.tuyoogame.yooasset.douyin",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.tuyoogame.yooasset.googleplay": {
+      "version": "file:com.gameframex.unity.tuyoogame.yooasset.googleplay",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.tuyoogame.yooasset.kuaishou": {
+      "version": "file:com.gameframex.unity.tuyoogame.yooasset.kuaishou",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.tuyoogame.yooasset.taptap": {
+      "version": "file:com.gameframex.unity.tuyoogame.yooasset.taptap",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.tuyoogame.yooasset.tiktok": {
+      "version": "file:com.gameframex.unity.tuyoogame.yooasset.tiktok",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.tuyoogame.yooasset.wechat": {
+      "version": "file:com.gameframex.unity.tuyoogame.yooasset.wechat",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0"
+      }
+    },
+    "com.gameframex.unity.ui": {
+      "version": "file:com.gameframex.unity.ui",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.localization": "3.0.0",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0",
+        "com.gameframex.unity.cysharp.unitask": "2.6.2"
+      }
+    },
+    "com.gameframex.unity.ui.fairygui": {
+      "version": "file:com.gameframex.unity.ui.fairygui",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.ui": "3.0.0",
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.fairygui.unity": "6.0.0",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0",
+        "com.gameframex.unity.cysharp.unitask": "2.6.2"
+      }
+    },
+    "com.gameframex.unity.ui.ugui": {
+      "version": "file:com.gameframex.unity.ui.ugui",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.ui": "3.0.0",
+        "com.gameframex.unity.asset": "5.0.0",
+        "com.gameframex.unity.event": "2.0.0",
+        "com.gameframex.unity.tuyoogame.yooasset": "3.1.0",
+        "com.gameframex.unity.cysharp.unitask": "2.6.2"
+      }
+    },
+    "com.gameframex.unity.web": {
+      "version": "file:com.gameframex.unity.web",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.litjson": "1.2.4"
+      }
+    },
+    "com.gameframex.unity.web.protobuff": {
+      "version": "file:com.gameframex.unity.web.protobuff",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.litjson": "1.2.4",
+        "com.gameframex.unity.web": "2.0.0",
+        "com.gameframex.unity.network": "3.0.0",
+        "com.gameframex.unity.google.protobuf": "3.5.0"
+      }
+    },
+    "com.gameframex.unity.webview": {
+      "version": "file:com.gameframex.unity.webview",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0",
+        "com.gameframex.unity.event": "2.0.0"
+      }
+    },
+    "com.gameframex.unity.xcode": {
+      "version": "file:com.gameframex.unity.xcode",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.gameframex.unity": "3.0.0"
+      }
+    },
+    "com.unity.ai.navigation": {
+      "version": "1.1.6",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.ai": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ext.nunit": {
+      "version": "1.0.6",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ide.rider": {
+      "version": "3.0.40",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ext.nunit": "1.0.6"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ide.visualstudio": {
+      "version": "2.0.27",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.33"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.scriptablebuildpipeline": {
+      "version": "2.1.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.test-framework": {
+      "version": "1.1.33",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ext.nunit": "1.0.6",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.textmeshpro": {
+      "version": "3.0.9",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ugui": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0"
+      }
+    },
+    "io.sentry.unity": {
+      "version": "4.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
+    "com.unity.modules.ai": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.androidjni": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.animation": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.assetbundle": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.audio": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.director": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.animation": "1.0.0"
+      }
+    },
+    "com.unity.modules.imageconversion": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.imgui": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.jsonserialize": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.particlesystem": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.physics": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.physics2d": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.screencapture": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.imageconversion": "1.0.0"
+      }
+    },
+    "com.unity.modules.ui": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.uielements": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      }
+    },
+    "com.unity.modules.unitywebrequest": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.unitywebrequestassetbundle": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      }
+    },
+    "com.unity.modules.unitywebrequestaudio": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.audio": "1.0.0"
+      }
+    },
+    "com.unity.modules.unitywebrequesttexture": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0"
+      }
+    },
+    "com.unity.modules.unitywebrequestwww": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0",
+        "com.unity.modules.unitywebrequestaudio": "1.0.0",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.assetbundle": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0"
+      }
+    },
+    "com.unity.modules.video": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      }
+    }
+  }
+}

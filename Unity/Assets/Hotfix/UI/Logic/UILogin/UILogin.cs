@@ -40,9 +40,9 @@ namespace Hotfix.UI
 
         private async void Login()
         {
-            if (m_UserName.text.IsNullOrWhiteSpace() || m_Password.text.IsNullOrWhiteSpace())
+            if (m_user_name.text.IsNullOrWhiteSpace() || m_password.text.IsNullOrWhiteSpace())
             {
-                m_ErrorText.text = "用户名或密码不能为空";
+                m_error_text.text = "用户名或密码不能为空";
                 return;
             }
 
@@ -53,8 +53,8 @@ namespace Hotfix.UI
             {
                 SdkType = 0,
                 SdkToken = "",
-                UserName = m_UserName.text,
-                Password = m_Password.text,
+                UserName = m_user_name.text,
+                Password = m_password.text,
                 Device = SystemInfo.deviceUniqueIdentifier
             };
             req.Platform = ApplicationHelper.PlatformName;
@@ -86,11 +86,11 @@ namespace Hotfix.UI
 
             if (respPlayerList.PlayerList.Count > 0)
             {
-                await GameApp.UI.OpenFullScreenAsync<UIPlayerList>(Utility.Asset.Path.GetUIPath(nameof(UILogin)), respLogin);
+                await GameApp.UI.OpenFullScreenAsync<UILoginPlayerList>(Utility.Asset.Path.GetUIPath(nameof(UILogin)), respLogin);
             }
             else
             {
-                await GameApp.UI.OpenFullScreenAsync<UIPlayerCreate>(Utility.Asset.Path.GetUIPath(nameof(UILogin)), respLogin);
+                await GameApp.UI.OpenFullScreenAsync<UILoginPlayerCreate>(Utility.Asset.Path.GetUIPath(nameof(UILogin)), respLogin);
             }
 
             GameApp.UI.CloseUIForm(this);

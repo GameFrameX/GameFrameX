@@ -21,52 +21,52 @@ namespace Hotfix.UI
 
 		#region Properties
 
-		[SerializeField] [UGUIElementProperty("UserName/Placeholder")]
-		private UnityEngine.UI.Text UserName_Placeholder;
+		[SerializeField] [UGUIElementProperty("user_name/Placeholder")]
+		private UnityEngine.UI.Text user_name_Placeholder;
 
-		public UnityEngine.UI.Text m_UserName_Placeholder
+		public UnityEngine.UI.Text m_user_name_Placeholder
 		{
-			get { return UserName_Placeholder;}
+			get { return user_name_Placeholder;}
 		}
 
-		[SerializeField] [UGUIElementProperty("UserName/Text")]
-		private UnityEngine.UI.Text UserName_Text;
+		[SerializeField] [UGUIElementProperty("user_name/Text")]
+		private UnityEngine.UI.Text user_name_Text;
 
-		public UnityEngine.UI.Text m_UserName_Text
+		public UnityEngine.UI.Text m_user_name_Text
 		{
-			get { return UserName_Text;}
+			get { return user_name_Text;}
 		}
 
-		[SerializeField] [UGUIElementProperty("UserName")]
-		private UnityEngine.UI.InputField UserName;
+		[SerializeField] [UGUIElementProperty("user_name")]
+		private UnityEngine.UI.InputField user_name;
 
-		public UnityEngine.UI.InputField m_UserName
+		public UnityEngine.UI.InputField m_user_name
 		{
-			get { return UserName;}
+			get { return user_name;}
 		}
 
-		[SerializeField] [UGUIElementProperty("Password/Placeholder")]
-		private UnityEngine.UI.Text Password_Placeholder;
+		[SerializeField] [UGUIElementProperty("password/Placeholder")]
+		private UnityEngine.UI.Text password_Placeholder;
 
-		public UnityEngine.UI.Text m_Password_Placeholder
+		public UnityEngine.UI.Text m_password_Placeholder
 		{
-			get { return Password_Placeholder;}
+			get { return password_Placeholder;}
 		}
 
-		[SerializeField] [UGUIElementProperty("Password/Text")]
-		private UnityEngine.UI.Text Password_Text;
+		[SerializeField] [UGUIElementProperty("password/Text")]
+		private UnityEngine.UI.Text password_Text;
 
-		public UnityEngine.UI.Text m_Password_Text
+		public UnityEngine.UI.Text m_password_Text
 		{
-			get { return Password_Text;}
+			get { return password_Text;}
 		}
 
-		[SerializeField] [UGUIElementProperty("Password")]
-		private UnityEngine.UI.InputField Password;
+		[SerializeField] [UGUIElementProperty("password")]
+		private UnityEngine.UI.InputField password;
 
-		public UnityEngine.UI.InputField m_Password
+		public UnityEngine.UI.InputField m_password
 		{
-			get { return Password;}
+			get { return password;}
 		}
 
 		[SerializeField] [UGUIElementProperty("enter/Text")]
@@ -85,12 +85,12 @@ namespace Hotfix.UI
 			get { return enter;}
 		}
 
-		[SerializeField] [UGUIElementProperty("ErrorText")]
-		private UnityEngine.UI.Text ErrorText;
+		[SerializeField] [UGUIElementProperty("error_text")]
+		private UnityEngine.UI.Text error_text;
 
-		public UnityEngine.UI.Text m_ErrorText
+		public UnityEngine.UI.Text m_error_text
 		{
-			get { return ErrorText;}
+			get { return error_text;}
 		}
 
 		[SerializeField] [UGUIElementProperty("TitleText")]
@@ -114,15 +114,15 @@ namespace Hotfix.UI
 
 			_isInitView = true;
 			this.self = this.gameObject;
-			UserName_Placeholder = gameObject.transform.FindChildName("UserName/Placeholder").GetComponent<UnityEngine.UI.Text>();
-			UserName_Text = gameObject.transform.FindChildName("UserName/Text").GetComponent<UnityEngine.UI.Text>();
-			UserName = gameObject.transform.FindChildName("UserName").GetComponent<UnityEngine.UI.InputField>();
-			Password_Placeholder = gameObject.transform.FindChildName("Password/Placeholder").GetComponent<UnityEngine.UI.Text>();
-			Password_Text = gameObject.transform.FindChildName("Password/Text").GetComponent<UnityEngine.UI.Text>();
-			Password = gameObject.transform.FindChildName("Password").GetComponent<UnityEngine.UI.InputField>();
+			user_name_Placeholder = gameObject.transform.FindChildName("user_name/Placeholder").GetComponent<UnityEngine.UI.Text>();
+			user_name_Text = gameObject.transform.FindChildName("user_name/Text").GetComponent<UnityEngine.UI.Text>();
+			user_name = gameObject.transform.FindChildName("user_name").GetComponent<UnityEngine.UI.InputField>();
+			password_Placeholder = gameObject.transform.FindChildName("password/Placeholder").GetComponent<UnityEngine.UI.Text>();
+			password_Text = gameObject.transform.FindChildName("password/Text").GetComponent<UnityEngine.UI.Text>();
+			password = gameObject.transform.FindChildName("password").GetComponent<UnityEngine.UI.InputField>();
 			enter_Text = gameObject.transform.FindChildName("enter/Text").GetComponent<UnityEngine.UI.Text>();
 			enter = gameObject.transform.FindChildName("enter").GetComponent<UnityEngine.UI.Button>();
-			ErrorText = gameObject.transform.FindChildName("ErrorText").GetComponent<UnityEngine.UI.Text>();
+			error_text = gameObject.transform.FindChildName("error_text").GetComponent<UnityEngine.UI.Text>();
 			TitleText = gameObject.transform.FindChildName("TitleText").GetComponent<UnityEngine.UI.Text>();
 		}
 	}

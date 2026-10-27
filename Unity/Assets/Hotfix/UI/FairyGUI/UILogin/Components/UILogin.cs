@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Hotfix.UI
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UILogin : FUI
     {
         public const string UIPackageName = "UILogin";
@@ -23,34 +22,19 @@ namespace Hotfix.UI
         /// </summary>
         public GComponent self { get; private set; }
 
-		public GTextField m_ErrorText { get; private set; }
+		public GTextField m_error_text { get; private set; }
 		public GButton m_enter { get; private set; }
-		public GTextInput m_UserName { get; private set; }
-		public GTextInput m_Password { get; private set; }
+		public GTextInput m_user_name { get; private set; }
+		public GTextInput m_password { get; private set; }
 
         private static GObject CreateGObject()
         {
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
 
-        private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
-        {
-            UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
-        }
-
         public static UILogin CreateInstance()
         {
             return Create(CreateGObject());
-        }
-
-        public static UniTask<UILogin> CreateInstanceAsync(Entity domain)
-        {
-            UniTaskCompletionSource<UILogin> tcs = new UniTaskCompletionSource<UILogin>();
-            CreateGObjectAsync((go) =>
-            {
-                tcs.TrySetResult(Create(go));
-            });
-            return tcs.Task;
         }
 
         public static UILogin Create(GObject go)
@@ -89,10 +73,10 @@ namespace Hotfix.UI
             var com = GObject.asCom;
             if (com != null)
             {
-				m_ErrorText = (GTextField)com.GetChild("ErrorText");
+				m_error_text = (GTextField)com.GetChild("error_text");
 				m_enter = (GButton)com.GetChild("enter");
-				m_UserName = (GTextInput)com.GetChild("UserName");
-				m_Password = (GTextInput)com.GetChild("Password");
+				m_user_name = (GTextInput)com.GetChild("user_name");
+				m_password = (GTextInput)com.GetChild("password");
             }
         }
 
@@ -105,16 +89,15 @@ namespace Hotfix.UI
 
             base.Dispose();
             self.Remove();
-			m_ErrorText = null;
+			m_error_text = null;
 			m_enter = null;
-			m_UserName = null;
-			m_Password = null;
-            self = null;            
+			m_user_name = null;
+			m_password = null;
+            self = null;
         }
 
         private UILogin(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

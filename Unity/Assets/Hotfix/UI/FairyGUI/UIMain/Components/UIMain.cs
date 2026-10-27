@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Hotfix.UI
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UIMain : FUI
     {
         public const string UIPackageName = "UIMain";
@@ -24,6 +23,7 @@ namespace Hotfix.UI
         public GComponent self { get; private set; }
 
 		public GLoader m_bg { get; private set; }
+		public GButton m_production_button { get; private set; }
 		public GButton m_bag_button { get; private set; }
 		public GButton m_room_button { get; private set; }
 		public GLoader m_player_icon { get; private set; }
@@ -35,24 +35,9 @@ namespace Hotfix.UI
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
 
-        private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
-        {
-            UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
-        }
-
         public static UIMain CreateInstance()
         {
             return Create(CreateGObject());
-        }
-
-        public static UniTask<UIMain> CreateInstanceAsync(Entity domain)
-        {
-            UniTaskCompletionSource<UIMain> tcs = new UniTaskCompletionSource<UIMain>();
-            CreateGObjectAsync((go) =>
-            {
-                tcs.TrySetResult(Create(go));
-            });
-            return tcs.Task;
         }
 
         public static UIMain Create(GObject go)
@@ -92,6 +77,7 @@ namespace Hotfix.UI
             if (com != null)
             {
 				m_bg = (GLoader)com.GetChild("bg");
+				m_production_button = (GButton)com.GetChild("production_button");
 				m_bag_button = (GButton)com.GetChild("bag_button");
 				m_room_button = (GButton)com.GetChild("room_button");
 				m_player_icon = (GLoader)com.GetChild("player_icon");
@@ -110,17 +96,17 @@ namespace Hotfix.UI
             base.Dispose();
             self.Remove();
 			m_bg = null;
+			m_production_button = null;
 			m_bag_button = null;
 			m_room_button = null;
 			m_player_icon = null;
 			m_player_name = null;
 			m_player_level = null;
-            self = null;            
+            self = null;
         }
 
         private UIMain(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

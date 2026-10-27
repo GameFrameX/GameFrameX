@@ -16,7 +16,7 @@ namespace Hotfix.UI
 
         void SetRoomList(IReadOnlyList<RoomInfo> rooms, long selectedRoomId);
 
-        void RegisterHandlers(Action onRefresh, Action onCreate, Action onClose, Action<long> onJoinRoom);
+        void RegisterHandlers(Action onRefresh, Action onCreate, Action onCreateConnectFour, Action onClose, Action<long> onJoinRoom);
 
         void ClearHandlers();
     }

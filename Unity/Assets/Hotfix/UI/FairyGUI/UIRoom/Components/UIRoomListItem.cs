@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Hotfix.UI
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UIRoomListItem : FUI
     {
         public const string UIPackageName = "UIRoom";
@@ -33,24 +32,9 @@ namespace Hotfix.UI
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
 
-        private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
-        {
-            UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
-        }
-
         public static UIRoomListItem CreateInstance()
         {
             return Create(CreateGObject());
-        }
-
-        public static UniTask<UIRoomListItem> CreateInstanceAsync(Entity domain)
-        {
-            UniTaskCompletionSource<UIRoomListItem> tcs = new UniTaskCompletionSource<UIRoomListItem>();
-            CreateGObjectAsync((go) =>
-            {
-                tcs.TrySetResult(Create(go));
-            });
-            return tcs.Task;
         }
 
         public static UIRoomListItem Create(GObject go)
@@ -109,12 +93,11 @@ namespace Hotfix.UI
 			m_room_name = null;
 			m_room_status = null;
 			m_join_button = null;
-            self = null;            
+            self = null;
         }
 
         private UIRoomListItem(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

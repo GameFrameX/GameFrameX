@@ -156,7 +156,7 @@ namespace Hotfix.UI
             SetGestureButton(m_paper_button, 2, "布");
         }
 
-        private static void SetGestureButton(UIGestureButton button, int gestureIndex, string title)
+        private static void SetGestureButton(UIRoomGestureButton button, int gestureIndex, string title)
         {
             if (button == null)
             {

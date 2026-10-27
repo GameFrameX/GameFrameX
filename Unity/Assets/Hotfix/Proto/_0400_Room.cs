@@ -50,6 +50,11 @@ namespace Hotfix.Proto
 		/// 石头剪刀布
 		/// </summary>
 		RockPaperScissors = 1,
+
+		/// <summary>
+		/// 四子棋
+		/// </summary>
+		ConnectFour = 2,
 	}
 
 	/// <summary>

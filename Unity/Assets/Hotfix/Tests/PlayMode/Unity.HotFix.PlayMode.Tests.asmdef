@@ -1,0 +1,28 @@
+{
+    "name": "Unity.HotFix.PlayMode.Tests",
+    "rootNamespace": "Hotfix.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.HotFix",
+        "GameFrameX.Runtime",
+        "GameFrameX.Entry.Runtime",
+        "GameFrameX.Network.Runtime",
+        "GameFrameX.Event.Runtime",
+        "GameFrameX.Web.ProtoBuff.Runtime",
+        "UniTask.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

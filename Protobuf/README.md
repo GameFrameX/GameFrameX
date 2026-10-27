@@ -569,6 +569,81 @@ So once `Tools/` holds the correct artifacts, **all scripts run directly** — y
 
 When `ProtoExport` is updated upstream, the **Tools Sync** workflow overwrites the files in `Tools/` on its weekly run (you can also trigger it manually for an immediate sync). Pull this repo's latest changes to pick up the current tool version.
 
+## Ecosystem Architecture
+
+GameFrameX consists of the repositories below: the build-time toolchain generates protocol and config code, while game clients, game servers and the operations backend cooperate at runtime.
+
+```mermaid
+%%{init: {"flowchart": {"curve": "linear", "nodeSpacing": 30, "rankSpacing": 50}}}%%
+flowchart TB
+    subgraph Toolchain["Build-time toolchain"]
+        direction TB
+        Luban["luban<br/>Luban fork"] -- "Luban.dll · daily sync" --> Config["Config<br/>Excel tables"]
+        Tools["Tools<br/>ProtoExport"] -- "ProtoExport.dll · weekly sync" --> Protobuf["Protobuf<br/>proto3 definitions"]
+        FairyGUI["FairyGUIProject<br/>UI source"]
+    end
+    subgraph Runtime["Runtime"]
+        direction TB
+        subgraph Clients["Game clients"]
+            direction TB
+            Unity["Unity<br/>Unity 2019.4.40+ · C#"]
+            Godot["Godot<br/>Godot 4.7 · C#"]
+            Cocos["CocosCreator<br/>Cocos 3.8 · TS"]
+            Laya["LayaBox<br/>LayaAir · TS"]
+        end
+        subgraph Backend["Backend"]
+            direction TB
+            Admin["Admin<br/>Admin · Client · Hub API"]
+            subgraph GameServers["Game servers"]
+                direction TB
+                Server["Server<br/>NuGet framework"]
+                ServerSource["Server.Source<br/>source framework"]
+            end
+        end
+    end
+    subgraph Infrastructure["Infrastructure"]
+        direction TB
+        subgraph Storage["Storage"]
+            direction TB
+            Mongo[("MongoDB<br/>game servers")]
+            Postgres[("PostgreSQL<br/>Admin")]
+        end
+        subgraph Libraries["Base libraries · NuGet"]
+            direction TB
+            Foundation["Foundation<br/>.NET base libraries"]
+            SuperSocket["SuperSocket<br/>socket framework"]
+        end
+    end
+    Toolchain -- "generated code · config data · UI packages" --> Runtime
+    Clients -- "TCP / WebSocket / HTTP" --> Backend
+    Admin -- "HTTP management API" --> GameServers
+    Runtime -- "data storage · NuGet packages" --> Infrastructure
+```
+
+### Core Projects
+
+| Project | Role | Tech Stack | Integration |
+|------|------|------|------|
+| [Unity](https://github.com/GameFrameX/GameFrameX.Unity) | Unity client project: assembles 90+ framework packages from the GameFrameX UPM registry, HybridCLR hot update, login / bag / room samples | Unity 2019.4.40+, HybridCLR, YooAsset, FairyGUI, UniTask | Consumes Protobuf / Config / FairyGUIProject output; TCP 29100 + HTTP 28080 to Server, HTTP 20808 to Admin Client API |
+| [Server](https://github.com/GameFrameX/GameFrameX.Server) | Actor-model game server: persistent Apps state layer strictly separated from the hot-updatable Hotfix logic layer; single- or multi-process deployment | .NET 10, MongoDB, Docker | Listens on TCP 29100 / WebSocket 29110 / HTTP 28080; HTTP management endpoints (mail, item grants, player management) for Admin |
+| [Admin](https://github.com/GameFrameX/GameFrameX.Admin) | Multi-tenant operations backend: Admin (20802) / Client (20808) / Hub (20806) hosts + Vue console, covering game areas, announcements, mail, orders & payment, remote config, LiveOps | .NET 10, SqlSugar, PostgreSQL, Vue 3.5, PrimeVue | Calls Server through each game area's `HttpManageUrl`; Client API serves global info, login and payment callbacks to game clients |
+| [luban](https://github.com/GameFrameX/luban) | GameFrameX fork of Luban: merged upstream v5.1.0, adds the `gameframex` table importer and `cs-dotnet-json` / `cs-dotnet-bin` code targets | .NET 10, Scriban | Publishes Luban tar.gz and Docker image; synced daily into Config `Tools/` |
+| [Config](https://github.com/GameFrameX/GameFrameX.Config) | Config table repository: Excel data tables + schema + localization tables, one-click scripts generate client and server code and data | Excel, Luban | `gen-client-*` → Unity; `gen-server-json` → Server; `gen-server-bin` → Server.Source; `gen-godot-json` / `gen-cocos-json` / `gen-laya-json` → Godot / CocosCreator / LayaBox |
+| [Protobuf](https://github.com/GameFrameX/GameFrameX.Protobuf) | Unified network protocol definitions: proto3, messages and error codes grouped by the numeric module ID in each file name (positive = client↔server, negative = server-internal) | proto3 | `Proto2CsExport_Server` → Server; `Proto2CsExport_Client` → Unity; `Proto2CsExport_Godot` / `Proto2TsExport_CocosCreator` / `Proto2TsExport_LayaBox` → other clients; CI publishes a six-language Release on every push |
+| [Tools](https://github.com/GameFrameX/GameFrameX.Tools) | ProtoExport protocol code generator: C# / TypeScript / C++ / Lua / Go, available as CLI, Avalonia GUI and Docker image | .NET 10, Avalonia 12 | `ProtoExport.dll` synced weekly into Protobuf `Tools/`; Docker image `gameframex/gameframex-tools` |
+
+### Peripheral Systems
+
+| Project | Role | Tech Stack | Integration |
+|------|------|------|------|
+| [Foundation](https://github.com/GameFrameX/GameFrameX.Foundation) | Modular .NET libraries: localization, JSON, command-line options, logging, HTTP, encryption, hashing, ORM base entities, idempotency | .NET | NuGet packages referenced by Server, Server.Source, Admin, Tools |
+| [SuperSocket](https://github.com/GameFrameX/GameFrameX.SuperSocket) | GameFrameX fork of SuperSocket: .NET 10 targets, dependency injection, KCP / ReliableSession for weak-network game traffic | .NET 10 | NuGet: Server (ClientEngine), Server.Source (Server / Kcp / Udp / WebSocket) |
+| [Server.Source](https://github.com/GameFrameX/GameFrameX.Server.Source) | Server variant with the framework as in-repo source: service discovery, cross-process RemoteMessaging (TCP / KCP), multi-process deployment | .NET 10, MongoDB, Docker | Receives Config `gen-server-bin` output; multi-process via `docker-compose.multi.yml` |
+| [Godot](https://github.com/GameFrameX/GameFrameX.Godot) | Godot .NET client with reusable runtime modules, editor plugins and hot-update assemblies | Godot 4.7, C# | Config `gen-godot-json`, Protobuf `Proto2CsExport_Godot`; TCP 29100 / WebSocket 29110 to Server |
+| [CocosCreator](https://github.com/GameFrameX/GameFrameX.CocosCreator) | Cocos Creator client, migrated from the Unity version | Cocos Creator 3.8, TypeScript | `npm run gen:proto` / `gen:config` call Protobuf / Config scripts; WebSocket to Server |
+| [LayaBox](https://github.com/GameFrameX/GameFrameX.LayaBox) | LayaBox client | LayaAir, TypeScript | Config `gen-laya-json`, Protobuf `Proto2TsExport_LayaBox`; WebSocket to Server |
+| [FairyGUIProject](https://github.com/GameFrameX/GameFrameX.FairyGUIProject) | FairyGUI editor project: design source of all game UI | FairyGUI Editor | Publishes UI packages to Unity `Assets/Bundles/UI` and code to `Assets/Hotfix/UI/FairyGUI/` |
+
 ## Dependencies
 
 | Dependency | Purpose |

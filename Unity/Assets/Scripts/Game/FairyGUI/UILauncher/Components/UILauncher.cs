@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Unity.Startup
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UILauncher : FUI
     {
         public const string UIPackageName = "UILauncher";
@@ -26,8 +25,8 @@ namespace Unity.Startup
 		public Controller m_IsUpgrade { get; private set; }
 		public Controller m_IsDownload { get; private set; }
 		public GLoader m_bg { get; private set; }
-		public GTextField m_TipText { get; private set; }
-		public GProgressBar m_ProgressBar { get; private set; }
+		public GTextField m_tip_text { get; private set; }
+		public GProgressBar m_progress_bar { get; private set; }
 		public UILauncherUpgrade m_upgrade { get; private set; }
 
         private static GObject CreateGObject()
@@ -35,24 +34,9 @@ namespace Unity.Startup
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
 
-        private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
-        {
-            UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
-        }
-
         public static UILauncher CreateInstance()
         {
             return Create(CreateGObject());
-        }
-
-        public static UniTask<UILauncher> CreateInstanceAsync(Entity domain)
-        {
-            UniTaskCompletionSource<UILauncher> tcs = new UniTaskCompletionSource<UILauncher>();
-            CreateGObjectAsync((go) =>
-            {
-                tcs.TrySetResult(Create(go));
-            });
-            return tcs.Task;
         }
 
         public static UILauncher Create(GObject go)
@@ -94,8 +78,8 @@ namespace Unity.Startup
 				m_IsUpgrade = com.GetController("IsUpgrade");
 				m_IsDownload = com.GetController("IsDownload");
 				m_bg = (GLoader)com.GetChild("bg");
-				m_TipText = (GTextField)com.GetChild("TipText");
-				m_ProgressBar = (GProgressBar)com.GetChild("ProgressBar");
+				m_tip_text = (GTextField)com.GetChild("tip_text");
+				m_progress_bar = (GProgressBar)com.GetChild("progress_bar");
 				m_upgrade = UILauncherUpgrade.Create(com.GetChild("upgrade"));
             }
         }
@@ -112,15 +96,14 @@ namespace Unity.Startup
 			m_IsUpgrade = null;
 			m_IsDownload = null;
 			m_bg = null;
-			m_TipText = null;
-			m_ProgressBar = null;
+			m_tip_text = null;
+			m_progress_bar = null;
 			m_upgrade = null;
-            self = null;            
+            self = null;
         }
 
         private UILauncher(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

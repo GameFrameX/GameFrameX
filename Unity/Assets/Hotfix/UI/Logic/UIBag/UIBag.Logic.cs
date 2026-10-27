@@ -71,7 +71,7 @@ namespace Hotfix.UI
             m_content.m_type_list.DataList = new List<object>(Tabs);
             m_content.m_type_list.GetChildAt(0).onClick.Call();
 
-            m_content.m_info.m_use_button.onClick.Add(OnUseButtonClick);
+            m_content.m_info.m_use_button.self.onClick.Add(OnUseButtonClick);
             this.m_bg.onClick.Set(OnCloseClick);
         }
 
@@ -105,7 +105,7 @@ namespace Hotfix.UI
         private void UpdateSelectItem(BagItem bagItem)
         {
             _selectBagItem = bagItem;
-            UIGoodItem.GetFormPool(m_content.m_info.m_good_item).SetCount(bagItem.Count).SetIcon(bagItem.ItemId);
+            m_content.m_info.m_good_item.SetCount(bagItem.Count).SetIcon(bagItem.ItemId);
             var itemConfig = GameApp.Config.GetConfig<TbItemConfig>().Get(bagItem.ItemId);
             if (itemConfig.CanUse == ItemCanUse.CanNot)
             {
@@ -125,7 +125,7 @@ namespace Hotfix.UI
         {
             var bagItemData = (BagItem)item.dataSource;
             var uiBagItem = UIBagItem.GetFormPool(item);
-            var uiGoodItem = UIGoodItem.GetFormPool(uiBagItem.m_good_item);
+            var uiGoodItem = uiBagItem.m_good_item;
             uiGoodItem.SetCount(bagItemData.Count);
             uiGoodItem.SetIcon(bagItemData.ItemId);
         }

@@ -2,9 +2,7 @@
 
 #if ENABLE_UI_FAIRYGUI
 using FairyGUI;
-using Cysharp.Threading.Tasks;
 using FairyGUI.Utils;
-using GameFrameX.Entity.Runtime;
 using GameFrameX.UI.Runtime;
 using GameFrameX.UI.FairyGUI.Runtime;
 using GameFrameX.Runtime;
@@ -12,6 +10,7 @@ using UnityEngine;
 
 namespace Hotfix.UI
 {
+    [OptionUIConfig(UIPackageName)]
     public sealed partial class UIRoomResultPopup : FUI
     {
         public const string UIPackageName = "UIRoom";
@@ -42,24 +41,9 @@ namespace Hotfix.UI
             return UIPackage.CreateObject(UIPackageName, UIResName);
         }
 
-        private static void CreateGObjectAsync(UIPackage.CreateObjectCallback result)
-        {
-            UIPackage.CreateObjectAsync(UIPackageName, UIResName, result);
-        }
-
         public static UIRoomResultPopup CreateInstance()
         {
             return Create(CreateGObject());
-        }
-
-        public static UniTask<UIRoomResultPopup> CreateInstanceAsync(Entity domain)
-        {
-            UniTaskCompletionSource<UIRoomResultPopup> tcs = new UniTaskCompletionSource<UIRoomResultPopup>();
-            CreateGObjectAsync((go) =>
-            {
-                tcs.TrySetResult(Create(go));
-            });
-            return tcs.Task;
         }
 
         public static UIRoomResultPopup Create(GObject go)
@@ -136,12 +120,11 @@ namespace Hotfix.UI
 			m_opponent_gesture_text = null;
 			m_restart_button = null;
 			m_close_button = null;
-            self = null;            
+            self = null;
         }
 
         private UIRoomResultPopup(GObject gObject) : base(gObject)
         {
-            // Awake(gObject);
         }
     }
 }

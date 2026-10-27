@@ -43,6 +43,10 @@ namespace Hotfix.UI
         private UnityEngine.UI.Button create_button;
         public UnityEngine.UI.Button m_create_button { get { return create_button; } }
 
+        [SerializeField] [UGUIElementProperty("create_connectfour_button")]
+        private UnityEngine.UI.Button create_connectfour_button;
+        public UnityEngine.UI.Button m_create_connectfour_button { get { return create_connectfour_button; } }
+
         [SerializeField] [UGUIElementProperty("close_button")]
         private UnityEngine.UI.Button close_button;
         public UnityEngine.UI.Button m_close_button { get { return close_button; } }
@@ -86,6 +90,7 @@ namespace Hotfix.UI
             summary_text = gameObject.transform.FindChildName("summary_text").GetComponent<UnityEngine.UI.Text>();
             refresh_button = gameObject.transform.FindChildName("refresh_button").GetComponent<UnityEngine.UI.Button>();
             create_button = gameObject.transform.FindChildName("create_button").GetComponent<UnityEngine.UI.Button>();
+            create_connectfour_button = gameObject.transform.FindChildName("create_connectfour_button").GetComponent<UnityEngine.UI.Button>();
             close_button = gameObject.transform.FindChildName("close_button").GetComponent<UnityEngine.UI.Button>();
             list_bg = gameObject.transform.FindChildName("list_bg").GetComponent<UnityEngine.UI.Image>();
             list_title = gameObject.transform.FindChildName("list_title").GetComponent<UnityEngine.UI.Text>();
